@@ -7,208 +7,314 @@ import {
   GlassCard,
   Icon,
   Avatar,
-  Container
-} from '@/components/ui'
+  PageLayout
+} from '@/components'
 import { useModalStore, useUserStore } from '@/stores'
 
 export default function Home() {
   const { openModal } = useModalStore()
   const { user, isAuthenticated } = useUserStore()
 
+  const heroStyle = {
+    textAlign: 'center' as const,
+    paddingTop: '80px',
+    paddingBottom: '80px'
+  }
+
+  const heroContentStyle = {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '32px',
+    alignItems: 'center'
+  }
+
+  const heroButtonsStyle = {
+    display: 'flex',
+    gap: '16px',
+    justifyContent: 'center',
+    flexWrap: 'wrap' as const
+  }
+
+  const sectionStyle = {
+    marginBottom: '64px'
+  }
+
+  const gridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '32px',
+    marginBottom: '64px'
+  }
+
+  const cardContentStyle = {
+    textAlign: 'center' as const,
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '16px'
+  }
+
+  const iconContainerStyle = {
+    display: 'flex',
+    justifyContent: 'center'
+  }
+
+  const componentGridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '32px'
+  }
+
+  const inputGroupStyle = {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '12px'
+  }
+
+  const buttonGroupStyle = {
+    display: 'flex',
+    gap: '12px',
+    flexWrap: 'wrap' as const
+  }
+
+  const membershipGridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+    gap: '32px',
+    maxWidth: '1024px',
+    margin: '0 auto'
+  }
+
+  const checklistStyle = {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '8px'
+  }
+
+  const checkItemStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px'
+  }
+
+  const statusBadgeStyle = {
+    padding: '16px 0',
+    borderTop: '1px solid var(--color-border-primary)'
+  }
+
   return (
-    <div className="min-h-screen bg-background-primary text-text-primary">
-      <Container className="py-20">
-        <div className="space-y-16">
-          {/* 标题区域 */}
-          <div className="text-center space-y-4">
+    <PageLayout>
+      <div style={{ paddingTop: '80px', paddingBottom: '80px' }}>
+        {/* Hero区域 */}
+        <div style={heroStyle}>
+          <div style={heroContentStyle}>
             <GradientText as="h1" size="8xl" weight="bold">
               AI变现之路
             </GradientText>
-            <GradientText as="p" size="xl" weight="medium">
-              原子组件展示页面
+            <GradientText
+              as="p"
+              size="xl"
+              weight="medium"
+              style={{ maxWidth: '512px', margin: '0 auto' }}
+            >
+              专注AI工具实用指南，帮助您在AI时代找到属于自己的变现之路
             </GradientText>
-          </div>
-
-          {/* 按钮组件展示 */}
-          <GlassCard className="space-y-6">
-            <GradientText as="h2" size="3xl" weight="bold">
-              按钮组件 (GradientButton)
-            </GradientText>
-            <div className="flex gap-4 items-center flex-wrap">
-              <GradientButton size="sm" onClick={() => openModal('login')}>
-                小按钮 - 登录
-              </GradientButton>
-              <GradientButton size="md" onClick={() => openModal('register')}>
-                中按钮 - 注册
-              </GradientButton>
+            <div style={heroButtonsStyle}>
               <GradientButton size="lg" onClick={() => openModal('membership')}>
-                大按钮 - 会员开通
+                开始探索
+              </GradientButton>
+              <GradientButton size="lg" variant="outline">
+                了解更多
               </GradientButton>
             </div>
-            <div className="flex gap-4 items-center flex-wrap">
-              <GradientButton variant="outline" size="md">
-                轮廓按钮
-              </GradientButton>
-              <GradientButton disabled size="md">
-                禁用按钮
-              </GradientButton>
-              <GradientButton fullWidth size="md">
-                全宽按钮
-              </GradientButton>
-            </div>
-          </GlassCard>
-
-          {/* 文字组件展示 */}
-          <GlassCard className="space-y-6">
-            <GradientText as="h2" size="3xl" weight="bold">
-              渐变文字组件 (GradientText)
-            </GradientText>
-            <div className="space-y-3">
-              <GradientText size="xs">超小文字 (12px)</GradientText>
-              <GradientText size="sm">小文字 (13.33px)</GradientText>
-              <GradientText size="base">基础文字 (14px)</GradientText>
-              <GradientText size="lg" weight="medium">大文字 (16px)</GradientText>
-              <GradientText size="xl" weight="semibold">特大文字 (18px)</GradientText>
-              <GradientText size="2xl" weight="bold">副标题 (20px)</GradientText>
-              <GradientText size="4xl" weight="bold">弹窗标题 (28px)</GradientText>
-            </div>
-          </GlassCard>
-
-          {/* 输入框组件展示 */}
-          <GlassCard className="space-y-6">
-            <GradientText as="h2" size="3xl" weight="bold">
-              输入框组件 (Input)
-            </GradientText>
-            <div className="space-y-4 max-w-md">
-              <Input
-                label="邮箱地址"
-                placeholder="请输入邮箱地址"
-                type="email"
-                icon={<Icon name="email-icon" size="sm" />}
-              />
-              <Input
-                label="密码"
-                placeholder="请输入密码"
-                type="password"
-                icon={<Icon name="password-icon" size="sm" />}
-              />
-              <Input
-                label="用户名"
-                placeholder="请输入用户名"
-                error="用户名已被占用"
-                icon={<Icon name="username-icon" size="sm" />}
-              />
-              <Input
-                label="帮助文本示例"
-                placeholder="正常输入框"
-                helperText="这是一个帮助文本"
-              />
-            </div>
-          </GlassCard>
-
-          {/* 卡片组件展示 */}
-          <div className="grid md:grid-cols-3 gap-6">
-            <GlassCard variant="default" padding="md">
-              <GradientText size="lg" weight="semibold" className="mb-4">
-                默认卡片
-              </GradientText>
-              <p className="text-text-secondary">这是一个默认的毛玻璃卡片组件，具有完美的背景模糊效果。</p>
-            </GlassCard>
-
-            <GlassCard variant="hover" padding="md" onClick={() => alert('卡片被点击!')}>
-              <GradientText size="lg" weight="semibold" className="mb-4">
-                悬停卡片
-              </GradientText>
-              <p className="text-text-secondary">这是一个可悬停的卡片，点击我试试！</p>
-            </GlassCard>
-
-            <GlassCard variant="active" padding="md">
-              <GradientText size="lg" weight="semibold" className="mb-4">
-                激活卡片
-              </GradientText>
-              <p className="text-text-secondary">这是一个激活状态的卡片，带有蓝色边框。</p>
-            </GlassCard>
-          </div>
-
-          {/* 头像和图标展示 */}
-          <GlassCard className="space-y-6">
-            <GradientText as="h2" size="3xl" weight="bold">
-              头像 & 图标组件
-            </GradientText>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <span className="text-text-secondary w-20">头像组件:</span>
-                <Avatar size="sm" fallback="小" />
-                <Avatar size="md" fallback="中" />
-                <Avatar size="lg" fallback="大" />
-                <Avatar size="xl" fallback="超" />
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="text-text-secondary w-20">图标组件:</span>
-                <Icon name="search-icon" size="xs" />
-                <Icon name="user-icon" size="sm" />
-                <Icon name="notification-icon" size="md" />
-                <Icon name="mail-icon" size="lg" />
-                <Icon name="rocket-icon" size="xl" />
-              </div>
-            </div>
-          </GlassCard>
-
-          {/* 状态管理展示 */}
-          <GlassCard className="space-y-6">
-            <GradientText as="h2" size="3xl" weight="bold">
-              状态管理展示
-            </GradientText>
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <span className="text-text-secondary">用户状态:</span>
-                <span className={isAuthenticated ? "text-green-400" : "text-red-400"}>
-                  {isAuthenticated ? '已登录' : '未登录'}
-                </span>
-              </div>
-              {user && (
-                <div className="space-y-2">
-                  <p className="text-text-secondary">用户信息:</p>
-                  <pre className="text-text-muted text-sm bg-background-secondary p-4 rounded">
-                    {JSON.stringify(user, null, 2)}
-                  </pre>
-                </div>
-              )}
-              <div className="flex gap-4">
-                <GradientButton size="sm" onClick={() => openModal('login')}>
-                  打开登录弹窗
-                </GradientButton>
-                <GradientButton size="sm" onClick={() => openModal('membership')}>
-                  打开会员弹窗
-                </GradientButton>
-              </div>
-            </div>
-          </GlassCard>
-
-          {/* 容器组件展示 */}
-          <div className="space-y-6">
-            <GradientText as="h2" size="3xl" weight="bold" className="text-center">
-              容器组件 (Container) 尺寸展示
-            </GradientText>
-
-            <Container size="sm" className="bg-primary-blue/10 p-4 rounded">
-              <p className="text-center text-text-secondary">小容器 (max-w-2xl)</p>
-            </Container>
-
-            <Container size="md" className="bg-primary-purple/10 p-4 rounded">
-              <p className="text-center text-text-secondary">中容器 (max-w-4xl)</p>
-            </Container>
-
-            <Container size="lg" className="bg-primary-blue/10 p-4 rounded">
-              <p className="text-center text-text-secondary">大容器 (max-w-6xl)</p>
-            </Container>
-
-            <Container size="xl" className="bg-primary-purple/10 p-4 rounded">
-              <p className="text-center text-text-secondary">超大容器 (max-w-[1440px]) - 设计稿标准</p>
-            </Container>
           </div>
         </div>
-      </Container>
-    </div>
+
+        {/* 功能展示区域 */}
+        <div style={sectionStyle}>
+          <div style={gridStyle}>
+            <GlassCard variant="hover" padding="lg">
+              <div style={cardContentStyle}>
+                <div style={iconContainerStyle}>
+                  <Icon name="ai-tool-library" size="xl" style={{ color: 'var(--color-primary-blue)' }} />
+                </div>
+                <GradientText size="xl" weight="semibold">
+                  AI工具库
+                </GradientText>
+                <p style={{ color: 'var(--color-text-secondary)' }}>
+                  精选优质AI工具，涵盖写作、设计、编程等多个领域，助力效率提升
+                </p>
+              </div>
+            </GlassCard>
+
+            <GlassCard variant="hover" padding="lg">
+              <div style={cardContentStyle}>
+                <div style={iconContainerStyle}>
+                  <Icon name="practical-experience" size="xl" style={{ color: 'var(--color-primary-purple)' }} />
+                </div>
+                <GradientText size="xl" weight="semibold">
+                  实战经验
+                </GradientText>
+                <p style={{ color: 'var(--color-text-secondary)' }}>
+                  分享真实的AI变现案例和实操经验，让您快速掌握变现技巧
+                </p>
+              </div>
+            </GlassCard>
+
+            <GlassCard variant="hover" padding="lg">
+              <div style={cardContentStyle}>
+                <div style={iconContainerStyle}>
+                  <Icon name="community-support" size="xl" style={{ color: 'var(--color-primary-blue)' }} />
+                </div>
+                <GradientText size="xl" weight="semibold">
+                  社区支持
+                </GradientText>
+                <p style={{ color: 'var(--color-text-secondary)' }}>
+                  加入活跃的AI变现社区，与同行交流心得，共同成长进步
+                </p>
+              </div>
+            </GlassCard>
+          </div>
+        </div>
+
+        {/* 原子组件展示区域 */}
+        <GlassCard className="glass-card" style={{ padding: '32px', marginBottom: '64px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+            <GradientText as="h2" size="3xl" weight="bold" style={{ textAlign: 'center' }}>
+              布局组件展示
+            </GradientText>
+
+            <div style={componentGridStyle}>
+              {/* 按钮组件展示 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <GradientText size="lg" weight="semibold">
+                  交互组件
+                </GradientText>
+                <div style={buttonGroupStyle}>
+                  <GradientButton size="sm" onClick={() => openModal('login')}>
+                    登录
+                  </GradientButton>
+                  <GradientButton size="md" onClick={() => openModal('register')}>
+                    注册
+                  </GradientButton>
+                  <GradientButton size="md" variant="outline">
+                    轮廓按钮
+                  </GradientButton>
+                </div>
+              </div>
+
+              {/* 输入框展示 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <GradientText size="lg" weight="semibold">
+                  表单组件
+                </GradientText>
+                <div style={inputGroupStyle}>
+                  <Input
+                    placeholder="搜索AI工具..."
+                    icon={<Icon name="search-icon" size="sm" />}
+                  />
+                  <Input
+                    placeholder="邮箱地址"
+                    type="email"
+                    icon={<Icon name="email-icon" size="sm" />}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 状态管理展示 */}
+            <div style={statusBadgeStyle}>
+              <GradientText size="lg" weight="semibold" style={{ marginBottom: '16px' }}>
+                用户状态管理
+              </GradientText>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <span style={{ color: 'var(--color-text-secondary)' }}>登录状态:</span>
+                <span style={{ color: isAuthenticated ? '#10B981' : '#EF4444' }}>
+                  {isAuthenticated ? '已登录' : '未登录'}
+                </span>
+                {user && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Avatar size="sm" fallback={user.username?.[0] || 'U'} />
+                    <span style={{
+                      color: 'var(--color-text-secondary)',
+                      fontSize: 'var(--font-size-sm)'
+                    }}>
+                      {user.username || user.email}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </GlassCard>
+
+        {/* 会员卡片区域 */}
+        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+          <div style={{ marginBottom: '32px' }}>
+            <GradientText as="h2" size="5xl" weight="bold">
+              升级会员，解锁更多权益
+            </GradientText>
+          </div>
+
+          <div style={membershipGridStyle}>
+            <GlassCard variant="default" padding="lg">
+              <div style={cardContentStyle}>
+                <GradientText size="2xl" weight="bold">
+                  免费会员
+                </GradientText>
+                <div style={checklistStyle}>
+                  <div style={checkItemStyle}>
+                    <Icon name="membership-check" size="sm" style={{ color: '#10B981' }} />
+                    <span style={{ color: 'var(--color-text-secondary)' }}>基础AI工具推荐</span>
+                  </div>
+                  <div style={checkItemStyle}>
+                    <Icon name="membership-check" size="sm" style={{ color: '#10B981' }} />
+                    <span style={{ color: 'var(--color-text-secondary)' }}>每周精选内容</span>
+                  </div>
+                  <div style={checkItemStyle}>
+                    <Icon name="membership-check" size="sm" style={{ color: '#10B981' }} />
+                    <span style={{ color: 'var(--color-text-secondary)' }}>社区基础权限</span>
+                  </div>
+                </div>
+                <GradientButton size="md" variant="outline" fullWidth>
+                  当前计划
+                </GradientButton>
+              </div>
+            </GlassCard>
+
+            <GlassCard variant="active" padding="lg">
+              <div style={cardContentStyle}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <GradientText size="2xl" weight="bold">
+                    高级会员
+                  </GradientText>
+                  <Icon name="membership-exclusive" size="sm" style={{ color: 'var(--color-primary-purple)' }} />
+                </div>
+                <div style={checklistStyle}>
+                  <div style={checkItemStyle}>
+                    <Icon name="membership-check" size="sm" style={{ color: '#10B981' }} />
+                    <span style={{ color: 'var(--color-text-secondary)' }}>完整AI工具库访问</span>
+                  </div>
+                  <div style={checkItemStyle}>
+                    <Icon name="membership-check" size="sm" style={{ color: '#10B981' }} />
+                    <span style={{ color: 'var(--color-text-secondary)' }}>独家变现案例分析</span>
+                  </div>
+                  <div style={checkItemStyle}>
+                    <Icon name="membership-check" size="sm" style={{ color: '#10B981' }} />
+                    <span style={{ color: 'var(--color-text-secondary)' }}>一对一指导咨询</span>
+                  </div>
+                  <div style={checkItemStyle}>
+                    <Icon name="membership-check" size="sm" style={{ color: '#10B981' }} />
+                    <span style={{ color: 'var(--color-text-secondary)' }}>VIP社群权限</span>
+                  </div>
+                </div>
+                <GradientButton size="md" fullWidth onClick={() => openModal('membership')}>
+                  立即升级
+                </GradientButton>
+              </div>
+            </GlassCard>
+          </div>
+        </div>
+      </div>
+    </PageLayout>
   )
 }

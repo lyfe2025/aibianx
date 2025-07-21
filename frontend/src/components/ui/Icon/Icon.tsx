@@ -1,41 +1,43 @@
 'use client'
 
-import { FC } from 'react'
 import Image from 'next/image'
-import { cn } from '@/lib/utils'
+import { type HTMLAttributes } from 'react'
 
-interface IconProps {
+export interface IconProps extends Omit<HTMLAttributes<HTMLDivElement>, 'size'> {
     name: string
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
     className?: string
-    onClick?: () => void
 }
 
-export const Icon: FC<IconProps> = ({
+export const Icon = ({
     name,
     size = 'md',
-    className,
-    onClick
-}) => {
-      const getSizeProps = (size: string) => {
+    className = '',
+    ...props
+}: IconProps) => {
     const sizeMap = {
-      xs: 12, sm: 16, md: 20, lg: 24, xl: 32
+        xs: 12,
+        sm: 16,
+        md: 20,
+        lg: 24,
+        xl: 32
     }
-    return sizeMap[size as keyof typeof sizeMap] || 20
-  }
+
+    const iconSize = sizeMap[size]
 
     return (
-        <Image
-            src={`/icons/${name}.svg`}
-            alt={name}
-            onClick={onClick}
-                  width={getSizeProps(size)}
-      height={getSizeProps(size)}
-            className={cn(
-                'inline-block',
-                onClick && 'cursor-pointer',
-                className
-            )}
-        />
+        <span
+            className={`icon icon--${size} ${className}`}
+            style={{ display: 'inline-block', lineHeight: 0 }}
+            {...props}
+        >
+            <Image
+                src={`/icons/${name}.svg`}
+                alt={name}
+                width={iconSize}
+                height={iconSize}
+                style={{ display: 'block' }}
+            />
+        </span>
     )
 } 
