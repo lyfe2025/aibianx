@@ -2,49 +2,42 @@
 
 import { create } from 'zustand'
 
-export type ModalType = 'login' | 'register' | 'forgot-password' | 'membership'
+// 定义弹窗类型
+export type ModalType = 'login' | 'register' | 'forgotPassword' | 'membership' | 'test' | null
 
-interface ModalState {
+// 定义弹窗数据类型
+export interface ModalData {
+    login?: Record<string, unknown>
+    register?: Record<string, unknown>
+    forgotPassword?: Record<string, unknown>
+    membership?: Record<string, unknown>
+    test?: Record<string, unknown>
+}
+
+interface ModalStore {
+    type: ModalType
+    data: ModalData
     isOpen: boolean
-    modalType: ModalType | null
-    modalData?: any
-}
-
-interface ModalActions {
-    openModal: (type: ModalType, data?: any) => void
+    openModal: (type: ModalType, data?: ModalData) => void
     closeModal: () => void
-    isModalOpen: (type: ModalType) => boolean
 }
 
-type ModalStore = ModalState & ModalActions
-
-export const useModalStore = create<ModalStore>((set, get) => ({
-    // 初始状态
+export const useModalStore = create<ModalStore>((set) => ({
+    type: null,
+    data: {},
     isOpen: false,
-    modalType: null,
-    modalData: undefined,
-
-    // 打开弹窗
-    openModal: (type: ModalType, data?: any) => {
+    openModal: (type: ModalType, data: ModalData = {}) => {
         set({
-            isOpen: true,
-            modalType: type,
-            modalData: data,
+            type,
+            data,
+            isOpen: true
         })
     },
-
-    // 关闭弹窗
     closeModal: () => {
         set({
-            isOpen: false,
-            modalType: null,
-            modalData: undefined,
+            type: null,
+            data: {},
+            isOpen: false
         })
-    },
-
-    // 检查特定弹窗是否打开
-    isModalOpen: (type: ModalType) => {
-        const state = get()
-        return state.isOpen && state.modalType === type
-    },
+    }
 })) 

@@ -1,54 +1,64 @@
 'use client'
 
-import { useModalStore } from '@/stores'
-import { BaseModal } from '@/components/ui'
+import { BaseModal } from '@/components/ui/Modal'
 import { GradientButton } from '@/components/ui'
+import { useModalStore } from '@/stores'
 
 export function TestModal() {
-    const { isOpen, modalType, closeModal, isModalOpen } = useModalStore()
+    const { type, isOpen, closeModal } = useModalStore()
+
+    const isThisModalOpen = isOpen && type === 'test'
 
     return (
         <BaseModal
-            isOpen={isModalOpen('login')}
+            isOpen={isThisModalOpen}
             onClose={closeModal}
             title="测试弹窗"
-            subtitle="这是一个用于测试BaseModal组件的示例弹窗"
-            maxWidth="md"
+            subtitle="这是一个用于测试的弹窗组件"
         >
-            <div style={{ padding: '20px 0' }}>
-                <p style={{ color: 'var(--color-text-secondary)', marginBottom: '20px' }}>
-                    弹窗组件功能验证：
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--spacing-4)',
+                padding: 'var(--spacing-4) 0'
+            }}>
+                <p style={{
+                    color: 'var(--color-text-secondary)',
+                    fontSize: 'var(--font-size-base)',
+                    lineHeight: '1.5'
+                }}>
+                    这是一个测试弹窗，用于验证弹窗系统的基本功能。
                 </p>
 
-                <ul style={{
-                    color: 'var(--color-text-muted)',
-                    fontSize: 'var(--font-size-sm)',
-                    listStyle: 'none',
-                    padding: 0
+                <div style={{
+                    display: 'flex',
+                    gap: 'var(--spacing-3)',
+                    justifyContent: 'flex-end'
                 }}>
-                    <li style={{ marginBottom: '8px' }}>✅ 毛玻璃背景效果</li>
-                    <li style={{ marginBottom: '8px' }}>✅ 点击遮罩关闭</li>
-                    <li style={{ marginBottom: '8px' }}>✅ ESC键关闭</li>
-                    <li style={{ marginBottom: '8px' }}>✅ 关闭按钮功能</li>
-                    <li style={{ marginBottom: '8px' }}>✅ 进入/退出动画</li>
-                    <li style={{ marginBottom: '8px' }}>✅ 响应式布局</li>
-                </ul>
-
-                <div style={{ marginTop: '24px', display: 'flex', gap: '12px' }}>
-                    <GradientButton
+                    <button
                         onClick={closeModal}
-                        size="md"
-                        variant="primary"
-                    >
-                        确认
-                    </GradientButton>
-
-                    <GradientButton
-                        onClick={closeModal}
-                        size="md"
-                        variant="outline"
+                        style={{
+                            background: 'transparent',
+                            border: '1px solid var(--color-border-primary)',
+                            borderRadius: 'var(--radius-lg)',
+                            color: 'var(--color-text-secondary)',
+                            padding: '8px 16px',
+                            fontSize: 'var(--font-size-sm)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
+                        }}
                     >
                         取消
+                    </button>
+
+                    <GradientButton
+                        size="sm"
+                        onClick={() => {
+                            alert('测试按钮被点击！')
+                            closeModal()
+                        }}
+                    >
+                        确认
                     </GradientButton>
                 </div>
             </div>

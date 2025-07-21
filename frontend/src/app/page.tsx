@@ -1,69 +1,58 @@
 'use client'
 
 import {
-  AppHeader,
-  HeroSection,
-  AIStepsSection,
-  ArticlesSection,
-  FeaturesSection,
-  ResourcesSection,
-  CTASection,
-  AppFooter
+  HeroSectionNew,
+  AIStepsSectionNew,
+  MainContentSection,
+  FreeResourcesSection,
+  FinalCTASection
 } from '@/components/molecules'
-import { LoginModal } from '@/components/organisms/LoginModal/LoginModal'
-import { RegisterModal } from '@/components/organisms/RegisterModal/RegisterModal'
-import { ForgotPasswordModal } from '@/components/organisms/ForgotPasswordModal/ForgotPasswordModal'
-import { MembershipModal } from '@/components/organisms/MembershipModal/MembershipModal'
+import {
+  LoginModal,
+  RegisterModal,
+  ForgotPasswordModal,
+  MembershipModal
+} from '@/components/organisms'
 
+/**
+ * 首页组件 - HomePage
+ * 
+ * 根据设计稿精确还原的首页，包含以下区块：
+ * 1. HeroSectionNew - 英雄区块（主标题、副标题、设备展示、邮箱订阅）
+ * 2. AIStepsSectionNew - AI变现5步骤展示
+ * 3. MainContentSection - 主要内容区（文章列表 + 侧边栏）
+ * 4. FreeResourcesSection - 免费精选资源4卡片
+ * 5. FinalCTASection - 最终行动召唤区块
+ * 
+ * 注意：
+ * - 顶部导航和底部导航使用公共组件（AppHeader、AppFooter），在layout.tsx中引用
+ * - 所有组件都使用纯CSS实现，确保100%设计稿还原
+ * - 响应式设计已内置在各个组件中
+ * - 模态框组件用于处理用户登录、注册、会员订阅等交互
+ */
 export default function HomePage() {
   return (
-    <div style={{
-      background: '#030303',
-      color: '#FFFFFF',
-      fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-      minHeight: '100vh'
-    }}>
-      {/* 背景装饰光效 */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '600px',
-        height: '600px',
-        background: 'linear-gradient(90deg, rgba(79, 172, 254, 0.10) 0%, rgba(0, 242, 254, 0.05) 100%)',
-        filter: 'blur(100px)',
-        borderRadius: '9999px',
-        zIndex: 0
-      }} />
+    <>
+      {/* 英雄区块 - "AI变现从这里开始" */}
+      <HeroSectionNew />
 
-      <div style={{
-        position: 'fixed',
-        top: '600px',
-        left: '200px',
-        width: '400px',
-        height: '400px',
-        background: 'linear-gradient(90deg, rgba(79, 172, 254, 0.10) 0%, rgba(0, 242, 254, 0.05) 100%)',
-        filter: 'blur(100px)',
-        borderRadius: '9999px',
-        opacity: 0.8,
-        zIndex: 0
-      }} />
+      {/* AI变现步骤区块 - 5个步骤展示 */}
+      <AIStepsSectionNew />
 
-      {/* 弹窗组件 */}
+      {/* 主要内容区块 - 文章列表与侧边栏 */}
+      <MainContentSection />
+
+      {/* 免费精选资源区块 - 4个资源卡片 */}
+      <FreeResourcesSection />
+
+      {/* 最终行动召唤区块 - "成为AI时代的赢家" */}
+      <FinalCTASection />
+
+      {/* 模态框组件 - 用户交互功能 */}
       <LoginModal />
       <RegisterModal />
       <ForgotPasswordModal />
       <MembershipModal />
-
-      {/* 页面内容 */}
-      <AppHeader />
-      <HeroSection />
-      <AIStepsSection />
-      <ArticlesSection />
-      <FeaturesSection />
-      <ResourcesSection />
-      <CTASection />
-      <AppFooter />
-    </div>
+    </>
   )
 }

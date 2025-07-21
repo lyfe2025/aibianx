@@ -1,488 +1,331 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { registerSchema, type RegisterFormData, checkPasswordStrength } from '@/lib/validations'
-import { Input, GradientButton, Icon } from '@/components/ui'
+import { useState } from 'react'
+import { GradientButton, Icon, Input } from '@/components/ui'
+import { getPasswordStrength } from '@/lib/validations'
 
-interface RegisterFormProps {
-    onSubmit: (data: RegisterFormData) => void
-    onSwitchToLogin: () => void
-    isLoading?: boolean
-}
-
-export function RegisterForm({
-    onSubmit,
-    onSwitchToLogin,
-    isLoading = false,
-}: RegisterFormProps) {
+export function RegisterForm() {
+    const [formData, setFormData] = useState({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        agreeToTerms: false
+    })
+    const [errors, setErrors] = useState<Record<string, string>>({})
+    const [isLoading, setIsLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [passwordStrength, setPasswordStrength] = useState({
-        score: 0,
-        strength: 'weak' as const,
-        strengthText: '弱',
-        feedback: [] as string[],
-    })
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors, isSubmitting },
-    } = useForm<RegisterFormData>({
-        resolver: zodResolver(registerSchema),
-        defaultValues: {
-            email: '',
-            username: '',
-            password: '',
-            confirmPassword: '',
-            agreeToTerms: false,
-        },
-    })
+    // 密码强度
+    const passwordStrength = getPasswordStrength(formData.password)
 
-    const watchedPassword = watch('password')
+    const handleInputChange = (field: string, value: string | boolean) => {
+        setFormData(prev => ({ ...prev, [field]: value }))
 
-    // 监听密码变化，实时更新强度检查
-    useEffect(() => {
-        if (watchedPassword) {
-            const strength = checkPasswordStrength(watchedPassword)
-            setPasswordStrength(strength)
-        } else {
-            setPasswordStrength({
-                score: 0,
-                strength: 'weak',
-                strengthText: '弱',
-                feedback: [],
-            })
+        // 清除对应字段的错误
+        if (errors[field]) {
+            setErrors(prev => ({ ...prev, [field]: '' }))
         }
-    }, [watchedPassword])
+    }
 
-    const handleFormSubmit = async (data: RegisterFormData) => {
+    const validateForm = () => {
+        const newErrors: Record<string, string> = {}
+
+        // 用户名验证
+        if (!formData.username) {
+            newErrors.username = '请输入用户名'
+        } else if (formData.username.length < 2) {
+            newErrors.username = '用户名至少需要2个字符'
+        }
+
+        // 邮箱验证
+        if (!formData.email) {
+            newErrors.email = '请输入邮箱'
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = '请输入有效的邮箱地址'
+        }
+
+        // 密码验证
+        if (!formData.password) {
+            newErrors.password = '请输入密码'
+        } else if (formData.password.length < 8) {
+            newErrors.password = '密码至少需要8个字符'
+        }
+
+        // 确认密码验证
+        if (!formData.confirmPassword) {
+            newErrors.confirmPassword = '请确认密码'
+        } else if (formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = '两次输入的密码不一致'
+        }
+
+        // 同意条款验证
+        if (!formData.agreeToTerms) {
+            newErrors.agreeToTerms = '请同意用户协议和隐私政策'
+        }
+
+        setErrors(newErrors)
+        return Object.keys(newErrors).length === 0
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+
+        if (!validateForm()) {
+            return
+        }
+
+        setIsLoading(true)
+
         try {
-            await onSubmit(data)
+            // TODO: 实现注册API调用
+            console.log('注册数据:', formData)
+            await new Promise(resolve => setTimeout(resolve, 2000)) // 模拟API调用
+
+            // 注册成功
+            alert('注册成功！请查收邮箱验证邮件。')
         } catch (error) {
-            console.error('注册失败:', error)
+            setErrors({ submit: '注册失败，请稍后重试' })
+        } finally {
+            setIsLoading(false)
         }
     }
 
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword)
+    const getPasswordStrengthColor = (score: number) => {
+        if (score <= 2) return '#EF4444' // 红色
+        if (score <= 4) return '#F59E0B' // 黄色
+        return '#10B981' // 绿色
     }
 
-    const toggleConfirmPasswordVisibility = () => {
-        setShowConfirmPassword(!showConfirmPassword)
-    }
-
-    const getStrengthColor = (strength: string) => {
-        switch (strength) {
-            case 'weak': return '#EF4444'
-            case 'medium': return '#F59E0B'
-            case 'strong': return '#10B981'
-            default: return '#6B7280'
-        }
-    }
-
-    const getStrengthWidth = (score: number) => {
-        return `${(score / 5) * 100}%`
+    const getPasswordStrengthText = (score: number) => {
+        if (score <= 2) return '弱'
+        if (score <= 4) return '中等'
+        return '强'
     }
 
     return (
-        <form onSubmit={handleSubmit(handleFormSubmit)} style={{ width: '100%' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
-                {/* 邮箱输入框 */}
-                <div className="input-container">
-                    <label className="input-label">
-                        邮箱地址
-                    </label>
-                    <div className="input-wrapper">
-                        <Input
-                            {...register('email')}
-                            type="email"
-                            placeholder="请输入邮箱地址"
-                            error={!!errors.email}
-                            disabled={isSubmitting || isLoading}
-                            style={{
-                                paddingLeft: 'var(--spacing-10)',
-                            }}
-                        />
-                        <Icon
-                            name="email-icon"
-                            size="sm"
-                            style={{
-                                position: 'absolute',
-                                left: 'var(--spacing-3)',
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                color: 'var(--color-text-muted)',
-                                pointerEvents: 'none',
-                            }}
-                        />
-                    </div>
-                    {errors.email && (
-                        <span className="input-error">
-                            {errors.email.message}
-                        </span>
-                    )}
-                </div>
+        <form onSubmit={handleSubmit} style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--spacing-4)'
+        }}>
+            {/* 用户名输入 */}
+            <Input
+                label="用户名"
+                type="text"
+                placeholder="请输入用户名"
+                value={formData.username}
+                onChange={(e) => handleInputChange('username', e.target.value)}
+                error={errors.username}
+                icon={<Icon name="user" size="sm" />}
+                autoComplete="username"
+            />
 
-                {/* 用户名输入框 */}
-                <div className="input-container">
-                    <label className="input-label">
-                        用户名
-                    </label>
-                    <div className="input-wrapper">
-                        <Input
-                            {...register('username')}
-                            type="text"
-                            placeholder="请输入用户名"
-                            error={!!errors.username}
-                            disabled={isSubmitting || isLoading}
-                            style={{
-                                paddingLeft: 'var(--spacing-10)',
-                            }}
-                        />
-                        <Icon
-                            name="username-icon"
-                            size="sm"
-                            style={{
-                                position: 'absolute',
-                                left: 'var(--spacing-3)',
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                color: 'var(--color-text-muted)',
-                                pointerEvents: 'none',
-                            }}
-                        />
-                    </div>
-                    {errors.username && (
-                        <span className="input-error">
-                            {errors.username.message}
-                        </span>
-                    )}
-                </div>
+            {/* 邮箱输入 */}
+            <Input
+                label="邮箱"
+                type="email"
+                placeholder="请输入邮箱地址"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                error={errors.email}
+                icon={<Icon name="mail" size="sm" />}
+                autoComplete="email"
+            />
 
-                {/* 密码输入框 */}
-                <div className="input-container">
-                    <label className="input-label">
-                        密码
-                    </label>
-                    <div className="input-wrapper">
-                        <Input
-                            {...register('password')}
-                            type={showPassword ? 'text' : 'password'}
-                            placeholder="请输入密码"
-                            error={!!errors.password}
-                            disabled={isSubmitting || isLoading}
-                            style={{
-                                paddingLeft: 'var(--spacing-10)',
-                                paddingRight: 'var(--spacing-10)',
-                            }}
-                        />
-                        <Icon
-                            name="password-icon"
-                            size="sm"
-                            style={{
-                                position: 'absolute',
-                                left: 'var(--spacing-3)',
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                color: 'var(--color-text-muted)',
-                                pointerEvents: 'none',
-                            }}
-                        />
+            {/* 密码输入 */}
+            <div>
+                <Input
+                    label="密码"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="请输入密码"
+                    value={formData.password}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    error={errors.password}
+                    icon={<Icon name="lock" size="sm" />}
+                    rightIcon={
                         <button
                             type="button"
-                            onClick={togglePasswordVisibility}
+                            onClick={() => setShowPassword(!showPassword)}
                             style={{
-                                position: 'absolute',
-                                right: 'var(--spacing-3)',
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                background: 'transparent',
+                                background: 'none',
                                 border: 'none',
                                 cursor: 'pointer',
                                 padding: '4px',
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center',
+                                justifyContent: 'center'
                             }}
-                            aria-label={showPassword ? '隐藏密码' : '显示密码'}
                         >
                             <Icon
-                                name="password-eye-icon"
+                                name={showPassword ? "eye-off" : "eye"}
                                 size="sm"
                                 style={{
-                                    color: 'var(--color-text-muted)',
-                                    opacity: showPassword ? 1 : 0.6,
+                                    color: showPassword ? 'var(--color-primary-blue)' : 'var(--color-text-muted)'
                                 }}
                             />
                         </button>
-                    </div>
+                    }
+                    autoComplete="new-password"
+                />
 
-                    {/* 密码强度指示器 */}
-                    {watchedPassword && (
-                        <div style={{ marginTop: 'var(--spacing-2)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-1)' }}>
-                                <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
-                                    密码强度
-                                </span>
-                                <span style={{
-                                    fontSize: 'var(--font-size-xs)',
-                                    color: getStrengthColor(passwordStrength.strength),
-                                    fontWeight: 500
-                                }}>
-                                    {passwordStrength.strengthText}
-                                </span>
-                            </div>
-                            <div style={{
-                                width: '100%',
-                                height: '4px',
-                                background: 'var(--color-border-primary)',
-                                borderRadius: '2px',
-                                overflow: 'hidden'
-                            }}>
-                                <div style={{
-                                    width: getStrengthWidth(passwordStrength.score),
-                                    height: '100%',
-                                    background: getStrengthColor(passwordStrength.strength),
-                                    transition: 'all 0.3s ease',
-                                }} />
-                            </div>
-                            {passwordStrength.feedback.length > 0 && (
-                                <div style={{ marginTop: 'var(--spacing-1)' }}>
-                                    <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
-                                        建议: {passwordStrength.feedback.join('、')}
-                                    </span>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {errors.password && (
-                        <span className="input-error">
-                            {errors.password.message}
-                        </span>
-                    )}
-                </div>
-
-                {/* 确认密码输入框 */}
-                <div className="input-container">
-                    <label className="input-label">
-                        确认密码
-                    </label>
-                    <div className="input-wrapper">
-                        <Input
-                            {...register('confirmPassword')}
-                            type={showConfirmPassword ? 'text' : 'password'}
-                            placeholder="请再次输入密码"
-                            error={!!errors.confirmPassword}
-                            disabled={isSubmitting || isLoading}
-                            style={{
-                                paddingLeft: 'var(--spacing-10)',
-                                paddingRight: 'var(--spacing-10)',
-                            }}
-                        />
-                        <Icon
-                            name="password-icon"
-                            size="sm"
-                            style={{
-                                position: 'absolute',
-                                left: 'var(--spacing-3)',
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                color: 'var(--color-text-muted)',
-                                pointerEvents: 'none',
-                            }}
-                        />
-                        <button
-                            type="button"
-                            onClick={toggleConfirmPasswordVisibility}
-                            style={{
-                                position: 'absolute',
-                                right: 'var(--spacing-3)',
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                background: 'transparent',
-                                border: 'none',
-                                cursor: 'pointer',
-                                padding: '4px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                            aria-label={showConfirmPassword ? '隐藏密码' : '显示密码'}
-                        >
-                            <Icon
-                                name="password-eye-icon"
-                                size="sm"
-                                style={{
-                                    color: 'var(--color-text-muted)',
-                                    opacity: showConfirmPassword ? 1 : 0.6,
-                                }}
-                            />
-                        </button>
-                    </div>
-                    {errors.confirmPassword && (
-                        <span className="input-error">
-                            {errors.confirmPassword.message}
-                        </span>
-                    )}
-                </div>
-
-                {/* 用户协议复选框 */}
-                <div className="input-container">
-                    <label
-                        style={{
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            gap: 'var(--spacing-2)',
-                            cursor: 'pointer',
-                            fontSize: 'var(--font-size-sm)',
-                            color: 'var(--color-text-secondary)',
-                            lineHeight: '1.4'
-                        }}
-                    >
-                        <input
-                            {...register('agreeToTerms')}
-                            type="checkbox"
-                            style={{
-                                width: '16px',
-                                height: '16px',
-                                accentColor: 'var(--color-primary-blue)',
-                                marginTop: '2px',
-                                flexShrink: 0,
-                            }}
-                        />
-                        <span>
-                            我已阅读并同意
-                            <button
-                                type="button"
-                                style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    color: 'var(--color-primary-blue)',
-                                    cursor: 'pointer',
-                                    textDecoration: 'underline',
-                                    margin: '0 2px',
-                                }}
-                                onClick={() => {
-                                    // TODO: 打开用户协议弹窗
-                                    console.log('打开用户协议')
-                                }}
-                            >
-                                用户协议
-                            </button>
-                            和
-                            <button
-                                type="button"
-                                style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    color: 'var(--color-primary-blue)',
-                                    cursor: 'pointer',
-                                    textDecoration: 'underline',
-                                    margin: '0 2px',
-                                }}
-                                onClick={() => {
-                                    // TODO: 打开隐私政策弹窗
-                                    console.log('打开隐私政策')
-                                }}
-                            >
-                                隐私政策
-                            </button>
-                        </span>
-                    </label>
-                    {errors.agreeToTerms && (
-                        <span className="input-error">
-                            {errors.agreeToTerms.message}
-                        </span>
-                    )}
-                </div>
-
-                {/* 注册按钮 */}
-                <GradientButton
-                    type="submit"
-                    size="lg"
-                    variant="primary"
-                    fullWidth
-                    disabled={isSubmitting || isLoading}
-                    loading={isSubmitting || isLoading}
-                    style={{ marginTop: 'var(--spacing-2)' }}
-                >
-                    {isSubmitting || isLoading ? '注册中...' : '创建账号'}
-                </GradientButton>
-
-                {/* 分割线 */}
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--spacing-4)',
-                    margin: 'var(--spacing-2) 0'
-                }}>
+                {/* 密码强度指示器 */}
+                {formData.password && (
                     <div style={{
-                        flex: 1,
-                        height: '1px',
-                        background: 'var(--color-border-primary)'
-                    }} />
-                    <span style={{
-                        color: 'var(--color-text-muted)',
-                        fontSize: 'var(--font-size-sm)'
-                    }}>
-                        或
-                    </span>
-                    <div style={{
-                        flex: 1,
-                        height: '1px',
-                        background: 'var(--color-border-primary)'
-                    }} />
-                </div>
-
-                {/* 社交注册 */}
-                <GradientButton
-                    type="button"
-                    size="lg"
-                    variant="outline"
-                    fullWidth
-                    disabled={isSubmitting || isLoading}
-                    onClick={() => {
-                        // TODO: 实现GitHub注册
-                        console.log('GitHub注册')
-                    }}
-                    style={{
+                        marginTop: 'var(--spacing-2)',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 'var(--spacing-3)',
-                    }}
-                >
-                    <Icon name="github-icon" size="sm" />
-                    使用 GitHub 注册
-                </GradientButton>
+                        gap: 'var(--spacing-2)'
+                    }}>
+                        <div style={{
+                            flex: 1,
+                            height: '4px',
+                            background: 'var(--color-border-primary)',
+                            borderRadius: '2px',
+                            overflow: 'hidden'
+                        }}>
+                            <div style={{
+                                width: `${(passwordStrength.score / 6) * 100}%`,
+                                height: '100%',
+                                background: getPasswordStrengthColor(passwordStrength.score),
+                                transition: 'all 0.3s ease'
+                            }} />
+                        </div>
+                        <span style={{
+                            fontSize: 'var(--font-size-xs)',
+                            color: getPasswordStrengthColor(passwordStrength.score),
+                            fontWeight: '500'
+                        }}>
+                            {getPasswordStrengthText(passwordStrength.score)}
+                        </span>
+                    </div>
+                )}
+            </div>
 
-                {/* 登录链接 */}
-                <div style={{
-                    textAlign: 'center',
-                    fontSize: 'var(--font-size-sm)',
-                    color: 'var(--color-text-secondary)'
-                }}>
-                    已有账号？
+            {/* 确认密码输入 */}
+            <Input
+                label="确认密码"
+                type={showConfirmPassword ? 'text' : 'password'}
+                placeholder="请再次输入密码"
+                value={formData.confirmPassword}
+                onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                error={errors.confirmPassword}
+                icon={<Icon name="lock" size="sm" />}
+                rightIcon={
                     <button
                         type="button"
-                        onClick={onSwitchToLogin}
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                         style={{
-                            background: 'transparent',
+                            background: 'none',
                             border: 'none',
-                            color: 'var(--color-primary-blue)',
-                            marginLeft: 'var(--spacing-1)',
                             cursor: 'pointer',
-                            textDecoration: 'underline',
+                            padding: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
                         }}
                     >
-                        立即登录
+                        <Icon
+                            name={showConfirmPassword ? "eye-off" : "eye"}
+                            size="sm"
+                            style={{
+                                color: showConfirmPassword ? 'var(--color-primary-blue)' : 'var(--color-text-muted)'
+                            }}
+                        />
                     </button>
+                }
+                autoComplete="new-password"
+            />
+
+            {/* 用户协议 */}
+            <div style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 'var(--spacing-3)',
+                margin: 'var(--spacing-2) 0'
+            }}>
+                <button
+                    type="button"
+                    onClick={() => handleInputChange('agreeToTerms', !formData.agreeToTerms)}
+                    style={{
+                        width: '20px',
+                        height: '20px',
+                        border: `2px solid ${formData.agreeToTerms ? 'var(--color-primary-blue)' : 'var(--color-border-primary)'}`,
+                        borderRadius: '4px',
+                        background: formData.agreeToTerms ? 'var(--color-primary-blue)' : 'transparent',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.2s ease',
+                        flexShrink: 0,
+                        marginTop: '2px'
+                    }}
+                >
+                    {formData.agreeToTerms && (
+                        <Icon name="check" size="xs" style={{ color: '#FFFFFF' }} />
+                    )}
+                </button>
+                <div style={{ flex: 1 }}>
+                    <span style={{
+                        fontSize: 'var(--font-size-sm)',
+                        color: 'var(--color-text-secondary)',
+                        lineHeight: '1.5'
+                    }}>
+                        我已阅读并同意
+                        <a href="/terms" style={{
+                            color: 'var(--color-primary-blue)',
+                            textDecoration: 'none',
+                            marginLeft: '4px',
+                            marginRight: '4px'
+                        }}>
+                            《用户协议》
+                        </a>
+                        和
+                        <a href="/privacy" style={{
+                            color: 'var(--color-primary-blue)',
+                            textDecoration: 'none',
+                            marginLeft: '4px'
+                        }}>
+                            《隐私政策》
+                        </a>
+                    </span>
+                    {errors.agreeToTerms && (
+                        <div style={{
+                            fontSize: 'var(--font-size-xs)',
+                            color: '#EF4444',
+                            marginTop: 'var(--spacing-1)'
+                        }}>
+                            {errors.agreeToTerms}
+                        </div>
+                    )}
                 </div>
             </div>
+
+            {/* 提交错误 */}
+            {errors.submit && (
+                <div style={{
+                    padding: 'var(--spacing-3)',
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    borderRadius: 'var(--radius-md)',
+                    fontSize: 'var(--font-size-sm)',
+                    color: '#EF4444'
+                }}>
+                    {errors.submit}
+                </div>
+            )}
+
+            {/* 注册按钮 */}
+            <GradientButton
+                type="submit"
+                size="lg"
+                fullWidth
+                disabled={isLoading}
+            >
+                {isLoading ? '注册中...' : '注册'}
+            </GradientButton>
         </form>
     )
 } 

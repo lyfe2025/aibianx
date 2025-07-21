@@ -1,53 +1,45 @@
 'use client'
 
-import { useState } from 'react'
+import { BaseModal } from '@/components/ui/Modal'
+import { ForgotPasswordForm } from '@/components/molecules'
 import { useModalStore } from '@/stores'
-import { BaseModal } from '@/components/ui'
-import { ForgotPasswordForm } from '@/components/molecules/ForgotPasswordForm/ForgotPasswordForm'
-import type { ForgotPasswordFormData } from '@/lib/validations'
+import { useState } from 'react'
+
+interface ForgotPasswordFormData {
+    email: string
+}
 
 export function ForgotPasswordModal() {
-    const { isOpen, modalType, closeModal, openModal, isModalOpen } = useModalStore()
+    const { type, isOpen, closeModal } = useModalStore()
     const [isLoading, setIsLoading] = useState(false)
 
     const handleForgotPassword = async (data: ForgotPasswordFormData) => {
         setIsLoading(true)
-
         try {
-            // TODO: 实现真实的忘记密码逻辑
-            console.log('忘记密码数据:', data)
+            // TODO: 实现忘记密码API调用
+            console.log('忘记密码请求:', data)
+            await new Promise(resolve => setTimeout(resolve, 1000))
 
-            // 模拟API调用
-            await new Promise(resolve => setTimeout(resolve, 1500))
-
-            // TODO: 发送重置密码邮件
-            console.log('重置密码邮件已发送')
-
+            // 成功后可以关闭弹窗或显示成功状态
+            alert('密码重置链接已发送到您的邮箱')
+            closeModal()
         } catch (error) {
-            console.error('发送重置密码邮件失败:', error)
-            // TODO: 显示错误信息
+            console.error('忘记密码失败:', error)
         } finally {
             setIsLoading(false)
         }
     }
 
-    const handleBackToLogin = () => {
-        openModal('login')
-    }
+    const isThisModalOpen = isOpen && type === 'forgotPassword'
 
     return (
         <BaseModal
-            isOpen={isModalOpen('forgot-password')}
+            isOpen={isThisModalOpen}
             onClose={closeModal}
-            title="重置密码"
-            subtitle="输入您的邮箱地址，我们将发送重置密码的链接"
-            maxWidth="md"
+            title="找回密码"
+            subtitle="输入您的邮箱地址，我们将发送密码重置链接给您"
         >
-            <ForgotPasswordForm
-                onSubmit={handleForgotPassword}
-                onBackToLogin={handleBackToLogin}
-                isLoading={isLoading}
-            />
+            <ForgotPasswordForm />
         </BaseModal>
     )
 } 

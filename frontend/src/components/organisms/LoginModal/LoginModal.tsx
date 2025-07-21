@@ -1,61 +1,46 @@
 'use client'
 
-import { useState } from 'react'
+import { BaseModal } from '@/components/ui/Modal'
+import { LoginForm } from '@/components/molecules'
 import { useModalStore } from '@/stores'
-import { BaseModal } from '@/components/ui'
-import { LoginForm } from '@/components/molecules/LoginForm/LoginForm'
-import type { LoginFormData } from '@/lib/validations'
+import { useState } from 'react'
+
+interface LoginFormData {
+    emailOrUsername: string
+    password: string
+    rememberMe: boolean
+}
 
 export function LoginModal() {
-    const { isOpen, modalType, closeModal, openModal, isModalOpen } = useModalStore()
+    const { type, isOpen, closeModal } = useModalStore()
     const [isLoading, setIsLoading] = useState(false)
 
     const handleLogin = async (data: LoginFormData) => {
         setIsLoading(true)
-
         try {
-            // TODO: 实现真实的登录逻辑
-            console.log('登录数据:', data)
-
-            // 模拟API调用
-            await new Promise(resolve => setTimeout(resolve, 1500))
+            // TODO: 实现登录API调用
+            console.log('登录请求:', data)
+            await new Promise(resolve => setTimeout(resolve, 1000))
 
             // 登录成功，关闭弹窗
             closeModal()
-
-            // TODO: 更新用户状态，跳转等
-            console.log('登录成功')
-
         } catch (error) {
             console.error('登录失败:', error)
-            // TODO: 显示错误信息
         } finally {
             setIsLoading(false)
         }
     }
 
-    const handleSwitchToRegister = () => {
-        openModal('register')
-    }
-
-    const handleForgotPassword = () => {
-        openModal('forgot-password')
-    }
+    const isThisModalOpen = isOpen && type === 'login'
 
     return (
         <BaseModal
-            isOpen={isModalOpen('login')}
+            isOpen={isThisModalOpen}
             onClose={closeModal}
-            title="欢迎回来"
-            subtitle="登录您的账号，继续AI变现之路"
-            maxWidth="md"
+            title="登录账户"
+            subtitle="欢迎回来！请登录您的账户"
         >
-            <LoginForm
-                onSubmit={handleLogin}
-                onSwitchToRegister={handleSwitchToRegister}
-                onForgotPassword={handleForgotPassword}
-                isLoading={isLoading}
-            />
+            <LoginForm />
         </BaseModal>
     )
 } 

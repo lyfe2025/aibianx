@@ -113,6 +113,7 @@ export const Footer = () => {
                                     <Link
                                         key={link.href}
                                         href={link.href}
+                                        className="footer-nav-link"
                                         style={{
                                             color: 'var(--color-text-muted)',
                                             fontSize: 'var(--font-size-sm)',
@@ -121,12 +122,6 @@ export const Footer = () => {
                                             alignItems: 'center',
                                             gap: 'var(--spacing-2)',
                                             transition: 'color 0.2s ease',
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.currentTarget.style.color = 'var(--color-text-secondary)'
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.currentTarget.style.color = 'var(--color-text-muted)'
                                         }}
                                     >
                                         <Icon name="arrow-right" size="xs" />
@@ -185,6 +180,7 @@ export const Footer = () => {
                                         key={social.id}
                                         href={social.href}
                                         aria-label={social.label}
+                                        className="footer-social-link"
                                         style={{
                                             padding: 'var(--spacing-3)',
                                             borderRadius: 'var(--radius-lg)',
@@ -194,16 +190,6 @@ export const Footer = () => {
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.currentTarget.style.borderColor = 'var(--color-border-active)'
-                                            e.currentTarget.style.boxShadow = 'var(--shadow-button)'
-                                            e.currentTarget.style.color = social.hoverColor
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.currentTarget.style.borderColor = 'var(--color-border-primary)'
-                                            e.currentTarget.style.boxShadow = 'none'
-                                            e.currentTarget.style.color = 'inherit'
                                         }}
                                     >
                                         <Icon name={social.icon} size="md" />
@@ -273,32 +259,22 @@ export const Footer = () => {
                             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)' }}>
                                 <Link
                                     href="/privacy"
+                                    className="footer-legal-link"
                                     style={{
                                         color: 'inherit',
                                         textDecoration: 'none',
                                         transition: 'color 0.2s ease'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.color = 'var(--color-text-secondary)'
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.color = 'var(--color-text-muted)'
                                     }}
                                 >
                                     隐私政策
                                 </Link>
                                 <Link
                                     href="/terms"
+                                    className="footer-legal-link"
                                     style={{
                                         color: 'inherit',
                                         textDecoration: 'none',
                                         transition: 'color 0.2s ease'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.color = 'var(--color-text-secondary)'
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.color = 'var(--color-text-muted)'
                                     }}
                                 >
                                     使用条款

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { GradientButton } from '@/components/ui'
 
 export function CTASection() {
     const [finalFormData, setFinalFormData] = useState({
@@ -212,24 +213,15 @@ export function CTASection() {
                         </div>
                     </div>
 
-                    <button
-                        onClick={handleFinalSubscribe}
-                        style={{
-                            width: '100%',
-                            background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                            border: 'none',
-                            borderRadius: '8px',
-                            padding: '18px',
-                            color: '#FFFFFF',
-                            fontSize: '13.33px',
-                            lineHeight: '15px',
-                            textAlign: 'center',
-                            cursor: 'pointer',
-                            marginBottom: '60px'
-                        }}
-                    >
-                        立即免费获取
-                    </button>
+                    <div style={{ marginBottom: '60px' }}>
+                        <GradientButton
+                            size="md"
+                            fullWidth
+                            onClick={handleFinalSubscribe}
+                        >
+                            立即免费获取
+                        </GradientButton>
+                    </div>
 
                     <div style={{
                         display: 'flex',

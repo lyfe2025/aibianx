@@ -2,11 +2,14 @@
 
 import { useState } from 'react'
 import { Container, Icon, Avatar, GradientButton } from '@/components/ui'
-import { useModalStore } from '@/stores'
+import { useModalStore, useUserStore } from '@/stores'
 
 export function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const { openModal } = useModalStore()
+
+    // 从userStore获取用户状态
+    const { user, isAuthenticated } = useUserStore()
 
     // 导航菜单项
     const navItems = [
@@ -18,10 +21,6 @@ export function Header() {
         { label: '关于', href: '#about', active: true },
     ]
 
-    // 用户状态（模拟）
-    const isAuthenticated = false
-    const user = null
-
     return (
         <header
             style={{
@@ -29,89 +28,82 @@ export function Header() {
                 top: 0,
                 left: 0,
                 right: 0,
-                zIndex: 50,
-                background: 'rgba(3, 3, 3, 0.85)',
+                height: '80px',
+                background: 'var(--color-bg-glass)',
                 backdropFilter: 'blur(64px)',
                 WebkitBackdropFilter: 'blur(64px)',
                 borderBottom: '1px solid rgba(42, 42, 42, 0.60)',
+                zIndex: 1000,
+                display: 'flex',
+                alignItems: 'center'
             }}
         >
             <Container size="xl">
-                <div
-                    style={{
-                        height: '72px',
-                        padding: '0 24px',
+                <nav style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    height: '100%'
+                }}>
+                    {/* Logo */}
+                    <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'space-between'
-                    }}
-                >
-                    {/* Logo */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
-                        <Icon name="logo-footer" size="lg" />
-                        <span
-                            className="gradient-text"
-                            style={{
-                                fontSize: 'var(--font-size-xl)',
-                                fontWeight: 700
-                            }}
-                        >
+                        gap: 'var(--spacing-3)'
+                    }}>
+                        <Icon name="logo" size="lg" />
+                        <span style={{
+                            fontSize: 'var(--font-size-xl)',
+                            fontWeight: '700',
+                            color: 'var(--color-text-primary)'
+                        }}>
                             AI变现之路
                         </span>
                     </div>
 
-                    {/* 桌面端导航 */}
-                    <nav
+                    {/* 桌面端导航菜单 */}
+                    <div
+                        className="desktop-nav"
                         style={{
-                            display: 'none',
+                            display: 'flex',
                             alignItems: 'center',
                             gap: 'var(--spacing-8)'
                         }}
-                        className="desktop-nav"
                     >
                         {navItems.map((item) => (
                             <a
                                 key={item.label}
                                 href={item.href}
                                 style={{
-                                    color: item.active ? 'var(--color-primary-blue)' : 'var(--color-text-secondary)',
                                     fontSize: 'var(--font-size-base)',
-                                    fontWeight: 500,
+                                    color: item.active ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                                     textDecoration: 'none',
-                                    transition: 'color 0.2s ease',
-                                    padding: '8px 0',
-                                    position: 'relative'
-                                }}
-                                onMouseEnter={(e) => {
-                                    if (!item.active) {
-                                        e.currentTarget.style.color = 'var(--color-text-primary)'
-                                    }
-                                }}
-                                onMouseLeave={(e) => {
-                                    if (!item.active) {
-                                        e.currentTarget.style.color = 'var(--color-text-secondary)'
-                                    }
+                                    fontWeight: item.active ? '600' : '400',
+                                    transition: 'color 0.2s ease'
                                 }}
                             >
                                 {item.label}
-                                {item.active && (
-                                    <Icon
-                                        name="nav-indicator"
-                                        size="xs"
-                                        style={{
-                                            position: 'absolute',
-                                            bottom: '-12px',
-                                            left: '50%',
-                                            transform: 'translateX(-50%)'
-                                        }}
-                                    />
-                                )}
                             </a>
                         ))}
-                    </nav>
+                    </div>
 
-                    {/* 用户区域 */}
+                    {/* 右侧操作区 */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)' }}>
+                        {/* 搜索图标 */}
+                        <button
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                padding: 'var(--spacing-2)',
+                                color: 'var(--color-text-secondary)',
+                                transition: 'color 0.2s ease'
+                            }}
+                        >
+                            <Icon name="search-icon" size="md" />
+                        </button>
+
+                        {/* 用户状态区域 */}
                         {isAuthenticated ? (
                             // 已登录状态
                             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
@@ -129,20 +121,28 @@ export function Header() {
                                 <div
                                     className="desktop-auth-buttons"
                                     style={{
-                                        display: 'none',
+                                        display: 'flex',
                                         alignItems: 'center',
                                         gap: 'var(--spacing-3)'
                                     }}
                                 >
-                                    <GradientButton
-                                        variant="outline"
-                                        size="sm"
+                                    <button
                                         onClick={() => openModal('login')}
+                                        style={{
+                                            background: 'none',
+                                            border: '1px solid var(--color-border-primary)',
+                                            borderRadius: 'var(--radius-lg)',
+                                            color: 'var(--color-text-secondary)',
+                                            padding: '8px 16px',
+                                            fontSize: 'var(--font-size-sm)',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s ease'
+                                        }}
                                     >
                                         登录
-                                    </GradientButton>
+                                    </button>
+
                                     <GradientButton
-                                        variant="primary"
                                         size="sm"
                                         onClick={() => openModal('register')}
                                     >
@@ -152,22 +152,23 @@ export function Header() {
 
                                 {/* 移动端菜单按钮 */}
                                 <button
+                                    className="mobile-menu-toggle"
                                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                    className="mobile-menu-button"
                                     style={{
-                                        background: 'transparent',
+                                        background: 'none',
                                         border: 'none',
-                                        padding: '8px',
                                         cursor: 'pointer',
-                                        display: 'block'
+                                        padding: 'var(--spacing-2)',
+                                        color: 'var(--color-text-secondary)',
+                                        display: 'none' // 通过CSS控制显示
                                     }}
                                 >
-                                    <Icon name="search-icon" size="md" />
+                                    <Icon name={isMobileMenuOpen ? 'close' : 'menu'} size="md" />
                                 </button>
                             </div>
                         )}
                     </div>
-                </div>
+                </nav>
 
                 {/* 移动端菜单 */}
                 {isMobileMenuOpen && (
@@ -179,64 +180,119 @@ export function Header() {
                             left: 0,
                             right: 0,
                             background: 'var(--color-bg-glass)',
-                            backdropFilter: 'blur(12px)',
-                            WebkitBackdropFilter: 'blur(12px)',
-                            border: '1px solid var(--color-border-primary)',
-                            borderTop: 'none',
-                            borderRadius: '0 0 16px 16px',
-                            padding: '20px 24px',
-                            animation: 'fadeIn 0.3s ease-out'
+                            backdropFilter: 'blur(64px)',
+                            WebkitBackdropFilter: 'blur(64px)',
+                            borderBottom: '1px solid var(--color-border-primary)',
+                            padding: 'var(--spacing-4) 0',
+                            display: 'none' // 通过CSS控制显示
                         }}
                     >
-                        <nav style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
-                            {navItems.map((item) => (
-                                <a
-                                    key={item.label}
-                                    href={item.href}
-                                    style={{
-                                        color: item.active ? 'var(--color-primary-blue)' : 'var(--color-text-secondary)',
-                                        fontSize: 'var(--font-size-lg)',
-                                        fontWeight: 500,
-                                        textDecoration: 'none',
-                                        padding: '12px 0',
-                                        borderBottom: '1px solid var(--color-border-primary)'
-                                    }}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                    {item.label}
-                                </a>
-                            ))}
-                        </nav>
+                        <Container size="xl">
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 'var(--spacing-4)'
+                            }}>
+                                {/* 移动端导航菜单 */}
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 'var(--spacing-3)'
+                                }}>
+                                    {navItems.map((item) => (
+                                        <a
+                                            key={item.label}
+                                            href={item.href}
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            style={{
+                                                fontSize: 'var(--font-size-lg)',
+                                                color: item.active ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                                                textDecoration: 'none',
+                                                fontWeight: item.active ? '600' : '400',
+                                                padding: 'var(--spacing-2) 0'
+                                            }}
+                                        >
+                                            {item.label}
+                                        </a>
+                                    ))}
+                                </div>
 
-                        {!isAuthenticated && (
-                            <div style={{ display: 'flex', gap: 'var(--spacing-3)' }}>
-                                <GradientButton
-                                    variant="outline"
-                                    size="md"
-                                    fullWidth
-                                    onClick={() => {
-                                        openModal('login')
-                                        setIsMobileMenuOpen(false)
-                                    }}
-                                >
-                                    登录
-                                </GradientButton>
-                                <GradientButton
-                                    variant="primary"
-                                    size="md"
-                                    fullWidth
-                                    onClick={() => {
-                                        openModal('register')
-                                        setIsMobileMenuOpen(false)
-                                    }}
-                                >
-                                    注册
-                                </GradientButton>
+                                {/* 移动端登录注册按钮 */}
+                                {!isAuthenticated && (
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 'var(--spacing-3)',
+                                        paddingTop: 'var(--spacing-4)',
+                                        borderTop: '1px solid var(--color-border-primary)'
+                                    }}>
+                                        <button
+                                            onClick={() => {
+                                                openModal('login')
+                                                setIsMobileMenuOpen(false)
+                                            }}
+                                            style={{
+                                                background: 'none',
+                                                border: '1px solid var(--color-border-primary)',
+                                                borderRadius: 'var(--radius-lg)',
+                                                color: 'var(--color-text-secondary)',
+                                                padding: '12px 0',
+                                                fontSize: 'var(--font-size-base)',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                        >
+                                            登录
+                                        </button>
+
+                                        <GradientButton
+                                            size="md"
+                                            fullWidth
+                                            onClick={() => {
+                                                openModal('register')
+                                                setIsMobileMenuOpen(false)
+                                            }}
+                                        >
+                                            注册
+                                        </GradientButton>
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </Container>
                     </div>
                 )}
             </Container>
+
+            {/* 响应式样式 */}
+            <style jsx>{`
+                @media (max-width: 768px) {
+                    .desktop-nav {
+                        display: none !important;
+                    }
+                    
+                    .desktop-auth-buttons {
+                        display: none !important;
+                    }
+                    
+                    .mobile-menu-toggle {
+                        display: block !important;
+                    }
+                    
+                    .mobile-menu {
+                        display: block !important;
+                    }
+                }
+                
+                @media (min-width: 769px) {
+                    .mobile-menu-toggle {
+                        display: none !important;
+                    }
+                    
+                    .mobile-menu {
+                        display: none !important;
+                    }
+                }
+            `}</style>
         </header>
     )
 } 

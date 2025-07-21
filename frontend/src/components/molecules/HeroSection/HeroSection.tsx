@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { GradientButton } from '@/components/ui'
 
 export function HeroSection() {
     const [heroEmail, setHeroEmail] = useState('')
@@ -49,7 +50,8 @@ export function HeroSection() {
             <div style={{
                 display: 'flex',
                 maxWidth: '381px',
-                margin: '0 auto 79px auto'
+                margin: '0 auto 79px auto',
+                gap: '0'
             }}>
                 <input
                     type="email"
@@ -68,22 +70,24 @@ export function HeroSection() {
                         outline: 'none'
                     }}
                 />
-                <button
-                    onClick={handleHeroSubscribe}
-                    style={{
-                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                        border: 'none',
-                        borderRadius: '0 8px 8px 0',
-                        padding: '19px 20px',
-                        color: '#FFFFFF',
-                        fontSize: '13.33px',
-                        fontWeight: 500,
-                        lineHeight: '19px',
-                        cursor: 'pointer'
-                    }}
-                >
-                    立即订阅
-                </button>
+                <div style={{
+                    borderRadius: '0 8px 8px 0',
+                    overflow: 'hidden'
+                }}>
+                    <GradientButton
+                        size="md"
+                        onClick={handleHeroSubscribe}
+                        style={{
+                            borderRadius: '0 8px 8px 0',
+                            padding: '19px 20px',
+                            fontSize: '13.33px',
+                            fontWeight: '500',
+                            lineHeight: '19px'
+                        }}
+                    >
+                        立即订阅
+                    </GradientButton>
+                </div>
             </div>
 
             {/* 三屏设备展示 */}
