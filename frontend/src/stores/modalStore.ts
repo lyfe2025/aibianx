@@ -2,34 +2,49 @@
 
 import { create } from 'zustand'
 
-export type ModalType =
-    | 'login'
-    | 'register'
-    | 'forgot-password'
-    | 'membership'
-    | null
+export type ModalType = 'login' | 'register' | 'forgot-password' | 'membership'
 
-interface ModalStore {
-    activeModal: ModalType
-    openModal: (type: Exclude<ModalType, null>) => void
-    closeModal: () => void
-    isOpen: (type: Exclude<ModalType, null>) => boolean
+interface ModalState {
+    isOpen: boolean
+    modalType: ModalType | null
+    modalData?: any
 }
 
+interface ModalActions {
+    openModal: (type: ModalType, data?: any) => void
+    closeModal: () => void
+    isModalOpen: (type: ModalType) => boolean
+}
+
+type ModalStore = ModalState & ModalActions
+
 export const useModalStore = create<ModalStore>((set, get) => ({
-    activeModal: null,
+    // 初始状态
+    isOpen: false,
+    modalType: null,
+    modalData: undefined,
 
-    openModal: (type) => {
-        set({ activeModal: type })
-        // 防止背景滚动
-        document.body.style.overflow = 'hidden'
+    // 打开弹窗
+    openModal: (type: ModalType, data?: any) => {
+        set({
+            isOpen: true,
+            modalType: type,
+            modalData: data,
+        })
     },
 
+    // 关闭弹窗
     closeModal: () => {
-        set({ activeModal: null })
-        // 恢复背景滚动
-        document.body.style.overflow = 'unset'
+        set({
+            isOpen: false,
+            modalType: null,
+            modalData: undefined,
+        })
     },
 
-    isOpen: (type) => get().activeModal === type
+    // 检查特定弹窗是否打开
+    isModalOpen: (type: ModalType) => {
+        const state = get()
+        return state.isOpen && state.modalType === type
+    },
 })) 

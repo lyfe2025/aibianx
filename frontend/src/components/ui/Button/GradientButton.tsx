@@ -1,54 +1,48 @@
 'use client'
 
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
+import { ButtonHTMLAttributes, forwardRef } from 'react'
 
-export interface GradientButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    children: ReactNode
-    size?: 'sm' | 'md' | 'lg'
+interface GradientButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    children: React.ReactNode
     variant?: 'primary' | 'outline'
+    size?: 'sm' | 'md' | 'lg'
     fullWidth?: boolean
     loading?: boolean
+    className?: string
 }
 
 export const GradientButton = forwardRef<HTMLButtonElement, GradientButtonProps>(
     ({
         children,
-        size = 'md',
         variant = 'primary',
+        size = 'md',
         fullWidth = false,
         loading = false,
         className = '',
         disabled,
         ...props
     }, ref) => {
-        const baseClass = 'btn'
-        const sizeClass = `btn--${size}`
-        const variantClass = variant === 'primary' ? 'btn--gradient' : 'btn--outline'
-        const fullWidthClass = fullWidth ? 'w-full' : ''
-
-        const classes = [
-            baseClass,
-            sizeClass,
-            variantClass,
-            fullWidthClass,
+        const buttonClasses = [
+            'btn',
+            `btn--${size}`,
+            variant === 'primary' ? 'btn--gradient' : 'btn--outline',
+            fullWidth && 'w-full',
             className
         ].filter(Boolean).join(' ')
+
+        const isDisabled = disabled || loading
 
         return (
             <button
                 ref={ref}
-                className={classes}
-                disabled={disabled || loading}
+                className={buttonClasses}
+                disabled={isDisabled}
                 {...props}
             >
-                {loading ? (
-                    <span className="flex items-center gap-2">
-                        <span className="loading-spinner"></span>
-                        {children}
-                    </span>
-                ) : (
-                    children
+                {loading && (
+                    <span className="loading-spinner" style={{ marginRight: 'var(--spacing-2)' }} />
                 )}
+                {children}
             </button>
         )
     }
