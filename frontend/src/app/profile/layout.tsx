@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { AppFooter } from '@/components/molecules/AppFooter/AppFooter'
 import { BackToTopButton } from '@/components/ui'
 import {
     LoginModal,
@@ -14,7 +13,7 @@ import {
  * 
  * ✅ 布局特点：
  * 1. 无顶部导航栏 - 个人中心使用左侧UserSidebar导航，不需要AppHeader
- * 2. 统一底部菜单栏 - 使用全站公共的AppFooter组件
+ * 2. 无底部菜单栏 - 由根布局的LayoutController统一控制，确保全站一致性
  * 3. 完整的弹窗支持 - 包含所有全局弹窗组件
  * 4. 返回顶部功能 - 保持与主站一致的用户体验
  * 
@@ -26,13 +25,13 @@ import {
  * 
  * 📍 组件构成：
  * - UserSidebar：左侧导航菜单（在各页面中单独引用）
- * - AppFooter：公共底部菜单栏（统一样式和功能）
+ * - 页面内容：由子页面控制
  * - BackToTopButton：返回顶部按钮
  * - 全局弹窗：登录、注册、会员、支付等弹窗
  * 
  * ⚠️ 重要说明：
  * - 与主站布局(layout.tsx)的区别：移除了AppHeader顶部导航
- * - 使用相同的AppFooter确保全站底部导航的一致性
+ * - AppFooter底部菜单栏由根布局的LayoutController统一管理，确保全站一致性
  * - 个人中心页面不需要搜索引擎索引，设置了robots配置
  */
 
@@ -55,7 +54,7 @@ export default function ProfileLayout({
 }) {
     return (
         <>
-            {/* 个人中心页面结构 - 专用布局，无顶部导航栏 */}
+            {/* 个人中心页面结构 - 专用布局，仅包含页面内容 */}
             <div style={{
                 minHeight: '100vh',
                 display: 'flex',
@@ -65,17 +64,14 @@ export default function ProfileLayout({
                 {/* 
                   页面主要内容区域
                   包含：UserSidebar（左侧导航） + 页面内容（右侧）
+                  
+                  ⚠️ 注意：AppHeader和AppFooter由根布局的LayoutController控制
+                  - AppHeader：个人中心页面不显示
+                  - AppFooter：个人中心页面正常显示，与其他页面保持一致
                 */}
                 <main style={{ flex: 1 }}>
                     {children}
                 </main>
-
-                {/* 
-                  全站统一底部导航 - AppFooter
-                  ✅ 与主站使用相同的底部菜单栏，确保一致性
-                  ✅ 包含：导航链接、资源链接、联系方式、社交媒体、版权信息
-                */}
-                <AppFooter />
             </div>
 
             {/* 

@@ -1,22 +1,21 @@
+'use client'
+
 import { Container, GradientText, Icon } from '@/components/ui'
 import Link from 'next/link'
 
 /**
  * 全站公共底部导航组件 - AppFooter
  * 
- * ⚠️ 重要说明：这是全站公共组件，在以下四个页面中统一使用：
- * 1. 主页 (/)
- * 2. 周刊页面 (/weekly)
- * 3. 关于页面 (/about)
- * 4. 文章详情页面 (/weekly/[slug])
+ * ⚠️ 重要说明：这是全站公共组件，在所有页面中统一使用
  * 
- * 🔧 修改影响：
- * - 任何对该组件的修改都会影响到上述所有页面
- * - 导航链接、社交媒体链接、版权信息的修改会全站生效
+ * 🔧 客户端组件：
+ * - 使用 'use client' 指令避免SSR hydration错误
+ * - CSS变量在客户端正确解析，确保样式一致性
+ * - Footer组件不需要SEO优化，客户端渲染性能更佳
  * 
  * 📍 使用位置：
- * - 在 /src/app/layout.tsx 中引用
- * - 通过 RootLayout 组件在所有页面底部渲染
+ * - 通过 LayoutController 在所有页面底部统一渲染
+ * - 确保个人中心和其他页面的底部菜单栏完全一致
  * 
  * 🎨 包含功能：
  * - 品牌Logo和描述
@@ -26,6 +25,11 @@ import Link from 'next/link'
  * - 社交媒体链接
  * - 版权信息和法律条款
  * - 响应式布局适配
+ * 
+ * ✅ Hydration修复：
+ * - 避免服务端和客户端样式不匹配
+ * - 确保CSS变量正确解析
+ * - 消除控制台hydration警告
  */
 export function AppFooter() {
     // 主导航配置 - 与头部导航保持一致
@@ -38,14 +42,17 @@ export function AppFooter() {
     // 资源导航配置 - 工具和指南相关链接
     const resourceItems = [
         { href: '/guide', label: '入门指南' },
-        { href: '/tools', label: '工具推荐' }
+        { href: '/tools', label: '工具推荐' },
+        { href: '/resources', label: '学习资源' },
+        { href: '/community', label: '社区交流' }
     ]
 
-    // 社交媒体配置 - 修改这里会影响所有页面的社交链接
-    const socialItems = [
-        { icon: 'social-wechat', href: '#', label: '微信公众号' },
-        { icon: 'social-weibo', href: '#', label: '微博' },
-        { icon: 'social-other', href: '#', label: '其他社交平台' }
+    // 联系方式配置 - 客服和支持渠道
+    const contactItems = [
+        { href: '/contact', label: '联系我们' },
+        { href: '/support', label: '技术支持' },
+        { href: '/feedback', label: '问题反馈' },
+        { href: '/business', label: '商务合作' }
     ]
 
     // 法律条款配置 - 网站法律相关链接
@@ -102,55 +109,63 @@ export function AppFooter() {
                             </GradientText>
                         </div>
 
-                        {/* 品牌描述 - 网站核心价值展示 */}
+                        {/* 品牌描述 */}
                         <p style={{
-                            color: 'var(--color-text-secondary)',
+                            color: 'var(--color-text-muted)',
+                            fontSize: 'var(--font-size-base)',
                             lineHeight: '1.6',
-                            margin: 0,
-                            maxWidth: '320px'
+                            maxWidth: '300px'
                         }}>
-                            每周更新AI领域最新变现机会和实战经验，助你快速掌握AI工具，实现财务自由
+                            专注AI商业化应用，分享最新变现机会与实用工具，助你掌握AI时代的财富密码。
                         </p>
 
-                        {/* 社交媒体链接 - 修改socialItems会影响所有页面 */}
+                        {/* 社交媒体链接 */}
                         <div style={{
                             display: 'flex',
-                            gap: 'var(--spacing-4)'
+                            gap: 'var(--spacing-4)',
+                            marginTop: 'var(--spacing-2)'
                         }}>
-                            {socialItems.map((social) => (
+                            {[
+                                { icon: 'social-wechat', href: '#wechat', label: '微信公众号' },
+                                { icon: 'social-weibo', href: '#weibo', label: '微博' },
+                                { icon: 'social-other', href: '#other', label: '更多平台' }
+                            ].map((social) => (
                                 <Link
                                     key={social.icon}
                                     href={social.href}
-                                    className="social-link"
                                     style={{
-                                        width: '32px',
-                                        height: '32px',
-                                        background: '#1A1A1A',
-                                        borderRadius: '50%',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        textDecoration: 'none',
-                                        transition: 'all 0.2s ease'
+                                        width: '40px',
+                                        height: '40px',
+                                        borderRadius: '8px',
+                                        background: 'rgba(255, 255, 255, 0.05)',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        transition: 'all 0.2s ease',
+                                        color: 'var(--color-text-muted)'
                                     }}
+                                    className="footer-social-link"
                                     title={social.label}
                                 >
-                                    <Icon name={social.icon} size="xs" style={{ color: '#FFFFFF' }} />
+                                    <Icon name={social.icon} size="sm" />
                                 </Link>
                             ))}
                         </div>
                     </div>
 
-                    {/* 导航链接区域 - 网站主要导航复制 */}
-                    <div>
-                        <h3 style={{
-                            color: '#FFFFFF',
-                            fontSize: 'var(--font-size-base)',
-                            fontWeight: '700',
-                            margin: '0 0 var(--spacing-6) 0'
-                        }}>
-                            导航
-                        </h3>
+                    {/* 主导航区域 */}
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 'var(--spacing-4)'
+                    }}>
+                        <h4 style={{
+                            color: 'var(--color-text-primary)',
+                            fontSize: 'var(--font-size-lg)',
+                            fontWeight: '600',
+                            marginBottom: 'var(--spacing-2)'
+                        }}>网站导航</h4>
                         <nav style={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -160,13 +175,13 @@ export function AppFooter() {
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className="footer-nav-link"
                                     style={{
-                                        color: 'var(--color-text-secondary)',
-                                        textDecoration: 'none',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: 'var(--font-size-base)',
+                                        lineHeight: '1.5',
                                         transition: 'color 0.2s ease'
                                     }}
+                                    className="footer-nav-link"
                                 >
                                     {item.label}
                                 </Link>
@@ -174,16 +189,18 @@ export function AppFooter() {
                         </nav>
                     </div>
 
-                    {/* 资源链接区域 - 工具和指南相关 */}
-                    <div>
-                        <h3 style={{
-                            color: '#FFFFFF',
-                            fontSize: 'var(--font-size-base)',
-                            fontWeight: '700',
-                            margin: '0 0 var(--spacing-6) 0'
-                        }}>
-                            资源
-                        </h3>
+                    {/* 资源导航区域 */}
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 'var(--spacing-4)'
+                    }}>
+                        <h4 style={{
+                            color: 'var(--color-text-primary)',
+                            fontSize: 'var(--font-size-lg)',
+                            fontWeight: '600',
+                            marginBottom: 'var(--spacing-2)'
+                        }}>精选资源</h4>
                         <nav style={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -193,13 +210,13 @@ export function AppFooter() {
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className="footer-nav-link"
                                     style={{
-                                        color: 'var(--color-text-secondary)',
-                                        textDecoration: 'none',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: 'var(--font-size-base)',
+                                        lineHeight: '1.5',
                                         transition: 'color 0.2s ease'
                                     }}
+                                    className="footer-nav-link"
                                 >
                                     {item.label}
                                 </Link>
@@ -207,100 +224,113 @@ export function AppFooter() {
                         </nav>
                     </div>
 
-                    {/* 联系方式区域 - 客服和邮箱信息 */}
-                    <div>
-                        <h3 style={{
-                            color: '#FFFFFF',
-                            fontSize: 'var(--font-size-base)',
-                            fontWeight: '700',
-                            margin: '0 0 var(--spacing-6) 0'
-                        }}>
-                            联系我们
-                        </h3>
-                        <div style={{
+                    {/* 联系支持区域 */}
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 'var(--spacing-4)'
+                    }}>
+                        <h4 style={{
+                            color: 'var(--color-text-primary)',
+                            fontSize: 'var(--font-size-lg)',
+                            fontWeight: '600',
+                            marginBottom: 'var(--spacing-2)'
+                        }}>联系我们</h4>
+
+                        {/* 联系方式链接 */}
+                        <nav style={{
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: 'var(--spacing-3)'
+                            gap: 'var(--spacing-3)',
+                            marginBottom: 'var(--spacing-4)'
                         }}>
-                            {/* 在线客服时间 */}
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 'var(--spacing-2)'
-                            }}>
-                                <Icon name="clock-icon" size="xs" style={{ color: 'var(--color-text-secondary)' }} />
-                                <span style={{
-                                    color: 'var(--color-text-secondary)',
-                                    fontSize: 'var(--font-size-base)'
-                                }}>
-                                    在线客服 9:00-18:00
-                                </span>
-                            </div>
-
-                            {/* 联系邮箱 */}
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 'var(--spacing-2)'
-                            }}>
-                                <Icon name="mail-icon" size="xs" style={{ color: 'var(--color-text-secondary)' }} />
-                                <a
-                                    href="mailto:support@ai-bianxian.com"
+                            {contactItems.map((item) => (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
                                     style={{
-                                        color: 'var(--color-text-secondary)',
-                                        textDecoration: 'none',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: 'var(--font-size-base)',
+                                        lineHeight: '1.5',
                                         transition: 'color 0.2s ease'
                                     }}
                                     className="footer-contact-link"
                                 >
-                                    support@ai-bianxian.com
-                                </a>
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </nav>
+
+                        {/* 直接联系信息 */}
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 'var(--spacing-2)'
+                        }}>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 'var(--spacing-2)'
+                            }}>
+                                <Icon name="email-contact" size="xs" style={{ color: 'var(--color-text-muted)' }} />
+                                <span style={{
+                                    color: 'var(--color-text-muted)',
+                                    fontSize: 'var(--font-size-sm)'
+                                }}>contact@aibianx.com</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* 版权和法律条款区域 */}
+                {/* 底部版权和法律信息 */}
                 <div style={{
-                    paddingTop: 'var(--spacing-6)',
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                    gap: 'var(--spacing-4)'
+                    flexDirection: 'column',
+                    gap: 'var(--spacing-4)',
+                    paddingTop: 'var(--spacing-6)',
+                    textAlign: 'center'
                 }}>
-                    {/* 版权信息 */}
-                    <p style={{
-                        color: 'var(--color-text-disabled)',
-                        fontSize: 'var(--font-size-sm)',
-                        margin: 0
-                    }}>
-                        © 2024 AI变现之路. 保留所有权利
-                    </p>
-
-                    {/* 法律条款链接 - 修改legalItems会影响所有页面 */}
+                    {/* 法律条款链接 */}
                     <div style={{
                         display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         gap: 'var(--spacing-6)',
                         flexWrap: 'wrap'
                     }}>
-                        {legalItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className="footer-legal-link"
-                                style={{
-                                    color: 'var(--color-text-disabled)',
-                                    textDecoration: 'none',
-                                    fontSize: 'var(--font-size-sm)',
-                                    transition: 'color 0.2s ease'
-                                }}
-                            >
-                                {item.label}
-                            </Link>
+                        {legalItems.map((item, index) => (
+                            <span key={item.href} style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-6)' }}>
+                                <Link
+                                    href={item.href}
+                                    style={{
+                                        color: 'var(--color-text-muted)',
+                                        fontSize: 'var(--font-size-sm)',
+                                        transition: 'color 0.2s ease'
+                                    }}
+                                    className="footer-legal-link"
+                                >
+                                    {item.label}
+                                </Link>
+                                {index < legalItems.length - 1 && (
+                                    <span style={{
+                                        color: 'var(--color-text-muted)',
+                                        fontSize: 'var(--font-size-sm)'
+                                    }}>|</span>
+                                )}
+                            </span>
                         ))}
                     </div>
+
+                    {/* 版权信息 */}
+                    <p style={{
+                        color: 'var(--color-text-muted)',
+                        fontSize: 'var(--font-size-sm)',
+                        lineHeight: '1.5'
+                    }}>
+                        © {new Date().getFullYear()} AI变现之路. 保留所有权利.
+                        <span style={{ margin: '0 8px' }}>|</span>
+                        专注AI商业化应用与变现实践
+                    </p>
                 </div>
             </Container>
         </footer>
