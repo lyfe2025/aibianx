@@ -2,16 +2,36 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Icon, Avatar } from '@/components/ui'
+import { useUserStore } from '@/stores'
 import styles from './UserSidebar.module.css'
 
 interface UserSidebarProps {
     className?: string
 }
 
+/**
+ * 个人中心侧边栏导航组件 - UserSidebar
+ * 
+ * ✅ 功能特性：
+ * 1. 首页跳转 - 点击"首页"直接跳转到主页 (/)
+ * 2. 退出登录 - 点击"退出"注销并跳转到首页
+ * 3. 页面导航 - 个人中心各子页面间的跳转
+ * 4. 路由高亮 - 当前页面的菜单项自动高亮显示
+ * 
+ * 🎯 导航路径：
+ * - 首页: / (直接跳转)
+ * - 个人中心: /profile
+ * - 我的收藏: /profile/bookmarks
+ * - 我的订阅: /profile/subscription
+ * - 设置: /profile/settings
+ * - 退出: 执行logout()并跳转到首页
+ */
 export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
     const pathname = usePathname()
+    const router = useRouter()
+    const { logout } = useUserStore()
 
     const navigationItems = [
         {
@@ -40,12 +60,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
         {
             href: '/profile/settings',
             label: '设置',
-            icon: 'adjustment-icon'
-        },
-        {
-            href: '/logout',
-            label: '退出',
-            icon: 'logout-icon'
+            icon: 'adjust-icon-detail'
         }
     ]
 
@@ -54,6 +69,12 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
             return pathname === '/profile'
         }
         return pathname?.startsWith(href)
+    }
+
+    // 退出登录处理：清除用户状态并跳转到首页
+    const handleLogout = () => {
+        logout()
+        router.push('/')
     }
 
     return (
@@ -104,6 +125,16 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                         <span className={styles.navLabel}>{item.label}</span>
                     </Link>
                 ))}
+
+                {/* 退出按钮 - 执行登出并跳转到首页 */}
+                <button
+                    onClick={handleLogout}
+                    className={styles.navItem}
+                    title="退出登录并返回首页"
+                >
+                    <Icon name="arrow-left" size="sm" className={styles.navIcon} />
+                    <span className={styles.navLabel}>退出</span>
+                </button>
             </nav>
         </div>
     )

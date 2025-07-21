@@ -7,13 +7,7 @@ import {
   FreeResourcesSection,
   FinalCTASection
 } from '@/components/molecules'
-import {
-  LoginModal,
-  RegisterModal,
-  ForgotPasswordModal,
-  MembershipModal,
-  PaymentModal
-} from '@/components/organisms'
+// 弹窗组件已移动到 layout.tsx 中，确保所有页面都能使用
 
 /**
  * 首页组件 - HomePage
@@ -49,12 +43,7 @@ export default function HomePage() {
       {/* 最终行动召唤区块 - "成为AI时代的赢家" */}
       <FinalCTASection />
 
-      {/* 模态框组件 - 用户交互功能 */}
-      <LoginModal />
-      <RegisterModal />
-      <ForgotPasswordModal />
-      <MembershipModal />
-      <PaymentModal />
+      {/* 模态框组件已移动到 layout.tsx 中，确保所有页面都能使用 */}
     </>
   )
 }

@@ -93,7 +93,7 @@ export function ForgotPasswordForm({ onSubmit, isLoading: externalLoading }: For
                     justifyContent: 'center',
                     boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)'
                 }}>
-                    <Icon name="mail-icon" size="lg" style={{ color: '#FFFFFF' }} />
+                    <Icon name="modals/email-icon-forgot" size="lg" style={{ color: '#FFFFFF' }} />
                 </div>
 
                 <h3 style={{
@@ -181,13 +181,12 @@ export function ForgotPasswordForm({ onSubmit, isLoading: externalLoading }: For
         }}>
             {/* 邮箱输入 */}
             <Input
-                label="邮箱地址"
                 type="email"
                 placeholder="请输入您的账号邮箱"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 error={errors.email}
-                icon={<Icon name="mail-icon" size="sm" />}
+                icon={<Icon name="modals/email-icon-forgot" size="sm" />}
                 autoComplete="email"
             />
 

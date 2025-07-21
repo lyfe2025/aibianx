@@ -90,19 +90,17 @@ export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormPro
         }}>
             {/* 邮箱或用户名输入 */}
             <Input
-                label="邮箱或用户名"
                 type="text"
                 placeholder="电子邮箱/用户名"
                 value={formData.emailOrUsername}
                 onChange={(e) => handleInputChange('emailOrUsername', e.target.value)}
                 error={errors.emailOrUsername}
-                icon={<Icon name="user-icon" size="sm" />}
+                icon={<Icon name="modals/email-username-icon" size="sm" />}
                 autoComplete="username"
             />
 
             {/* 密码输入 */}
             <Input
-                label="密码"
                 type={showPassword ? 'text' : 'password'}
                 placeholder="密码"
                 value={formData.password}
@@ -167,7 +165,7 @@ export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormPro
                         }}
                     >
                         {formData.rememberMe && (
-                            <Icon name="modals/remember-me-checkbox" size="xs" style={{ color: '#FFFFFF' }} />
+                            <Icon name="modals/checkbox-icon" size="xs" style={{ color: '#FFFFFF' }} />
                         )}
                     </button>
                     记住我
@@ -216,29 +214,32 @@ export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormPro
                 {effectiveLoading ? '登录中...' : '登录'}
             </GradientButton>
 
-            {/* 社交登录 */}
+            {/* 社交登录分隔线 */}
             <div style={{
-                position: 'relative',
-                margin: 'var(--spacing-4) 0'
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
+                margin: 'var(--spacing-5) 0'
             }}>
                 <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: 0,
-                    right: 0,
+                    flex: 1,
                     height: '1px',
-                    background: 'var(--color-border-primary)'
+                    background: '#2A2A2A'
                 }} />
                 <div style={{
-                    position: 'relative',
+                    fontSize: 'var(--font-size-base)',
+                    color: '#6B7280',
+                    lineHeight: '24px',
                     textAlign: 'center',
-                    background: 'var(--color-bg-primary)',
-                    padding: '0 var(--spacing-4)',
-                    fontSize: 'var(--font-size-sm)',
-                    color: 'var(--color-text-muted)'
+                    whiteSpace: 'nowrap'
                 }}>
                     或
                 </div>
+                <div style={{
+                    flex: 1,
+                    height: '1px',
+                    background: '#2A2A2A'
+                }} />
             </div>
 
             {/* GitHub登录 */}

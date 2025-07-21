@@ -16,7 +16,7 @@ interface Plan {
 }
 
 export function MembershipModal() {
-    const { type, isOpen, closeModal } = useModalStore()
+    const { type, isOpen, closeModal, openModal } = useModalStore()
     const [selectedPlan, setSelectedPlan] = useState<string>('annual')
     const [isLoading, setIsLoading] = useState(false)
 
@@ -50,21 +50,13 @@ export function MembershipModal() {
     ]
 
     const handleSubscribe = async () => {
-        setIsLoading(true)
-        try {
-            const selectedPlanData = plans.find(p => p.id === selectedPlan)
-            console.log('订阅会员:', selectedPlanData)
-
-            // TODO: 实现支付流程
-            await new Promise(resolve => setTimeout(resolve, 2000))
-
-            alert('订阅成功！')
-            closeModal()
-        } catch (error) {
-            console.error('订阅失败:', error)
-        } finally {
-            setIsLoading(false)
-        }
+        const selectedPlanData = plans.find(p => p.id === selectedPlan)
+        if (!selectedPlanData) return
+        
+        // 直接打开支付弹窗，传递选中的计划信息
+        openModal('payment', {
+            payment: { plan: selectedPlanData }
+        })
     }
 
     const isThisModalOpen = isOpen && type === 'membership'
@@ -242,9 +234,8 @@ export function MembershipModal() {
                     <GradientButton
                         size="md"
                         onClick={handleSubscribe}
-                        disabled={isLoading}
                     >
-                        {isLoading ? '处理中...' : '立即订阅'}
+                        立即升级会员
                     </GradientButton>
                 </div>
             </div>

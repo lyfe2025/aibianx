@@ -1,616 +1,455 @@
 'use client'
 
 import React from 'react'
-import { Container, Icon, GradientButton } from '@/components/ui'
-import { UserSidebar, StatCard } from '@/components/molecules'
-import { Header, Footer } from '@/components/organisms'
+import { Container, Icon, GradientText, GradientButton } from '@/components/ui'
+import { UserSidebar } from '@/components/molecules'
 
 export default function SubscriptionPage() {
-    // 模拟订阅数据
-    const subscriptionData = {
-        plan: 'Pro 会员',
-        status: 'active',
-        expiryDate: '2024-06-15',
-        autoRenew: true,
-        nextBillingDate: '2024-06-15',
-        price: '199',
-        features: [
-            '无限制访问所有内容',
-            '专属 AI 工具库',
-            '1对1 专家咨询',
-            '优先客服支持',
-            '独家案例分析',
-            '高级模板下载'
-        ]
-    }
-
-    const subscriptionHistory = [
-        {
-            date: '2024-03-15',
-            plan: 'Pro 会员',
-            period: '3个月',
-            amount: '199',
-            status: 'paid'
-        },
-        {
-            date: '2023-12-15',
-            plan: 'Basic 会员',
-            period: '1个月',
-            amount: '99',
-            status: 'paid'
-        },
-        {
-            date: '2023-11-15',
-            plan: 'Basic 会员',
-            period: '1个月',
-            amount: '99',
-            status: 'paid'
-        }
+  // 当前订阅信息
+  const currentSubscription = {
+    plan: '高级会员',
+    expiryDate: '2024年12月31日',
+    remainingDays: 245,
+    status: 'active',
+    benefits: [
+      '全站文章无限制阅读',
+      'AI工具库完整访问',
+      '高级教程专享权限',
+      '专属社群交流机会',
+      '一对一咨询服务 (每月1次)',
+      '优先享受新功能'
     ]
+  }
 
-    const membershipStats = [
-        {
-            title: '会员天数',
-            value: '92',
-            icon: 'clock-icon',
-            iconColor: 'blue' as const
-        },
-        {
-            title: '累计消费',
-            value: '¥397',
-            icon: 'rocket-icon',
-            iconColor: 'green' as const
-        },
-        {
-            title: '节省金额',
-            value: '¥156',
-            icon: 'success-check',
-            iconColor: 'purple' as const
-        },
-        {
-            title: '专享权益',
-            value: '6项',
-            icon: 'membership-exclusive',
-            iconColor: 'orange' as const
-        }
-    ]
-
-    const getDaysRemaining = () => {
-        const expiry = new Date(subscriptionData.expiryDate)
-        const today = new Date()
-        const timeDiff = expiry.getTime() - today.getTime()
-        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24))
-        return daysDiff > 0 ? daysDiff : 0
+  // 历史订阅记录
+  const subscriptionHistory = [
+    {
+      id: 'sub_001',
+      plan: '高级会员',
+      period: '2024.01.01 - 2024.12.31',
+      price: '¥399',
+      status: '有效',
+      paymentMethod: '支付宝',
+      purchaseDate: '2024-01-01'
+    },
+    {
+      id: 'sub_002',
+      plan: '基础会员',
+      period: '2023.06.01 - 2023.12.31',
+      price: '¥199',
+      status: '已过期',
+      paymentMethod: '微信支付',
+      purchaseDate: '2023-06-01'
+    },
+    {
+      id: 'sub_003',
+      plan: '基础会员',
+      period: '2023.01.01 - 2023.06.01',
+      price: '¥199',
+      status: '已过期',
+      paymentMethod: '支付宝',
+      purchaseDate: '2023-01-01'
     }
+  ]
 
-    return (
-        <div className="min-h-screen bg-[var(--color-bg-primary)]">
-            <Header />
+  return (
+    <div className="min-h-screen bg-[var(--color-bg-primary)]">
+      <div className="flex">
+        {/* 左侧导航栏 - 使用UserSidebar组件 */}
+        <UserSidebar />
 
-            <main className="subscription-page">
-                <Container size="xl" className="subscription-container">
-                    <div className="subscription-layout">
-                        {/* 左侧边栏 */}
-                        <UserSidebar />
+        {/* 右侧主内容区域 */}
+        <main style={{ flex: 1 }}>
+          <div style={{ padding: '32px 40px' }}>
+            <Container size="xl">
+              {/* 页面标题 */}
+              <div style={{ marginBottom: '32px' }}>
+                <h1 style={{
+                  color: '#FFFFFF',
+                  fontSize: '24px',
+                  fontWeight: '700',
+                  lineHeight: '32px',
+                  margin: 0
+                }}>我的订阅</h1>
+              </div>
 
-                        {/* 右侧主内容 */}
-                        <div className="subscription-main">
-                            <div className="subscription-header">
-                                <h1 className="page-title">我的订阅</h1>
-                                <p className="page-description">管理您的会员订阅和权益</p>
-                            </div>
-
-                            {/* 当前订阅状态 */}
-                            <div className="current-subscription">
-                                <div className="subscription-card">
-                                    <div className="subscription-card__header">
-                                        <div className="plan-info">
-                                            <h2 className="plan-name">{subscriptionData.plan}</h2>
-                                            <div className="plan-status">
-                                                <Icon name="success-check" size="sm" />
-                                                <span>有效</span>
-                                            </div>
-                                        </div>
-                                        <div className="plan-price">
-                                            <span className="currency">¥</span>
-                                            <span className="amount">{subscriptionData.price}</span>
-                                            <span className="period">/3个月</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="subscription-card__content">
-                                        <div className="expiry-info">
-                                            <div className="expiry-date">
-                                                <Icon name="clock-icon" size="sm" />
-                                                <span>到期时间: {subscriptionData.expiryDate}</span>
-                                            </div>
-                                            <div className="days-remaining">
-                                                剩余 <strong>{getDaysRemaining()}</strong> 天
-                                            </div>
-                                        </div>
-
-                                        <div className="auto-renew">
-                                            <div className="auto-renew__info">
-                                                <Icon name="refresh-icon" size="sm" />
-                                                <span>自动续费: {subscriptionData.autoRenew ? '已开启' : '已关闭'}</span>
-                                            </div>
-                                            <label className="toggle-switch">
-                                                <input type="checkbox" defaultChecked={subscriptionData.autoRenew} />
-                                                <span className="toggle-slider"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div className="subscription-card__actions">
-                                        <GradientButton variant="outline" size="sm">
-                                            管理订阅
-                                        </GradientButton>
-                                        <GradientButton size="sm">
-                                            立即续费
-                                        </GradientButton>
-                                    </div>
-                                </div>
-
-                                {/* 会员权益 */}
-                                <div className="features-card">
-                                    <h3 className="features-title">
-                                        <Icon name="membership-exclusive" size="sm" />
-                                        专享权益
-                                    </h3>
-                                    <div className="features-list">
-                                        {subscriptionData.features.map((feature, index) => (
-                                            <div key={index} className="feature-item">
-                                                <Icon name="success-check" size="xs" />
-                                                <span>{feature}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* 会员统计 */}
-                            <div className="membership-stats">
-                                <h2 className="section-title">会员统计</h2>
-                                <div className="stats-grid">
-                                    {membershipStats.map((stat, index) => (
-                                        <StatCard
-                                            key={index}
-                                            title={stat.title}
-                                            value={stat.value}
-                                            icon={stat.icon}
-                                            iconColor={stat.iconColor}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* 订阅历史 */}
-                            <div className="subscription-history">
-                                <h2 className="section-title">订阅历史</h2>
-                                <div className="history-table">
-                                    <div className="history-header">
-                                        <div className="header-cell">日期</div>
-                                        <div className="header-cell">套餐</div>
-                                        <div className="header-cell">周期</div>
-                                        <div className="header-cell">金额</div>
-                                        <div className="header-cell">状态</div>
-                                        <div className="header-cell">操作</div>
-                                    </div>
-
-                                    {subscriptionHistory.map((record, index) => (
-                                        <div key={index} className="history-row">
-                                            <div className="history-cell">{record.date}</div>
-                                            <div className="history-cell">{record.plan}</div>
-                                            <div className="history-cell">{record.period}</div>
-                                            <div className="history-cell">¥{record.amount}</div>
-                                            <div className="history-cell">
-                                                <span className={`status-badge status-badge--${record.status}`}>
-                                                    {record.status === 'paid' ? '已支付' : '未支付'}
-                                                </span>
-                                            </div>
-                                            <div className="history-cell">
-                                                <button className="action-btn">查看发票</button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
+              {/* 当前订阅状态卡片 */}
+              <div style={{
+                background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.20) 0%, rgba(139, 92, 246, 0.20) 100%)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.10)',
+                borderRadius: '12px',
+                padding: '25px',
+                marginBottom: '32px'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  marginBottom: '20px'
+                }}>
+                  <div>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      marginBottom: '8px'
+                    }}>
+                      <h2 style={{
+                        color: '#FFFFFF',
+                        fontSize: '20px',
+                        fontWeight: '700',
+                        lineHeight: '28px',
+                        margin: 0
+                      }}>{currentSubscription.plan}</h2>
+                      <div style={{
+                        background: 'linear-gradient(90deg, #FACC15 0%, #CA8A04 100%)',
+                        borderRadius: '9999px',
+                        padding: '2px 8px'
+                      }}>
+                        <span style={{
+                          color: '#FFFFFF',
+                          fontSize: '12px',
+                          lineHeight: '16px'
+                        }}>当前方案</span>
+                      </div>
                     </div>
-                </Container>
-            </main>
+                    <p style={{
+                      color: '#D1D5DB',
+                      fontSize: '16px',
+                      lineHeight: '24px',
+                      margin: 0
+                    }}>到期时间: {currentSubscription.expiryDate} (剩余{currentSubscription.remainingDays}天)</p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <GradientButton size="md" variant="outline">
+                      <Icon name="adjust-icon-detail" size="xs" style={{ marginRight: '8px' }} />
+                      管理订阅
+                    </GradientButton>
+                    <GradientButton size="md" variant="primary">
+                      立即续费
+                      <Icon name="arrow-right" size="xs" style={{ marginLeft: '8px' }} />
+                    </GradientButton>
+                  </div>
+                </div>
 
-            <Footer />
+                {/* 订阅权益展示 */}
+                <div style={{
+                  borderTop: '1px solid rgba(255, 255, 255, 0.10)',
+                  paddingTop: '20px'
+                }}>
+                  <h3 style={{
+                    color: '#FFFFFF',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    lineHeight: '24px',
+                    margin: '0 0 16px 0'
+                  }}>专属会员权益</h3>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                    gap: '12px'
+                  }}>
+                    {currentSubscription.benefits.map((benefit, index) => (
+                      <div key={index} style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                      }}>
+                        <Icon name="success-check" size="xs" style={{ color: '#22C55E' }} />
+                        <span style={{
+                          color: '#D1D5DB',
+                          fontSize: '14px',
+                          lineHeight: '20px'
+                        }}>{benefit}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-            <style jsx>{`
-        .subscription-page {
-          padding: 32px 0 80px;
-          min-height: calc(100vh - 80px);
-        }
+              {/* 订阅历史 */}
+              <div style={{ marginBottom: '32px' }}>
+                <h2 style={{
+                  color: '#FFFFFF',
+                  fontSize: '20px',
+                  fontWeight: '700',
+                  lineHeight: '28px',
+                  margin: '0 0 20px 0'
+                }}>订阅历史</h2>
 
-        .subscription-container {
-          max-width: 1440px;
-        }
+                <div style={{
+                  background: 'rgba(26, 26, 26, 0.30)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(42, 42, 42, 0.70)',
+                  borderRadius: '12px',
+                  overflow: 'hidden'
+                }}>
+                  {/* 表头 */}
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    padding: '16px 20px',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 200px 120px 100px 120px 80px',
+                    gap: '16px',
+                    borderBottom: '1px solid rgba(42, 42, 42, 0.70)'
+                  }}>
+                    <span style={{
+                      color: '#9CA3AF',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      lineHeight: '20px'
+                    }}>套餐</span>
+                    <span style={{
+                      color: '#9CA3AF',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      lineHeight: '20px'
+                    }}>有效期</span>
+                    <span style={{
+                      color: '#9CA3AF',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      lineHeight: '20px'
+                    }}>金额</span>
+                    <span style={{
+                      color: '#9CA3AF',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      lineHeight: '20px'
+                    }}>状态</span>
+                    <span style={{
+                      color: '#9CA3AF',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      lineHeight: '20px'
+                    }}>支付方式</span>
+                    <span style={{
+                      color: '#9CA3AF',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      lineHeight: '20px'
+                    }}>操作</span>
+                  </div>
 
-        .subscription-layout {
-          display: flex;
-          gap: 40px;
-          align-items: flex-start;
-        }
+                  {/* 订阅记录 */}
+                  {subscriptionHistory.map((record, index) => (
+                    <div key={record.id} style={{
+                      padding: '16px 20px',
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 200px 120px 100px 120px 80px',
+                      gap: '16px',
+                      alignItems: 'center',
+                      borderBottom: index < subscriptionHistory.length - 1 ? '1px solid rgba(42, 42, 42, 0.70)' : 'none'
+                    }}>
+                      <div>
+                        <div style={{
+                          color: '#FFFFFF',
+                          fontSize: '16px',
+                          fontWeight: '500',
+                          lineHeight: '24px',
+                          marginBottom: '4px'
+                        }}>{record.plan}</div>
+                        <div style={{
+                          color: '#9CA3AF',
+                          fontSize: '12px',
+                          lineHeight: '16px'
+                        }}>订单号: {record.id}</div>
+                      </div>
 
-        .subscription-main {
-          flex: 1;
-          max-width: calc(100% - 280px);
-        }
+                      <span style={{
+                        color: '#D1D5DB',
+                        fontSize: '14px',
+                        lineHeight: '20px'
+                      }}>{record.period}</span>
 
-        .subscription-header {
-          margin-bottom: 32px;
-        }
+                      <span style={{
+                        color: '#FFFFFF',
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        lineHeight: '24px'
+                      }}>{record.price}</span>
 
-        .page-title {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-5xl);
-          font-weight: 700;
-          line-height: 44px;
-          margin: 0 0 8px 0;
-        }
+                      <div style={{
+                        background: record.status === '有效' ? 'rgba(34, 197, 94, 0.10)' : 'rgba(156, 163, 175, 0.10)',
+                        color: record.status === '有效' ? '#22C55E' : '#9CA3AF',
+                        fontSize: '12px',
+                        lineHeight: '16px',
+                        padding: '4px 8px',
+                        borderRadius: '9999px',
+                        textAlign: 'center'
+                      }}>
+                        {record.status}
+                      </div>
 
-        .page-description {
-          color: var(--color-text-muted);
-          font-size: var(--font-size-lg);
-          line-height: 24px;
-          margin: 0;
-        }
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}>
+                        <Icon
+                          name={record.paymentMethod === '支付宝' ? 'payments/alipay-icon' : 'payments/wechat-pay-icon'}
+                          size="xs"
+                        />
+                        <span style={{
+                          color: '#D1D5DB',
+                          fontSize: '12px',
+                          lineHeight: '16px'
+                        }}>{record.paymentMethod}</span>
+                      </div>
 
-        .current-subscription {
-          display: flex;
-          gap: 24px;
-          margin-bottom: 40px;
-        }
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        cursor: 'pointer'
+                      }}>
+                        <span style={{
+                          color: '#60A5FA',
+                          fontSize: '12px',
+                          lineHeight: '16px'
+                        }}>详情</span>
+                        <Icon name="arrow-right" size="xs" style={{ color: '#60A5FA' }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-        .subscription-card {
-          flex: 2;
-          background: linear-gradient(135deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(59, 130, 246, 0.20);
-          border-radius: 16px;
-          padding: 32px;
-        }
+              {/* 常见问题和帮助 */}
+              <div style={{
+                background: 'rgba(26, 26, 26, 0.30)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(42, 42, 42, 0.70)',
+                borderRadius: '12px',
+                padding: '21px'
+              }}>
+                <h3 style={{
+                  color: '#FFFFFF',
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  lineHeight: '28px',
+                  margin: '0 0 16px 0'
+                }}>订阅管理帮助</h3>
 
-        .subscription-card__header {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 24px;
-        }
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                  gap: '16px'
+                }}>
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '8px',
+                    padding: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px'
+                  }}>
+                    <div style={{
+                      background: 'rgba(59, 130, 246, 0.20)',
+                      borderRadius: '8px',
+                      padding: '8px',
+                      width: '36px',
+                      height: '36px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Icon name="help-icon" size="sm" style={{ color: '#3B82F6' }} />
+                    </div>
+                    <div>
+                      <div style={{
+                        color: '#FFFFFF',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        lineHeight: '20px',
+                        marginBottom: '2px'
+                      }}>如何取消订阅</div>
+                      <div style={{
+                        color: '#9CA3AF',
+                        fontSize: '12px',
+                        lineHeight: '16px'
+                      }}>了解取消流程和注意事项</div>
+                    </div>
+                  </div>
 
-        .plan-info {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '8px',
+                    padding: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px'
+                  }}>
+                    <div style={{
+                      background: 'rgba(34, 197, 94, 0.20)',
+                      borderRadius: '8px',
+                      padding: '8px',
+                      width: '36px',
+                      height: '36px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Icon name="success-check" size="sm" style={{ color: '#22C55E' }} />
+                    </div>
+                    <div>
+                      <div style={{
+                        color: '#FFFFFF',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        lineHeight: '20px',
+                        marginBottom: '2px'
+                      }}>自动续费设置</div>
+                      <div style={{
+                        color: '#9CA3AF',
+                        fontSize: '12px',
+                        lineHeight: '16px'
+                      }}>管理自动续费开关</div>
+                    </div>
+                  </div>
 
-        .plan-name {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-3xl);
-          font-weight: 700;
-          line-height: 32px;
-          margin: 0;
-        }
-
-        .plan-status {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          color: #22C55E;
-          font-size: var(--font-size-sm);
-          font-weight: 500;
-        }
-
-        .plan-price {
-          display: flex;
-          align-items: baseline;
-          gap: 4px;
-        }
-
-        .currency {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-lg);
-          font-weight: 500;
-        }
-
-        .amount {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-4xl);
-          font-weight: 700;
-          line-height: 36px;
-        }
-
-        .period {
-          color: var(--color-text-muted);
-          font-size: var(--font-size-lg);
-        }
-
-        .subscription-card__content {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-          margin-bottom: 24px;
-        }
-
-        .expiry-info {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 16px 20px;
-          background: rgba(0, 0, 0, 0.20);
-          border-radius: 8px;
-        }
-
-        .expiry-date {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: var(--color-text-secondary);
-          font-size: var(--font-size-base);
-        }
-
-        .days-remaining {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-base);
-          font-weight: 500;
-        }
-
-        .auto-renew {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .auto-renew__info {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: var(--color-text-secondary);
-          font-size: var(--font-size-base);
-        }
-
-        .toggle-switch {
-          position: relative;
-          display: inline-block;
-          width: 48px;
-          height: 28px;
-          cursor: pointer;
-        }
-
-        .toggle-switch input {
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-
-        .toggle-slider {
-          position: absolute;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: rgba(55, 65, 81, 0.50);
-          border: 1px solid rgba(42, 42, 42, 0.70);
-          transition: all 0.2s ease;
-          border-radius: 28px;
-        }
-
-        .toggle-slider:before {
-          position: absolute;
-          content: '';
-          height: 20px;
-          width: 20px;
-          left: 3px;
-          bottom: 3px;
-          background-color: var(--color-text-primary);
-          border-radius: 50%;
-          transition: all 0.2s ease;
-        }
-
-        .toggle-switch input:checked + .toggle-slider {
-          background: var(--gradient-primary);
-          border-color: transparent;
-        }
-
-        .toggle-switch input:checked + .toggle-slider:before {
-          transform: translateX(20px);
-        }
-
-        .subscription-card__actions {
-          display: flex;
-          gap: 12px;
-        }
-
-        .features-card {
-          flex: 1;
-          background: rgba(26, 26, 26, 0.30);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(42, 42, 42, 0.70);
-          border-radius: 16px;
-          padding: 24px;
-        }
-
-        .features-title {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: var(--color-text-primary);
-          font-size: var(--font-size-xl);
-          font-weight: 600;
-          line-height: 28px;
-          margin: 0 0 20px 0;
-        }
-
-        .features-list {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .feature-item {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: var(--color-text-secondary);
-          font-size: var(--font-size-base);
-          line-height: 20px;
-        }
-
-        .feature-item :global(.icon) {
-          color: #22C55E;
-        }
-
-        .membership-stats {
-          margin-bottom: 40px;
-        }
-
-        .section-title {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-2xl);
-          font-weight: 600;
-          line-height: 28px;
-          margin: 0 0 24px 0;
-        }
-
-        .stats-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(262px, 1fr));
-          gap: 24px;
-        }
-
-        .subscription-history {
-          background: rgba(26, 26, 26, 0.30);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(42, 42, 42, 0.70);
-          border-radius: 16px;
-          padding: 24px;
-        }
-
-        .history-table {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .history-header {
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-          gap: 16px;
-          padding: 16px 0;
-          border-bottom: 1px solid rgba(42, 42, 42, 0.50);
-        }
-
-        .header-cell {
-          color: var(--color-text-muted);
-          font-size: var(--font-size-sm);
-          font-weight: 500;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .history-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-          gap: 16px;
-          padding: 16px 0;
-          border-bottom: 1px solid rgba(42, 42, 42, 0.30);
-        }
-
-        .history-row:last-child {
-          border-bottom: none;
-        }
-
-        .history-cell {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-base);
-          line-height: 20px;
-          display: flex;
-          align-items: center;
-        }
-
-        .status-badge {
-          background: rgba(34, 197, 94, 0.10);
-          color: #22C55E;
-          font-size: var(--font-size-xs);
-          font-weight: 500;
-          padding: 4px 8px;
-          border-radius: 12px;
-        }
-
-        .action-btn {
-          background: none;
-          border: 1px solid rgba(59, 130, 246, 0.50);
-          color: var(--color-primary-blue);
-          font-size: var(--font-size-sm);
-          padding: 4px 12px;
-          border-radius: 6px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .action-btn:hover {
-          background: rgba(59, 130, 246, 0.10);
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 1024px) {
-          .subscription-layout {
-            flex-direction: column;
-          }
-
-          .subscription-main {
-            max-width: 100%;
-          }
-
-          .current-subscription {
-            flex-direction: column;
-          }
-
-          .stats-grid {
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          }
-        }
-
-        @media (max-width: 768px) {
-          .subscription-page {
-            padding: 20px 0 60px;
-          }
-
-          .subscription-layout {
-            gap: 24px;
-          }
-
-          .subscription-card {
-            padding: 24px;
-          }
-
-          .subscription-card__header {
-            flex-direction: column;
-            gap: 16px;
-          }
-
-          .history-header,
-          .history-row {
-            grid-template-columns: 1fr;
-            gap: 8px;
-          }
-
-          .header-cell,
-          .history-cell {
-            padding: 8px 0;
-          }
-
-          .stats-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-      `}</style>
-        </div>
-    )
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '8px',
+                    padding: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px'
+                  }}>
+                    <div style={{
+                      background: 'rgba(168, 85, 247, 0.20)',
+                      borderRadius: '8px',
+                      padding: '8px',
+                      width: '36px',
+                      height: '36px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <Icon name="contact-icon" size="sm" style={{ color: '#A855F7' }} />
+                    </div>
+                    <div>
+                      <div style={{
+                        color: '#FFFFFF',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        lineHeight: '20px',
+                        marginBottom: '2px'
+                      }}>联系客服</div>
+                      <div style={{
+                        color: '#9CA3AF',
+                        fontSize: '12px',
+                        lineHeight: '16px'
+                      }}>专业客服团队为您服务</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Container>
+          </div>
+        </main>
+      </div>
+    </div>
+  )
 } 

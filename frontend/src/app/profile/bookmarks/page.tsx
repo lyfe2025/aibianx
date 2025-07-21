@@ -1,342 +1,445 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Container, Icon } from '@/components/ui'
-import { UserSidebar, SearchFilter, CollectionCard } from '@/components/molecules'
-import { Header, Footer } from '@/components/organisms'
+import { Container, Icon, GradientText } from '@/components/ui'
+import { UserSidebar } from '@/components/molecules'
 
 export default function BookmarksPage() {
-    const [searchQuery, setSearchQuery] = useState('')
-    const [activeFilter, setActiveFilter] = useState('全部')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [activeFilter, setActiveFilter] = useState('全部')
 
-    // 模拟收藏数据
-    const bookmarkedItems = [
-        {
-            title: 'ChatGPT 高效提示词编写技巧',
-            category: 'AI工具',
-            coverImage: '/images/articles/chatgpt-article.jpeg',
-            collectedAt: '2 天前'
-        },
-        {
-            title: 'Midjourney 从入门到精通完整指南',
-            category: '教程',
-            coverImage: '/images/articles/midjourney-article.jpeg',
-            collectedAt: '5 天前'
-        },
-        {
-            title: 'AI 内容自动化生产工作流',
-            category: '案例',
-            coverImage: '/images/articles/ai-content-automation.svg',
-            collectedAt: '1 周前'
-        },
-        {
-            title: 'GPT-4 高级应用与商业化场景',
-            category: 'AI工具',
-            coverImage: '/images/articles/gpt4-article.jpeg',
-            collectedAt: '1 周前'
-        },
-        {
-            title: 'AI 绘画艺术创作完整指南',
-            category: '教程',
-            coverImage: '/images/articles/ai-art-guide.svg',
-            collectedAt: '2 周前'
-        },
-        {
-            title: 'ChatGPT 智能客服机器人搭建',
-            category: '案例',
-            coverImage: '/images/articles/chatgpt-bot.svg',
-            collectedAt: '2 周前'
-        },
-        {
-            title: 'AI 变现模式深度解析',
-            category: '文章',
-            coverImage: '/images/articles/ai-revenue-model.jpeg',
-            collectedAt: '3 周前'
-        },
-        {
-            title: 'Midjourney 商业化工作流程',
-            category: '教程',
-            coverImage: '/images/articles/midjourney-workflow.jpeg',
-            collectedAt: '3 周前'
-        }
-    ]
-
-    // 筛选逻辑
-    const filteredItems = bookmarkedItems.filter(item => {
-        const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.category.toLowerCase().includes(searchQuery.toLowerCase())
-
-        if (activeFilter === '全部') return matchesSearch
-        if (activeFilter === '最近收藏') {
-            const isRecent = ['天前', '1 周前'].some(period => item.collectedAt.includes(period))
-            return matchesSearch && isRecent
-        }
-        return matchesSearch
-    })
-
-    const handleSearch = (query: string) => {
-        setSearchQuery(query)
+  // 收藏统计数据
+  const collectionStats = [
+    {
+      title: '文章',
+      count: '12',
+      icon: 'article-icon',
+      gradient: 'linear-gradient(90deg, #3B82F6 0%, #06B6D4 100%)'
+    },
+    {
+      title: '教程',
+      count: '8',
+      icon: 'tutorial-icon',
+      gradient: 'linear-gradient(90deg, #22C55E 0%, #34D399 100%)'
+    },
+    {
+      title: 'AI工具',
+      count: '6',
+      icon: 'tool-icon',
+      gradient: 'linear-gradient(90deg, #A855F7 0%, #EC4899 100%)'
+    },
+    {
+      title: '案例',
+      count: '2',
+      icon: 'case-icon',
+      gradient: 'linear-gradient(90deg, #FB923C 0%, #F59E0B 100%)'
     }
+  ]
 
-    const handleFilterChange = (filter: string) => {
-        setActiveFilter(filter)
+  // 收藏的内容数据
+  const bookmarkedItems = [
+    {
+      title: 'Midjourney高级提示词大全',
+      category: 'AI工具',
+      image: '/images/articles/midjourney-article.jpeg',
+      collectedAt: '收藏于 3 天前'
+    },
+    {
+      title: 'AI辅助内容创作工作流',
+      category: '教程',
+      image: '/images/articles/ai-content-automation.svg',
+      collectedAt: '收藏于 3 天前'
+    },
+    {
+      title: 'GPT-4高级应用案例',
+      category: '案例',
+      image: '/images/articles/gpt4-article.jpeg',
+      collectedAt: '收藏于 3 天前'
+    },
+    {
+      title: 'AI变现新思路：垂直领域应用',
+      category: '文章',
+      image: '/images/articles/ai-revenue-model.jpeg',
+      collectedAt: '收藏于 3 天前'
+    },
+    {
+      title: 'ChatGPT高效提示词技巧',
+      category: 'AI工具',
+      image: '/images/articles/chatgpt-article.jpeg',
+      collectedAt: '收藏于 5 天前'
+    },
+    {
+      title: 'AI绘画入门到精通课程',
+      category: '教程',
+      image: '/images/articles/ai-art-guide.svg',
+      collectedAt: '收藏于 7 天前'
+    },
+    {
+      title: '人工智能创业商业模式分析',
+      category: '文章',
+      image: '/images/articles/ai-startup-guide.jpeg',
+      collectedAt: '收藏于 10 天前'
+    },
+    {
+      title: 'AI数据分析工作流实战',
+      category: '教程',
+      image: '/images/articles/ai-data-analysis.jpeg',
+      collectedAt: '收藏于 12 天前'
     }
+  ]
 
-    return (
-        <div className="min-h-screen bg-[var(--color-bg-primary)]">
-            <Header />
+  const filters = ['全部', '最近收藏', '筛选']
 
-            <main className="bookmarks-page">
-                <Container size="xl" className="bookmarks-container">
-                    <div className="bookmarks-layout">
-                        {/* 左侧边栏 */}
-                        <UserSidebar />
+  return (
+    <div className="min-h-screen bg-[var(--color-bg-primary)]">
+      <div className="flex">
+        {/* 左侧导航栏 - 使用UserSidebar组件 */}
+        <UserSidebar />
 
-                        {/* 右侧主内容 */}
-                        <div className="bookmarks-main">
-                            <div className="bookmarks-header">
-                                <h1 className="page-title">我的收藏</h1>
-                                <p className="page-description">已收藏 {bookmarkedItems.length} 项内容</p>
-                            </div>
+        {/* 右侧主内容区域 */}
+        <main style={{ flex: 1 }}>
+          <div style={{ padding: '32px 40px' }}>
+            <Container size="xl">
+              <div style={{ marginBottom: '32px' }}>
+                {/* 页面标题 */}
+                <h1 style={{
+                  color: '#FFFFFF',
+                  fontSize: '24px',
+                  fontWeight: '700',
+                  lineHeight: '32px',
+                  margin: '0 0 24px 0'
+                }}>我的收藏</h1>
 
-                            {/* 搜索筛选 */}
-                            <SearchFilter
-                                onSearch={handleSearch}
-                                onFilterChange={handleFilterChange}
-                                activeFilter={activeFilter}
-                            />
+                {/* 筛选控制栏 */}
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '24px'
+                }}>
+                  {/* 左侧筛选标签 */}
+                  <div style={{
+                    display: 'flex',
+                    gap: '16px',
+                    alignItems: 'center'
+                  }}>
+                    {filters.map((filter) => (
+                      <div key={filter} style={{
+                        background: 'rgba(26, 26, 26, 0.60)',
+                        border: '1px solid rgba(42, 42, 42, 0.70)',
+                        borderRadius: '8px',
+                        padding: '9px 17px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        cursor: 'pointer'
+                      }}>
+                        <span style={{
+                          color: '#FFFFFF',
+                          fontSize: '14px',
+                          lineHeight: '20px'
+                        }}>{filter}</span>
+                        <Icon name="arrow-down" size="xs" style={{ color: '#FFFFFF' }} />
+                      </div>
+                    ))}
+                  </div>
 
-                            {/* 收藏统计 */}
-                            <div className="bookmarks-stats">
-                                <div className="stats-item">
-                                    <span className="stats-label">显示结果:</span>
-                                    <span className="stats-value">{filteredItems.length} 项</span>
-                                </div>
-                                {searchQuery && (
-                                    <div className="stats-item">
-                                        <span className="stats-label">搜索关键词:</span>
-                                        <span className="stats-value">"{searchQuery}"</span>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* 收藏内容网格 */}
-                            {filteredItems.length > 0 ? (
-                                <div className="collections-grid">
-                                    {filteredItems.map((item, index) => (
-                                        <CollectionCard
-                                            key={index}
-                                            title={item.title}
-                                            category={item.category}
-                                            coverImage={item.coverImage}
-                                            collectedAt={item.collectedAt}
-                                            onClick={() => {
-                                                // 处理卡片点击
-                                                console.log('查看收藏:', item.title)
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="empty-state">
-                                    <div className="empty-icon">
-                                        <Icon name="collect-icon-detail" size="xl" />
-                                    </div>
-                                    <h3 className="empty-title">暂无符合条件的收藏</h3>
-                                    <p className="empty-description">
-                                        {searchQuery ?
-                                            '尝试调整搜索关键词或筛选条件' :
-                                            '开始收藏您感兴趣的内容吧'
-                                        }
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* 分页或加载更多 */}
-                            {filteredItems.length > 0 && (
-                                <div className="pagination-section">
-                                    <div className="load-more">
-                                        <button className="load-more-btn">
-                                            加载更多收藏
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                  {/* 右侧搜索和视图控制 */}
+                  <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                    {/* 搜索框 */}
+                    <div style={{
+                      background: 'rgba(26, 26, 26, 0.60)',
+                      border: '1px solid rgba(42, 42, 42, 0.70)',
+                      borderRadius: '8px',
+                      padding: '8px 12px',
+                      width: '256px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px'
+                    }}>
+                      <Icon name="search-icon" size="sm" style={{ color: '#9CA3AF' }} />
+                      <input
+                        type="text"
+                        placeholder="搜索收藏内容"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          outline: 'none',
+                          color: '#9CA3AF',
+                          fontSize: '14px',
+                          width: '100%'
+                        }}
+                      />
                     </div>
-                </Container>
-            </main>
 
-            <Footer />
+                    {/* 视图切换 */}
+                    <div style={{
+                      background: 'rgba(26, 26, 26, 0.60)',
+                      border: '1px solid rgba(42, 42, 42, 0.70)',
+                      borderRadius: '8px',
+                      padding: '1px',
+                      display: 'flex',
+                      overflow: 'hidden'
+                    }}>
+                      <div style={{
+                        background: 'rgba(59, 130, 246, 0.20)',
+                        padding: '8px'
+                      }}>
+                        <Icon name="grid-view" size="sm" style={{ color: '#FFFFFF' }} />
+                      </div>
+                      <div style={{ padding: '8px' }}>
+                        <Icon name="list-view" size="sm" style={{ color: '#9CA3AF' }} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-            <style jsx>{`
-        .bookmarks-page {
-          padding: 32px 0 80px;
-          min-height: calc(100vh - 80px);
-        }
+              {/* 收藏统计卡片 */}
+              <div style={{
+                background: 'rgba(26, 26, 26, 0.30)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(42, 42, 42, 0.70)',
+                borderRadius: '12px',
+                padding: '21px',
+                marginBottom: '32px'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  marginBottom: '16px'
+                }}>
+                  <div>
+                    <h3 style={{
+                      color: '#FFFFFF',
+                      fontSize: '20px',
+                      fontWeight: '700',
+                      lineHeight: '28px',
+                      margin: '0 0 4px 0'
+                    }}>收藏统计</h3>
+                    <p style={{
+                      color: '#9CA3AF',
+                      fontSize: '14px',
+                      lineHeight: '20px',
+                      margin: 0
+                    }}>当前共有 28 个收藏项目</p>
+                  </div>
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.10)',
+                    borderRadius: '8px',
+                    padding: '6px 12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    <Icon name="manage-icon" size="xs" style={{ color: '#FFFFFF' }} />
+                    <span style={{
+                      color: '#FFFFFF',
+                      fontSize: '14px',
+                      lineHeight: '20px'
+                    }}>批量管理</span>
+                  </div>
+                </div>
 
-        .bookmarks-container {
-          max-width: 1440px;
-        }
+                {/* 统计数据 */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gap: '16px'
+                }}>
+                  {collectionStats.map((stat, index) => (
+                    <div key={index} style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      borderRadius: '8px',
+                      padding: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px'
+                    }}>
+                      <div style={{
+                        background: stat.gradient,
+                        borderRadius: '8px',
+                        padding: '10px',
+                        width: '40px',
+                        height: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        <Icon name={stat.icon} size="sm" style={{ color: '#FFFFFF' }} />
+                      </div>
+                      <div>
+                        <div style={{
+                          color: '#9CA3AF',
+                          fontSize: '12px',
+                          lineHeight: '16px',
+                          marginBottom: '4px'
+                        }}>{stat.title}</div>
+                        <div style={{
+                          color: '#FFFFFF',
+                          fontSize: '18px',
+                          fontWeight: '600',
+                          lineHeight: '28px'
+                        }}>{stat.count}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-        .bookmarks-layout {
-          display: flex;
-          gap: 40px;
-          align-items: flex-start;
-        }
+              {/* 收藏内容网格 */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(265px, 1fr))',
+                gap: '20px',
+                marginBottom: '40px'
+              }}>
+                {bookmarkedItems.map((item, index) => (
+                  <div key={index} style={{
+                    background: 'rgba(26, 26, 26, 0.30)',
+                    backdropFilter: 'blur(12px)',
+                    border: '1px solid rgba(42, 42, 42, 0.70)',
+                    borderRadius: '12px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{
+                      width: '100%',
+                      height: '128px',
+                      backgroundImage: `url(${item.image})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      position: 'relative',
+                      padding: '8px'
+                    }}>
+                      <div style={{
+                        background: 'rgba(0, 0, 0, 0.50)',
+                        borderRadius: '9999px',
+                        padding: '4px 8px',
+                        color: '#FFFFFF',
+                        fontSize: '12px',
+                        display: 'inline-block'
+                      }}>{item.category}</div>
+                    </div>
+                    <div style={{ padding: '12px' }}>
+                      <h4 style={{
+                        color: '#FFFFFF',
+                        fontSize: '16px',
+                        fontWeight: '500',
+                        lineHeight: '24px',
+                        margin: '0 0 8px 0'
+                      }}>{item.title}</h4>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                      }}>
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}>
+                          <Icon name="clock-icon" size="xs" style={{ color: '#FACC15' }} />
+                          <span style={{
+                            color: '#FACC15',
+                            fontSize: '12px',
+                            lineHeight: '16px'
+                          }}>{item.collectedAt}</span>
+                        </div>
+                        <Icon name="share-link-detail" size="xs" style={{ color: '#9CA3AF' }} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-        .bookmarks-main {
-          flex: 1;
-          max-width: calc(100% - 280px);
-        }
+              {/* 分页导航 */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '8px',
+                marginTop: '32px'
+              }}>
+                <div style={{
+                  background: 'rgba(26, 26, 26, 0.30)',
+                  border: '1px solid rgba(42, 42, 42, 0.70)',
+                  borderRadius: '6px',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer'
+                }}>
+                  <span style={{
+                    color: '#FFFFFF',
+                    fontSize: '16px',
+                    lineHeight: '24px'
+                  }}>&lt;</span>
+                </div>
 
-        .bookmarks-header {
-          margin-bottom: 32px;
-        }
+                <div style={{
+                  background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                  borderRadius: '6px',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <span style={{
+                    color: '#FFFFFF',
+                    fontSize: '16px',
+                    lineHeight: '24px',
+                    fontWeight: '600'
+                  }}>1</span>
+                </div>
 
-        .page-title {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-5xl);
-          font-weight: 700;
-          line-height: 44px;
-          margin: 0 0 8px 0;
-        }
+                {[2, 3].map((page) => (
+                  <div key={page} style={{
+                    background: 'rgba(26, 26, 26, 0.30)',
+                    border: '1px solid rgba(42, 42, 42, 0.70)',
+                    borderRadius: '6px',
+                    width: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer'
+                  }}>
+                    <span style={{
+                      color: '#FFFFFF',
+                      fontSize: '16px',
+                      lineHeight: '24px'
+                    }}>{page}</span>
+                  </div>
+                ))}
 
-        .page-description {
-          color: var(--color-text-muted);
-          font-size: var(--font-size-lg);
-          line-height: 24px;
-          margin: 0;
-        }
-
-        .bookmarks-stats {
-          display: flex;
-          gap: 32px;
-          margin-bottom: 32px;
-          padding: 16px 0;
-          border-bottom: 1px solid rgba(42, 42, 42, 0.30);
-        }
-
-        .stats-item {
-          display: flex;
-          gap: 8px;
-        }
-
-        .stats-label {
-          color: var(--color-text-muted);
-          font-size: var(--font-size-base);
-          line-height: 20px;
-        }
-
-        .stats-value {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-base);
-          line-height: 20px;
-          font-weight: 500;
-        }
-
-        .collections-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
-          gap: 24px;
-          margin-bottom: 40px;
-        }
-
-        .empty-state {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 80px 20px;
-          text-align: center;
-        }
-
-        .empty-icon {
-          width: 80px;
-          height: 80px;
-          background: rgba(59, 130, 246, 0.10);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 24px;
-          color: var(--color-text-muted);
-        }
-
-        .empty-title {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-2xl);
-          font-weight: 600;
-          line-height: 28px;
-          margin: 0 0 8px 0;
-        }
-
-        .empty-description {
-          color: var(--color-text-muted);
-          font-size: var(--font-size-lg);
-          line-height: 24px;
-          margin: 0;
-        }
-
-        .pagination-section {
-          display: flex;
-          justify-content: center;
-          padding-top: 40px;
-        }
-
-        .load-more-btn {
-          background: rgba(26, 26, 26, 0.60);
-          border: 1px solid rgba(42, 42, 42, 0.70);
-          border-radius: 8px;
-          color: var(--color-text-primary);
-          font-size: var(--font-size-base);
-          line-height: 20px;
-          font-weight: 500;
-          padding: 12px 24px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .load-more-btn:hover {
-          background: rgba(26, 26, 26, 0.80);
-          border-color: rgba(59, 130, 246, 0.30);
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 1024px) {
-          .bookmarks-layout {
-            flex-direction: column;
-          }
-
-          .bookmarks-main {
-            max-width: 100%;
-          }
-
-          .collections-grid {
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-          }
-        }
-
-        @media (max-width: 768px) {
-          .bookmarks-page {
-            padding: 20px 0 60px;
-          }
-
-          .bookmarks-layout {
-            gap: 24px;
-          }
-
-          .collections-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
-          }
-
-          .bookmarks-stats {
-            flex-direction: column;
-            gap: 12px;
-          }
-        }
-      `}</style>
-        </div>
-    )
+                <div style={{
+                  background: 'rgba(26, 26, 26, 0.30)',
+                  border: '1px solid rgba(42, 42, 42, 0.70)',
+                  borderRadius: '6px',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer'
+                }}>
+                  <span style={{
+                    color: '#FFFFFF',
+                    fontSize: '16px',
+                    lineHeight: '24px'
+                  }}>&gt;</span>
+                </div>
+              </div>
+            </Container>
+          </div>
+        </main>
+      </div>
+    </div>
+  )
 } 

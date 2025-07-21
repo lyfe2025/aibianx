@@ -8,6 +8,8 @@ import { useModalStore } from '@/stores'
 interface RegisterFormProps {
     onSubmit?: (data: RegisterFormData) => Promise<void>
     isLoading?: boolean
+    onShowTerms?: () => void
+    onShowPrivacy?: () => void
 }
 
 interface RegisterFormData {
@@ -18,7 +20,7 @@ interface RegisterFormData {
     agreeToTerms: boolean
 }
 
-export function RegisterForm({ onSubmit, isLoading: externalLoading }: RegisterFormProps = {}) {
+export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms, onShowPrivacy }: RegisterFormProps = {}) {
     const { openModal } = useModalStore()
     const [formData, setFormData] = useState({
         username: '',
@@ -144,25 +146,23 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading }: RegisterF
 
             {/* 用户名输入 */}
             <Input
-                label="用户名"
                 type="text"
                 placeholder="用户名"
                 value={formData.username}
                 onChange={(e) => handleInputChange('username', e.target.value)}
                 error={errors.username}
-                icon={<Icon name="user-icon" size="sm" />}
+                icon={<Icon name="modals/username-icon" size="sm" />}
                 autoComplete="username"
             />
 
             {/* 邮箱输入 */}
             <Input
-                label="邮箱"
                 type="email"
                 placeholder="电子邮箱"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 error={errors.email}
-                icon={<Icon name="mail-icon" size="sm" />}
+                icon={<Icon name="modals/email-icon" size="sm" />}
                 autoComplete="email"
             />
 
@@ -179,7 +179,6 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading }: RegisterF
             {/* 密码输入 */}
             <div>
                 <Input
-                    label="密码"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="密码"
                     value={formData.password}
@@ -247,7 +246,6 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading }: RegisterF
 
             {/* 确认密码输入 */}
             <Input
-                label="确认密码"
                 type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="确认密码"
                 value={formData.confirmPassword}
@@ -306,7 +304,7 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading }: RegisterF
                     }}
                 >
                     {formData.agreeToTerms && (
-                        <Icon name="success-check" size="xs" style={{ color: '#FFFFFF' }} />
+                        <Icon name="modals/checkbox-icon" size="xs" style={{ color: '#FFFFFF' }} />
                     )}
                 </button>
                 <div style={{ flex: 1 }}>
@@ -316,22 +314,42 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading }: RegisterF
                         lineHeight: '1.5'
                     }}>
                         我已阅读并同意
-                        <a href="/terms" style={{
-                            color: 'var(--color-primary-blue)',
-                            textDecoration: 'none',
-                            marginLeft: '4px',
-                            marginRight: '4px'
-                        }}>
+                        <button
+                            type="button"
+                            onClick={onShowTerms}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                color: 'var(--color-primary-blue)',
+                                textDecoration: 'underline',
+                                cursor: 'pointer',
+                                fontSize: 'inherit',
+                                fontFamily: 'inherit',
+                                marginLeft: '4px',
+                                marginRight: '4px',
+                                padding: 0
+                            }}
+                        >
                             《用户协议》
-                        </a>
+                        </button>
                         和
-                        <a href="/privacy" style={{
-                            color: 'var(--color-primary-blue)',
-                            textDecoration: 'none',
-                            marginLeft: '4px'
-                        }}>
+                        <button
+                            type="button"
+                            onClick={onShowPrivacy}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                color: 'var(--color-primary-blue)',
+                                textDecoration: 'underline',
+                                cursor: 'pointer',
+                                fontSize: 'inherit',
+                                fontFamily: 'inherit',
+                                marginLeft: '4px',
+                                padding: 0
+                            }}
+                        >
                             《隐私政策》
-                        </a>
+                        </button>
                     </span>
                     {errors.agreeToTerms && (
                         <div style={{
@@ -369,57 +387,7 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading }: RegisterF
                 {effectiveLoading ? '注册中...' : '注册'}
             </GradientButton>
 
-            {/* 分隔线 */}
-            <div style={{
-                position: 'relative',
-                margin: 'var(--spacing-4) 0'
-            }}>
-                <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: 0,
-                    right: 0,
-                    height: '1px',
-                    background: 'var(--color-border-primary)'
-                }} />
-                <div style={{
-                    position: 'relative',
-                    textAlign: 'center',
-                    background: 'var(--color-bg-primary)',
-                    padding: '0 var(--spacing-4)',
-                    fontSize: 'var(--font-size-sm)',
-                    color: 'var(--color-text-muted)'
-                }}>
-                    或
-                </div>
-            </div>
 
-            {/* GitHub注册 */}
-            <button
-                type="button"
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 'var(--spacing-3)',
-                    width: '100%',
-                    padding: '12px 24px',
-                    background: 'rgba(18, 18, 18, 0.70)',
-                    border: '1px solid var(--color-border-secondary)',
-                    borderRadius: 'var(--radius-lg)',
-                    color: 'var(--color-text-primary)',
-                    fontSize: 'var(--font-size-base)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                }}
-                onClick={() => {
-                    // TODO: 实现GitHub注册
-                    console.log('GitHub注册')
-                }}
-            >
-                <Icon name="modals/github-icon" size="sm" />
-                使用 GitHub 注册
-            </button>
 
             {/* 登录链接 */}
             <div style={{

@@ -73,7 +73,23 @@ export function MembershipSection({
     })
 
     const handleUpgrade = () => {
-        openModal('membership')
+        // 直接打开支付弹窗，传递默认的年度会员计划信息
+        const defaultPlan = {
+            name: '年度会员',
+            price: pricing.currentPrice,
+            originalPrice: pricing.originalPrice,
+            period: pricing.period,
+            features: [
+                '200+ AI变现教程和指南',
+                '每周更新实战案例',
+                '专属社区和导师指导',
+                'AI工具专属优惠'
+            ]
+        }
+        
+        openModal('payment', {
+            payment: { plan: defaultPlan }
+        })
     }
 
     return (
