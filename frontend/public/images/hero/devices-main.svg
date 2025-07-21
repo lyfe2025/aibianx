@@ -1,0 +1,230 @@
+
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="354" height="410.652" viewBox="0 0 354 410.652">
+	<defs>
+		<clipPath id="clipPath0:0:0">
+			<path d="M0 0L354 0L354 410.652L0 410.652L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 5.19156e-05)"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clipPath0:0:0)">
+		<defs>
+			<filter id="filter0:0:1" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feComponentTransfer in="SourceAlpha" result="componentTransfer0:0:2">
+					<feFuncR type="linear" slope="0" intercept="0.23137255"/>
+					<feFuncG type="linear" slope="0" intercept="0.50980395"/>
+					<feFuncB type="linear" slope="0" intercept="0.96470588"/>
+					<feFuncA type="linear" slope="10000" intercept="0"/>
+				</feComponentTransfer>
+				<feComponentTransfer in="componentTransfer0:0:2" result="componentTransfer0:0:3">
+					<feFuncA type="linear" slope="0.29803923" intercept="0"/>
+				</feComponentTransfer>
+				<feGaussianBlur stdDeviation="15" in="componentTransfer0:0:3" result="gaussianBlur0:0:4"/>
+				<feMerge>
+					<feMergeNode in="gaussianBlur0:0:4"/>
+					<feMergeNode in="SourceGraphic"/>
+				</feMerge>
+			</filter>
+		</defs>
+		<g filter="url(#filter0:0:1)">
+			<defs>
+				<linearGradient id="linearGradient0:0:5" gradientTransform="matrix(137.26 189.66 -189.66 137.26 123.257 -29.3502)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+					<stop offset="0.25" stop-color="rgb(59, 130, 246)" stop-opacity="0.2"/>
+					<stop offset="0.75" stop-color="rgb(139, 92, 246)" stop-opacity="0.2"/>
+				</linearGradient>
+			</defs>
+			<rect width="159.81435" height="259.07947" rx="19.992153" ry="19.992153" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 166.949 121.584)" fill="url(#linearGradient0:0:5)"/>
+			<path d="M0 19.3109C0 8.6458 7.36917 0 16.4595 0L143.355 0C152.445 0 159.814 8.6458 159.814 19.3109L159.814 239.769C159.814 250.434 152.445 259.079 143.355 259.079L16.4595 259.079C7.36917 259.079 0 250.434 0 239.769L0 19.3109ZM16.4595 0.965547C7.82369 0.965547 0.822975 9.17906 0.822975 19.3109L0.822975 239.769C0.822975 249.9 7.82369 258.114 16.4595 258.114L143.355 258.114C151.99 258.114 158.991 249.9 158.991 239.769L158.991 19.3109C158.991 9.17906 151.99 0.965547 143.355 0.965547L16.4595 0.965547Z" fill-rule="nonzero" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 166.949 121.584)" fill="rgb(255, 255, 255)" fill-opacity="0.1"/>
+			<defs>
+				<mask id="mask0:0:6" style="mask-type:alpha">
+					<path d="M16.4595 0C7.36917 0 0 8.64581 0 19.3109L0 239.769C0 250.434 7.36917 259.079 16.4595 259.079L143.355 259.079C152.445 259.079 159.814 250.434 159.814 239.769L159.814 19.3109C159.814 8.64581 152.445 0 143.355 0L16.4595 0Z" fill-rule="nonzero" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 166.95 121.584)" fill="rgb(0, 0, 0)"/>
+				</mask>
+			</defs>
+			<g mask="url(#mask0:0:6)">
+				<defs>
+					<filter id="filter0:0:7" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+						<feComponentTransfer in="SourceAlpha" result="componentTransfer0:0:8">
+							<feFuncR type="linear" slope="0" intercept="0.23137255"/>
+							<feFuncG type="linear" slope="0" intercept="0.50980395"/>
+							<feFuncB type="linear" slope="0" intercept="0.96470588"/>
+							<feFuncA type="linear" slope="10000" intercept="0"/>
+						</feComponentTransfer>
+						<feComponentTransfer in="componentTransfer0:0:8" result="componentTransfer0:0:9">
+							<feFuncA type="linear" slope="0.29803923" intercept="0"/>
+						</feComponentTransfer>
+						<feOffset dx="0" dy="8" in="componentTransfer0:0:9" result="offset0:0:10"/>
+						<feGaussianBlur stdDeviation="7.5" in="offset0:0:10" result="gaussianBlur0:0:11"/>
+						<feMerge>
+							<feMergeNode in="gaussianBlur0:0:11"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
+				</defs>
+				<g filter="url(#filter0:0:7)">
+					<defs>
+						<linearGradient id="linearGradient0:0:12" gradientTransform="matrix(34.3148 47.4148 -47.4148 34.3148 30.8143 -7.33747)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+							<stop offset="0.25" stop-color="rgb(59, 130, 246)"/>
+							<stop offset="0.75" stop-color="rgb(139, 92, 246)"/>
+						</linearGradient>
+					</defs>
+					<rect width="39.953465" height="64.769867" rx="11.995292" ry="11.995292" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 225.849 207.668)" fill="url(#linearGradient0:0:12)"/>
+					<defs>
+						<mask id="mask0:0:13" style="mask-type:alpha">
+							<path d="M0 0L26.3352 0L26.3352 30.8975L0 30.8975L0 0Z" fill-rule="nonzero" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 232.542 223.346)" fill="rgb(0, 0, 0)"/>
+						</mask>
+					</defs>
+					<g mask="url(#mask0:0:13)">
+						<defs>
+							<mask id="mask0:0:14" style="mask-type:alpha">
+								<path d="M0 0L26.3351 0L26.3351 30.8974L0 30.8974L0 0Z" fill-rule="nonzero" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 232.544 223.346)" fill="rgb(0, 0, 0)"/>
+							</mask>
+						</defs>
+						<g mask="url(#mask0:0:14)">
+							<defs>
+								<mask id="mask0:0:15" style="mask-type:alpha">
+									<path d="M0 0L26.3351 0L26.3351 30.8974L0 30.8974L0 0Z" fill-rule="nonzero" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 232.546 223.346)" fill="rgb(0, 0, 0)"/>
+								</mask>
+							</defs>
+							<g mask="url(#mask0:0:15)">
+								<path d="M9.38496 25.7638L0 20.2583L0 5.79326L9.8757 0L19.7513 5.79326L19.7513 20.2583L10.3664 25.7638L9.8757 24.6124L9.38496 25.7638ZM3.55092 6.5889L9.8757 2.87868L16.2003 6.5889L9.8757 10.2991L3.55092 6.5889ZM8.77835 22.5293L2.19459 18.6672L2.19459 8.67195L8.77835 12.5342L8.77835 22.5293ZM10.973 12.5342L17.5567 8.67195L17.5567 18.6672L10.973 22.5293L10.973 12.5342Z" fill-rule="evenodd" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 235.78 225.161)" fill="rgb(255, 255, 255)"/>
+							</g>
+						</g>
+					</g>
+				</g>
+				<defs>
+					<filter id="filter0:0:16" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+						<feComponentTransfer in="SourceAlpha" result="componentTransfer0:0:17">
+							<feFuncR type="linear" slope="0" intercept="0"/>
+							<feFuncG type="linear" slope="0" intercept="0"/>
+							<feFuncB type="linear" slope="0" intercept="0"/>
+							<feFuncA type="linear" slope="10000" intercept="0"/>
+						</feComponentTransfer>
+						<feComponentTransfer in="componentTransfer0:0:17" result="componentTransfer0:0:18">
+							<feFuncA type="linear" slope="0.49803922" intercept="0"/>
+						</feComponentTransfer>
+						<feOffset dx="0" dy="2" in="componentTransfer0:0:18" result="offset0:0:19"/>
+						<feGaussianBlur stdDeviation="5" in="offset0:0:19" result="gaussianBlur0:0:20"/>
+						<feMerge>
+							<feMergeNode in="gaussianBlur0:0:20"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
+				</defs>
+				<g filter="url(#filter0:0:16)">
+					<path d="M5.70457 6.97665L6.40779 9.3825L8.1349 9.3825L5.16168 0L2.98449 0L0 9.3825L1.67086 9.3825L2.41066 6.97665L5.70457 6.97665ZM2.88041 5.38263L3.99995 1.68971L4.13778 1.68971L5.22075 5.38263L2.88041 5.38263Z" fill-rule="nonzero" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 228.654 300.83)" fill="rgb(255, 255, 255)"/>
+					<path d="M0 0L0 9.3825L1.62307 9.3825L1.62307 0L0 0Z" fill-rule="nonzero" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 237.59 299.15)" fill="rgb(255, 255, 255)"/>
+					<path d="M10.3571 10.7323C8.52594 10.0723 7.17577 9.3396 6.12935 8.43537C7.17577 7.13835 7.86772 5.54105 8.34028 3.41901L9.99989 3.41901L9.99989 1.97352L5.97743 1.97352C5.72429 0.920756 5.5527 0.257415 5.47114 0L4.15751 0.217808C4.26161 0.554427 4.39938 1.13527 4.59632 1.97352L0.390996 1.97352L0.390996 3.41901L2.01407 3.41901C2.52324 5.52784 3.23767 7.12512 4.26161 8.40891C3.23767 9.31314 1.87622 10.0723 0 10.828L0.587934 12.356C2.61319 11.422 4.09002 10.5178 5.20672 9.43529C6.36003 10.5178 7.84517 11.422 9.83957 12.2866L10.3571 10.7323ZM6.95916 3.41901C6.59063 5.13842 6.02525 6.4222 5.18417 7.46181C4.34317 6.4222 3.73277 5.06912 3.36424 3.41901L6.95916 3.41901Z" fill-rule="nonzero" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 240.511 297.007)" fill="rgb(255, 255, 255)"/>
+					<path d="M8.39928 2.36625L8.39928 3.2573L9.65382 3.2573L9.65382 1.16167L6.02525 1.16167C5.8874 0.623734 5.78329 0.231017 5.70173 0L4.43592 0.257415C4.44719 0.270614 4.49221 0.458732 4.58504 0.825051L4.67787 1.16167L0.78199 1.16167L0.78199 3.2441L2.05061 3.2441L2.05061 2.36625L8.39928 2.36625ZM2.38531 4.65C2.11809 5.01632 1.92403 5.27373 1.79746 5.42224L3.09702 5.79847C3.43172 5.90737 3.68487 5.98988 3.85926 6.02948C3.11101 6.21763 2.00279 6.39577 0.540035 6.57073L0.919755 7.80171C2.94789 7.50142 4.53723 7.11192 5.67927 6.62355C6.8325 7.00301 8.00549 7.42215 9.19255 7.89411L9.60889 6.66313C9.12506 6.47505 8.27271 6.2044 7.03783 5.84137C7.47664 5.50145 7.84517 5.10872 8.15741 4.65L10.1855 4.65L10.1855 3.47512L4.65252 3.47512C4.7791 3.2705 4.90847 3.02959 5.04632 2.74577L3.7777 2.37945C3.65113 2.62366 3.45419 2.98669 3.1673 3.47512L0.275614 3.47512L0.275614 4.65L2.38531 4.65ZM6.52027 4.65C6.27839 4.93381 5.95488 5.19122 5.56388 5.42224C4.68906 5.16483 4.06747 5.00312 3.68487 4.92061L3.893 4.65L6.52027 4.65ZM10.4387 10.8808C8.91685 10.4089 7.65951 9.84123 6.68058 9.15145L9.95487 9.15145L9.95487 7.9337L5.86485 7.9337L5.86485 7.13838L4.58504 7.08228L4.58504 7.9337L0.483826 7.9337L0.483826 9.15145L3.84806 9.15145C2.86914 9.81478 1.70463 10.3693 0 10.8676L0.447205 12.2734C2.29248 11.5573 3.5583 10.9237 4.58504 10.125L4.58504 12.3692L5.86485 12.3692L5.86485 10.0986C6.38242 10.5046 6.95908 10.8676 7.60322 11.1943C8.24744 11.5177 9.04342 11.8675 9.99988 12.2339L10.4387 10.8808Z" fill-rule="nonzero" transform="matrix(0.982789 -0.184734 -2.56557e-08 1 251.654 294.926)" fill="rgb(255, 255, 255)"/>
+				</g>
+			</g>
+		</g>
+		<defs>
+			<filter id="filter0:0:21" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feComponentTransfer in="SourceAlpha" result="componentTransfer0:0:22">
+					<feFuncR type="linear" slope="0" intercept="0.23137255"/>
+					<feFuncG type="linear" slope="0" intercept="0.50980395"/>
+					<feFuncB type="linear" slope="0" intercept="0.96470588"/>
+					<feFuncA type="linear" slope="10000" intercept="0"/>
+				</feComponentTransfer>
+				<feComponentTransfer in="componentTransfer0:0:22" result="componentTransfer0:0:23">
+					<feFuncA type="linear" slope="0.29803923" intercept="0"/>
+				</feComponentTransfer>
+				<feGaussianBlur stdDeviation="15" in="componentTransfer0:0:23" result="gaussianBlur0:0:24"/>
+				<feMerge>
+					<feMergeNode in="gaussianBlur0:0:24"/>
+					<feMergeNode in="SourceGraphic"/>
+				</feMerge>
+			</filter>
+		</defs>
+		<g filter="url(#filter0:0:21)">
+			<defs>
+				<linearGradient id="linearGradient0:0:25" gradientTransform="matrix(137.26 189.66 -189.66 137.26 123.257 -29.3502)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+					<stop offset="0.25" stop-color="rgb(59, 130, 246)" stop-opacity="0.2"/>
+					<stop offset="0.75" stop-color="rgb(139, 92, 246)" stop-opacity="0.2"/>
+				</linearGradient>
+			</defs>
+			<rect width="159.81435" height="259.07944" rx="19.992153" ry="19.992153" transform="matrix(-0.982789 0.184734 4.17429e-07 1 187.053 29.9884)" fill="url(#linearGradient0:0:25)"/>
+			<path d="M0 19.3109C0 8.6458 7.36917 0 16.4595 0L143.355 0C152.445 0 159.814 8.6458 159.814 19.3109L159.814 239.769C159.814 250.434 152.445 259.079 143.355 259.079L16.4595 259.079C7.36917 259.079 0 250.434 0 239.769L0 19.3109ZM16.4595 0.965547C7.82369 0.965547 0.822975 9.17906 0.822975 19.3109L0.822975 239.769C0.822975 249.9 7.82369 258.114 16.4595 258.114L143.355 258.114C151.99 258.114 158.991 249.9 158.991 239.769L158.991 19.3109C158.991 9.17906 151.99 0.965547 143.355 0.965547L16.4595 0.965547Z" fill-rule="nonzero" transform="matrix(-0.982789 0.184734 4.17429e-07 1 187.053 29.9884)" fill="rgb(255, 255, 255)" fill-opacity="0.1"/>
+			<defs>
+				<mask id="mask0:0:26" style="mask-type:alpha">
+					<path d="M16.4595 0C7.36917 0 0 8.64581 0 19.3109L0 239.769C0 250.434 7.36917 259.079 16.4595 259.079L143.355 259.079C152.445 259.079 159.814 250.434 159.814 239.769L159.814 19.3109C159.814 8.64581 152.445 0 143.355 0L16.4595 0Z" fill-rule="nonzero" transform="matrix(-0.982789 0.184734 4.17429e-07 1 187.054 29.9884)" fill="rgb(0, 0, 0)"/>
+				</mask>
+			</defs>
+			<g mask="url(#mask0:0:26)">
+				<defs>
+					<filter id="filter0:0:27" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+						<feComponentTransfer in="SourceAlpha" result="componentTransfer0:0:28">
+							<feFuncR type="linear" slope="0" intercept="0.23137255"/>
+							<feFuncG type="linear" slope="0" intercept="0.50980395"/>
+							<feFuncB type="linear" slope="0" intercept="0.96470588"/>
+							<feFuncA type="linear" slope="10000" intercept="0"/>
+						</feComponentTransfer>
+						<feComponentTransfer in="componentTransfer0:0:28" result="componentTransfer0:0:29">
+							<feFuncA type="linear" slope="0.29803923" intercept="0"/>
+						</feComponentTransfer>
+						<feOffset dx="0" dy="8" in="componentTransfer0:0:29" result="offset0:0:30"/>
+						<feGaussianBlur stdDeviation="7.5" in="offset0:0:30" result="gaussianBlur0:0:31"/>
+						<feMerge>
+							<feMergeNode in="gaussianBlur0:0:31"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
+				</defs>
+				<g filter="url(#filter0:0:27)">
+					<defs>
+						<linearGradient id="linearGradient0:0:32" gradientTransform="matrix(34.3149 47.4148 -47.4148 34.3149 30.8142 -7.33752)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+							<stop offset="0.25" stop-color="rgb(59, 130, 246)"/>
+							<stop offset="0.75" stop-color="rgb(139, 92, 246)"/>
+						</linearGradient>
+					</defs>
+					<rect width="39.953545" height="64.769859" rx="11.995292" ry="11.995292" transform="matrix(-0.982789 0.184734 4.17429e-07 1 128.156 138.214)" fill="url(#linearGradient0:0:32)"/>
+					<defs>
+						<mask id="mask0:0:33" style="mask-type:alpha">
+							<path d="M0 0L26.3352 0L26.3352 30.8975L0 30.8975L0 0Z" fill-rule="nonzero" transform="matrix(-0.982789 0.184734 4.17429e-07 1 121.465 156.409)" fill="rgb(0, 0, 0)"/>
+						</mask>
+					</defs>
+					<g mask="url(#mask0:0:33)">
+						<defs>
+							<mask id="mask0:0:34" style="mask-type:alpha">
+								<path d="M0 0L26.3352 0L26.3352 30.8975L0 30.8975L0 0Z" fill-rule="nonzero" transform="matrix(-0.982789 0.184734 4.17429e-07 1 121.467 156.409)" fill="rgb(0, 0, 0)"/>
+							</mask>
+						</defs>
+						<g mask="url(#mask0:0:34)">
+							<defs>
+								<mask id="mask0:0:35" style="mask-type:alpha">
+									<path d="M0 0L26.3352 0L26.3352 30.8975L0 30.8975L0 0Z" fill-rule="nonzero" transform="matrix(-0.982789 0.184734 4.17429e-07 1 121.468 156.409)" fill="rgb(0, 0, 0)"/>
+								</mask>
+							</defs>
+							<g mask="url(#mask0:0:35)">
+								<path d="M9.38496 25.7639L0 20.2584L0 5.79328L9.8757 0L19.7514 5.79328L19.7514 20.2584L10.3664 25.7639L9.8757 24.6125L9.38496 25.7639ZM3.55094 6.58893L9.8757 2.87869L16.2004 6.58893L9.8757 10.2992L3.55094 6.58893ZM8.77843 22.5294L2.1946 18.6672L2.1946 8.67197L8.77843 12.5342L8.77843 22.5294ZM10.973 12.5342L17.5568 8.67197L17.5568 18.6672L10.973 22.5294L10.973 12.5342Z" fill-rule="evenodd" transform="matrix(-0.982789 0.184734 4.17429e-07 1 118.232 159.439)" fill="rgb(255, 255, 255)"/>
+							</g>
+						</g>
+					</g>
+				</g>
+				<defs>
+					<filter id="filter0:0:36" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+						<feComponentTransfer in="SourceAlpha" result="componentTransfer0:0:37">
+							<feFuncR type="linear" slope="0" intercept="0"/>
+							<feFuncG type="linear" slope="0" intercept="0"/>
+							<feFuncB type="linear" slope="0" intercept="0"/>
+							<feFuncA type="linear" slope="10000" intercept="0"/>
+						</feComponentTransfer>
+						<feComponentTransfer in="componentTransfer0:0:37" result="componentTransfer0:0:38">
+							<feFuncA type="linear" slope="0.49803922" intercept="0"/>
+						</feComponentTransfer>
+						<feOffset dx="0" dy="2" in="componentTransfer0:0:38" result="offset0:0:39"/>
+						<feGaussianBlur stdDeviation="5" in="offset0:0:39" result="gaussianBlur0:0:40"/>
+						<feMerge>
+							<feMergeNode in="gaussianBlur0:0:40"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
+				</defs>
+				<g filter="url(#filter0:0:36)">
+					<path d="M5.70457 6.97665L6.40779 9.3825L8.1349 9.3825L5.16168 0L2.98449 0L0 9.3825L1.67086 9.3825L2.41066 6.97665L5.70457 6.97665ZM2.88041 5.38263L3.99995 1.68971L4.13778 1.68971L5.22075 5.38263L2.88041 5.38263Z" fill-rule="nonzero" transform="matrix(-0.982789 0.184734 4.17429e-07 1 125.351 232.431)" fill="rgb(255, 255, 255)"/>
+					<path d="M0 0L0 9.3825L1.62307 9.3825L1.62307 0L0 0Z" fill-rule="nonzero" transform="matrix(-0.982789 0.184734 4.17429e-07 1 116.414 234.111)" fill="rgb(255, 255, 255)"/>
+					<path d="M0.461277 5.24733C0.64694 5.20443 0.796063 5.17803 0.911362 5.16483C1.15323 5.12523 1.52176 5.09882 1.99432 5.06912C1.63706 5.75887 1.35017 6.27369 1.13077 6.63674C0.900087 7.01629 0.829805 7.09875 0.472552 7.22089L0.751047 8.73236L1.27981 8.61022C1.74117 8.51781 2.47814 8.36931 3.47954 8.19445C3.60891 8.17794 3.67648 8.16471 3.71022 8.15149L3.68767 6.80175L2.13216 7.11198C2.29528 6.88092 2.51188 6.48823 2.80165 5.96348C3.08854 5.42224 3.37831 4.86782 3.65393 4.30017L4.28688 5.38264C4.41345 5.27374 4.59903 5.09882 4.84099 4.84141L4.84099 5.66646L8.80435 5.66646L8.80435 4.47509C9.06877 4.7457 9.39228 5.04272 9.772 5.35294L10.4049 4.12526C9.15033 3.1385 8.0561 1.66331 7.40916 0.0825062L6.40776 0.0825062C5.7749 1.71941 4.886 3.06919 3.74676 4.11206C3.98871 3.59723 4.18277 3.1517 4.33469 2.78538L3.38951 2.15174L2.90568 3.21771L2.69755 3.66324L1.6708 3.71934C1.834 3.51473 2.07587 3.08239 2.38531 2.43555C2.69755 1.77221 2.97324 1.15177 3.20384 0.541237L2.13216 0C1.89021 0.702947 1.61459 1.40589 1.30236 2.10883C1.00419 2.81178 0.784789 3.25731 0.635666 3.44872C0.576659 3.51473 0.450003 3.71934 0.185664 3.82825L0.461277 5.24733ZM5.26572 4.36617C5.99142 3.51473 6.55689 2.65007 6.93661 1.79861C7.31633 2.68968 7.89299 3.54112 8.68905 4.36617L5.26572 4.36617ZM7.39789 8.97655C7.57228 9.26042 7.81423 9.69269 8.11239 10.2736L6.94788 10.3297L5.45139 10.3957C5.73828 10.059 6.24465 9.12505 6.62717 8.19445L9.93232 8.19445L9.93232 6.88092L3.95209 6.88092L3.95209 8.19445L5.35855 8.19445C5.04911 8.81482 4.72569 9.44851 4.37963 10.0855C4.24186 10.3297 4.09274 10.5045 3.91835 10.6003L4.21931 11.828C4.3909 11.7883 4.59903 11.762 4.82971 11.7487L6.78749 11.6002L8.72279 11.4913L9.09124 12.2603L10.0027 11.422C9.20662 9.80161 8.74526 8.9106 8.3318 8.31321L7.39789 8.97655ZM3.75803 9.3561C3.21512 9.5046 2.59344 9.66633 1.87902 9.84119C1.16451 10.0162 0.542835 10.1679 0 10.2868L0.196856 11.762L3.90707 10.8709L3.83679 10.0986L3.75803 9.3561Z" fill-rule="nonzero" transform="matrix(-0.982789 0.184734 4.17429e-07 1 113.518 233.101)" fill="rgb(255, 255, 255)"/>
+					<path d="M9.78328 1.31348L9.78328 0L0 0L0 1.31348L9.78328 1.31348ZM1.64842 2.17814L0.438812 2.12203L0.438812 11.0326L8.12367 11.0326L8.12367 11.531L9.34447 11.531L9.34447 2.16494L8.12367 2.10883L8.12367 9.63994L1.64842 9.63994L1.64842 2.17814ZM7.45418 8.67951L7.45418 2.19134L2.3291 2.19134L2.3291 8.67951L7.45418 8.67951ZM3.4458 4.82821L3.4458 3.43551L4.33189 3.43551L4.33189 4.82821L3.4458 4.82821ZM5.45139 3.43551L6.33749 3.43551L6.33749 4.82821L5.45139 4.82821L5.45139 3.43551ZM4.33189 7.42218L3.4458 7.42218L3.4458 6.00311L4.33189 6.00311L4.33189 7.42218ZM6.33749 6.00311L6.33749 7.42218L5.45139 7.42218L5.45139 6.00311L6.33749 6.00311Z" fill-rule="nonzero" transform="matrix(-0.982789 0.184734 4.17429e-07 1 102.036 235.962)" fill="rgb(255, 255, 255)"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>
