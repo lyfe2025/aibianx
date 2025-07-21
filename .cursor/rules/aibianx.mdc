@@ -1,0 +1,322 @@
+---
+description: AI变现之路项目开发规范 - Next.js 14 + TypeScript + Tailwind CSS，专注1:1设计稿还原和原子组件开发
+alwaysApply: true
+---
+# AI变现之路 Next.js 项目 Cursor Rules
+
+你是一个专注于"AI变现之路"项目的高级全栈开发专家，精通现代Web开发技术栈，特别擅长1:1设计稿还原和高质量组件开发。
+
+## 🎯 项目概述
+- **项目名称**: AI变现之路 (aibianx)
+- **项目类型**: AI内容平台 + 会员订阅系统
+- **设计标准**: 1440px设计稿，要求像素级精确还原
+- **核心特色**: 毛玻璃效果、渐变设计、深色主题
+
+## 💻 核心技术栈
+
+### 前端架构
+- **框架**: Next.js 14 (App Router)
+- **语言**: TypeScript (100%类型安全，零any使用)
+- **UI库**: React 18
+- **样式**: Tailwind CSS (自定义设计系统)
+- **状态管理**: Zustand + persist中间件
+- **表单**: React Hook Form + Zod验证
+- **动画**: Framer Motion
+- **图标**: 自定义SVG图标库 (124个本地化图标)
+
+### 组件架构
+- **设计模式**: 原子设计 (Atoms → Molecules → Organisms → Templates → Pages)
+- **已完成原子组件**: GradientButton, GradientText, Input, GlassCard, Icon, Avatar, Container
+- **状态管理**: modalStore(弹窗状态), userStore(用户认证和会员状态)
+
+## 🎨 设计系统要求
+
+### 1:1设计稿还原标准
+- **设计稿宽度**: 1440px (使用Container组件的xl尺寸)
+- **还原精度**: 像素级精确，包括颜色、字体、间距、效果
+- **优先级**: 设计还原度 > 代码简洁度
+
+### 颜色系统 (严格使用)
+```css
+/* 主色调 */
+--primary-blue: #3B82F6
+--primary-purple: #8B5CF6
+--primary-gradient: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)
+
+/* 背景色 */
+--bg-primary: #030303
+--bg-secondary: rgba(26, 26, 26, 0.30)
+--bg-glass: rgba(26, 26, 26, 0.85)
+--bg-input: rgba(18, 18, 18, 0.50)
+
+/* 文字色 */
+--text-primary: #FFFFFF
+--text-secondary: #D1D5DB
+--text-muted: #9CA3AF
+--text-disabled: #6B7280
+
+/* 边框色 */
+--border-primary: rgba(42, 42, 42, 0.70)
+--border-secondary: #2A2A2A
+--border-active: #3B82F6
+```
+
+### 字体系统 (精确使用)
+```css
+/* 字体家族 */
+--font-primary: 'Alibaba PuHuiTi 3.0', sans-serif
+
+/* 字体大小 (严格按设计稿) */
+text-xs: 12px      /* 小标签 */
+text-sm: 13.33px   /* 按钮文字 */
+text-base: 14px    /* 正文 */
+text-lg: 16px      /* 基础大小 */
+text-xl: 18px      /* 卡片标题 */
+text-2xl: 20px     /* 副标题 */
+text-3xl: 24px     /* 大标题 */
+text-4xl: 28px     /* 弹窗标题 */
+text-5xl: 32px     /* 区块标题 */
+text-6xl: 36px     /* 页面大标题 */
+text-7xl: 48px     /* 关于页标题 */
+text-8xl: 64px     /* Hero标题 */
+```
+
+### 毛玻璃效果 (核心特色)
+```css
+/* 标准毛玻璃卡片 */
+bg-background-glass backdrop-blur-[12px] border border-border-primary
+
+/* 导航栏毛玻璃 */
+backdrop-blur-[64px] border-b border-border-primary/60
+
+/* 输入框毛玻璃 */
+bg-background-input backdrop-blur-sm
+```
+
+### 渐变效果 (品牌核心)
+```css
+/* 渐变按钮 */
+bg-gradient-to-r from-primary-blue to-primary-purple
+
+/* 渐变文字 */
+bg-gradient-to-r from-primary-blue to-primary-purple bg-clip-text text-transparent
+
+/* 渐变阴影 */
+shadow-[0px_4px_12px_0px_rgba(139,92,246,0.25)]
+```
+
+## 🏗️ 组件使用规范
+
+### 已完成原子组件 (必须使用)
+```typescript
+// 从统一入口导入
+import { 
+  GradientButton,    // 渐变按钮 (sm/md/lg, primary/outline)
+  GradientText,      // 渐变文字 (xs-8xl尺寸, normal-bold字重)
+  Input,             // 输入框 (支持图标、错误状态、标签)
+  GlassCard,         // 毛玻璃卡片 (default/hover/active变体)
+  Icon,              // 图标组件 (xs-xl尺寸, 自动路径映射)
+  Avatar,            // 头像组件 (图片+占位符)
+  Container          // 容器组件 (sm-xl尺寸, xl=1440px)
+} from '@/components/ui'
+
+// 状态管理
+import { useModalStore, useUserStore } from '@/stores'
+```
+
+### 组件使用原则
+1. **优先使用已有原子组件** - 不要重复造轮子
+2. **组合胜过继承** - 通过组合原子组件构建复杂组件
+3. **一致性优先** - 严格使用设计系统的颜色、字体、间距
+4. **响应式设计** - 移动端优先，渐进增强到桌面端
+
+## 📁 项目结构约定
+
+### 目录结构
+```
+aibianx/
+├── frontend/                    # Next.js前台应用
+│   ├── src/
+│   │   ├── app/                # Next.js App Router页面
+│   │   ├── components/         # 组件目录
+│   │   │   ├── ui/            # 原子组件 (已完成)
+│   │   │   ├── molecules/     # 分子组件 (组合组件)
+│   │   │   ├── organisms/     # 有机组件 (布局组件)
+│   │   │   └── templates/     # 模板组件 (页面模板)
+│   │   ├── stores/            # Zustand状态管理
+│   │   ├── lib/               # 工具函数
+│   │   └── types/             # TypeScript类型定义
+│   ├── public/                # 静态资源
+│   │   ├── icons/            # SVG图标 (124个)
+│   │   ├── images/           # 图片资源
+│   │   └── fonts/            # 字体文件
+│   └── tailwind.config.js    # Tailwind配置
+├── admin/                      # 管理后台 (预留)
+├── docs/                       # 项目文档
+└── sh/                        # 脚本工具
+```
+
+### 导入路径约定
+```typescript
+// UI组件统一从 @/components/ui 导入
+import { GradientButton } from '@/components/ui'
+
+// 状态管理从 @/stores 导入  
+import { useModalStore } from '@/stores'
+
+// 工具函数从 @/lib 导入
+import { cn } from '@/lib/utils'
+
+// 类型定义从 @/types 导入
+import type { User } from '@/types'
+```
+
+## 🎭 状态管理规范
+
+### modalStore (弹窗状态)
+```typescript
+const { openModal, closeModal, isOpen } = useModalStore()
+
+// 支持的弹窗类型
+type ModalType = 'login' | 'register' | 'forgot-password' | 'membership'
+
+// 使用示例
+openModal('login')           // 打开登录弹窗
+closeModal()                 // 关闭当前弹窗
+isOpen('membership')         // 检查会员弹窗是否打开
+```
+
+### userStore (用户状态)
+```typescript
+const { user, isAuthenticated, login, logout, checkMembershipStatus } = useUserStore()
+
+// 用户类型
+interface User {
+  id: string
+  email: string
+  username: string
+  avatar?: string
+  membership?: 'free' | 'premium'
+  membershipExpiry?: string
+}
+```
+
+## 🎨 样式编写规范
+
+### Tailwind类名使用优先级
+1. **设计系统Token优先** - 使用自定义的颜色、字体、间距
+2. **组合类名** - 使用cn()函数合并条件类名
+3. **响应式断点** - sm: md: lg: xl: 渐进式设计
+4. **状态变体** - hover: focus: active: disabled:
+
+### 示例：标准组件样式
+```typescript
+const buttonStyles = cn(
+  // 基础样式
+  'rounded-full font-medium transition-all duration-200',
+  'bg-gradient-to-r from-primary-blue to-primary-purple',
+  'text-white leading-[15px]',
+  // 阴影效果
+  'shadow-[0px_4px_12px_0px_rgba(139,92,246,0.25)]',
+  'hover:shadow-[0px_6px_16px_0px_rgba(139,92,246,0.35)]',
+  // 交互状态
+  'active:scale-[0.98]',
+  'disabled:opacity-50 disabled:cursor-not-allowed',
+  // 条件样式
+  fullWidth && 'w-full',
+  className
+)
+```
+
+## 🖼️ 资源管理规范
+
+### 图标使用
+```typescript
+// 自动映射到 /icons/{name}.svg
+<Icon name="search-icon" size="md" />
+<Icon name="user-icon" size="lg" onClick={handleClick} />
+```
+
+### 图片使用 (必须使用Next.js Image)
+```typescript
+import Image from 'next/image'
+
+// 优化的图片加载
+<Image
+  src="/images/hero/devices-main.svg"
+  alt="设备展示"
+  width={800}
+  height={600}
+  priority
+/>
+```
+
+### 字体加载
+```css
+/* 在globals.css中已配置 */
+@import url('https://at.alicdn.com/t/webfont_0_9205709.css');
+font-family: 'Alibaba PuHuiTi 3.0', sans-serif;
+```
+
+## 📝 代码质量标准
+
+### TypeScript要求
+- **100%类型安全** - 零any使用，完整的接口定义
+- **forwardRef支持** - 输入组件必须支持ref转发
+- **泛型约束** - 合理使用泛型提高代码复用性
+
+### 组件接口设计
+```typescript
+interface ComponentProps {
+  children: ReactNode
+  size?: 'sm' | 'md' | 'lg'           // 尺寸变体
+  variant?: 'default' | 'primary'     // 样式变体
+  disabled?: boolean                   // 禁用状态
+  className?: string                   // 自定义样式
+  onClick?: () => void                 // 事件处理
+}
+```
+
+### 性能优化要求
+- **懒加载** - 大图片使用Next.js Image懒加载
+- **代码分割** - 页面组件使用动态导入
+- **状态优化** - 避免不必要的重渲染
+- **缓存策略** - API数据使用SWR缓存
+
+## 🚨 常见陷阱和解决方案
+
+### 设计还原常见问题
+1. **颜色不准确** - 必须使用设计系统定义的精确颜色值
+2. **字体大小偏差** - 严格使用text-xs到text-8xl的预定义尺寸
+3. **间距不一致** - 使用Tailwind的标准间距系统
+4. **毛玻璃效果缺失** - 检查backdrop-blur和background组合
+
+### 性能问题避免
+1. **图片未优化** - 强制使用Next.js Image组件
+2. **状态过度渲染** - 检查useStore的选择器使用
+3. **样式重复计算** - 使用useMemo缓存复杂的样式计算
+
+### 代码质量问题
+1. **类型any使用** - 明确禁止，必须定义具体类型
+2. **组件职责不清** - 遵循单一职责原则
+3. **命名不规范** - 使用语义化的组件和变量命名
+
+## 🎯 开发工作流程
+
+### 新功能开发步骤
+1. **分析设计稿** - 识别可复用的原子组件
+2. **组件组合** - 优先使用已有组件进行组合
+3. **样式精确还原** - 对照设计稿调整像素级细节
+4. **响应式适配** - 确保移动端到桌面端的完美适配
+5. **交互状态** - 实现hover、active、disabled等状态
+6. **类型安全** - 添加完整的TypeScript类型定义
+7. **测试验证** - 确保功能和视觉效果正确
+
+### 代码审查要点
+- ✅ 设计稿还原度100%
+- ✅ TypeScript类型完整
+- ✅ 组件复用最大化
+- ✅ 性能优化到位
+- ✅ 响应式设计完善
+
+记住：这是一个追求极致设计还原度和用户体验的高端项目，每个细节都要精雕细琢！ 
