@@ -1,27 +1,30 @@
 /* ============= CSS Reset ============= */
-*,
-*::before,
-*::after {
+
+* {
   box-sizing: border-box;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
-html {
-  font-family: 'Alibaba PuHuiTi 3.0', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
+html,
 body {
-  font-family: 'Alibaba PuHuiTi 3.0', sans-serif;
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: var(--font-family-primary);
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
-  line-height: 1.5;
-  overflow-x: hidden;
 }
 
-/* ============= Design Tokens ============= */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* ============= 设计系统变量 ============= */
 
 :root {
   /* 主色调 */
@@ -46,6 +49,9 @@ body {
   --color-border-secondary: #2A2A2A;
   --color-border-active: #3B82F6;
 
+  /* 字体系统 */
+  --font-family-primary: 'Alibaba PuHuiTi 3.0', sans-serif;
+
   /* 字体大小 */
   --font-size-xs: 12px;
   --font-size-sm: 13.33px;
@@ -60,7 +66,7 @@ body {
   --font-size-7xl: 48px;
   --font-size-8xl: 64px;
 
-  /* 间距 */
+  /* 间距系统 */
   --spacing-1: 4px;
   --spacing-2: 8px;
   --spacing-3: 12px;
@@ -74,35 +80,29 @@ body {
   --spacing-20: 80px;
   --spacing-24: 96px;
 
-  /* 圆角 */
+  /* 圆角系统 */
   --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --radius-2xl: 16px;
-  --radius-3xl: 24px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
   --radius-full: 9999px;
 
-  /* 阴影 */
-  --shadow-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.10);
-  --shadow-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.10);
-  --shadow-xl: 0px 20px 25px -5px rgba(0, 0, 0, 0.10);
-  --shadow-2xl: 0px 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --shadow-button: 0px 4px 12px 0px rgba(139, 92, 246, 0.25);
+  /* 阴影系统 */
+  --shadow-button: 0px 8px 16px 0px rgba(59, 130, 246, 0.24);
   --shadow-modal: 0px 24px 48px 0px rgba(0, 0, 0, 0.50);
+  --shadow-card: 0px 4px 8px 0px rgba(0, 0, 0, 0.12);
 
   /* 模糊效果 */
   --blur-sm: 4px;
   --blur-md: 12px;
-  --blur-lg: 16px;
-  --blur-xl: 24px;
-  --blur-2xl: 40px;
-  --blur-3xl: 64px;
+  --blur-lg: 24px;
+  --blur-xl: 64px;
 }
 
-/* ============= 布局工具类 ============= */
+/* ============= 通用工具类 ============= */
 
+/* 容器 */
 .container {
   width: 100%;
   margin: 0 auto;
@@ -125,6 +125,7 @@ body {
   max-width: 1440px;
 }
 
+/* 布局工具 */
 .flex {
   display: flex;
 }
@@ -135,10 +136,6 @@ body {
 
 .justify-center {
   justify-content: center;
-}
-
-.justify-between {
-  justify-content: space-between;
 }
 
 .gap-2 {
@@ -157,16 +154,36 @@ body {
   width: 100%;
 }
 
-.h-full {
-  height: 100%;
+/* 间距工具 */
+.p-2 {
+  padding: var(--spacing-2);
 }
 
-.min-h-screen {
-  min-height: 100vh;
+.p-3 {
+  padding: var(--spacing-3);
 }
 
-/* ============= 文字工具类 ============= */
+.p-4 {
+  padding: var(--spacing-4);
+}
 
+.p-6 {
+  padding: var(--spacing-6);
+}
+
+/* ============= 字体样式 ============= */
+
+/* 渐变文字 */
+.gradient-text {
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 100%;
+  background-repeat: repeat;
+}
+
+/* 字体大小 */
 .text-xs {
   font-size: var(--font-size-xs);
 }
@@ -215,6 +232,7 @@ body {
   font-size: var(--font-size-8xl);
 }
 
+/* 字体重量 */
 .font-normal {
   font-weight: 400;
 }
@@ -231,68 +249,30 @@ body {
   font-weight: 700;
 }
 
-.text-center {
-  text-align: center;
-}
-
-/* ============= 渐变文字 ============= */
-
-.gradient-text {
-  background: var(--gradient-primary);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
-/* ============= 毛玻璃效果 ============= */
+/* ============= 卡片组件 ============= */
 
 .glass-card {
   background: var(--color-bg-glass);
   backdrop-filter: blur(var(--blur-md));
   -webkit-backdrop-filter: blur(var(--blur-md));
   border: 1px solid var(--color-border-primary);
-  border-radius: var(--radius-2xl);
-}
-
-.glass-card--hover {
-  background: var(--color-bg-glass);
-  backdrop-filter: blur(var(--blur-md));
-  -webkit-backdrop-filter: blur(var(--blur-md));
-  border: 1px solid var(--color-border-primary);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-xl);
   transition: all 0.3s ease;
 }
 
 .glass-card--hover:hover {
-  background: rgba(26, 26, 26, 0.90);
   border-color: var(--color-border-active);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
 }
 
 .glass-card--active {
-  background: rgba(26, 26, 26, 0.90);
-  backdrop-filter: blur(var(--blur-md));
-  -webkit-backdrop-filter: blur(var(--blur-md));
-  border: 1px solid var(--color-border-active);
-  border-radius: var(--radius-2xl);
+  border-color: var(--color-border-active);
+  box-shadow: var(--shadow-card);
+  background: rgba(59, 130, 246, 0.05);
 }
 
-.glass-navbar {
-  background: rgba(3, 3, 3, 0.85);
-  backdrop-filter: blur(var(--blur-3xl));
-  -webkit-backdrop-filter: blur(var(--blur-3xl));
-  border-bottom: 1px solid rgba(42, 42, 42, 0.60);
-}
-
-.glass-input {
-  background: var(--color-bg-input);
-  backdrop-filter: blur(var(--blur-sm));
-  -webkit-backdrop-filter: blur(var(--blur-sm));
-  border: 1px solid var(--color-border-primary);
-  border-radius: var(--radius-lg);
-}
-
-/* ============= 按钮样式 ============= */
+/* ============= 按钮组件 ============= */
 
 .btn {
   display: inline-flex;
@@ -304,37 +284,46 @@ body {
   border: none;
   cursor: pointer;
   text-decoration: none;
-  position: relative;
-  overflow: hidden;
+  font-family: inherit;
 }
 
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 按钮尺寸 */
 .btn--sm {
   height: 32px;
   padding: 0 var(--spacing-4);
   font-size: var(--font-size-sm);
+  gap: var(--spacing-2);
 }
 
 .btn--md {
   height: 40px;
   padding: 0 var(--spacing-6);
   font-size: var(--font-size-base);
+  gap: var(--spacing-2);
 }
 
 .btn--lg {
   height: 48px;
   padding: 0 var(--spacing-8);
   font-size: var(--font-size-lg);
+  gap: var(--spacing-3);
 }
 
+/* 按钮变体 */
 .btn--gradient {
   background: var(--gradient-primary);
-  color: var(--color-text-primary);
+  color: white;
   box-shadow: var(--shadow-button);
 }
 
-.btn--gradient:hover {
-  box-shadow: 0px 6px 16px 0px rgba(139, 92, 246, 0.35);
+.btn--gradient:hover:not(:disabled) {
   transform: translateY(-1px);
+  box-shadow: 0px 12px 24px 0px rgba(59, 130, 246, 0.32);
 }
 
 .btn--outline {
@@ -343,25 +332,23 @@ body {
   border: 1px solid var(--color-border-primary);
 }
 
-.btn--outline:hover {
-  background: var(--color-bg-secondary);
+.btn--outline:hover:not(:disabled) {
   border-color: var(--color-border-active);
+  background: rgba(59, 130, 246, 0.1);
 }
 
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-/* ============= 输入框样式 ============= */
+/* ============= 输入框组件 ============= */
 
 .input-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2);
   width: 100%;
+}
+
+.input-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-2);
 }
 
 .input-wrapper {
@@ -371,16 +358,16 @@ body {
 
 .input {
   width: 100%;
-  padding: var(--spacing-3) var(--spacing-4);
+  height: 48px;
+  padding: 0 var(--spacing-4);
   background: var(--color-bg-input);
   backdrop-filter: blur(var(--blur-sm));
   -webkit-backdrop-filter: blur(var(--blur-sm));
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-lg);
-  color: var(--color-text-primary);
   font-size: var(--font-size-base);
+  color: var(--color-text-primary);
   transition: all 0.2s ease;
-  outline: none;
 }
 
 .input::placeholder {
@@ -388,35 +375,67 @@ body {
 }
 
 .input:focus {
+  outline: none;
   border-color: var(--color-border-active);
-  background: rgba(18, 18, 18, 0.70);
-}
-
-.input--with-icon {
-  padding-left: var(--spacing-10);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .input--error {
   border-color: #EF4444;
-  background: rgba(239, 68, 68, 0.05);
 }
 
-.input-label {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  font-weight: 500;
+.input--error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
 .input-error {
+  display: block;
+  margin-top: var(--spacing-1);
   font-size: var(--font-size-xs);
   color: #EF4444;
-  margin-top: var(--spacing-1);
 }
 
 .input-helper {
+  display: block;
+  margin-top: var(--spacing-1);
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
-  margin-top: var(--spacing-1);
+}
+
+/* ============= 加载动画 ============= */
+
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============= 淡入动画 ============= */
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ============= 弹窗样式 ============= */
@@ -522,136 +541,95 @@ body {
   transition: all 0.2s ease-in;
 }
 
-/* ============= 加载动画 ============= */
+/* ============= Header 响应式 ============= */
 
-.loading-spinner {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 1s ease-in-out infinite;
-}
+/* 桌面端 - 显示导航和登录按钮 */
+@media (min-width: 1024px) {
+  .desktop-nav {
+    display: flex !important;
+  }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+  .desktop-auth-buttons {
+    display: flex !important;
+  }
+
+  .mobile-menu-button {
+    display: none !important;
   }
 }
 
-/* ============= 淡入动画 ============= */
-
-.fade-in {
-  animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+/* 移动端 - 隐藏桌面导航，显示菜单按钮 */
+@media (max-width: 1023px) {
+  .desktop-nav {
+    display: none !important;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .desktop-auth-buttons {
+    display: none !important;
   }
-}
 
-/* ============= 间距工具类 ============= */
-
-.p-2 {
-  padding: var(--spacing-2);
-}
-
-.p-3 {
-  padding: var(--spacing-3);
-}
-
-.p-4 {
-  padding: var(--spacing-4);
-}
-
-.p-5 {
-  padding: var(--spacing-5);
-}
-
-.p-6 {
-  padding: var(--spacing-6);
-}
-
-.p-8 {
-  padding: var(--spacing-8);
-}
-
-.m-2 {
-  margin: var(--spacing-2);
-}
-
-.m-3 {
-  margin: var(--spacing-3);
-}
-
-.m-4 {
-  margin: var(--spacing-4);
-}
-
-.mt-2 {
-  margin-top: var(--spacing-2);
-}
-
-.mt-4 {
-  margin-top: var(--spacing-4);
-}
-
-.mb-2 {
-  margin-bottom: var(--spacing-2);
-}
-
-.mb-4 {
-  margin-bottom: var(--spacing-4);
+  .mobile-menu-button {
+    display: block !important;
+  }
 }
 
 /* ============= 响应式设计 ============= */
 
-/* 移动端 */
+/* 平板设备 */
 @media (max-width: 768px) {
   .container {
     padding: 0 var(--spacing-3);
   }
 
   .modal-container {
-    margin: var(--spacing-2);
-    max-height: calc(100vh - var(--spacing-4));
+    max-width: calc(100vw - var(--spacing-8));
   }
 
-  .modal-header {
-    padding: var(--spacing-4) var(--spacing-4) 0;
-  }
-
-  .modal-body {
-    padding: var(--spacing-4);
-  }
-
+  .modal-header,
+  .modal-body,
   .modal-footer {
-    padding: 0 var(--spacing-4) var(--spacing-4);
+    padding-left: var(--spacing-4);
+    padding-right: var(--spacing-4);
+  }
+
+  /* Footer响应式 */
+  footer [style*="grid-template-columns"] {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+  }
+
+  footer [style*="flex-direction: column"] {
+    align-items: center !important;
+    text-align: center !important;
+  }
+}
+
+/* 手机设备 */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--spacing-2);
+  }
+
+  .modal-container {
+    max-width: calc(100vw - var(--spacing-4));
+    margin: var(--spacing-2);
   }
 
   .modal-title {
     font-size: var(--font-size-3xl);
   }
-}
 
-/* 平板端 */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .container {
-    padding: 0 var(--spacing-5);
+  .btn--lg {
+    height: 44px;
+    font-size: var(--font-size-base);
   }
-}
 
-/* 桌面端 */
-@media (min-width: 1025px) {
-  .container {
-    padding: 0 var(--spacing-6);
+  /* Footer手机端优化 */
+  footer [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-6) !important;
+  }
+
+  footer [style*="padding"] {
+    padding: var(--spacing-8) var(--spacing-4) !important;
   }
 }

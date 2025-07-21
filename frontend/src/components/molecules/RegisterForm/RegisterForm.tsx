@@ -89,7 +89,7 @@ export function RegisterForm({
     }
 
     return (
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="w-full">
+        <form onSubmit={handleSubmit(handleFormSubmit)} style={{ width: '100%' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)' }}>
                 {/* 邮箱输入框 */}
                 <div className="input-container">

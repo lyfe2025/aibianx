@@ -24,7 +24,6 @@ export function Header() {
 
     return (
         <header
-            className="header"
             style={{
                 position: 'fixed',
                 top: 0,
@@ -39,18 +38,23 @@ export function Header() {
         >
             <Container size="xl">
                 <div
-                    className="flex items-center justify-between"
                     style={{
                         height: '72px',
-                        padding: '0 24px'
+                        padding: '0 24px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
                     }}
                 >
                     {/* Logo */}
-                    <div className="flex items-center gap-3">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
                         <Icon name="logo-footer" size="lg" />
                         <span
-                            className="gradient-text font-bold"
-                            style={{ fontSize: 'var(--font-size-xl)' }}
+                            className="gradient-text"
+                            style={{
+                                fontSize: 'var(--font-size-xl)',
+                                fontWeight: 700
+                            }}
                         >
                             AI变现之路
                         </span>
@@ -58,14 +62,17 @@ export function Header() {
 
                     {/* 桌面端导航 */}
                     <nav
-                        className="hidden lg:flex items-center gap-8"
-                        style={{ display: 'none' }}
+                        style={{
+                            display: 'none',
+                            alignItems: 'center',
+                            gap: 'var(--spacing-8)'
+                        }}
+                        className="desktop-nav"
                     >
                         {navItems.map((item) => (
                             <a
                                 key={item.label}
                                 href={item.href}
-                                className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
                                 style={{
                                     color: item.active ? 'var(--color-primary-blue)' : 'var(--color-text-secondary)',
                                     fontSize: 'var(--font-size-base)',
@@ -74,6 +81,16 @@ export function Header() {
                                     transition: 'color 0.2s ease',
                                     padding: '8px 0',
                                     position: 'relative'
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (!item.active) {
+                                        e.currentTarget.style.color = 'var(--color-text-primary)'
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (!item.active) {
+                                        e.currentTarget.style.color = 'var(--color-text-secondary)'
+                                    }
                                 }}
                             >
                                 {item.label}
@@ -94,10 +111,10 @@ export function Header() {
                     </nav>
 
                     {/* 用户区域 */}
-                    <div className="flex items-center gap-4">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)' }}>
                         {isAuthenticated ? (
                             // 已登录状态
-                            <div className="flex items-center gap-3">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
                                 <Icon name="notification-icon" size="md" />
                                 <Avatar
                                     src={user?.avatar}
@@ -107,11 +124,15 @@ export function Header() {
                             </div>
                         ) : (
                             // 未登录状态
-                            <div className="flex items-center gap-3">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
                                 {/* 桌面端按钮 */}
                                 <div
-                                    className="hidden lg:flex items-center gap-3"
-                                    style={{ display: 'flex' }}
+                                    className="desktop-auth-buttons"
+                                    style={{
+                                        display: 'none',
+                                        alignItems: 'center',
+                                        gap: 'var(--spacing-3)'
+                                    }}
                                 >
                                     <GradientButton
                                         variant="outline"
@@ -132,12 +153,13 @@ export function Header() {
                                 {/* 移动端菜单按钮 */}
                                 <button
                                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                    className="lg:hidden"
+                                    className="mobile-menu-button"
                                     style={{
                                         background: 'transparent',
                                         border: 'none',
                                         padding: '8px',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        display: 'block'
                                     }}
                                 >
                                     <Icon name="search-icon" size="md" />
@@ -150,7 +172,7 @@ export function Header() {
                 {/* 移动端菜单 */}
                 {isMobileMenuOpen && (
                     <div
-                        className="lg:hidden mobile-menu"
+                        className="mobile-menu"
                         style={{
                             position: 'absolute',
                             top: '100%',
@@ -166,12 +188,11 @@ export function Header() {
                             animation: 'fadeIn 0.3s ease-out'
                         }}
                     >
-                        <nav className="flex flex-col gap-4 mb-6">
+                        <nav style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-4)', marginBottom: 'var(--spacing-6)' }}>
                             {navItems.map((item) => (
                                 <a
                                     key={item.label}
                                     href={item.href}
-                                    className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
                                     style={{
                                         color: item.active ? 'var(--color-primary-blue)' : 'var(--color-text-secondary)',
                                         fontSize: 'var(--font-size-lg)',
@@ -188,7 +209,7 @@ export function Header() {
                         </nav>
 
                         {!isAuthenticated && (
-                            <div className="flex gap-3">
+                            <div style={{ display: 'flex', gap: 'var(--spacing-3)' }}>
                                 <GradientButton
                                     variant="outline"
                                     size="md"

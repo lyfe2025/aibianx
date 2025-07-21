@@ -76,7 +76,7 @@ export function ForgotPasswordForm({
     const isButtonDisabled = isSubmitting || isLoading || countdown > 0
 
     return (
-        <div className="w-full">
+        <div style={{ width: '100%' }}>
             <form onSubmit={handleSubmit(handleFormSubmit)}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-5)' }}>
                     {/* 安全提示 */}

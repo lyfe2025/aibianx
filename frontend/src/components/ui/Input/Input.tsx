@@ -31,7 +31,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         return (
             <div className="input-wrapper">
                 {label && (
-                    <label className="input-label text-sm font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+                    <label
+                        className="input-label"
+                        style={{
+                            color: 'var(--color-text-secondary)',
+                            fontSize: 'var(--font-size-sm)',
+                            fontWeight: 500
+                        }}
+                    >
                         {label}
                     </label>
                 )}
@@ -58,13 +65,25 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                 </div>
 
                 {error && (
-                    <span className="input-error text-sm" style={{ color: '#EF4444' }}>
+                    <span
+                        className="input-error"
+                        style={{
+                            color: '#EF4444',
+                            fontSize: 'var(--font-size-sm)'
+                        }}
+                    >
                         {error}
                     </span>
                 )}
 
                 {helperText && !error && (
-                    <span className="input-helper text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                    <span
+                        className="input-helper"
+                        style={{
+                            color: 'var(--color-text-muted)',
+                            fontSize: 'var(--font-size-sm)'
+                        }}
+                    >
                         {helperText}
                     </span>
                 )}
