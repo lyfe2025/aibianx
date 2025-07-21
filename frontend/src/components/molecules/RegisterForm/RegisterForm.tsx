@@ -3,8 +3,23 @@
 import { useState } from 'react'
 import { GradientButton, Icon, Input } from '@/components/ui'
 import { getPasswordStrength } from '@/lib/validations'
+import { useModalStore } from '@/stores'
 
-export function RegisterForm() {
+interface RegisterFormProps {
+    onSubmit?: (data: RegisterFormData) => Promise<void>
+    isLoading?: boolean
+}
+
+interface RegisterFormData {
+    username: string
+    email: string
+    password: string
+    confirmPassword: string
+    agreeToTerms: boolean
+}
+
+export function RegisterForm({ onSubmit, isLoading: externalLoading }: RegisterFormProps = {}) {
+    const { openModal } = useModalStore()
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -14,6 +29,7 @@ export function RegisterForm() {
     })
     const [errors, setErrors] = useState<Record<string, string>>({})
     const [isLoading, setIsLoading] = useState(false)
+    const effectiveLoading = externalLoading ?? isLoading
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -76,19 +92,25 @@ export function RegisterForm() {
             return
         }
 
-        setIsLoading(true)
-
-        try {
-            // TODO: 实现注册API调用
-            console.log('注册数据:', formData)
-            await new Promise(resolve => setTimeout(resolve, 2000)) // 模拟API调用
-
-            // 注册成功
-            alert('注册成功！请查收邮箱验证邮件。')
-        } catch (error) {
-            setErrors({ submit: '注册失败，请稍后重试' })
-        } finally {
-            setIsLoading(false)
+        if (onSubmit) {
+            // 使用外部传入的处理函数
+            try {
+                await onSubmit(formData)
+            } catch (error) {
+                setErrors({ submit: '注册失败，请稍后重试' })
+            }
+        } else {
+            // 使用默认处理逻辑
+            setIsLoading(true)
+            try {
+                console.log('注册数据:', formData)
+                await new Promise(resolve => setTimeout(resolve, 2000))
+                alert('注册成功！请查收邮箱验证邮件。')
+            } catch (error) {
+                setErrors({ submit: '注册失败，请稍后重试' })
+            } finally {
+                setIsLoading(false)
+            }
         }
     }
 
@@ -110,15 +132,25 @@ export function RegisterForm() {
             flexDirection: 'column',
             gap: 'var(--spacing-4)'
         }}>
+            {/* 个人信息标签 */}
+            <div style={{
+                color: 'var(--color-text-muted)',
+                fontSize: 'var(--font-size-sm)',
+                fontWeight: '500',
+                marginTop: 'var(--spacing-2)'
+            }}>
+                个人信息
+            </div>
+
             {/* 用户名输入 */}
             <Input
                 label="用户名"
                 type="text"
-                placeholder="请输入用户名"
+                placeholder="用户名"
                 value={formData.username}
                 onChange={(e) => handleInputChange('username', e.target.value)}
                 error={errors.username}
-                icon={<Icon name="user" size="sm" />}
+                icon={<Icon name="user-icon" size="sm" />}
                 autoComplete="username"
             />
 
@@ -126,24 +158,34 @@ export function RegisterForm() {
             <Input
                 label="邮箱"
                 type="email"
-                placeholder="请输入邮箱地址"
+                placeholder="电子邮箱"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 error={errors.email}
-                icon={<Icon name="mail" size="sm" />}
+                icon={<Icon name="mail-icon" size="sm" />}
                 autoComplete="email"
             />
+
+            {/* 安全信息标签 */}
+            <div style={{
+                color: 'var(--color-text-muted)',
+                fontSize: 'var(--font-size-sm)',
+                fontWeight: '500',
+                marginTop: 'var(--spacing-2)'
+            }}>
+                安全信息
+            </div>
 
             {/* 密码输入 */}
             <div>
                 <Input
                     label="密码"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="请输入密码"
+                    placeholder="密码"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
                     error={errors.password}
-                    icon={<Icon name="lock" size="sm" />}
+                    icon={<Icon name="modals/password-icon" size="sm" />}
                     rightIcon={
                         <button
                             type="button"
@@ -159,7 +201,7 @@ export function RegisterForm() {
                             }}
                         >
                             <Icon
-                                name={showPassword ? "eye-off" : "eye"}
+                                name={showPassword ? "modals/password-eye-icon" : "eye-icon"}
                                 size="sm"
                                 style={{
                                     color: showPassword ? 'var(--color-primary-blue)' : 'var(--color-text-muted)'
@@ -207,11 +249,11 @@ export function RegisterForm() {
             <Input
                 label="确认密码"
                 type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="请再次输入密码"
+                placeholder="确认密码"
                 value={formData.confirmPassword}
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                 error={errors.confirmPassword}
-                icon={<Icon name="lock" size="sm" />}
+                icon={<Icon name="modals/password-icon" size="sm" />}
                 rightIcon={
                     <button
                         type="button"
@@ -227,7 +269,7 @@ export function RegisterForm() {
                         }}
                     >
                         <Icon
-                            name={showConfirmPassword ? "eye-off" : "eye"}
+                            name={showConfirmPassword ? "modals/password-eye-icon" : "eye-icon"}
                             size="sm"
                             style={{
                                 color: showConfirmPassword ? 'var(--color-primary-blue)' : 'var(--color-text-muted)'
@@ -264,7 +306,7 @@ export function RegisterForm() {
                     }}
                 >
                     {formData.agreeToTerms && (
-                        <Icon name="check" size="xs" style={{ color: '#FFFFFF' }} />
+                        <Icon name="success-check" size="xs" style={{ color: '#FFFFFF' }} />
                     )}
                 </button>
                 <div style={{ flex: 1 }}>
@@ -322,10 +364,91 @@ export function RegisterForm() {
                 type="submit"
                 size="lg"
                 fullWidth
-                disabled={isLoading}
+                disabled={effectiveLoading}
             >
-                {isLoading ? '注册中...' : '注册'}
+                {effectiveLoading ? '注册中...' : '注册'}
             </GradientButton>
+
+            {/* 分隔线 */}
+            <div style={{
+                position: 'relative',
+                margin: 'var(--spacing-4) 0'
+            }}>
+                <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: 0,
+                    right: 0,
+                    height: '1px',
+                    background: 'var(--color-border-primary)'
+                }} />
+                <div style={{
+                    position: 'relative',
+                    textAlign: 'center',
+                    background: 'var(--color-bg-primary)',
+                    padding: '0 var(--spacing-4)',
+                    fontSize: 'var(--font-size-sm)',
+                    color: 'var(--color-text-muted)'
+                }}>
+                    或
+                </div>
+            </div>
+
+            {/* GitHub注册 */}
+            <button
+                type="button"
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 'var(--spacing-3)',
+                    width: '100%',
+                    padding: '12px 24px',
+                    background: 'rgba(18, 18, 18, 0.70)',
+                    border: '1px solid var(--color-border-secondary)',
+                    borderRadius: 'var(--radius-lg)',
+                    color: 'var(--color-text-primary)',
+                    fontSize: 'var(--font-size-base)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                }}
+                onClick={() => {
+                    // TODO: 实现GitHub注册
+                    console.log('GitHub注册')
+                }}
+            >
+                <Icon name="modals/github-icon" size="sm" />
+                使用 GitHub 注册
+            </button>
+
+            {/* 登录链接 */}
+            <div style={{
+                textAlign: 'center',
+                marginTop: 'var(--spacing-4)',
+                fontSize: 'var(--font-size-base)'
+            }}>
+                <span style={{ color: 'var(--color-text-muted)' }}>
+                    已有账号？
+                </span>
+                <button
+                    type="button"
+                    onClick={() => {
+                        openModal('login')
+                    }}
+                    style={{
+                        border: 'none',
+                        background: 'var(--gradient-primary)',
+                        backgroundClip: 'text',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        fontWeight: '500',
+                        marginLeft: '4px',
+                        cursor: 'pointer'
+                    }}
+                >
+                    登录
+                </button>
+            </div>
         </form>
     )
 } 

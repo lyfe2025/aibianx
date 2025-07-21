@@ -39,10 +39,10 @@ export function RegisterModal() {
         <BaseModal
             isOpen={isThisModalOpen}
             onClose={closeModal}
-            title="创建账户"
-            subtitle="加入AI变现之路，开启您的AI创业之旅"
+            title="注册 AI变现之路"
+            subtitle="创建您的账号，开启AI赚钱新旅程"
         >
-            <RegisterForm />
+            <RegisterForm onSubmit={handleRegister} isLoading={isLoading} />
         </BaseModal>
     )
 } 

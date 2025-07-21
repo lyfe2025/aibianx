@@ -36,10 +36,10 @@ export function ForgotPasswordModal() {
         <BaseModal
             isOpen={isThisModalOpen}
             onClose={closeModal}
-            title="找回密码"
-            subtitle="输入您的邮箱地址，我们将发送密码重置链接给您"
+            title="忘记密码"
+            subtitle="请输入您的账号邮箱，我们将发送重置链接"
         >
-            <ForgotPasswordForm />
+            <ForgotPasswordForm onSubmit={handleForgotPassword} isLoading={isLoading} />
         </BaseModal>
     )
 } 

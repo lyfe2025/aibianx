@@ -85,7 +85,7 @@ export function BaseModal({
                                 aria-label="关闭弹窗"
                                 type="button"
                             >
-                                <Icon name="close-button" size="md" />
+                                <Icon name="modals/close-button" size="md" />
                             </button>
                         )}
 

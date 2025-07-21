@@ -2,8 +2,21 @@
 
 import { useState } from 'react'
 import { GradientButton, Icon, Input } from '@/components/ui'
+import { useModalStore } from '@/stores'
 
-export function LoginForm() {
+interface LoginFormProps {
+    onSubmit?: (data: LoginFormData) => Promise<void>
+    isLoading?: boolean
+}
+
+interface LoginFormData {
+    emailOrUsername: string
+    password: string
+    rememberMe: boolean
+}
+
+export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormProps = {}) {
+    const { openModal } = useModalStore()
     const [formData, setFormData] = useState({
         emailOrUsername: '',
         password: '',
@@ -11,6 +24,7 @@ export function LoginForm() {
     })
     const [errors, setErrors] = useState<Record<string, string>>({})
     const [isLoading, setIsLoading] = useState(false)
+    const effectiveLoading = externalLoading ?? isLoading
     const [showPassword, setShowPassword] = useState(false)
 
     const handleInputChange = (field: string, value: string | boolean) => {
@@ -46,19 +60,25 @@ export function LoginForm() {
             return
         }
 
-        setIsLoading(true)
-
-        try {
-            // TODO: 实现登录API调用
-            console.log('登录数据:', formData)
-            await new Promise(resolve => setTimeout(resolve, 2000)) // 模拟API调用
-
-            // 登录成功
-            alert('登录成功！')
-        } catch (error) {
-            setErrors({ submit: '登录失败，请检查用户名和密码' })
-        } finally {
-            setIsLoading(false)
+        if (onSubmit) {
+            // 使用外部传入的处理函数
+            try {
+                await onSubmit(formData)
+            } catch (error) {
+                setErrors({ submit: '登录失败，请检查用户名和密码' })
+            }
+        } else {
+            // 使用默认处理逻辑
+            setIsLoading(true)
+            try {
+                console.log('登录数据:', formData)
+                await new Promise(resolve => setTimeout(resolve, 2000))
+                alert('登录成功！')
+            } catch (error) {
+                setErrors({ submit: '登录失败，请检查用户名和密码' })
+            } finally {
+                setIsLoading(false)
+            }
         }
     }
 
@@ -72,11 +92,11 @@ export function LoginForm() {
             <Input
                 label="邮箱或用户名"
                 type="text"
-                placeholder="请输入邮箱或用户名"
+                placeholder="电子邮箱/用户名"
                 value={formData.emailOrUsername}
                 onChange={(e) => handleInputChange('emailOrUsername', e.target.value)}
                 error={errors.emailOrUsername}
-                icon={<Icon name="user" size="sm" />}
+                icon={<Icon name="user-icon" size="sm" />}
                 autoComplete="username"
             />
 
@@ -84,11 +104,11 @@ export function LoginForm() {
             <Input
                 label="密码"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="请输入密码"
+                placeholder="密码"
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
                 error={errors.password}
-                icon={<Icon name="lock" size="sm" />}
+                icon={<Icon name="modals/password-icon-login" size="sm" />}
                 rightIcon={
                     <button
                         type="button"
@@ -104,7 +124,7 @@ export function LoginForm() {
                         }}
                     >
                         <Icon
-                            name={showPassword ? "eye-off" : "eye"}
+                            name={showPassword ? "modals/password-eye-login" : "eye-icon"}
                             size="sm"
                             style={{
                                 color: showPassword ? 'var(--color-primary-blue)' : 'var(--color-text-muted)'
@@ -147,7 +167,7 @@ export function LoginForm() {
                         }}
                     >
                         {formData.rememberMe && (
-                            <Icon name="check" size="xs" style={{ color: '#FFFFFF' }} />
+                            <Icon name="modals/remember-me-checkbox" size="xs" style={{ color: '#FFFFFF' }} />
                         )}
                     </button>
                     记住我
@@ -158,17 +178,17 @@ export function LoginForm() {
                     style={{
                         background: 'none',
                         border: 'none',
-                        color: 'var(--color-primary-blue)',
+                        color: 'var(--color-text-muted)',
                         fontSize: 'var(--font-size-sm)',
                         cursor: 'pointer',
                         textDecoration: 'none'
                     }}
                     onClick={() => {
-                        // TODO: 打开忘记密码弹窗
-                        console.log('忘记密码')
+                        // 打开忘记密码弹窗
+                        openModal('forgotPassword')
                     }}
                 >
-                    忘记密码？
+                    忘记密码?
                 </button>
             </div>
 
@@ -191,9 +211,9 @@ export function LoginForm() {
                 type="submit"
                 size="lg"
                 fullWidth
-                disabled={isLoading}
+                disabled={effectiveLoading}
             >
-                {isLoading ? '登录中...' : '登录'}
+                {effectiveLoading ? '登录中...' : '登录'}
             </GradientButton>
 
             {/* 社交登录 */}
@@ -231,10 +251,10 @@ export function LoginForm() {
                     gap: 'var(--spacing-3)',
                     width: '100%',
                     padding: '12px 24px',
-                    background: 'transparent',
-                    border: '1px solid var(--color-border-primary)',
+                    background: 'rgba(18, 18, 18, 0.70)',
+                    border: '1px solid var(--color-border-secondary)',
                     borderRadius: 'var(--radius-lg)',
-                    color: 'var(--color-text-secondary)',
+                    color: 'var(--color-text-primary)',
                     fontSize: 'var(--font-size-base)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
@@ -244,9 +264,39 @@ export function LoginForm() {
                     console.log('GitHub登录')
                 }}
             >
-                <Icon name="github" size="sm" />
+                <Icon name="modals/github-icon-login" size="sm" />
                 使用 GitHub 登录
             </button>
+
+            {/* 注册链接 */}
+            <div style={{
+                textAlign: 'center',
+                marginTop: 'var(--spacing-4)',
+                fontSize: 'var(--font-size-base)'
+            }}>
+                <span style={{ color: 'var(--color-text-muted)' }}>
+                    还没有账号？
+                </span>
+                <button
+                    type="button"
+                    onClick={() => {
+                        openModal('register')
+                    }}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        background: 'var(--gradient-primary)',
+                        backgroundClip: 'text',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        fontWeight: '500',
+                        marginLeft: '4px',
+                        cursor: 'pointer'
+                    }}
+                >
+                    注册
+                </button>
+            </div>
         </form>
     )
 } 

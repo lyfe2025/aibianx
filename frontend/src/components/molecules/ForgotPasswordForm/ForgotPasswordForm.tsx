@@ -2,13 +2,25 @@
 
 import { useState } from 'react'
 import { GradientButton, Icon, Input } from '@/components/ui'
+import { useModalStore } from '@/stores'
 
-export function ForgotPasswordForm() {
+interface ForgotPasswordFormProps {
+    onSubmit?: (data: ForgotPasswordFormData) => Promise<void>
+    isLoading?: boolean
+}
+
+interface ForgotPasswordFormData {
+    email: string
+}
+
+export function ForgotPasswordForm({ onSubmit, isLoading: externalLoading }: ForgotPasswordFormProps = {}) {
+    const { openModal } = useModalStore()
     const [formData, setFormData] = useState({
         email: ''
     })
     const [errors, setErrors] = useState<Record<string, string>>({})
     const [isLoading, setIsLoading] = useState(false)
+    const effectiveLoading = externalLoading ?? isLoading
     const [isSubmitted, setIsSubmitted] = useState(false)
 
     const handleInputChange = (field: string, value: string) => {
@@ -41,19 +53,26 @@ export function ForgotPasswordForm() {
             return
         }
 
-        setIsLoading(true)
-
-        try {
-            // TODO: 实现找回密码API调用
-            console.log('找回密码数据:', formData)
-            await new Promise(resolve => setTimeout(resolve, 2000)) // 模拟API调用
-
-            // 发送成功
-            setIsSubmitted(true)
-        } catch (error) {
-            setErrors({ submit: '发送失败，请稍后重试' })
-        } finally {
-            setIsLoading(false)
+        if (onSubmit) {
+            // 使用外部传入的处理函数
+            try {
+                await onSubmit(formData)
+                setIsSubmitted(true)
+            } catch (error) {
+                setErrors({ submit: '发送失败，请稍后重试' })
+            }
+        } else {
+            // 使用默认处理逻辑
+            setIsLoading(true)
+            try {
+                console.log('找回密码数据:', formData)
+                await new Promise(resolve => setTimeout(resolve, 2000))
+                setIsSubmitted(true)
+            } catch (error) {
+                setErrors({ submit: '发送失败，请稍后重试' })
+            } finally {
+                setIsLoading(false)
+            }
         }
     }
 
@@ -74,7 +93,7 @@ export function ForgotPasswordForm() {
                     justifyContent: 'center',
                     boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)'
                 }}>
-                    <Icon name="mail" size="lg" style={{ color: '#FFFFFF' }} />
+                    <Icon name="mail-icon" size="lg" style={{ color: '#FFFFFF' }} />
                 </div>
 
                 <h3 style={{
@@ -128,6 +147,28 @@ export function ForgotPasswordForm() {
                 >
                     重新输入邮箱
                 </button>
+
+                {/* 返回登录 */}
+                <div style={{
+                    textAlign: 'center',
+                    marginTop: 'var(--spacing-4)'
+                }}>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            openModal('login')
+                        }}
+                        style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'var(--color-text-muted)',
+                            fontSize: 'var(--font-size-sm)',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        返回登录
+                    </button>
+                </div>
             </div>
         )
     }
@@ -142,11 +183,11 @@ export function ForgotPasswordForm() {
             <Input
                 label="邮箱地址"
                 type="email"
-                placeholder="请输入您的注册邮箱"
+                placeholder="请输入您的账号邮箱"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 error={errors.email}
-                icon={<Icon name="mail" size="sm" />}
+                icon={<Icon name="mail-icon" size="sm" />}
                 autoComplete="email"
             />
 
@@ -169,10 +210,32 @@ export function ForgotPasswordForm() {
                 type="submit"
                 size="lg"
                 fullWidth
-                disabled={isLoading}
+                disabled={effectiveLoading}
             >
-                {isLoading ? '发送中...' : '发送重置链接'}
+                {effectiveLoading ? '发送中...' : '发送重置链接'}
             </GradientButton>
+
+            {/* 返回登录 */}
+            <div style={{
+                textAlign: 'center',
+                marginTop: 'var(--spacing-4)'
+            }}>
+                <button
+                    type="button"
+                    onClick={() => {
+                        openModal('login')
+                    }}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--color-text-muted)',
+                        fontSize: 'var(--font-size-sm)',
+                        cursor: 'pointer'
+                    }}
+                >
+                    返回登录
+                </button>
+            </div>
         </form>
     )
 } 

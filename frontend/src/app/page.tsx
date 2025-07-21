@@ -11,7 +11,8 @@ import {
   LoginModal,
   RegisterModal,
   ForgotPasswordModal,
-  MembershipModal
+  MembershipModal,
+  PaymentModal
 } from '@/components/organisms'
 
 /**
@@ -53,6 +54,7 @@ export default function HomePage() {
       <RegisterModal />
       <ForgotPasswordModal />
       <MembershipModal />
+      <PaymentModal />
     </>
   )
 }

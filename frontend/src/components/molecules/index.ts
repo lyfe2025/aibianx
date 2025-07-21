@@ -22,8 +22,16 @@ export { Pagination } from './Pagination'
 export { RegisterForm } from './RegisterForm'
 export { RelatedArticles } from './RelatedArticles'
 export { ResourcesSection } from './ResourcesSection'
-export { SearchBar } from './SearchBar'
-export { StatsSection } from './StatsSection'
+export * from './SearchBar'
+export * from './StatsSection'
+
+// 新增用户中心相关组件
+export * from './UserSidebar'
+export * from './StatCard'
+export * from './CollectionCard'
+export * from './SearchFilter'
+export * from './InviteSection'
+export * from './SettingsForm'
 
 // 新设计稿首页组件
 export { HeroSectionNew } from './HeroSectionNew'

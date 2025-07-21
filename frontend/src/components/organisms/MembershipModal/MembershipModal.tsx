@@ -36,17 +36,15 @@ export function MembershipModal() {
         {
             id: 'annual',
             name: '年度会员',
-            price: 199,
-            originalPrice: 348,
+            price: 299,
+            originalPrice: 399,
             period: '年',
             popular: true,
             features: [
-                '所有付费内容访问权限',
-                '会员专属AI工具',
-                '每周专家在线答疑',
-                '优先客服支持',
-                '年度会员专属资源包',
-                '一对一创业指导(2次)'
+                '200+ AI变现教程和指南',
+                '每周更新实战案例',
+                '专属社区和导师指导',
+                'AI工具专属优惠'
             ]
         }
     ]
@@ -75,8 +73,8 @@ export function MembershipModal() {
         <BaseModal
             isOpen={isThisModalOpen}
             onClose={closeModal}
-            title="升级会员"
-            subtitle="解锁全部内容，加速您的AI变现之路"
+            title="会员特权"
+            subtitle="解锁全部AI变现资源和高级功能"
             maxWidth="lg"
         >
             <div style={{
@@ -161,11 +159,28 @@ export function MembershipModal() {
 
                                 {plan.originalPrice && (
                                     <div style={{
-                                        fontSize: 'var(--font-size-sm)',
-                                        color: 'var(--color-text-muted)',
-                                        textDecoration: 'line-through'
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 'var(--spacing-2)',
+                                        marginTop: 'var(--spacing-1)'
                                     }}>
-                                        原价 ¥{plan.originalPrice}
+                                        <span style={{
+                                            fontSize: 'var(--font-size-sm)',
+                                            color: 'var(--color-text-muted)',
+                                            textDecoration: 'line-through'
+                                        }}>
+                                            ¥{plan.originalPrice}
+                                        </span>
+                                        <span style={{
+                                            background: '#EF4444',
+                                            color: '#FFFFFF',
+                                            fontSize: 'var(--font-size-xs)',
+                                            fontWeight: '500',
+                                            padding: '2px 8px',
+                                            borderRadius: 'var(--radius-full)'
+                                        }}>
+                                            7.5折
+                                        </span>
                                     </div>
                                 )}
                             </div>
@@ -187,7 +202,7 @@ export function MembershipModal() {
                                         color: 'var(--color-text-secondary)'
                                     }}>
                                         <Icon
-                                            name="check"
+                                            name="success-check"
                                             size="xs"
                                             style={{
                                                 color: 'var(--color-primary-blue)',

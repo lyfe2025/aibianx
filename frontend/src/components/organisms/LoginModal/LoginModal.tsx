@@ -37,10 +37,10 @@ export function LoginModal() {
         <BaseModal
             isOpen={isThisModalOpen}
             onClose={closeModal}
-            title="登录账户"
-            subtitle="欢迎回来！请登录您的账户"
+            title="登录 AI变现之路"
+            subtitle="输入账号密码，继续您的AI之旅"
         >
-            <LoginForm />
+            <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
         </BaseModal>
     )
 } 

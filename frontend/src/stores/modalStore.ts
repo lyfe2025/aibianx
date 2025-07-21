@@ -3,7 +3,7 @@
 import { create } from 'zustand'
 
 // 定义弹窗类型
-export type ModalType = 'login' | 'register' | 'forgotPassword' | 'membership' | 'test' | null
+export type ModalType = 'login' | 'register' | 'forgotPassword' | 'membership' | 'payment' | 'test' | null
 
 // 定义弹窗数据类型
 export interface ModalData {
@@ -11,6 +11,15 @@ export interface ModalData {
     register?: Record<string, unknown>
     forgotPassword?: Record<string, unknown>
     membership?: Record<string, unknown>
+    payment?: {
+        plan?: {
+            name: string
+            price: number
+            originalPrice?: number
+            period: string
+            features: string[]
+        }
+    }
     test?: Record<string, unknown>
 }
 
