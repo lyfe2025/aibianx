@@ -2,6 +2,7 @@
 
 import { PageLayout } from '@/components/templates/PageLayout/PageLayout'
 import { Container, GradientText, GradientButton, Icon } from '@/components/ui'
+import Image from 'next/image'
 import { LoginModal } from '@/components/organisms/LoginModal/LoginModal'
 import { RegisterModal } from '@/components/organisms/RegisterModal/RegisterModal'
 import { ForgotPasswordModal } from '@/components/organisms/ForgotPasswordModal/ForgotPasswordModal'
@@ -73,8 +74,12 @@ export default function HomePage() {
                 margin: 'var(--spacing-12) 0'
               }}
             >
-              <Icon
-                name="devices-main"
+              <Image
+                src="/images/hero/devices-main.svg"
+                alt="AI变现之路设备展示"
+                width={600}
+                height={400}
+                priority
                 style={{
                   width: '100%',
                   height: 'auto',
