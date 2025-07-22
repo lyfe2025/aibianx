@@ -12,22 +12,27 @@
 ## 💻 核心技术栈
 
 ### 前端架构
-- **框架**: Next.js 14 (App Router)
-- **语言**: TypeScript (100%类型安全，零any使用)
-- **UI库**: React 18
-- **样式**: 纯CSS + CSS变量系统 (已移除Tailwind CSS)
-- **状态管理**: Zustand + persist中间件
-- **表单**: React Hook Form + Zod验证
-- **动画**: CSS原生动画 + transition
-- **图标**: 自定义SVG图标库 (124个本地化图标)
+- **框架**: Next.js 15.4.2 (App Router + Turbopack)
+- **语言**: TypeScript 5+ (100%类型安全，零any使用)
+- **UI库**: React 19.1.0
+- **样式**: 纯CSS + CSS变量系统 (已完全移除Tailwind CSS)
+- **状态管理**: Zustand 5.0+ + persist中间件
+- **表单**: React Hook Form 7.60+ + Zod 4.0+验证
+- **动画**: CSS原生动画 + Framer Motion 12.23+
+- **图标**: 自定义SVG图标库 (124个本地化图标) + Lucide React
+- **UI增强**: Radix UI组件 (Dialog, Select, Checkbox等)
+- **工具库**: clsx, class-variance-authority, usehooks-ts
 
 ### 样式架构 (重要更新)
 - **设计模式**: 原子设计 (Atoms → Molecules → Organisms → Templates → Pages)
-- **样式方案**: CSS变量 + 语义化类名 + CSS Modules
+- **样式方案**: CSS变量 + 语义化类名 + 条件类名组合
 - **精确还原**: 直接使用设计稿数值，无框架限制
 - **毛玻璃效果**: 原生backdrop-filter实现
-- **响应式**: 原生CSS媒体查询
-- **已完成原子组件**: GradientButton, GradientText, Input, GlassCard, Icon, Avatar, Container
+- **响应式**: 原生CSS媒体查询 (1024px, 1200px, 1440px断点)
+- **CSS变量系统**: 64个变量统一管理颜色、字体、间距、阴影、动画
+- **已完成原子组件**: 11个 (GradientButton, GradientText, Input, GlassCard, Icon, Avatar, Container, BaseModal, BackToTopButton, BackgroundDecoration, PageTransition)
+- **分子组件**: 35个业务组件 (Header, Footer, Forms, Cards, Sections等)
+- **有机组件**: 7个模态框组件 (Login, Register, Payment, Membership等)
 - **状态管理**: modalStore(弹窗状态), userStore(用户认证和会员状态)
 
 ## 🎨 设计系统要求
@@ -61,6 +66,28 @@
 --color-border-primary: rgba(42, 42, 42, 0.70)
 --color-border-secondary: #2A2A2A
 --color-border-active: #3B82F6
+
+/* 间距系统 */
+--spacing-1: 4px    --spacing-2: 8px    --spacing-3: 12px
+--spacing-4: 16px   --spacing-5: 20px   --spacing-6: 24px
+--spacing-8: 32px   --spacing-10: 40px  --spacing-12: 48px
+--spacing-16: 64px  --spacing-20: 80px
+
+/* 圆角系统 */
+--radius-sm: 6px    --radius-md: 8px    --radius-lg: 12px
+--radius-xl: 16px   --radius-full: 9999px
+
+/* 模糊效果 */
+--blur-sm: 4px      --blur-md: 12px     --blur-lg: 64px
+
+/* 阴影系统 */
+--shadow-button: 0px 0px 15px 0px rgba(139, 92, 246, 0.50)
+--shadow-card: 0 4px 12px rgba(0, 0, 0, 0.15)
+
+/* 动画时长 */
+--transition-fast: 0.15s ease
+--transition-normal: 0.3s ease
+--transition-slow: 0.5s ease
 ```
 
 ### 字体系统 (精确使用)
@@ -106,17 +133,41 @@ backdrop-filter: blur(4px);
 ```typescript
 // 从统一入口导入
 import { 
-  GradientButton,    // 渐变按钮 (sm/md/lg, primary/outline)
-  GradientText,      // 渐变文字 (xs-8xl尺寸, normal-bold字重)
-  Input,             // 输入框 (支持图标、错误状态、标签)
-  GlassCard,         // 毛玻璃卡片 (default/hover/active变体)
-  Icon,              // 图标组件 (xs-xl尺寸, 自动路径映射)
-  Avatar,            // 头像组件 (图片+占位符)
-  Container          // 容器组件 (sm-xl尺寸, xl=1440px)
+  GradientButton,        // 渐变按钮 (sm/md/lg, primary/outline, loading状态)
+  GradientText,          // 渐变文字 (xs-8xl尺寸, normal-bold字重)
+  Input,                 // 输入框 (支持图标、错误状态、标签)
+  GlassCard,             // 毛玻璃卡片 (default/hover/active变体)
+  Icon,                  // 图标组件 (xs-xl尺寸, 自动路径映射)
+  Avatar,                // 头像组件 (图片+占位符)
+  Container,             // 容器组件 (sm-xl尺寸, xl=1440px)
+  BaseModal,             // 基础模态框组件
+  ModalOverlay,          // 模态框遮罩层
+  BackToTopButton,       // 返回顶部按钮
+  BackgroundDecoration,  // 背景装饰组件
+  PageTransition         // 页面过渡动画
 } from '@/components/ui'
 
+// 分子组件 (业务组件)
+import {
+  AppHeader,             // 应用头部导航
+  AppFooter,             // 应用底部
+  HeroSection,           // 首页英雄区
+  ArticleCard,           // 文章卡片
+  MembershipPlanCard,    // 会员计划卡片
+  // ... 35个分子组件
+} from '@/components/molecules'
+
+// 有机组件 (模态框)
+import {
+  LoginModal,            // 登录模态框
+  RegisterModal,         // 注册模态框
+  PaymentModal,          // 支付模态框
+  MembershipModal,       // 会员模态框
+  ForgotPasswordModal    // 忘记密码模态框
+} from '@/components/organisms'
+
 // 状态管理
-import { useModalStore, useUserStore } from '@/stores'
+import { useModalStore, useUserStore, type ModalType } from '@/stores'
 ```
 
 ### 组件使用原则
@@ -213,16 +264,45 @@ interface ComponentProps extends HTMLAttributes<HTMLElement> {
 2. **字体大小偏差** - 严格使用--font-size-*变量的预定义尺寸
 3. **间距不一致** - 使用--spacing-*变量的标准间距系统
 4. **毛玻璃效果缺失** - 检查backdrop-filter和-webkit-backdrop-filter
+5. **响应式断点错误** - 使用1024px, 1200px, 1440px标准断点
 
 ### 性能问题避免
 1. **图片未优化** - 强制使用Next.js Image组件
 2. **状态过度渲染** - 检查useStore的选择器使用
 3. **CSS重复计算** - 使用CSS变量代替内联样式
+4. **组件重复渲染** - 合理使用React.memo和useMemo
+5. **Bundle体积过大** - 按需导入Radix UI和Lucide图标
 
 ### 代码质量问题
 1. **类型any使用** - 明确禁止，必须定义具体类型
 2. **组件职责不清** - 遵循单一职责原则
 3. **命名不规范** - 使用语义化的组件和变量命名
+4. **forwardRef缺失** - 输入类组件必须支持ref转发
+5. **错误边界缺失** - 关键组件需要错误处理
+
+## 🛠️ 开发最佳实践
+
+### 组件开发流程
+1. **设计稿分析** - 精确测量尺寸、颜色、间距
+2. **原子组件优先** - 检查是否可复用现有组件
+3. **类型定义** - 先定义Props接口，再实现组件
+4. **样式实现** - 使用CSS变量，避免硬编码
+5. **响应式适配** - 移动端优先，渐进增强
+6. **测试验证** - 多设备测试，确保还原度
+
+### 调试技巧
+1. **CSS调试** - 使用浏览器DevTools直接修改CSS变量
+2. **组件调试** - React DevTools查看props和state
+3. **性能调试** - Next.js内置性能分析工具
+4. **类型检查** - TypeScript严格模式，零any容忍
+5. **样式冲突** - 使用CSS层叠优先级规则
+
+### 代码组织原则
+1. **文件命名** - PascalCase组件，camelCase工具函数
+2. **导入顺序** - React → 第三方库 → 内部组件 → 类型定义
+3. **组件结构** - Props接口 → 组件实现 → 样式定义 → 导出
+4. **注释规范** - 复杂逻辑必须注释，说明业务背景
+5. **代码分割** - 按功能模块分割，避免单文件过大
 
 ## 💡 纯CSS技术栈优势
 
@@ -240,4 +320,4 @@ interface ComponentProps extends HTMLAttributes<HTMLElement> {
 - **类型安全** - TypeScript全面覆盖
 - **开发体验** - 热重载，实时预览
 
-记住：这是一个追求极致设计还原度和用户体验的高端项目，每个细节都要精雕细琢！纯CSS方案让我们有能力实现100%的设计稿还原。 
+记住：这是一个追求极致设计还原度和用户体验的高端项目，每个细节都要精雕细琢！纯CSS方案让我们有能力实现100%的设计稿还原。
