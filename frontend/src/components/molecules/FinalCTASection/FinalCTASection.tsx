@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Container, GradientText, GradientButton, Icon } from '@/components/ui'
+import { Container, GradientText, GradientButton, Icon, BackgroundDecoration } from '@/components/ui'
 
 /**
  * 最终行动召唤区块组件 - FinalCTASection
@@ -63,31 +63,40 @@ export function FinalCTASection() {
             position: 'relative',
             overflow: 'hidden'
         }}>
-            {/* 装饰性背景效果 */}
-            <div style={{
-                position: 'absolute',
-                top: '50%',
-                right: '400px',
-                width: '80px',
-                height: '80px',
-                background: 'linear-gradient(90deg, rgba(255, 154, 158, 0.20) 0%, rgba(254, 207, 239, 0.15) 100%)',
-                filter: 'blur(30px)',
-                borderRadius: '50%',
-                opacity: 0.8,
-                zIndex: 0
-            }} />
+            {/* 装饰性背景效果 - 设计稿风格 */}
+            <BackgroundDecoration 
+                position="custom"
+                customPosition={{
+                    top: '50%',
+                    right: '400px'
+                }}
+                size={{ width: '80px', height: '80px' }}
+                gradient={{
+                    fromColor: '255, 154, 158',
+                    toColor: '254, 207, 239',
+                    fromOpacity: 0.20,
+                    toOpacity: 0.15
+                }}
+                blur={30}
+                animation={{ type: 'pulse', duration: '4s' }}
+            />
 
-            <div style={{
-                position: 'absolute',
-                bottom: '200px',
-                right: '720px',
-                width: '400px',
-                height: '400px',
-                background: 'linear-gradient(90deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%)',
-                filter: 'blur(80px)',
-                borderRadius: '50%',
-                zIndex: 0
-            }} />
+            <BackgroundDecoration 
+                position="custom"
+                customPosition={{
+                    bottom: '200px',
+                    right: '720px'
+                }}
+                size={{ width: '400px', height: '400px' }}
+                gradient={{
+                    fromColor: '102, 126, 234',
+                    toColor: '118, 75, 162',
+                    fromOpacity: 0.15,
+                    toOpacity: 0.15
+                }}
+                blur={80}
+                animation={{ type: 'float', duration: '10s', delay: '3s' }}
+            />
 
             <Container>
                 <div style={{

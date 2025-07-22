@@ -1,48 +1,94 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { GradientButton, GradientText, Icon } from '@/components/ui'
 import { useModalStore } from '@/stores'
+import { Icon } from '@/components/ui'
+import Image from 'next/image'
 
 /**
- * 全站公共头部导航组件 - AppHeader
+ * AppHeader 组件 - 应用顶部导航栏
  * 
- * ⚠️ 重要说明：这是全站公共组件，在以下四个页面中统一使用：
- * 1. 主页 (/)
- * 2. 周刊页面 (/weekly)
- * 3. 关于页面 (/about)
- * 4. 文章详情页面 (/weekly/[slug])
- * 
- * 🔧 修改影响：
- * - 任何对该组件的修改都会影响到上述所有页面
- * - 导航菜单、Logo、登录按钮的样式和行为修改会全站生效
- * 
- * 📍 使用位置：
- * - 在 /src/app/layout.tsx 中引用
- * - 通过 RootLayout 组件在所有页面中渲染
- * 
- * 🎨 包含功能：
- * - Logo 和品牌名称显示
+ * 功能特性：
+ * - 品牌Logo和名称展示
  * - 主导航菜单（首页、周刊、关于）
- * - 当前页面高亮显示
- * - 登录按钮（桌面端）
- * - 移动端菜单按钮（待实现）
+ * - 搜索和用户功能按钮
+ * - 登录/注册入口
+ * - 滚动隐藏/显示效果
+ * - 移动端响应式布局
+ * 
+ * 设计规范：
+ * - 高度: 98px
+ * - 背景: 半透明毛玻璃效果 + 模糊
+ * - Logo尺寸: 与文字等高对齐
+ * - 字体: Alibaba PuHuiTi 3.0
+ * - 最大宽度: 1504px
+ * - 选中指示器: 渐变下划线
+ * - 动画过渡: 平滑过渡效果
  * - 响应式布局适配
  */
 export function AppHeader() {
     const pathname = usePathname()
     const { openModal } = useModalStore()
+    const [isVisible, setIsVisible] = useState(true)
+    const [lastScrollY, setLastScrollY] = useState(0)
+    const [isScrolled, setIsScrolled] = useState(false)
 
-    // 导航菜单配置 - 修改这里会影响全站导航
-    const navItems = [
-        { href: '/', label: '首页', isActive: pathname === '/' },
-        { href: '/weekly', label: '周刊', isActive: pathname.startsWith('/weekly') },
-        { href: '/about', label: '关于', isActive: pathname === '/about' }
-    ]
+    // 滚动监听效果 - 优化用户体验
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY
+
+            // 检测是否已滚动，用于调整背景透明度
+            setIsScrolled(currentScrollY > 10)
+
+            // 优化滚动阈值，减少触发频率
+            const scrollThreshold = 80
+
+            // 向下滚动且滚动距离大于阈值时隐藏导航栏
+            if (currentScrollY > lastScrollY && currentScrollY > scrollThreshold) {
+                setIsVisible(false)
+            }
+            // 向上滚动时显示导航栏
+            else if (currentScrollY < lastScrollY) {
+                setIsVisible(true)
+            }
+
+            setLastScrollY(currentScrollY)
+        }
+
+        // 使用 requestAnimationFrame 优化性能
+        let ticking = false
+        const optimizedHandleScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    handleScroll()
+                    ticking = false
+                })
+                ticking = true
+            }
+        }
+
+        window.addEventListener('scroll', optimizedHandleScroll, { passive: true })
+
+        return () => {
+            window.removeEventListener('scroll', optimizedHandleScroll)
+        }
+    }, [lastScrollY])
 
     const handleLogin = () => {
         openModal('login')
+    }
+
+    const handleSearch = () => {
+        // TODO: 实现搜索功能
+        console.log('Search clicked')
+    }
+
+    const handleUserMenu = () => {
+        // TODO: 实现用户菜单功能
+        console.log('User menu clicked')
     }
 
     return (
@@ -52,159 +98,406 @@ export function AppHeader() {
             left: 0,
             right: 0,
             zIndex: 50,
+            // 优化毛玻璃效果，增加透明度
+            background: isScrolled
+                ? 'rgba(3, 3, 3, 0.85)' // 滚动时更不透明
+                : 'rgba(3, 3, 3, 0.65)', // 顶部时更透明
             backdropFilter: 'blur(64px)',
             WebkitBackdropFilter: 'blur(64px)',
-            borderBottom: '1px solid rgba(42, 42, 42, 0.60)',
-            background: 'rgba(3, 3, 3, 0.8)'
+            borderBottom: `1px solid ${isScrolled ? 'rgba(42, 42, 42, 0.80)' : 'rgba(42, 42, 42, 0.60)'}`,
+            height: '98px',
+            // 优化过渡效果，更平滑的动画
+            transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+            transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)', // 更平缓的贝塞尔曲线
+            willChange: 'transform, background-color, border-color'
         }}>
             <div style={{
-                maxWidth: '1440px',
+                maxWidth: '1504px',
                 margin: '0 auto',
-                padding: '0 var(--spacing-8)',
-                height: '80px',
+                padding: '27.5px 32px',
+                height: '100%',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
+                alignItems: 'center', // 改为center确保垂直居中
+                justifyContent: 'space-between',
+                width: '1504px',
+                overflow: 'hidden',
+                fontFamily: 'var(--font-family-primary)', // 使用CSS变量
+                fontSize: '16px',
+                fontWeight: 400,
+                minHeight: '98px'
             }}>
                 {/* Logo 区域 - 品牌标识，点击返回首页 */}
                 <Link href="/" style={{
                     display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--spacing-3)',
-                    textDecoration: 'none'
+                    alignItems: 'center', // 确保logo和文字在同一水平线
+                    gap: '8px', // 减少间距使整体更紧凑
+                    textDecoration: 'none',
+                    height: '32px' // 调整为适应更大的logo
                 }}>
+                    {/* Logo图标 - 比文字稍大，增强视觉层次 */}
                     <div style={{
-                        width: '32px',
+                        width: '32px', // 比文字稍大，增强视觉层次
                         height: '32px',
-                        borderRadius: '8px',
-                        background: 'var(--gradient-primary)',
-                        boxShadow: '0 4px 12px rgba(59, 130, 246, 0.4)',
+                        borderRadius: '4px',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        flexShrink: 0
                     }}>
-                        <Icon name="logo-detail" size="sm" style={{ color: '#FFFFFF' }} />
+                        <Image
+                            src="/icons/logo-main.svg"
+                            alt="AI变现之路"
+                            width={32}
+                            height={32}
+                            style={{
+                                width: '32px',
+                                height: '32px',
+                                objectFit: 'contain'
+                            }}
+                        />
                     </div>
-                    <GradientText size="lg" weight="bold">
+                    <div style={{
+                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                        backgroundClip: 'text',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        fontFamily: 'var(--font-family-primary)',
+                        fontSize: '24px',
+                        lineHeight: '1', // 使用相对行高确保文字紧凑
+                        fontWeight: '600',
+                        display: 'flex',
+                        alignItems: 'center', // 确保与logo在同一水平线
+                        whiteSpace: 'nowrap' // 防止文字换行
+                    }}>
                         AI变现之路
-                    </GradientText>
+                    </div>
                 </Link>
 
-                {/* 桌面端导航菜单 - 主要导航入口 */}
-                <nav className="desktop-nav" style={{
-                    display: 'none', // 默认隐藏，通过CSS媒体查询控制显示
-                    alignItems: 'center',
-                    gap: 'var(--spacing-8)'
+                {/* 右侧导航区域 */}
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center', // 确保所有元素垂直居中
+                    gap: '4px'
                 }}>
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: 'var(--spacing-2)'
+                    {/* 桌面端导航菜单 - 统一间距和选中效果 */}
+                    <nav className="desktop-nav" style={{
+                        display: 'none', // 默认隐藏，通过CSS媒体查询控制显示
+                        alignItems: 'center', // 导航菜单也居中对齐
+                        gap: '20px'
                     }}>
-                        {/* 导航链接 - 修改navItems会影响所有页面的导航 */}
+                        {/* 导航菜单容器 - 确保统一间距 */}
                         <div style={{
                             display: 'flex',
-                            alignItems: 'center',
-                            gap: 'var(--spacing-8)'
+                            alignItems: 'center', // 垂直居中
+                            gap: '20px'
                         }}>
-                            {navItems.map((item) => (
+                            {/* 首页 - 包含指示器 */}
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: '4px',
+                                position: 'relative'
+                            }}>
                                 <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={`nav-link ${item.isActive ? 'nav-link--active' : ''}`}
+                                    href="/"
                                     style={{
-                                        fontSize: 'var(--font-size-base)',
-                                        fontWeight: '500',
-                                        color: item.isActive ? '#FFFFFF' : 'var(--color-text-muted)',
+                                        color: pathname === '/' ? '#FFFFFF' : '#9CA3AF',
+                                        lineHeight: '24px',
+                                        height: '24px',
+                                        alignItems: 'center',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
                                         textDecoration: 'none',
-                                        transition: 'color 0.2s ease',
-                                        position: 'relative'
+                                        fontSize: '14px',
+                                        fontWeight: '400',
+                                        transition: 'color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)', // 平滑过渡
+                                        padding: '0 4px',
+                                        whiteSpace: 'nowrap'
                                     }}
+                                    className="nav-link"
                                 >
-                                    {item.label}
+                                    首页
                                 </Link>
-                            ))}
+                                {/* 首页指示器 - 精确对齐文字中心 */}
+                                {pathname === '/' && (
+                                    <div style={{
+                                        width: '28px',
+                                        height: '2px',
+                                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                                        borderRadius: '1px',
+                                        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)' // 平滑出现动画
+                                    }} />
+                                )}
+                            </div>
+
+                            {/* 周刊 - 包含指示器 */}
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: '4px',
+                                position: 'relative'
+                            }}>
+                                <Link
+                                    href="/weekly"
+                                    style={{
+                                        color: pathname.startsWith('/weekly') ? '#FFFFFF' : '#9CA3AF',
+                                        lineHeight: '24px',
+                                        height: '24px',
+                                        alignItems: 'center',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
+                                        textDecoration: 'none',
+                                        fontSize: '14px',
+                                        fontWeight: '400',
+                                        transition: 'color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                                        padding: '0 4px',
+                                        whiteSpace: 'nowrap'
+                                    }}
+                                    className="nav-link"
+                                >
+                                    周刊
+                                </Link>
+                                {/* 周刊指示器 - 精确对齐文字中心 */}
+                                {pathname.startsWith('/weekly') && (
+                                    <div style={{
+                                        width: '28px',
+                                        height: '2px',
+                                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                                        borderRadius: '1px',
+                                        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                                    }} />
+                                )}
+                            </div>
+
+                            {/* 关于 - 包含指示器 */}
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: '4px',
+                                position: 'relative'
+                            }}>
+                                <Link
+                                    href="/about"
+                                    style={{
+                                        color: pathname === '/about' ? '#FFFFFF' : '#9CA3AF',
+                                        lineHeight: '24px',
+                                        height: '24px',
+                                        alignItems: 'center',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
+                                        textDecoration: 'none',
+                                        fontSize: '14px',
+                                        fontWeight: '400',
+                                        transition: 'color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                                        padding: '0 4px',
+                                        whiteSpace: 'nowrap'
+                                    }}
+                                    className="nav-link"
+                                >
+                                    关于
+                                </Link>
+                                {/* 关于指示器 - 精确对齐文字中心 */}
+                                {pathname === '/about' && (
+                                    <div style={{
+                                        width: '28px',
+                                        height: '2px',
+                                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                                        borderRadius: '1px',
+                                        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                                    }} />
+                                )}
+                            </div>
                         </div>
+                    </nav>
 
-                        {/* 当前页面指示器 - 显示用户当前所在页面 */}
-                        <div style={{
-                            height: '2px',
-                            width: '64px',
-                            background: navItems.some(item => item.isActive)
-                                ? 'var(--gradient-primary)'
-                                : 'transparent',
-                            borderRadius: 'var(--radius-full)',
-                            transition: 'all 0.3s ease'
-                        }} />
-                    </div>
-                </nav>
-
-                {/* 桌面端认证按钮 - 用户登录入口 */}
-                <div className="desktop-auth-buttons" style={{
-                    display: 'none', // 默认隐藏，通过CSS媒体查询控制显示
-                    alignItems: 'center',
-                    gap: 'var(--spacing-3)'
-                }}>
-                    <GradientButton
-                        size="sm"
-                        onClick={handleLogin}
+                    {/* 搜索图标按钮 - 精确位置和样式 */}
+                    <button
+                        onClick={handleSearch}
+                        style={{
+                            background: 'rgba(26, 26, 26, 0.50)',
+                            borderStyle: 'solid',
+                            borderColor: 'rgba(59, 130, 246, 0.20)',
+                            borderWidth: '1px',
+                            borderRadius: '8px',
+                            padding: '10px',
+                            display: 'flex',
+                            width: '40px',
+                            height: '40px', // 明确设置高度
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginLeft: '32px',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)' // 平滑hover效果
+                        }}
+                        className="icon-button inner-border"
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.40)'
+                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.70)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.20)'
+                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.50)'
+                        }}
                     >
-                        登录
-                    </GradientButton>
-                </div>
+                        <Icon
+                            name="search-icon"
+                            style={{
+                                color: 'rgb(156, 163, 175)',
+                                width: '20px',
+                                height: '20px',
+                                backgroundSize: 'cover'
+                            }}
+                        />
+                    </button>
 
-                {/* 移动端菜单按钮 - 移动设备导航触发器 */}
-                <button
-                    className="mobile-menu-button"
-                    style={{
+                    {/* 用户图标按钮 - 精确位置和样式 */}
+                    <button
+                        onClick={handleUserMenu}
+                        style={{
+                            background: 'rgba(26, 26, 26, 0.50)',
+                            borderStyle: 'solid',
+                            borderColor: 'rgba(59, 130, 246, 0.20)',
+                            borderWidth: '1px',
+                            borderRadius: '8px',
+                            padding: '10px',
+                            display: 'flex',
+                            width: '40px',
+                            height: '40px', // 明确设置高度
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginLeft: '12px',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                        }}
+                        className="icon-button inner-border"
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.40)'
+                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.70)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.20)'
+                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.50)'
+                        }}
+                    >
+                        <Icon
+                            name="user-icon"
+                            style={{
+                                color: 'rgb(156, 163, 175)',
+                                width: '20px',
+                                height: '20px',
+                                backgroundSize: 'cover'
+                            }}
+                        />
+                    </button>
+
+                    {/* 桌面端登录按钮 - 精确还原设计稿样式 */}
+                    <div className="desktop-auth-buttons" style={{
                         display: 'none', // 默认隐藏，通过CSS媒体查询控制显示
-                        width: '40px',
-                        height: '40px',
-                        border: 'none',
-                        background: 'transparent',
-                        cursor: 'pointer',
-                        position: 'relative'
-                    }}
-                    onClick={() => {
-                        // TODO: 实现移动端菜单切换逻辑
-                        console.log('Toggle mobile menu')
-                    }}
-                >
-                    <div style={{
-                        width: '24px',
-                        height: '2px',
-                        background: '#FFFFFF',
-                        borderRadius: '1px',
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        transition: 'all 0.3s ease'
-                    }} />
-                    <div style={{
-                        width: '24px',
-                        height: '2px',
-                        background: '#FFFFFF',
-                        borderRadius: '1px',
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%) translateY(-6px)',
-                        transition: 'all 0.3s ease'
-                    }} />
-                    <div style={{
-                        width: '24px',
-                        height: '2px',
-                        background: '#FFFFFF',
-                        borderRadius: '1px',
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%) translateY(6px)',
-                        transition: 'all 0.3s ease'
-                    }} />
-                </button>
+                        alignItems: 'center'
+                    }}>
+                        <button
+                            onClick={handleLogin}
+                            style={{
+                                background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                                borderRadius: '9999px',
+                                border: 'none',
+                                display: 'flex',
+                                width: '88px',
+                                height: '40px', // 与其他按钮高度一致
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginLeft: '12px',
+                                paddingLeft: '28px',
+                                paddingRight: '28px',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                                boxShadow: '0px 0px 15px 0px rgba(139, 92, 246, 0.30)' // 减弱阴影
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-1px)'
+                                e.currentTarget.style.boxShadow = '0px 0px 20px 0px rgba(139, 92, 246, 0.50)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)'
+                                e.currentTarget.style.boxShadow = '0px 0px 15px 0px rgba(139, 92, 246, 0.30)'
+                            }}
+                        >
+                            <span style={{
+                                color: '#FFFFFF',
+                                fontFamily: 'var(--font-family-primary)',
+                                lineHeight: '18px',
+                                textAlign: 'center',
+                                width: '32px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                display: 'flex',
+                                textOverflow: 'ellipsis',
+                                minHeight: '18px',
+                                fontSize: '14px'
+                            }}>
+                                登录
+                            </span>
+                        </button>
+                    </div>
+
+                    {/* 移动端菜单按钮 - 移动设备导航触发器 */}
+                    <button
+                        className="mobile-menu-button"
+                        style={{
+                            display: 'none', // 默认隐藏，通过CSS媒体查询控制显示
+                            width: '40px',
+                            height: '40px',
+                            border: 'none',
+                            background: 'transparent',
+                            cursor: 'pointer',
+                            position: 'relative'
+                        }}
+                        onClick={() => {
+                            // TODO: 实现移动端菜单切换逻辑
+                            console.log('Toggle mobile menu')
+                        }}
+                    >
+                        <div style={{
+                            width: '24px',
+                            height: '2px',
+                            background: '#FFFFFF',
+                            borderRadius: '1px',
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                        }} />
+                        <div style={{
+                            width: '24px',
+                            height: '2px',
+                            background: '#FFFFFF',
+                            borderRadius: '1px',
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%) translateY(-6px)',
+                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                        }} />
+                        <div style={{
+                            width: '24px',
+                            height: '2px',
+                            background: '#FFFFFF',
+                            borderRadius: '1px',
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%) translateY(6px)',
+                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                        }} />
+                    </button>
+                </div>
             </div>
         </header>
     )

@@ -304,6 +304,25 @@ a {
   color: #FFFFFF !important;
 }
 
+/* ===== 头部图标按钮样式 ===== */
+
+/* 图标按钮基础样式 */
+.icon-button {
+  transition: all 0.2s ease !important;
+}
+
+/* 图标按钮hover效果 */
+.icon-button:hover {
+  background: rgba(59, 130, 246, 0.10) !important;
+  border-color: rgba(59, 130, 246, 0.40) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 图标按钮中的图标hover效果 */
+.icon-button:hover svg {
+  color: #FFFFFF !important;
+}
+
 /* ===== 响应式设计 ===== */
 
 /* 桌面端样式 (1024px及以上) */
@@ -318,6 +337,16 @@ a {
 
   .mobile-menu-button {
     display: none !important;
+  }
+
+  /* 确保头部布局在桌面端正确显示 */
+  header>div {
+    width: 1504px !important;
+  }
+
+  /* 调整页面顶部间距适配新的header高度 */
+  body main {
+    padding-top: 0px !important; /* 移除顶部间距，让背景上移 */
   }
 }
 
@@ -335,11 +364,6 @@ a {
     display: none !important;
   }
 
-  /* 缩小导航间距 */
-  .desktop-nav>div>div {
-    gap: var(--spacing-6) !important;
-  }
-
   /* 调整容器最大宽度 */
   .container-xl {
     max-width: 768px !important;
@@ -350,6 +374,11 @@ a {
   :root {
     --font-size-7xl: 40px;
     --font-size-8xl: 56px;
+  }
+
+  /* 调整页面顶部间距适配新的header高度 */
+  body main {
+    padding-top: 0px !important; /* 移除顶部间距，让背景上移 */
   }
 }
 
@@ -378,9 +407,9 @@ a {
     padding: 0 var(--spacing-4) !important;
   }
 
-  /* 调整页面顶部间距 */
+  /* 调整页面顶部间距适配移动端header高度 */
   body main {
-    padding-top: 64px !important;
+    padding-top: 0px !important; /* 移除顶部间距，让背景上移 */
   }
 
   /* 调整字体大小 */
@@ -657,6 +686,7 @@ a {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -666,6 +696,7 @@ a {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
@@ -676,6 +707,7 @@ a {
     opacity: 0;
     transform: scale(0.95) translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -687,6 +719,7 @@ a {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
+
   to {
     opacity: 0;
     transform: scale(0.95) translateY(-10px);
@@ -805,4 +838,176 @@ a {
 
 .mt-8 {
   margin-top: var(--spacing-8) !important;
+}
+
+/* ===== 响应式导航栏样式 ===== */
+
+/* 默认状态（桌面端） */
+.desktop-nav {
+  display: flex !important;
+}
+
+.desktop-auth-buttons {
+  display: flex !important;
+}
+
+.mobile-menu-button {
+  display: none !important;
+}
+
+/* 平板端适配 */
+@media (max-width: 1024px) {
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .desktop-auth-buttons {
+    display: none !important;
+  }
+
+  .mobile-menu-button {
+    display: flex !important;
+  }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .desktop-auth-buttons {
+    display: none !important;
+  }
+
+  .mobile-menu-button {
+    display: flex !important;
+  }
+}
+
+/* 导航链接hover效果 */
+.nav-link:hover {
+  color: var(--color-text-primary) !important;
+  transition: color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 图标按钮hover效果增强 */
+.icon-button {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.icon-button:hover {
+  transform: translateY(-1px);
+}
+
+/* 毛玻璃效果增强 */
+.inner-border {
+  border: 1px solid rgba(59, 130, 246, 0.20);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* 邮箱输入框placeholder样式 */
+.hero-email-input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+.hero-email-input::-webkit-input-placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+.hero-email-input::-moz-placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+.hero-email-input:-ms-input-placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+/* ===== 页面过渡效果增强 ===== */
+
+/* 平滑滚动优化 */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 0px; /* 移除Header空间，让背景上移 */
+}
+
+/* 页面过渡容器优化 */
+.page-transition {
+  isolation: isolate; /* 创建新的层叠上下文 */
+  contain: layout style paint; /* 优化渲染性能 */
+}
+
+/* 标准页面间距优化 */
+.page-transition.standard-page {
+  padding-top: 0px; /* 移除顶部间距，让背景上移 */
+  transition: padding-top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 个人中心页面特殊处理 */
+.page-transition.profile-page {
+  padding-top: 0;
+}
+
+/* 内容区域进入动画 */
+.page-transition > * {
+  animation: contentFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 优化页面滚动性能 */
+* {
+  scroll-behavior: smooth;
+}
+
+/* 减少重排重绘 */
+.page-transition,
+.page-transition * {
+  will-change: auto; /* 避免过度使用will-change */
+}
+
+/* 为动画元素单独优化 */
+.background-decoration,
+.nav-link,
+.icon-button {
+  will-change: transform, opacity;
+}
+
+/* 响应式过渡优化 */
+@media (max-width: 768px) {
+  .page-transition.standard-page {
+    padding-top: 0px; /* 移除顶部间距，让背景上移 */
+  }
+  
+  html {
+    scroll-padding-top: 0px; /* 移除移动端Header空间 */
+  }
+}
+
+/* 设备性能优化 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  .page-transition,
+  .page-transition *,
+  .background-decoration {
+    animation: none !important;
+    transition: none !important;
+  }
 }

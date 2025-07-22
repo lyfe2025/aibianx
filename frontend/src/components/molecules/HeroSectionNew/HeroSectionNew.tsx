@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Container, GradientButton, GradientText, Input } from '@/components/ui'
+import { Container, GradientButton, GradientText, Input, BackgroundDecoration } from '@/components/ui'
 
 /**
  * 新版英雄区块组件 - HeroSectionNew
@@ -45,31 +45,29 @@ export function HeroSectionNew() {
             overflow: 'hidden',
             background: 'var(--color-bg-primary)'
         }}>
-            {/* 背景装饰 - 左上角蓝色渐变 */}
-            <div style={{
-                position: 'absolute',
-                top: '-300px',
-                left: '-200px',
-                width: '600px',
-                height: '600px',
-                background: 'linear-gradient(90deg, rgba(79, 172, 254, 0.10) 0%, rgba(0, 242, 254, 0.05) 100%)',
-                filter: 'blur(100px)',
-                borderRadius: '50%',
-                zIndex: 0
-            }} />
+            {/* 背景装饰 - 设计稿蓝色渐变 */}
+            <BackgroundDecoration 
+                position="top-left"
+                animation={{ type: 'float', duration: '8s' }}
+            />
 
-            {/* 右侧装饰效果 */}
-            <div style={{
-                position: 'absolute',
-                top: '300px',
-                right: '-125px',
-                width: '500px',
-                height: '500px',
-                background: 'linear-gradient(90deg, rgba(255, 154, 158, 0.15) 0%, rgba(254, 207, 239, 0.08) 100%)',
-                filter: 'blur(80px)',
-                borderRadius: '50%',
-                zIndex: 0
-            }} />
+            {/* 右侧装饰效果 - 粉色渐变 */}
+            <BackgroundDecoration 
+                position="custom"
+                customPosition={{
+                    top: '300px',
+                    right: '-125px'
+                }}
+                size={{ width: '500px', height: '500px' }}
+                gradient={{
+                    fromColor: '255, 154, 158',
+                    toColor: '254, 207, 239',
+                    fromOpacity: 0.15,
+                    toOpacity: 0.08
+                }}
+                blur={80}
+                animation={{ type: 'pulse', duration: '6s', delay: '2s' }}
+            />
 
             <Container>
                 <div style={{
@@ -143,11 +141,9 @@ export function HeroSectionNew() {
                                         border: 'none',
                                         outline: 'none',
                                         color: 'var(--color-text-primary)',
-                                        fontSize: 'var(--font-size-base)',
-                                        '::placeholder': {
-                                            color: 'var(--color-text-muted)'
-                                        }
+                                        fontSize: 'var(--font-size-base)'
                                     }}
+                                    className="hero-email-input"
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') {
                                             handleSubscribe()

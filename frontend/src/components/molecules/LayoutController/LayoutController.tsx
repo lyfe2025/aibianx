@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation'
 import { AppHeader } from '@/components/molecules/AppHeader/AppHeader'
 import { AppFooter } from '@/components/molecules/AppFooter/AppFooter'
+import { PageTransition } from '@/components/ui'
 
 interface LayoutControllerProps {
     children: React.ReactNode
@@ -47,9 +48,15 @@ export function LayoutController({ children }: LayoutControllerProps) {
             */}
             {!isProfilePage && <AppHeader />}
 
-            {/* 页面主要内容区域 - 所有页面共用 */}
+            {/* 页面主要内容区域 - 使用过渡效果包装 */}
             <main style={{ flex: 1 }}>
-                {children}
+                <PageTransition 
+                    animationType="fade"
+                    duration={600}
+                    className={isProfilePage ? 'profile-page' : 'standard-page'}
+                >
+                    {children}
+                </PageTransition>
             </main>
 
             {/* 
