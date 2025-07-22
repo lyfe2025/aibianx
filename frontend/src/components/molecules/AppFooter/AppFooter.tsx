@@ -3,6 +3,7 @@
 import { Icon } from '@/components/ui'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 
 /**
  * ⭐ 全站唯一公共底部菜单组件 - AppFooter
@@ -50,8 +51,13 @@ import Image from 'next/image'
  * - 🚨 禁止使用普通白色文字（必须使用渐变色文字）
  */
 export function AppFooter() {
-    // 使用 useMemo 优化性能，避免每次渲染都重新计算
-    const currentYear = new Date().getFullYear()
+    // 使用 useState 和 useEffect 避免 hydration 错误
+    const [currentYear, setCurrentYear] = useState('2025')
+
+    // 在客户端渲染时更新年份
+    useEffect(() => {
+        setCurrentYear(new Date().getFullYear().toString())
+    }, [])
 
     // 主导航配置 - 与 Header 组件的导航保持一致
     const mainNavItems = [
