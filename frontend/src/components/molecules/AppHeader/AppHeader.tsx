@@ -98,18 +98,18 @@ export function AppHeader() {
             left: 0,
             right: 0,
             zIndex: 50,
-            // 优化毛玻璃效果，增加透明度
+            // 智能背景效果：顶部透明，滚动时显示毛玻璃
             background: isScrolled
-                ? 'rgba(3, 3, 3, 0.85)' // 滚动时更不透明
-                : 'rgba(3, 3, 3, 0.65)', // 顶部时更透明
-            backdropFilter: 'blur(64px)',
-            WebkitBackdropFilter: 'blur(64px)',
-            borderBottom: `1px solid ${isScrolled ? 'rgba(42, 42, 42, 0.80)' : 'rgba(42, 42, 42, 0.60)'}`,
+                ? 'rgba(0, 0, 0, 0.25)' // 滚动时深色半透明
+                : 'transparent', // 顶部时完全透明，无白色
+            backdropFilter: isScrolled ? 'blur(20px)' : 'none', // 滚动时启用模糊
+            WebkitBackdropFilter: isScrolled ? 'blur(20px)' : 'none',
+            borderBottom: isScrolled ? '1px solid rgba(42, 42, 42, 0.15)' : '1px solid rgba(42, 42, 42, 0)',
             height: '98px',
             // 优化过渡效果，更平滑的动画
             transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
-            transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)', // 更平缓的贝塞尔曲线
-            willChange: 'transform, background-color, border-color'
+            transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)', // 平滑过渡所有属性
+            willChange: 'transform, background-color, border-color, backdrop-filter'
         }}>
             <div style={{
                 maxWidth: '1504px',
@@ -124,7 +124,8 @@ export function AppHeader() {
                 fontFamily: 'var(--font-family-primary)', // 使用CSS变量
                 fontSize: '16px',
                 fontWeight: 400,
-                minHeight: '98px'
+                minHeight: '98px',
+                background: 'transparent' // 确保内部容器也透明
             }}>
                 {/* Logo 区域 - 品牌标识，点击返回首页 */}
                 <Link href="/" style={{

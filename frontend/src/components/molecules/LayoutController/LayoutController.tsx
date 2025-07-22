@@ -39,7 +39,8 @@ export function LayoutController({ children }: LayoutControllerProps) {
         <div id="root" style={{
             minHeight: '100vh',
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            background: 'var(--color-bg-primary)' // 确保根容器背景色
         }}>
             {/* 
               智能头部导航控制 - AppHeader
@@ -49,7 +50,14 @@ export function LayoutController({ children }: LayoutControllerProps) {
             {!isProfilePage && <AppHeader />}
 
             {/* 页面主要内容区域 - 使用过渡效果包装 */}
-            <main style={{ flex: 1 }}>
+            <main style={{ 
+                flex: 1,
+                background: 'var(--color-bg-primary)', // 确保主内容区背景色
+                marginTop: !isProfilePage ? '-98px' : '0', // 个人中心外的页面内容上移到菜单下方
+                paddingTop: !isProfilePage ? '98px' : '0', // 保证内容不被菜单遮挡
+                position: 'relative',
+                zIndex: 1
+            }}>
                 <PageTransition 
                     animationType="fade"
                     duration={600}
