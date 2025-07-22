@@ -23,7 +23,7 @@ import Image from 'next/image'
  * - 背景: 半透明毛玻璃效果 + 模糊
  * - Logo尺寸: 与文字等高对齐
  * - 字体: Alibaba PuHuiTi 3.0
- * - 最大宽度: 1504px
+ * - 最大宽度: 响应式适配 (1504px/1200px/1024px/768px)
  * - 选中指示器: 渐变下划线
  * - 动画过渡: 平滑过渡效果
  * - 响应式布局适配
@@ -119,7 +119,7 @@ export function AppHeader() {
                 display: 'flex',
                 alignItems: 'center', // 改为center确保垂直居中
                 justifyContent: 'space-between',
-                width: '1504px',
+                width: '100%', // 改为响应式宽度
                 overflow: 'hidden',
                 fontFamily: 'var(--font-family-primary)', // 使用CSS变量
                 fontSize: '16px',
@@ -500,6 +500,138 @@ export function AppHeader() {
                     </button>
                 </div>
             </div>
+
+            {/* 响应式样式优化 */}
+            <style jsx>{`
+                /* 大屏桌面端 - 1440px及以上 */
+                @media (min-width: 1440px) {
+                    .desktop-nav {
+                        display: flex !important;
+                    }
+                    
+                    .desktop-auth-buttons {
+                        display: flex !important;
+                    }
+                    
+                    .mobile-menu-button {
+                        display: none !important;
+                    }
+                }
+
+                /* 中等桌面端 - 1200px-1439px */
+                @media (min-width: 1200px) and (max-width: 1439px) {
+                    .desktop-nav {
+                        display: flex !important;
+                    }
+                    
+                    .desktop-auth-buttons {
+                        display: flex !important;
+                    }
+                    
+                    .mobile-menu-button {
+                        display: none !important;
+                    }
+
+                    /* 调整按钮间距 */
+                    .desktop-nav {
+                        gap: 16px !important;
+                    }
+                }
+
+                /* 小桌面端 - 1024px-1199px */
+                @media (min-width: 1024px) and (max-width: 1199px) {
+                    .desktop-nav {
+                        display: flex !important;
+                    }
+                    
+                    .desktop-auth-buttons {
+                        display: flex !important;
+                    }
+                    
+                    .mobile-menu-button {
+                        display: none !important;
+                    }
+
+                    /* 调整间距和字体 */
+                    .desktop-nav {
+                        gap: 12px !important;
+                    }
+                }
+
+                /* 平板端 - 768px-1023px */
+                @media (min-width: 768px) and (max-width: 1023px) {
+                    .desktop-nav {
+                        display: none !important;
+                    }
+                    
+                    .desktop-auth-buttons {
+                        display: none !important;
+                    }
+                    
+                    .mobile-menu-button {
+                        display: block !important;
+                    }
+
+                    /* 调整padding */
+                    header > div {
+                        padding: 20px 24px !important;
+                    }
+                }
+
+                /* 移动端 - 767px及以下 */
+                @media (max-width: 767px) {
+                    .desktop-nav {
+                        display: none !important;
+                    }
+                    
+                    .desktop-auth-buttons {
+                        display: none !important;
+                    }
+                    
+                    .mobile-menu-button {
+                        display: block !important;
+                    }
+
+                    /* 调整移动端布局 */
+                    header {
+                        height: 80px !important;
+                    }
+
+                    header > div {
+                        padding: 20px 16px !important;
+                        min-height: 80px !important;
+                    }
+
+                    /* 调整Logo尺寸 */
+                    header img {
+                        width: 28px !important;
+                        height: 28px !important;
+                    }
+
+                    /* 调整品牌文字 */
+                    header div[style*="fontSize: '24px'"] {
+                        font-size: 20px !important;
+                    }
+                }
+
+                /* 超小屏幕 - 480px及以下 */
+                @media (max-width: 480px) {
+                    header > div {
+                        padding: 16px 12px !important;
+                    }
+
+                    /* 进一步缩小Logo */
+                    header img {
+                        width: 24px !important;
+                        height: 24px !important;
+                    }
+
+                    /* 进一步缩小品牌文字 */
+                    header div[style*="fontSize: '24px'"] {
+                        font-size: 18px !important;
+                    }
+                }
+            `}</style>
         </header>
     )
 } 

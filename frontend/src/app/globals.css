@@ -330,8 +330,8 @@ a {
 
 /* ===== 响应式设计 ===== */
 
-/* 桌面端样式 (1024px及以上) */
-@media (min-width: 1024px) {
+/* 大屏桌面端样式 (1440px及以上) */
+@media (min-width: 1440px) {
   .desktop-nav {
     display: flex !important;
   }
@@ -344,14 +344,61 @@ a {
     display: none !important;
   }
 
-  /* 确保头部布局在桌面端正确显示 */
-  header>div {
-    width: 1504px !important;
-  }
-
   /* 调整页面顶部间距适配新的header高度 */
   body main {
     padding-top: 0px !important; /* 移除顶部间距，让背景上移 */
+  }
+}
+
+/* 中等桌面端样式 (1200px - 1439px) */
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .desktop-nav {
+    display: flex !important;
+  }
+
+  .desktop-auth-buttons {
+    display: flex !important;
+  }
+
+  .mobile-menu-button {
+    display: none !important;
+  }
+
+  /* 调整容器最大宽度和内边距 */
+  .container-xl {
+    max-width: 1200px !important;
+    padding: 0 var(--spacing-8) !important;
+  }
+
+  /* 调整页面顶部间距 */
+  body main {
+    padding-top: 0px !important;
+  }
+}
+
+/* 桌面端样式 (1024px - 1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .desktop-nav {
+    display: flex !important;
+  }
+
+  .desktop-auth-buttons {
+    display: flex !important;
+  }
+
+  .mobile-menu-button {
+    display: none !important;
+  }
+
+  /* 调整容器最大宽度和内边距 */
+  .container-xl {
+    max-width: 1024px !important;
+    padding: 0 var(--spacing-6) !important;
+  }
+
+  /* 调整页面顶部间距 */
+  body main {
+    padding-top: 0px !important;
   }
 }
 
@@ -860,8 +907,8 @@ a {
   display: none !important;
 }
 
-/* 平板端适配 */
-@media (max-width: 1024px) {
+/* 平板端适配 - 1024px以下 */
+@media (max-width: 1023px) {
   .desktop-nav {
     display: none !important;
   }
@@ -875,8 +922,8 @@ a {
   }
 }
 
-/* 移动端适配 */
-@media (max-width: 768px) {
+/* 移动端适配 - 768px以下 */
+@media (max-width: 767px) {
   .desktop-nav {
     display: none !important;
   }

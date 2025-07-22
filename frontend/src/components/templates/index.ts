@@ -1,2 +1,2 @@
 // 模板组件统一导出
-export { PageLayout } from './PageLayout' 
+// PageLayout 已移除 - 项目统一使用 LayoutController + AppFooter 的架构 

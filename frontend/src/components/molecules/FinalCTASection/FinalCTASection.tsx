@@ -6,10 +6,10 @@ import { Container, GradientText, GradientButton, Icon, BackgroundDecoration } f
 /**
  * 最终行动召唤区块组件 - FinalCTASection
  * 
- * 根据设计稿创建的最终CTA区块，包含：
+ * 根据设计稿1:1还原的最终CTA区块，包含：
  * - "成为AI时代的赢家"主标题
  * - 用户数量统计
- * - 三大核心价值点
+ * - 三大核心价值点（使用新下载的设计稿图标）
  * - 邮件订阅表单
  * - 装饰性背景效果
  */
@@ -18,18 +18,18 @@ export function FinalCTASection() {
     const [email, setEmail] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
 
-    // 核心价值点
+    // 核心价值点 - 使用设计稿中的图标
     const benefits = [
         {
-            icon: 'drive-innovation',
+            icon: 'drive-innovation-feature',
             title: '掌握前沿AI工具和变现策略'
         },
         {
-            icon: 'update-weekly-icon',
+            icon: 'weekly-update-feature',
             title: '每周更新实战案例和变现干货'
         },
         {
-            icon: 'rocket-icon',
+            icon: 'ai-guidance-feature',
             title: '专业指导快速实现AI创业'
         }
     ]
@@ -63,272 +63,353 @@ export function FinalCTASection() {
             position: 'relative',
             overflow: 'hidden'
         }}>
-            {/* 装饰性背景效果 - 设计稿风格 */}
-            <BackgroundDecoration 
-                position="custom"
-                customPosition={{
-                    top: '50%',
-                    right: '400px'
-                }}
-                size={{ width: '80px', height: '80px' }}
-                gradient={{
-                    fromColor: '255, 154, 158',
-                    toColor: '254, 207, 239',
-                    fromOpacity: 0.20,
-                    toOpacity: 0.15
-                }}
-                blur={30}
-                animation={{ type: 'pulse', duration: '4s' }}
-            />
-
-            <BackgroundDecoration 
-                position="custom"
-                customPosition={{
-                    bottom: '200px',
-                    right: '720px'
-                }}
-                size={{ width: '400px', height: '400px' }}
-                gradient={{
-                    fromColor: '102, 126, 234',
-                    toColor: '118, 75, 162',
-                    fromOpacity: 0.15,
-                    toOpacity: 0.15
-                }}
-                blur={80}
-                animation={{ type: 'float', duration: '10s', delay: '3s' }}
-            />
-
             <Container>
+                {/* 主要内容容器 - 精确按设计稿尺寸 */}
                 <div style={{
                     background: 'rgba(26, 26, 26, 0.20)',
                     borderRadius: '16px',
-                    padding: '48px',
                     position: 'relative',
                     zIndex: 1,
                     overflow: 'hidden',
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 592px',
-                    gap: '320px',
-                    alignItems: 'center'
+                    width: '1200px',
+                    height: '520px',
+                    margin: '0 auto',
+                    display: 'flex',
+                    alignItems: 'stretch',
+                    gap: '32px'
                 }}>
-                    {/* 左侧内容 */}
+                    {/* 左侧内容 - 精确按设计稿布局 */}
                     <div style={{
+                        marginTop: '32px',
+                        marginBottom: '32px',
+                        marginLeft: '32px',
+                        gap: '8px',
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '32px'
+                        alignItems: 'stretch',
+                        flex: '1',
+                        minWidth: '450px'
                     }}>
-                        {/* 主标题 */}
+                        {/* 主标题 - 精确按设计稿样式 */}
                         <div style={{
+                            background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            fontSize: '36px',
+                            fontWeight: '700',
+                            lineHeight: '40px',
+                            width: '400px',
+                            alignItems: 'center',
                             display: 'flex',
-                            flexDirection: 'column',
-                            gap: '8px'
+                            textOverflow: 'ellipsis',
+                            marginRight: '19px',
+                            minHeight: '40px'
                         }}>
-                            <GradientText
-                                size="6xl"
-                                weight="bold"
-                                style={{
-                                    fontSize: '36px',
-                                    lineHeight: '40px'
-                                }}
-                            >
-                                成为AI时代的赢家
-                            </GradientText>
-                            <p style={{
-                                color: 'var(--color-text-secondary)',
-                                fontSize: '20px',
-                                lineHeight: '28px',
-                                margin: 0
-                            }}>
-                                加入10000+已实现AI变现的先行者
-                            </p>
+                            成为AI时代的赢家
                         </div>
 
-                        {/* 价值点列表 */}
+                        {/* 副标题 - 精确按设计稿样式 */}
                         <div style={{
+                            color: '#D1D5DB',
+                            fontSize: '20px',
+                            lineHeight: '28px',
+                            width: '400px',
+                            alignItems: 'center',
+                            display: 'flex',
+                            textOverflow: 'ellipsis',
+                            minHeight: '28px'
+                        }}>
+                            加入10000+已实现AI变现的先行者
+                        </div>
+
+                        {/* 价值点列表 - 精确按设计稿布局 */}
+                        <div style={{
+                            marginTop: '24px',
+                            marginRight: '32px',
+                            gap: '20px',
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '24px'
+                            alignItems: 'stretch'
                         }}>
                             {benefits.map((benefit, index) => (
                                 <div
                                     key={index}
                                     style={{
+                                        gap: '16px',
                                         display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '16px'
+                                        flexDirection: 'row',
+                                        alignItems: 'stretch',
+                                        paddingRight: index === 0 ? '19px' : '0'
                                     }}
                                 >
+                                    {/* 图标圆形背景 - 精确按设计稿样式 */}
                                     <div style={{
-                                        width: '40px',
-                                        height: '40px',
                                         background: 'rgba(30, 61, 89, 0.30)',
-                                        borderRadius: '50%',
+                                        borderRadius: '9999px',
+                                        padding: '10px',
                                         display: 'flex',
-                                        alignItems: 'center',
+                                        width: '40px',
                                         justifyContent: 'center',
-                                        flexShrink: 0
+                                        alignItems: 'center'
                                     }}>
                                         <Icon
                                             name={benefit.icon}
                                             size="sm"
                                             style={{
-                                                color: index === 1 ? '#8B5CF6' : '#3B82F6'
+                                                width: '20px',
+                                                height: '20px'
                                             }}
                                         />
                                     </div>
-                                    <span style={{
-                                        color: 'var(--color-text-secondary)',
-                                        fontSize: '18px',
-                                        lineHeight: '28px'
+                                    {/* 功能描述文字 - 精确按设计稿样式 */}
+                                    <div style={{
+                                        color: '#D1D5DB',
+                                        lineHeight: '28px',
+                                        width: '300px',
+                                        alignItems: 'center',
+                                        display: 'flex',
+                                        textOverflow: 'ellipsis',
+                                        marginTop: '6px',
+                                        minHeight: '28px'
                                     }}>
                                         {benefit.title}
-                                    </span>
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    {/* 右侧订阅表单 */}
+                    {/* 右侧订阅表单 - 精确按设计稿布局 */}
                     <div style={{
                         background: 'rgba(26, 26, 26, 0.30)',
                         border: '1px solid rgba(42, 42, 42, 0.80)',
                         borderRadius: '16px',
-                        padding: '33px',
+                        width: '500px',
+                        position: 'relative',
+                        marginTop: '32px',
+                        marginBottom: '32px',
+                        marginRight: '32px',
+                        gap: '8px',
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '16px',
-                        position: 'relative'
+                        alignItems: 'stretch'
                     }}>
-                        {/* 装饰性光效 */}
+                        {/* 表单标题 - 精确按设计稿样式 */}
                         <div style={{
-                            position: 'absolute',
-                            top: '-48px',
-                            right: '48px',
-                            width: '80px',
-                            height: '80px',
-                            background: 'linear-gradient(90deg, rgba(79, 172, 254, 0.20) 0%, rgba(0, 242, 254, 0.15) 100%)',
-                            filter: 'blur(30px)',
-                            borderRadius: '50%',
-                            opacity: 0.8,
-                            zIndex: -1
-                        }} />
-
-                        {/* 表单标题 */}
-                        <h3 style={{
-                            color: '#FFFFFF',
+                            background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
                             fontSize: '24px',
                             fontWeight: '700',
                             lineHeight: '32px',
                             textAlign: 'center',
-                            margin: 0
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            display: 'flex',
+                            textOverflow: 'ellipsis',
+                            marginTop: '32px',
+                            marginLeft: '33px',
+                            marginRight: '33px',
+                            minHeight: '32px'
                         }}>
                             获取独家AI变现指南
-                        </h3>
+                        </div>
 
-                        {/* 表单描述 */}
-                        <p style={{
-                            color: 'var(--color-text-muted)',
-                            fontSize: 'var(--font-size-base)',
+                        {/* 表单描述 - 精确按设计稿样式 */}
+                        <div style={{
+                            color: '#9CA3AF',
+                            fontSize: '16px',
                             lineHeight: '24px',
                             textAlign: 'center',
-                            margin: 0
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            display: 'flex',
+                            textOverflow: 'ellipsis',
+                            marginTop: '16px',
+                            marginLeft: '33px',
+                            marginRight: '33px',
+                            minHeight: '24px'
                         }}>
                             订阅周刊，每周获取精选AI变现干货和独家资源
-                        </p>
+                        </div>
 
-                        {/* 表单字段 */}
+                        {/* 称呼输入框 - 精确按设计稿样式 */}
                         <div style={{
+                            background: 'rgba(18, 18, 18, 0.50)',
+                            border: '1px solid rgba(59, 130, 246, 0.30)',
+                            borderRadius: '8px',
+                            padding: '17px',
                             display: 'flex',
-                            flexDirection: 'column',
-                            gap: '8px',
-                            marginTop: '16px'
+                            width: '434px',
+                            gap: '12px',
+                            alignItems: 'stretch',
+                            marginTop: '16px',
+                            marginLeft: '33px',
+                            marginRight: '33px',
+                            flexDirection: 'row'
                         }}>
-                            {/* 称呼输入框 */}
+                            <Icon name="input-email-icon" size="sm" style={{
+                                width: '20px',
+                                height: '20px',
+                                color: '#3B82F6'
+                            }} />
                             <div style={{
-                                background: 'rgba(18, 18, 18, 0.50)',
-                                border: '1px solid rgba(59, 130, 246, 0.30)',
-                                borderRadius: '8px',
-                                padding: '17px',
+                                width: '368px',
+                                overflow: 'hidden',
                                 display: 'flex',
-                                alignItems: 'center',
-                                gap: '12px'
+                                alignItems: 'flex-start',
+                                minHeight: '20px'
                             }}>
-                                <Icon name="user-icon" size="sm" style={{ color: '#3B82F6' }} />
                                 <input
                                     type="text"
                                     placeholder="您的称呼"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     style={{
-                                        flex: 1,
+                                        width: '368px',
+                                        height: '20px',
+                                        color: '#9CA3AF',
+                                        fontSize: '14px',
+                                        lineHeight: '20px',
+                                        alignItems: 'center',
+                                        display: 'flex',
+                                        textOverflow: 'ellipsis',
+                                        minHeight: '20px',
+                                        marginRight: '-1px',
                                         background: 'transparent',
                                         border: 'none',
-                                        outline: 'none',
-                                        color: 'var(--color-text-primary)',
-                                        fontSize: '14px',
-                                        '::placeholder': {
-                                            color: 'var(--color-text-muted)'
-                                        }
+                                        outline: 'none'
                                     }}
                                 />
                             </div>
+                        </div>
 
-                            {/* 邮箱输入框 */}
+                        {/* 邮箱输入框 - 精确按设计稿样式 */}
+                        <div style={{
+                            background: 'rgba(18, 18, 18, 0.50)',
+                            border: '1px solid rgba(59, 130, 246, 0.30)',
+                            borderRadius: '8px',
+                            padding: '17px',
+                            display: 'flex',
+                            width: '434px',
+                            gap: '12px',
+                            alignItems: 'stretch',
+                            marginTop: '16px',
+                            marginLeft: '33px',
+                            marginRight: '33px',
+                            flexDirection: 'row'
+                        }}>
+                            <Icon name="input-email-icon" size="sm" style={{
+                                width: '20px',
+                                height: '20px',
+                                color: '#3B82F6'
+                            }} />
                             <div style={{
-                                background: 'rgba(18, 18, 18, 0.50)',
-                                border: '1px solid rgba(59, 130, 246, 0.30)',
-                                borderRadius: '8px',
-                                padding: '17px',
+                                width: '368px',
+                                overflow: 'hidden',
                                 display: 'flex',
-                                alignItems: 'center',
-                                gap: '12px'
+                                alignItems: 'flex-start',
+                                minHeight: '20px'
                             }}>
-                                <Icon name="email-icon" size="sm" style={{ color: '#3B82F6' }} />
                                 <input
                                     type="email"
                                     placeholder="您的邮箱"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     style={{
-                                        flex: 1,
+                                        width: '368px',
+                                        height: '20px',
+                                        color: '#9CA3AF',
+                                        fontSize: '14px',
+                                        lineHeight: '20px',
+                                        alignItems: 'center',
+                                        display: 'flex',
+                                        textOverflow: 'ellipsis',
+                                        minHeight: '20px',
+                                        marginRight: '-1px',
                                         background: 'transparent',
                                         border: 'none',
-                                        outline: 'none',
-                                        color: 'var(--color-text-primary)',
-                                        fontSize: '14px',
-                                        '::placeholder': {
-                                            color: 'var(--color-text-muted)'
-                                        }
+                                        outline: 'none'
                                     }}
                                 />
                             </div>
                         </div>
 
-                        {/* 提交按钮 */}
-                        <GradientButton
-                            onClick={handleSubmit}
-                            disabled={isSubmitting}
-                            style={{
-                                marginTop: '88px',
-                                padding: '20px',
-                                fontSize: '18px',
-                                fontWeight: '500'
-                            }}
-                        >
-                            {isSubmitting ? '提交中...' : '立即免费获取'}
-                        </GradientButton>
+                        {/* 提交按钮 - 精确按设计稿样式 */}
+                        <div style={{
+                            background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            width: '434px',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: '16px',
+                            marginLeft: '33px',
+                            marginRight: '33px',
+                            paddingTop: '20px',
+                            paddingBottom: '20px',
+                            cursor: 'pointer'
+                        }} onClick={handleSubmit}>
+                            <div style={{
+                                color: '#FFFFFF',
+                                lineHeight: '28px',
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                display: 'flex',
+                                textOverflow: 'ellipsis',
+                                minHeight: '28px'
+                            }}>
+                                {isSubmitting ? '提交中...' : '立即免费获取'}
+                            </div>
+                        </div>
 
-                        {/* 统计信息 */}
-                        <p style={{
-                            color: 'var(--color-text-disabled)',
+                        {/* 统计信息 - 精确按设计稿样式 */}
+                        <div style={{
+                            color: '#6B7280',
                             fontSize: '14px',
                             lineHeight: '20px',
                             textAlign: 'center',
-                            margin: '16px 0 0 0'
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            display: 'flex',
+                            textOverflow: 'ellipsis',
+                            marginTop: '16px',
+                            marginBottom: '32px',
+                            marginLeft: '33px',
+                            marginRight: '33px',
+                            minHeight: '20px'
                         }}>
                             已有5000+读者订阅
-                        </p>
+                        </div>
                     </div>
+
+                    {/* 装饰性背景效果 - 精确按设计稿位置 */}
+                    <div style={{
+                        position: 'absolute',
+                        opacity: '0.80',
+                        background: 'linear-gradient(90deg, rgba(79, 172, 254, 0.20) 0%, rgba(0, 242, 254, 0.15) 100%)',
+                        filter: 'blur(30px)',
+                        borderRadius: '9999px',
+                        width: '80px',
+                        height: '80px',
+                        top: '-48px',
+                        left: '544px'
+                    }} />
+
+                    <div style={{
+                        position: 'absolute',
+                        opacity: '0.80',
+                        background: 'linear-gradient(90deg, rgba(255, 154, 158, 0.20) 0%, rgba(254, 207, 239, 0.15) 100%)',
+                        filter: 'blur(30px)',
+                        borderRadius: '9999px',
+                        width: '80px',
+                        height: '80px',
+                        bottom: '16px',
+                        right: '400px'
+                    }} />
                 </div>
             </Container>
         </section>
