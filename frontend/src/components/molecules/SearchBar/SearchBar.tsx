@@ -8,8 +8,6 @@ interface SearchBarProps {
     onSearch: (query: string) => void
     className?: string
     disabled?: boolean
-    showResultCount?: boolean
-    resultCount?: number
     isLoading?: boolean
 }
 
@@ -18,14 +16,33 @@ export function SearchBar({
     onSearch,
     className = '',
     disabled = false,
-    showResultCount = false,
-    resultCount = 0,
     isLoading = false
 }: SearchBarProps) {
     const [query, setQuery] = useState('')
     const [isFocused, setIsFocused] = useState(false)
+    const [showShortcut, setShowShortcut] = useState(true)
     const inputRef = useRef<HTMLInputElement>(null)
     const debounceTimeoutRef = useRef<NodeJS.Timeout>()
+
+    // 键盘快捷键支持
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Ctrl+K 或 Cmd+K 聚焦搜索框
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault()
+                inputRef.current?.focus()
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyDown)
+        return () => document.removeEventListener('keydown', handleKeyDown)
+    }, [])
+
+    // 检测键盘快捷键显示
+    useEffect(() => {
+        const isMac = typeof navigator !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0
+        setShowShortcut(!isFocused && !query && !isLoading)
+    }, [isFocused, query, isLoading])
 
     // 防抖搜索 - P0-2: 优化搜索门槛，1字符时延迟更长
     const debouncedSearch = useCallback((searchQuery: string, delay?: number) => {
@@ -106,92 +123,90 @@ export function SearchBar({
 
     // P0-3: 简化占位符提示，移除重复信息
     const getPlaceholderText = () => {
-        return placeholder // 直接返回简洁的占位符，不再添加ESC提示
+        if (isLoading) return "搜索中..."
+        if (showShortcut) {
+            const isMac = typeof navigator !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0
+            const shortcut = isMac ? '⌘K' : 'Ctrl+K'
+            return `${placeholder} (${shortcut})`
+        }
+        return placeholder
     }
 
     return (
         <form onSubmit={handleSubmit} className={className} role="search">
-            {/* 外层毛玻璃容器 - 按设计稿精确还原 */}
+            {/* 外层毛玻璃容器 - 优化视觉设计 */}
             <div style={{
                 background: 'rgba(26, 26, 26, 0.30)',
                 backdropFilter: 'blur(16px)',
                 WebkitBackdropFilter: 'blur(16px)',
                 border: isFocused
-                    ? '1px solid rgba(59, 130, 246, 0.50)'
-                    : '1px solid rgba(42, 42, 42, 0.80)',
+                    ? '1px solid rgba(59, 130, 246, 0.40)' // 聚焦时蓝色边框，稍微降低透明度
+                    : '1px solid rgba(42, 42, 42, 0.50)', // 非聚焦时更淡的边框
                 borderRadius: '16px',
-                padding: '20px 24px',
+                padding: '16px 20px', // 减少垂直内边距，让搜索框更紧凑
                 width: '100%',
-                transition: 'border-color 0.2s ease',
-                opacity: disabled ? 0.5 : 1
+                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)', // 更平滑的过渡
+                opacity: disabled ? 0.5 : 1,
+                // 添加微妙的阴影增强层次感
+                boxShadow: isFocused
+                    ? '0 4px 20px rgba(59, 130, 246, 0.15)'
+                    : '0 2px 8px rgba(0, 0, 0, 0.1)',
             }}>
-                {/* 搜索结果统计 - 仅在有结果时显示 */}
-                {showResultCount && query.trim() && !isLoading && (
-                    <div style={{
-                        color: '#9CA3AF',
-                        fontSize: '12px',
-                        lineHeight: '16px',
-                        marginBottom: '8px',
-                        fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif"
-                    }}>
-                        找到 {resultCount} 个相关结果
-                    </div>
-                )}
+                {/* P1-4: 移除内部结果统计，将统计移到搜索框外部 */}
 
-                {/* 内层搜索输入框 - 按设计稿精确还原 */}
+                {/* 内层搜索输入框 - 优化视觉设计 */}
                 <div style={{
-                    background: 'rgba(18, 18, 18, 0.50)',
-                    border: 'none', // 移除内层边框，避免双重边框效果
+                    background: 'rgba(18, 18, 18, 0.40)', // 稍微降低背景透明度
+                    border: 'none',
                     borderRadius: '12px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    paddingLeft: '21px',
-                    paddingRight: '21px',
-                    paddingTop: '1px',
-                    paddingBottom: '1px',
+                    gap: '12px', // 增加间距让布局更舒适
+                    paddingLeft: '18px', // 优化内边距
+                    paddingRight: '18px',
+                    paddingTop: '2px',
+                    paddingBottom: '2px',
                     overflow: 'hidden',
-                    position: 'relative'
+                    position: 'relative',
+                    minHeight: '44px' // 确保最小高度，优化视觉比例
                 }}>
                     {/* 搜索图标或加载指示器 */}
-                    {isLoading ? (
-                        <div style={{
-                            width: '20px',
-                            height: '20px',
-                            flexShrink: 0,
-                            marginTop: '14px',
-                            marginBottom: '14px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>
-                            <div style={{
-                                width: '16px',
-                                height: '16px',
-                                border: '2px solid rgba(59, 130, 246, 0.2)',
-                                borderTop: '2px solid #3B82F6',
-                                borderRadius: '50%',
-                                animation: 'spin 1s linear infinite'
-                            }} />
-                        </div>
-                    ) : (
-                        <Icon
-                            name="search-icon"
-                            size="md"
-                            style={{
-                                width: '20px',
-                                height: '20px',
-                                flexShrink: 0,
-                                marginTop: '14px',
-                                marginBottom: '14px',
-                                transition: 'filter 0.2s ease',
-                                // 使用filter确保图标在黑色背景下可见
-                                filter: isFocused
-                                    ? 'brightness(0) saturate(100%) invert(47%) sepia(65%) saturate(2976%) hue-rotate(214deg) brightness(102%) contrast(98%)' // 蓝色
-                                    : 'brightness(0) saturate(100%) invert(83%) sepia(8%) saturate(345%) hue-rotate(183deg) brightness(95%) contrast(92%)' // 亮灰色，在黑背景下可见
-                            }}
-                        />
-                    )}
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minWidth: '18px',
+                        minHeight: '18px'
+                    }}>
+                        {isLoading ? (
+                            // 加载状态 - 旋转动画
+                            <div
+                                style={{
+                                    width: '18px',
+                                    height: '18px',
+                                    border: '2px solid rgba(59, 130, 246, 0.2)',
+                                    borderTop: '2px solid #3B82F6',
+                                    borderRadius: '50%',
+                                    animation: 'spin 1s linear infinite'
+                                }}
+                            />
+                        ) : (
+                            <Icon
+                                name="search-icon"
+                                size="md"
+                                style={{
+                                    width: '18px', // 稍微减小尺寸，更精致
+                                    height: '18px',
+                                    flexShrink: 0,
+                                    transition: 'filter 0.3s ease',
+                                    // 优化颜色过渡
+                                    filter: isFocused
+                                        ? 'brightness(0) saturate(100%) invert(47%) sepia(65%) saturate(2976%) hue-rotate(214deg) brightness(102%) contrast(98%)'
+                                        : 'brightness(0) saturate(100%) invert(75%) sepia(8%) saturate(345%) hue-rotate(183deg) brightness(95%) contrast(92%)' // 稍微更亮的灰色
+                                }}
+                            />
+                        )}
+                    </div>
 
                     {/* 搜索输入框 - 精确还原设计稿样式 */}
                     <input
@@ -205,64 +220,70 @@ export function SearchBar({
                         placeholder={getPlaceholderText()}
                         disabled={disabled}
                         aria-label="搜索AI变现内容"
-                        aria-describedby={showResultCount ? "search-results-count" : undefined}
+                        aria-describedby={undefined}
                         style={{
                             flex: 1,
                             background: 'transparent',
                             border: 'none',
                             outline: 'none',
                             color: query ? '#FFFFFF' : '#9CA3AF',
-                            fontSize: '16px',
-                            lineHeight: '24px',
+                            fontSize: '15px', // 稍微增大字体，提升可读性
+                            lineHeight: '22px',
                             fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-                            height: '48px',
+                            height: '40px', // 优化高度
                             display: 'flex',
                             alignItems: 'center',
                             padding: 0,
                             width: '100%',
-                            transition: 'color 0.2s ease'
+                            transition: 'color 0.3s ease',
+                            // 优化占位符样式
+                            '::placeholder': {
+                                color: '#6B7280',
+                                opacity: 1
+                            }
                         }}
                     />
 
-                    {/* P1-5: 清空按钮 - 优化点击区域 */}
+                    {/* 清空按钮 - 优化视觉设计 */}
                     {query && !disabled && (
                         <button
                             type="button"
                             onClick={handleClear}
                             aria-label="清空搜索"
                             style={{
-                                background: 'rgba(107, 114, 128, 0.2)',
+                                background: 'rgba(107, 114, 128, 0.15)', // 更淡的背景
                                 border: 'none',
                                 borderRadius: '50%',
-                                width: '28px', // 从20px增加到28px
-                                height: '28px', // 从20px增加到28px
+                                width: '24px', // 稍微减小尺寸
+                                height: '24px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'pointer',
                                 color: '#9CA3AF',
-                                fontSize: '14px', // 从12px增加到14px
+                                fontSize: '12px',
                                 lineHeight: '1',
                                 flexShrink: 0,
-                                marginTop: '10px', // 从14px调整到10px保持居中
-                                marginBottom: '10px', // 从14px调整到10px保持居中
-                                transition: 'all 0.2s ease',
-                                opacity: 0.7,
-                                // 增加更大的点击区域
-                                padding: '4px' // 内边距增加点击区域
+                                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)', // 更平滑的过渡
+                                opacity: 0.6,
+                                // 更好的视觉反馈
+                                ':hover': {
+                                    transform: 'scale(1.1)',
+                                    opacity: 1
+                                }
                             }}
                             onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(107, 114, 128, 0.3)'
+                                e.currentTarget.style.background = 'rgba(107, 114, 128, 0.25)'
                                 e.currentTarget.style.opacity = '1'
-                                e.currentTarget.style.transform = 'scale(1.1)' // 添加悬浮放大效果
+                                e.currentTarget.style.transform = 'scale(1.1)'
                             }}
                             onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'rgba(107, 114, 128, 0.2)'
-                                e.currentTarget.style.opacity = '0.7'
+                                e.currentTarget.style.background = 'rgba(107, 114, 128, 0.15)'
+                                e.currentTarget.style.opacity = '0.6'
                                 e.currentTarget.style.transform = 'scale(1)'
                             }}
                         >
-                            ×
+                            ✕
                         </button>
                     )}
                 </div>
@@ -279,5 +300,28 @@ export function SearchBar({
                 }
             `}</style>
         </form>
+
+        {/* 内联CSS样式 */ }
+    <style jsx>{`
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            /* 输入框聚焦时的高亮效果 */
+            input:focus::placeholder {
+                color: rgba(156, 163, 175, 0.8);
+                transition: color 0.3s ease;
+            }
+
+            /* 搜索框整体的微动画 */
+            form {
+                transition: transform 0.2s ease;
+            }
+
+            form:focus-within {
+                transform: translateY(-1px);
+            }
+        `}</style>
     )
 } 

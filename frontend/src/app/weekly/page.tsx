@@ -328,25 +328,84 @@ export default function WeeklyPage() {
                             gap: 'var(--spacing-6)',
                             marginBottom: '60px'
                         }}>
-                        {/* 搜索栏 - 按设计稿1:1还原 */}
+                        {/* 搜索栏 - 优化视觉比例 */}
                         <div style={{
                             width: '100%',
                             display: 'flex',
                             justifyContent: 'center'
                         }}>
-                            <div style={{
-                                width: '100%',
-                                maxWidth: '1374px' // 按设计稿精确宽度
-                            }}>
+                            <div
+                                className="search-container"
+                                style={{
+                                    width: '100%',
+                                    maxWidth: '800px' // 更合理的搜索框比例
+                                }}>
                                 <SearchBar
-                                    placeholder="搜索AI变现技巧、工具和案例..."
+                                    placeholder="搜索文章、工具、案例..."
                                     onSearch={handleSearch}
-                                    showResultCount={searchQuery.trim().length > 0}
-                                    resultCount={filteredArticles.length}
                                     isLoading={isSearching}
                                 />
                             </div>
                         </div>
+
+                        {/* P1-4: 外部结果统计 - 优化位置布局 */}
+                        {searchQuery.trim() && (
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center', // 居中对齐整个容器
+                                marginBottom: '24px'
+                            }}>
+                                <div
+                                    className="search-result-stats"
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        width: '100%',
+                                        maxWidth: '800px', // 与搜索框保持一致的最大宽度
+                                        color: '#9CA3AF',
+                                        fontSize: '14px',
+                                        fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                                        paddingLeft: '4px', // 微调左边距，与搜索框内容对齐
+                                        paddingRight: '4px'
+                                    }}>
+                                    <div>
+                                        {isSearching ? (
+                                            <span>搜索中...</span>
+                                        ) : (
+                                            <span>
+                                                搜索 "{searchQuery}" 找到 <strong style={{ color: '#D1D5DB' }}>{filteredArticles.length}</strong> 个相关结果
+                                            </span>
+                                        )}
+                                    </div>
+                                    {filteredArticles.length > 0 && (
+                                        <button
+                                            onClick={() => handleSearch('')}
+                                            style={{
+                                                background: 'transparent',
+                                                border: '1px solid rgba(42, 42, 42, 0.70)',
+                                                borderRadius: '6px',
+                                                padding: '4px 8px',
+                                                color: '#9CA3AF',
+                                                fontSize: '12px',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.50)'
+                                                e.currentTarget.style.color = '#D1D5DB'
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.borderColor = 'rgba(42, 42, 42, 0.70)'
+                                                e.currentTarget.style.color = '#9CA3AF'
+                                            }}
+                                        >
+                                            清空搜索
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
 
                         {/* 筛选器 */}
                         <div style={{
@@ -408,72 +467,227 @@ export default function WeeklyPage() {
                             </div>
                         </>
                     ) : (
-                        // 空状态
+                        // P1-6: 优化空搜索结果状态 - 更智能更友好
                         <div
                             className="empty-state"
                             style={{
                                 textAlign: 'center',
-                                padding: '120px 0',
+                                padding: '80px 0',
                                 color: 'var(--color-text-secondary)'
                             }}>
-                            <div style={{
-                                fontSize: '72px',
-                                marginBottom: '24px',
-                                opacity: 0.3
-                            }}>
-                                📝
-                            </div>
-                            <h3 style={{
-                                fontSize: 'var(--font-size-3xl)',
-                                color: 'var(--color-text-primary)',
-                                marginBottom: '16px'
-                            }}>
-                                暂无匹配的文章
-                            </h3>
-                            <p style={{
-                                fontSize: 'var(--font-size-lg)',
-                                marginBottom: '32px'
-                            }}>
-                                {searchQuery
-                                    ? `没有找到包含"${searchQuery}"的文章，试试其他关键词吧`
-                                    : '该分类下暂无文章，敬请期待更多精彩内容'
-                                }
-                            </p>
-                            <button
-                                onClick={() => {
-                                    setSearchQuery('')
-                                    setActiveFilter('latest')
-                                    setCurrentPage(1)
-                                }}
-                                style={{
-                                    background: 'var(--gradient-primary)',
-                                    color: '#FFFFFF',
-                                    border: 'none',
-                                    borderRadius: 'var(--radius-lg)',
-                                    padding: '12px 24px',
-                                    fontSize: 'var(--font-size-base)',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s ease'
-                                }}
-                            >
-                                查看全部文章
-                            </button>
+                            {searchQuery.trim() ? (
+                                // 搜索无结果状态
+                                <>
+                                    <div style={{
+                                        fontSize: '48px',
+                                        marginBottom: '20px',
+                                        opacity: 0.4,
+                                        animation: 'pulse 2s ease-in-out infinite'
+                                    }}>
+                                        🔍
+                                    </div>
+                                    <h3 style={{
+                                        fontSize: 'var(--font-size-2xl)',
+                                        color: 'var(--color-text-primary)',
+                                        marginBottom: '12px',
+                                        fontWeight: '600'
+                                    }}>
+                                        未找到相关内容
+                                    </h3>
+                                    <p style={{
+                                        fontSize: 'var(--font-size-base)',
+                                        marginBottom: '32px',
+                                        lineHeight: '1.6',
+                                        color: '#9CA3AF'
+                                    }}>
+                                        没有找到包含 "<span style={{
+                                            color: 'var(--color-primary-blue)',
+                                            fontWeight: '500'
+                                        }}>{searchQuery}</span>" 的内容
+                                    </p>
+
+                                    {/* 搜索建议 */}
+                                    <div style={{
+                                        marginBottom: '32px'
+                                    }}>
+                                        <p style={{
+                                            fontSize: 'var(--font-size-sm)',
+                                            color: '#9CA3AF',
+                                            marginBottom: '16px'
+                                        }}>
+                                            试试这些热门搜索：
+                                        </p>
+                                        <div style={{
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            gap: '8px',
+                                            justifyContent: 'center',
+                                            marginBottom: '24px'
+                                        }}>
+                                            {['ChatGPT', 'AI工具', 'Midjourney', '变现', 'GPT-4', '无代码'].map((suggestion) => (
+                                                <button
+                                                    key={suggestion}
+                                                    className="suggestion-button"
+                                                    onClick={() => handleSearch(suggestion)}
+                                                    style={{
+                                                        background: 'rgba(59, 130, 246, 0.1)',
+                                                        border: '1px solid rgba(59, 130, 246, 0.3)',
+                                                        borderRadius: '20px',
+                                                        padding: '6px 16px',
+                                                        color: '#60A5FA',
+                                                        fontSize: 'var(--font-size-sm)',
+                                                        cursor: 'pointer',
+                                                        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                                                        fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                                                        opacity: 0 // 初始透明，动画控制显示
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)'
+                                                        e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.5)'
+                                                        e.currentTarget.style.transform = 'translateY(-1px)'
+                                                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.2)'
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'
+                                                        e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)'
+                                                        e.currentTarget.style.transform = 'translateY(0)'
+                                                        e.currentTarget.style.boxShadow = 'none'
+                                                    }}
+                                                >
+                                                    {suggestion}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        onClick={() => {
+                                            setSearchQuery('')
+                                            setActiveFilter('latest')
+                                            setCurrentPage(1)
+                                        }}
+                                        style={{
+                                            background: 'var(--gradient-primary)',
+                                            color: '#FFFFFF',
+                                            border: 'none',
+                                            borderRadius: '12px',
+                                            padding: '14px 28px',
+                                            fontSize: 'var(--font-size-base)',
+                                            fontWeight: '500',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                                            boxShadow: '0 4px 20px rgba(59, 130, 246, 0.3)'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-2px)'
+                                            e.currentTarget.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.4)'
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)'
+                                            e.currentTarget.style.boxShadow = '0 4px 20px rgba(59, 130, 246, 0.3)'
+                                        }}
+                                    >
+                                        查看全部文章
+                                    </button>
+                                </>
+                            ) : (
+                                // 分类无内容状态
+                                <>
+                                    <div style={{
+                                        fontSize: '72px',
+                                        marginBottom: '24px',
+                                        opacity: 0.3
+                                    }}>
+                                        📝
+                                    </div>
+                                    <h3 style={{
+                                        fontSize: 'var(--font-size-3xl)',
+                                        color: 'var(--color-text-primary)',
+                                        marginBottom: '16px'
+                                    }}>
+                                        该分类暂无文章
+                                    </h3>
+                                    <p style={{
+                                        fontSize: 'var(--font-size-lg)',
+                                        marginBottom: '32px'
+                                    }}>
+                                        敬请期待更多精彩内容
+                                    </p>
+                                    <button
+                                        onClick={() => {
+                                            setActiveFilter('latest')
+                                            setCurrentPage(1)
+                                        }}
+                                        style={{
+                                            background: 'var(--gradient-primary)',
+                                            color: '#FFFFFF',
+                                            border: 'none',
+                                            borderRadius: 'var(--radius-lg)',
+                                            padding: '12px 24px',
+                                            fontSize: 'var(--font-size-base)',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        查看最新文章
+                                    </button>
+                                </>
+                            )}
                         </div>
                     )}
                 </Container>
             </div>
 
-            {/* 响应式样式 */}
+            {/* 响应式样式和动画 */}
             <style jsx>{`
-                @media (max-width: 1200px) {
-                    .articles-grid {
-                        grid-template-columns: repeat(2, 1fr) !important;
-                        gap: 20px !important;
-                        max-width: 900px !important;
+                .search-container {
+                    max-width: 800px;
+                }
+
+                /* 动画效果 */
+                @keyframes pulse {
+                    0%, 100% {
+                        opacity: 0.4;
+                    }
+                    50% {
+                        opacity: 0.8;
+                    }
+                }
+
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                /* 搜索建议按钮动画 */
+                .suggestion-button {
+                    animation: fadeInUp 0.6s ease-out forwards;
+                }
+
+                .suggestion-button:nth-child(1) { animation-delay: 0.1s; }
+                .suggestion-button:nth-child(2) { animation-delay: 0.2s; }
+                .suggestion-button:nth-child(3) { animation-delay: 0.3s; }
+                .suggestion-button:nth-child(4) { animation-delay: 0.4s; }
+                .suggestion-button:nth-child(5) { animation-delay: 0.5s; }
+                .suggestion-button:nth-child(6) { animation-delay: 0.6s; }
+
+                @media (max-width: 1024px) {
+                    .search-container {
+                        max-width: 700px;
                     }
                 }
 
                 @media (max-width: 768px) {
+                    .search-container {
+                        max-width: 100%;
+                    }
+                    
                     .articles-grid {
                         grid-template-columns: 1fr !important;
                         gap: var(--spacing-6) !important;
@@ -490,7 +704,32 @@ export default function WeeklyPage() {
                         padding-bottom: var(--spacing-2);
                     }
 
-                    /* 订阅组件移动端适配由组件内部处理 */
+                    /* 移动端搜索建议优化 */
+                    .suggestion-button {
+                        font-size: 12px !important;
+                        padding: 4px 12px !important;
+                    }
+
+                    /* 移动端搜索结果统计优化 */
+                    .search-result-stats {
+                        flex-direction: column !important;
+                        gap: 12px !important;
+                        text-align: center !important;
+                        padding-left: 16px !important;
+                        padding-right: 16px !important;
+                    }
+
+                    .search-result-stats > div:first-child {
+                        font-size: 13px !important;
+                    }
+                }
+
+                @media (max-width: 1200px) {
+                    .articles-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                        gap: 20px !important;
+                        max-width: 900px !important;
+                    }
                 }
 
                 @media (max-width: 480px) {
@@ -499,11 +738,15 @@ export default function WeeklyPage() {
                     }
                     
                     .empty-state {
-                        padding: 80px 0 !important;
+                        padding: 60px 20px !important;
                     }
                     
                     .empty-state h3 {
-                        font-size: var(--font-size-2xl) !important;
+                        font-size: var(--font-size-xl) !important;
+                    }
+
+                    .empty-state p {
+                        font-size: var(--font-size-sm) !important;
                     }
                 }
             `}</style>
