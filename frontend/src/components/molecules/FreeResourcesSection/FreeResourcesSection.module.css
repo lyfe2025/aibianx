@@ -4,8 +4,8 @@
 .freeResourcesSection {
     padding-top: 160px;
     /* 从212px减少到160px，减少52px */
-    padding-bottom: 48px;
-    /* 从64px减少到48px，减少16px */
+    padding-bottom: 64px;
+    /* 从48px增加到64px，增加16px，让底部间隔更协调 */
     background: var(--color-bg-primary);
     position: relative;
 }
@@ -26,10 +26,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
-    /* 从20px减少到16px，减少4px */
-    margin-bottom: 32px;
-    /* 从40.45px减少到32px，减少8.45px */
+    gap: 20px;
+    /* 从16px增加到20px，增加4px，让主副标题间隔更舒适 */
+    margin-bottom: 48px;
+    /* 从32px增加到48px，增加16px，让标题和卡片间隔更协调 */
     text-align: center;
     width: 100%;
     max-width: 1440px;
@@ -73,8 +73,8 @@
 }
 
 .cardsContainer {
-    margin-top: 32px;
-    /* 从40.45px减少到32px，减少8.45px */
+    margin-top: 0;
+    /* 移除margin-top，由titleContainer的margin-bottom控制间隔 */
     gap: 16px;
     /* 从20px减少到16px，减少4px */
     display: flex;
@@ -98,13 +98,11 @@
     border-radius: 16px;
     width: 280px;
     overflow: hidden;
-    gap: 12px;
-    /* 从14px减少到12px，减少2px */
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding-bottom: 20px;
-    /* 从24px减少到20px，减少4px */
+    padding-bottom: 24px;
+    /* 从20px增加到24px，增加4px，让底部空间更充足 */
     text-decoration: none;
     transition: all 0.2s ease;
 }
@@ -120,12 +118,16 @@
     background-size: cover;
     background-position: center;
     flex-shrink: 0;
+    margin-bottom: 8px;
+    /* 添加底部间隔，从图片到标签区域 */
 }
 
 .tagContainer {
     width: 280px;
-    margin-top: 4px;
-    /* 从6px减少到4px，减少2px */
+    margin-top: 0;
+    /* 移除margin-top，由resourceImage的margin-bottom控制 */
+    margin-bottom: 16px;
+    /* 从标签到标题的间隔，从12px增加到16px */
     display: flex;
     align-items: flex-start;
     min-height: 26px;
@@ -157,8 +159,10 @@
 
 .titleContainer {
     width: 280px;
-    margin-top: 12px;
-    /* 从16px减少到12px，减少4px */
+    margin-top: 0;
+    /* 移除margin-top，由tagContainer的margin-bottom控制 */
+    margin-bottom: 8px;
+    /* 添加标题到描述的间隔 */
     display: flex;
     align-items: flex-start;
     min-height: 24px;
@@ -197,6 +201,9 @@
 @media (max-width: 1439px) {
     .titleContainer {
         max-width: 1200px;
+        gap: 18px;
+        /* 适配中等尺寸的间隔 */
+        margin-bottom: 40px;
     }
 
     .mainTitle {
@@ -217,14 +224,24 @@
 
     .resourceCard {
         width: 260px;
+        padding-bottom: 20px;
     }
 
     .resourceImage {
         width: 260px;
+        margin-bottom: 6px;
     }
 
-    .tagContainer,
-    .titleContainer,
+    .tagContainer {
+        width: 260px;
+        margin-bottom: 14px;
+    }
+
+    .titleContainer {
+        width: 260px;
+        margin-bottom: 6px;
+    }
+
     .descriptionContainer {
         width: 260px;
     }
@@ -234,6 +251,8 @@
 @media (max-width: 1199px) {
     .titleContainer {
         max-width: 1024px;
+        gap: 16px;
+        margin-bottom: 36px;
     }
 
     .cardsContainer {
@@ -246,14 +265,24 @@
 
     .resourceCard {
         width: 240px;
+        padding-bottom: 18px;
     }
 
     .resourceImage {
         width: 240px;
+        margin-bottom: 6px;
     }
 
-    .tagContainer,
-    .titleContainer,
+    .tagContainer {
+        width: 240px;
+        margin-bottom: 12px;
+    }
+
+    .titleContainer {
+        width: 240px;
+        margin-bottom: 6px;
+    }
+
     .descriptionContainer {
         width: 240px;
     }
@@ -264,12 +293,14 @@
     .freeResourcesSection {
         padding-top: 100px;
         /* 从120px减少到100px，减少20px */
-        padding-bottom: 32px;
-        /* 从40px减少到32px，减少8px */
+        padding-bottom: 40px;
+        /* 从32px增加到40px，增加8px */
     }
 
     .titleContainer {
         max-width: 768px;
+        gap: 16px;
+        margin-bottom: 32px;
     }
 
     .mainTitle {
@@ -299,21 +330,30 @@
     .resourceCard {
         width: 100%;
         max-width: 320px;
+        padding-bottom: 20px;
     }
 
     .resourceImage {
         width: 100%;
         height: 180px;
+        margin-bottom: 8px;
     }
 
-    .tagContainer,
-    .titleContainer,
+    .tagContainer {
+        width: 100%;
+        padding-left: 16px;
+        margin-bottom: 14px;
+    }
+
+    .titleContainer {
+        width: 100%;
+        padding-left: 16px;
+        margin-bottom: 8px;
+    }
+
     .descriptionContainer {
         width: 100%;
         padding-left: 16px;
-    }
-
-    .descriptionContainer {
         padding-right: 16px;
     }
 
@@ -329,12 +369,14 @@
     .freeResourcesSection {
         padding-top: 60px;
         /* 从80px减少到60px，减少20px */
-        padding-bottom: 24px;
-        /* 从32px减少到24px，减少8px */
+        padding-bottom: 32px;
+        /* 从24px增加到32px，增加8px */
     }
 
     .titleContainer {
         max-width: 480px;
+        gap: 14px;
+        margin-bottom: 28px;
     }
 
     .mainTitle {
@@ -359,15 +401,25 @@
 
     .resourceCard {
         max-width: 280px;
+        padding-bottom: 18px;
     }
 
-    .tagContainer,
-    .titleContainer,
+    .resourceImage {
+        margin-bottom: 6px;
+    }
+
+    .tagContainer {
+        padding-left: 12px;
+        margin-bottom: 12px;
+    }
+
+    .titleContainer {
+        padding-left: 12px;
+        margin-bottom: 6px;
+    }
+
     .descriptionContainer {
         padding-left: 12px;
-    }
-
-    .descriptionContainer {
         padding-right: 12px;
     }
 }

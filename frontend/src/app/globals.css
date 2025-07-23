@@ -545,8 +545,8 @@ a {
     margin-bottom: 60px !important;
   }
 
-  /* 返回顶部按钮调整 */
-  #back-to-top {
+  /* 返回顶部按钮调整 - 移动端响应式 */
+  .back-to-top-button {
     bottom: 20px !important;
     right: 20px !important;
     width: 40px !important;
