@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState, memo } from 'react'
 import { usePathname } from 'next/navigation'
 
 interface PageTransitionProps {
@@ -40,13 +40,13 @@ interface PageTransitionProps {
  * 
  * 设计规范：
  * - 默认动画: fade淡入淡出
- * - 持续时间: 500ms
+ * - 持续时间: 300ms (优化后更快速)
  * - 缓动函数: cubic-bezier(0.25, 0.46, 0.45, 0.94)
  * - 层级管理: 确保与Header组件不冲突
  */
-export function PageTransition({
+export const PageTransition = memo(function PageTransition({
     children,
-    duration = 500,
+    duration = 300, // 减少到300ms，更快速
     animationType = 'fade',
     enabled = true,
     className = ''
@@ -65,11 +65,11 @@ export function PageTransition({
         // 开始过渡动画
         setIsTransitioning(true)
 
-        // 延迟更新内容，确保退出动画完成
+        // 优化：减少延迟时间，让过渡更快速
         const timer = setTimeout(() => {
             setDisplayContent(children)
             setIsTransitioning(false)
-        }, duration / 2)
+        }, duration / 3) // 从 duration / 2 改为 duration / 3
 
         return () => clearTimeout(timer)
     }, [pathname, children, duration, enabled])
@@ -114,9 +114,12 @@ export function PageTransition({
 
     const containerStyles = {
         ...getAnimationStyles(),
-        willChange: 'transform, opacity',
+        willChange: isTransitioning ? 'transform, opacity' : 'auto', // 只在过渡时设置will-change
         minHeight: '100vh',
-        position: 'relative' as const
+        position: 'relative' as const,
+        // 添加性能优化
+        contain: 'layout style paint' as const, // 创建新的层叠上下文
+        isolation: 'isolate' as const // 隔离层叠上下文
     }
 
     return (
@@ -136,7 +139,7 @@ export function PageTransition({
                     height: '2px',
                     background: 'var(--gradient-primary)',
                     zIndex: 1000,
-                    animation: 'progressBar 0.5s ease-out'
+                    animation: 'progressBar 0.3s ease-out' // 从0.5s减少到0.3s
                 }} />
             )}
 
@@ -182,4 +185,4 @@ export function PageTransition({
             `}</style>
         </div>
     )
-} 
+})

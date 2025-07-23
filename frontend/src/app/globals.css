@@ -6,7 +6,10 @@
 }
 
 /* 强制深色背景，确保无白色 */
-html, body, #root, #__next {
+html,
+body,
+#root,
+#__next {
   background: #030303 !important;
 }
 
@@ -346,7 +349,8 @@ a {
 
   /* 调整页面顶部间距适配新的header高度 */
   body main {
-    padding-top: 0px !important; /* 移除顶部间距，让背景上移 */
+    padding-top: 0px !important;
+    /* 移除顶部间距，让背景上移 */
   }
 }
 
@@ -430,7 +434,8 @@ a {
 
   /* 调整页面顶部间距适配新的header高度 */
   body main {
-    padding-top: 0px !important; /* 移除顶部间距，让背景上移 */
+    padding-top: 0px !important;
+    /* 移除顶部间距，让背景上移 */
   }
 }
 
@@ -461,7 +466,8 @@ a {
 
   /* 调整页面顶部间距适配移动端header高度 */
   body main {
-    padding-top: 0px !important; /* 移除顶部间距，让背景上移 */
+    padding-top: 0px !important;
+    /* 移除顶部间距，让背景上移 */
   }
 
   /* 调整字体大小 */
@@ -985,18 +991,22 @@ a {
 /* 平滑滚动优化 */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 0px; /* 移除Header空间，让背景上移 */
+  scroll-padding-top: 0px;
+  /* 移除Header空间，让背景上移 */
 }
 
 /* 页面过渡容器优化 */
 .page-transition {
-  isolation: isolate; /* 创建新的层叠上下文 */
-  contain: layout style paint; /* 优化渲染性能 */
+  isolation: isolate;
+  /* 创建新的层叠上下文 */
+  contain: layout style paint;
+  /* 优化渲染性能 */
 }
 
 /* 标准页面间距优化 */
 .page-transition.standard-page {
-  padding-top: 0px; /* 移除顶部间距，让背景上移 */
+  padding-top: 0px;
+  /* 移除顶部间距，让背景上移 */
   transition: padding-top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -1006,15 +1016,18 @@ html {
 }
 
 /* 内容区域进入动画 */
-.page-transition > * {
-  animation: contentFadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+.page-transition>* {
+  animation: contentFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  /* 从0.6s减少到0.3s */
 }
 
 @keyframes contentFadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
+    /* 从20px减少到10px，减少位移 */
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1029,7 +1042,8 @@ html {
 /* 减少重排重绘 */
 .page-transition,
 .page-transition * {
-  will-change: auto; /* 避免过度使用will-change */
+  will-change: auto;
+  /* 避免过度使用will-change */
 }
 
 /* 为动画元素单独优化 */
@@ -1042,11 +1056,13 @@ html {
 /* 响应式过渡优化 */
 @media (max-width: 768px) {
   .page-transition.standard-page {
-    padding-top: 0px; /* 移除顶部间距，让背景上移 */
+    padding-top: 0px;
+    /* 移除顶部间距，让背景上移 */
   }
-  
+
   html {
-    scroll-padding-top: 0px; /* 移除移动端Header空间 */
+    scroll-padding-top: 0px;
+    /* 移除移动端Header空间 */
   }
 }
 
@@ -1055,7 +1071,7 @@ html {
   html {
     scroll-behavior: auto;
   }
-  
+
   .page-transition,
   .page-transition *,
   .background-decoration {

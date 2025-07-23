@@ -217,7 +217,6 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
         // 加载中状态
         return (
             <div style={{
-                background: '#030303',
                 color: '#FFFFFF',
                 fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                 minHeight: '100vh',
@@ -244,7 +243,6 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
         // 404页面
         return (
             <div style={{
-                background: '#030303',
                 color: '#FFFFFF',
                 fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                 minHeight: '100vh',
@@ -317,7 +315,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                 url: window.location.href
             })
         } else {
-            // 备用方案：复制链接到剪贴板
+            // 降级到复制链接
             navigator.clipboard.writeText(window.location.href)
             alert('链接已复制到剪贴板')
         }
@@ -330,7 +328,6 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
 
     return (
         <div style={{
-            background: '#030303',
             color: '#FFFFFF',
             fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
             minHeight: '100vh',

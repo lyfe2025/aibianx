@@ -1,5 +1,6 @@
 import { Container, GradientText, GradientButton } from '@/components/ui'
 import Link from 'next/link'
+import styles from './FreeResourcesSection.module.css'
 
 /**
  * 免费精选资源区块组件 - FreeResourcesSection
@@ -55,142 +56,85 @@ export function FreeResourcesSection() {
     ]
 
     return (
-        <section style={{
-            paddingTop: '212px',
-            paddingBottom: '64px',
-            background: 'var(--color-bg-primary)',
-            position: 'relative'
-        }}>
+        <section className={styles.freeResourcesSection}>
             {/* 装饰性渐变背景 */}
-            <div style={{
-                position: 'absolute',
-                top: '0',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '231px',
-                height: '74px',
-                background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.20) 0%, rgba(139, 92, 246, 0.20) 100%)',
-                borderRadius: '12px',
-                marginTop: '5px'
-            }} />
+            <div className={styles.decorationBg} />
 
             <Container>
-                {/* 区块标题 */}
-                <div style={{
-                    textAlign: 'center',
-                    marginBottom: '64px'
-                }}>
-                    <GradientText
-                        size="xl"
-                        weight="bold"
-                        style={{
-                            fontSize: '30px',
-                            lineHeight: '36px',
-                            marginBottom: '20px',
-                            display: 'block'
-                        }}
-                    >
+                {/* 区块标题 - 1:1还原设计稿 */}
+                <div className={styles.titleContainer}>
+                    {/* 主标题 */}
+                    <div className={styles.mainTitle}>
                         免费精选资源
-                    </GradientText>
-                    <p style={{
-                        color: 'var(--color-text-muted)',
-                        fontSize: '18px',
-                        lineHeight: '28px',
-                        margin: 0,
-                        maxWidth: '425px',
-                        marginLeft: 'auto',
-                        marginRight: 'auto'
-                    }}>
+                    </div>
+
+                    {/* 副标题 */}
+                    <div className={styles.subTitle}>
                         立即获取这些高质量的AI变现指南，加速你的成功之路
-                    </p>
+                    </div>
                 </div>
 
-                {/* 资源卡片网格 */}
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(4, 1fr)',
-                    gap: '24px',
-                    paddingLeft: '124px',
-                    paddingRight: '124px'
-                }}>
+                {/* 资源卡片网格 - 1:1还原设计稿布局 */}
+                <div className={styles.cardsContainer}>
                     {resources.map((resource) => (
                         <Link
                             key={resource.id}
                             href={`/resources/${resource.id}`}
-                            className="free-resource-card"
-                            style={{
-                                background: 'rgba(26, 26, 26, 0.30)',
-                                backdropFilter: 'blur(12px)',
-                                WebkitBackdropFilter: 'blur(12px)',
-                                border: '1px solid rgba(42, 42, 42, 0.70)',
-                                borderRadius: '16px',
-                                boxShadow: '0px 4px 6px -4px rgba(0, 0, 0, 0.10), 0px 10px 15px -3px rgba(0, 0, 0, 0.10)',
-                                overflow: 'hidden',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                textDecoration: 'none',
-                                transition: 'all 0.2s ease',
-                                width: '280px'
-                            }}
+                            className={styles.resourceCard}
                         >
-                            {/* 资源图片 */}
-                            <div style={{
-                                width: '278px',
-                                height: '160px',
-                                background: `url(${resource.image})`,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
-                                borderRadius: '16px',
-                                margin: '1px 1px 0 1px'
-                            }} />
+                            {/* 资源图片 - 1:1还原设计稿尺寸 */}
+                            <div
+                                className={styles.resourceImage}
+                                style={{
+                                    backgroundImage: `url(${resource.image})`
+                                }}
+                            />
 
-                            {/* 卡片内容 */}
-                            <div style={{
-                                padding: '20px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '12px',
-                                flex: 1
-                            }}>
-                                {/* 标签 */}
-                                <div style={{
-                                    background: resource.tagBg,
-                                    border: `1px solid ${resource.tagBorder}`,
-                                    borderRadius: '8px',
-                                    padding: '5px 12px',
-                                    alignSelf: 'flex-start'
-                                }}>
-                                    <span style={{
-                                        color: resource.tagColor,
-                                        fontSize: '12px',
-                                        lineHeight: '16px',
-                                        fontWeight: '500'
-                                    }}>
+                            {/* 标签区域 - 1:1还原设计稿间距 */}
+                            <div className={styles.tagContainer}>
+                                <div
+                                    className={styles.tag}
+                                    style={{
+                                        background: resource.tagBg,
+                                        border: `1px solid ${resource.tagBorder}`,
+                                        width: resource.tag === 'AI工具' ? '70px' : '80px',
+                                        paddingRight: resource.tag === 'AI工具' ? '12px' : '12px'
+                                    }}
+                                >
+                                    <div
+                                        className={styles.tagText}
+                                        style={{
+                                            color: resource.tagColor,
+                                            width: resource.tag === 'AI工具' ? '46px' : '56px'
+                                        }}
+                                    >
                                         {resource.tag}
-                                    </span>
+                                    </div>
                                 </div>
+                            </div>
 
-                                {/* 标题 */}
-                                <h3 style={{
-                                    color: '#FFFFFF',
-                                    fontSize: '18px',
-                                    fontWeight: '700',
-                                    lineHeight: '28px',
-                                    margin: 0
-                                }}>
+                            {/* 标题区域 - 1:1还原设计稿间距 */}
+                            <div className={styles.titleContainer}>
+                                <div
+                                    className={styles.titleText}
+                                    style={{
+                                        width: resource.title === 'AI创业案例集' ? '107px' : '125px'
+                                    }}
+                                >
                                     {resource.title}
-                                </h3>
+                                </div>
+                            </div>
 
-                                {/* 描述 */}
-                                <p style={{
-                                    color: 'var(--color-text-muted)',
-                                    fontSize: '14px',
-                                    lineHeight: '20px',
-                                    margin: 0,
-                                    flex: 1
-                                }}>
+                            {/* 描述区域 - 1:1还原设计稿间距 */}
+                            <div className={styles.descriptionContainer}>
+                                <div
+                                    className={styles.descriptionText}
+                                    style={{
+                                        width: resource.description.length > 15 ? '195px' : '234px'
+                                    }}
+                                >
                                     {resource.description}
-                                </p>
+                                </div>
                             </div>
                         </Link>
                     ))}

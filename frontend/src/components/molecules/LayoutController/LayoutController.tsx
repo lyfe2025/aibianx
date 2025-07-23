@@ -1,6 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
+import { memo } from 'react'
 import { AppHeader } from '@/components/molecules/AppHeader/AppHeader'
 import { AppFooter } from '@/components/molecules/AppFooter/AppFooter'
 import { PageTransition } from '@/components/ui'
@@ -29,7 +30,7 @@ interface LayoutControllerProps {
  * - 所有页面都使用相同的AppFooter组件
  * - 确保样式、内容、交互完全一致
  */
-export function LayoutController({ children }: LayoutControllerProps) {
+export const LayoutController = memo(function LayoutController({ children }: LayoutControllerProps) {
     const pathname = usePathname()
 
     // 检查是否为个人中心页面
@@ -50,7 +51,7 @@ export function LayoutController({ children }: LayoutControllerProps) {
             {!isProfilePage && <AppHeader />}
 
             {/* 页面主要内容区域 - 使用过渡效果包装 */}
-            <main style={{ 
+            <main style={{
                 flex: 1,
                 background: 'var(--color-bg-primary)', // 确保主内容区背景色
                 marginTop: !isProfilePage ? '-98px' : '0', // 个人中心外的页面内容上移到菜单下方
@@ -58,9 +59,9 @@ export function LayoutController({ children }: LayoutControllerProps) {
                 position: 'relative',
                 zIndex: 1
             }}>
-                <PageTransition 
+                <PageTransition
                     animationType="fade"
-                    duration={600}
+                    duration={300} // 从600ms减少到300ms
                     className={isProfilePage ? 'profile-page' : 'standard-page'}
                 >
                     {children}
@@ -76,4 +77,4 @@ export function LayoutController({ children }: LayoutControllerProps) {
             <AppFooter />
         </div>
     )
-} 
+}) 

@@ -34,9 +34,29 @@ export function AppHeader() {
     const [isVisible, setIsVisible] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
     const [isScrolled, setIsScrolled] = useState(false)
+    const [isPageTransitioning, setIsPageTransitioning] = useState(false) // 新增：页面切换状态
+
+    // 监听路由变化，在页面切换时暂时禁用滚动隐藏
+    useEffect(() => {
+        setIsPageTransitioning(true)
+        // 页面切换时强制显示导航栏
+        setIsVisible(true)
+
+        // 300ms后恢复滚动隐藏功能
+        const timer = setTimeout(() => {
+            setIsPageTransitioning(false)
+        }, 300)
+
+        return () => clearTimeout(timer)
+    }, [pathname])
 
     // 滚动监听效果 - 优化用户体验
     useEffect(() => {
+        // 页面切换时禁用滚动监听
+        if (isPageTransitioning) {
+            return
+        }
+
         const handleScroll = () => {
             const currentScrollY = window.scrollY
 
@@ -75,7 +95,7 @@ export function AppHeader() {
         return () => {
             window.removeEventListener('scroll', optimizedHandleScroll)
         }
-    }, [lastScrollY])
+    }, [lastScrollY, isPageTransitioning]) // 添加isPageTransitioning依赖
 
     const handleLogin = () => {
         openModal('login')

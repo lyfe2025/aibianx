@@ -234,7 +234,6 @@ export default function WeeklyPage() {
 
     return (
         <div style={{
-            background: '#030303',
             color: '#FFFFFF',
             fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
             minHeight: '100vh',
