@@ -1,0 +1,12 @@
+
+> aibianx@0.1.0 dev
+> next dev --turbopack
+
+ ⚠ Port 3000 is in use by process 27552
+27611, using available port 3004 instead.
+   ▲ Next.js 15.4.2 (Turbopack)
+   - Local:        http://localhost:3004
+   - Network:      http://192.168.2.17:3004
+
+ ✓ Starting...
+ ✓ Ready in 803ms

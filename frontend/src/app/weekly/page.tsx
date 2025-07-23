@@ -374,7 +374,7 @@ export default function WeeklyPage() {
                                             <span>搜索中...</span>
                                         ) : (
                                             <span>
-                                                搜索 "{searchQuery}" 找到 <strong style={{ color: '#D1D5DB' }}>{filteredArticles.length}</strong> 个相关结果
+                                                搜索 &ldquo;{searchQuery}&rdquo; 找到 <strong style={{ color: '#D1D5DB' }}>{filteredArticles.length}</strong> 个相关结果
                                             </span>
                                         )}
                                     </div>
@@ -500,10 +500,10 @@ export default function WeeklyPage() {
                                         lineHeight: '1.6',
                                         color: '#9CA3AF'
                                     }}>
-                                        没有找到包含 "<span style={{
+                                        没有找到包含 &ldquo;<span style={{
                                             color: 'var(--color-primary-blue)',
                                             fontWeight: '500'
-                                        }}>{searchQuery}</span>" 的内容
+                                        }}>{searchQuery}</span>&rdquo; 的内容
                                     </p>
 
                                     {/* 搜索建议 */}

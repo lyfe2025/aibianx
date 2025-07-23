@@ -1,0 +1,84 @@
+
+> aibianx@0.1.0 build
+> next build
+
+   ▲ Next.js 15.4.2
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 2000ms
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./src/app/profile/bookmarks/page.tsx
+4:27  Warning: 'GradientText' is defined but never used.  @typescript-eslint/no-unused-vars
+9:10  Warning: 'activeFilter' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+9:24  Warning: 'setActiveFilter' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/profile/page.tsx
+4:27  Warning: 'GradientText' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/profile/settings/page.tsx
+4:27  Warning: 'GradientText' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/profile/subscription/page.tsx
+4:27  Warning: 'GradientText' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/weekly/page.tsx
+377:52  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+377:66  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+503:48  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+506:64  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/molecules/AIStepsSectionNew/AIStepsSectionNew.tsx
+1:21  Warning: 'GradientText' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/molecules/AppFooter/AppFooter.tsx
+70:11  Warning: 'socialIcons' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/molecules/ContactSection/ContactSection.tsx
+53:18  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/molecules/FinalCTASection/FinalCTASection.tsx
+4:21  Warning: 'GradientText' is defined but never used.  @typescript-eslint/no-unused-vars
+4:35  Warning: 'GradientButton' is defined but never used.  @typescript-eslint/no-unused-vars
+4:57  Warning: 'BackgroundDecoration' is defined but never used.  @typescript-eslint/no-unused-vars
+51:18  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/molecules/ForgotPasswordForm/ForgotPasswordForm.tsx
+61:22  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+71:22  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/molecules/FreeResourcesSection/FreeResourcesSection.tsx
+1:21  Warning: 'GradientText' is defined but never used.  @typescript-eslint/no-unused-vars
+1:35  Warning: 'GradientButton' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/molecules/HeroSectionNew/HeroSectionNew.tsx
+4:51  Warning: 'Input' is defined but never used.  @typescript-eslint/no-unused-vars
+33:18  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/molecules/LoginForm/LoginForm.tsx
+67:22  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+77:22  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/molecules/MainContentSection/MainContentSection.tsx
+4:37  Warning: 'GradientText' is defined but never used.  @typescript-eslint/no-unused-vars
+4:57  Warning: 'Input' is defined but never used.  @typescript-eslint/no-unused-vars
+423:37  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+423:74  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+./src/components/molecules/RegisterForm/RegisterForm.tsx
+101:22  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+111:22  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/molecules/SearchBar/SearchBar.tsx
+112:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/molecules/SettingsForm/SettingsForm.tsx
+297:52  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/organisms/MembershipModal/MembershipModal.tsx
+21:12  Warning: 'isLoading' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+21:23  Warning: 'setIsLoading' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
