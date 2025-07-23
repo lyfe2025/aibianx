@@ -65,7 +65,7 @@ export const Icon = ({
     return (
         <span
             className={`icon icon--${size} ${className}`}
-            style={{ display: 'inline-block', lineHeight: 0 }}
+            style={{ display: 'inline-block', lineHeight: 0, ...props.style }}
             {...props}
         >
             <Image

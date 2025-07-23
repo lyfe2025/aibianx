@@ -26,6 +26,7 @@ export { RelatedArticles } from './RelatedArticles'
 export { ResourcesSection } from './ResourcesSection'
 export * from './SearchBar'
 export * from './StatsSection'
+export { SubscriptionSection } from './SubscriptionSection'
 
 // 新增用户中心相关组件
 export * from './UserSidebar'

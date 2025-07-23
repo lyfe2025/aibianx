@@ -7,7 +7,8 @@ import {
     SearchBar,
     ArticleFilter,
     ArticleCard,
-    Pagination
+    Pagination,
+    SubscriptionSection
 } from '@/components/molecules'
 import type { ArticleCardData } from '@/components/molecules/ArticleCard/ArticleCard'
 
@@ -46,7 +47,7 @@ const mockArticles: ArticleCardData[] = [
         viewCount: '1.8k',
         tags: [
             { name: '技术指南', color: '#3B82F6' },
-            { name: '变现心得', color: '#10B981' }
+            { name: '前沿技术', color: '#60A5FA' }
         ],
         slug: 'gpt4-copywriting-system',
         isPremium: false
@@ -103,7 +104,7 @@ const mockArticles: ArticleCardData[] = [
         viewCount: '1.5k',
         tags: [
             { name: 'AI工具', color: '#8B5CF6' },
-            { name: '变现心得', color: '#10B981' }
+            { name: '前沿技术', color: '#60A5FA' }
         ],
         slug: 'ai-voice-cloning-business',
         isPremium: true
@@ -129,24 +130,86 @@ const mockArticles: ArticleCardData[] = [
     }
 ]
 
-// 筛选选项
+// 筛选选项 - 按设计稿精确还原
 const filterOptions = [
-    { id: 'all', label: '全部', count: mockArticles.length },
-    { id: 'latest', label: '最新', count: 12 },
-    { id: 'hot', label: '热门', count: 8 },
-    { id: 'ai-tools', label: 'AI工具', count: 15 },
-    { id: 'monetization', label: '变现心得', count: 6 },
-    { id: 'tech-guide', label: '技术指南', count: 9 },
-    { id: 'case-study', label: '实战案例', count: 7 },
-    { id: 'premium', label: '会员专享', count: 3 }
+    {
+        id: 'latest',
+        label: '最新发布',
+        count: 12,
+        colors: {
+            background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+            text: '#FFFFFF'
+        }
+    },
+    {
+        id: 'tech-guide',
+        label: '技术指南',
+        count: 9,
+        colors: {
+            background: 'rgba(12, 30, 71, 0.80)',
+            border: 'rgba(59, 130, 246, 0.40)',
+            text: '#3B82F6'
+        }
+    },
+    {
+        id: 'monetization',
+        label: '变现心得',
+        count: 6,
+        colors: {
+            background: 'rgba(58, 23, 8, 0.80)',
+            border: 'rgba(249, 115, 22, 0.40)',
+            text: '#F97316'
+        }
+    },
+    {
+        id: 'case-study',
+        label: '实战案例',
+        count: 7,
+        colors: {
+            background: 'rgba(12, 40, 23, 0.80)',
+            border: 'rgba(16, 185, 129, 0.40)',
+            text: '#10B981'
+        }
+    },
+    {
+        id: 'ai-tools',
+        label: 'AI工具',
+        count: 15,
+        colors: {
+            background: 'rgba(30, 12, 71, 0.80)',
+            border: 'rgba(139, 92, 246, 0.40)',
+            text: '#8B5CF6'
+        }
+    },
+    {
+        id: 'trending',
+        label: '前沿技术',
+        count: 5,
+        colors: {
+            background: 'rgba(30, 58, 138, 0.80)',
+            border: 'rgba(96, 165, 250, 0.40)',
+            text: '#60A5FA'
+        }
+    },
+    {
+        id: 'hot',
+        label: '热门趋势',
+        count: 8,
+        colors: {
+            background: 'rgba(127, 29, 29, 0.80)',
+            border: 'rgba(252, 165, 165, 0.40)',
+            text: '#FCA5A5'
+        }
+    }
 ]
 
 const ITEMS_PER_PAGE = 6
 
 export default function WeeklyPage() {
     const [searchQuery, setSearchQuery] = useState('')
-    const [activeFilter, setActiveFilter] = useState('all')
+    const [activeFilter, setActiveFilter] = useState('latest')
     const [currentPage, setCurrentPage] = useState(1)
+    const [isSearching, setIsSearching] = useState(false)
 
     // 筛选和搜索逻辑
     const filteredArticles = useMemo(() => {
@@ -163,45 +226,45 @@ export default function WeeklyPage() {
         }
 
         // 应用分类筛选
-        if (activeFilter !== 'all') {
-            switch (activeFilter) {
-                case 'latest':
-                    filtered = filtered.sort((a, b) =>
-                        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-                    )
-                    break
-                case 'hot':
-                    filtered = filtered.sort((a, b) =>
-                        parseInt(b.viewCount.replace('k', '000').replace('.', '')) -
-                        parseInt(a.viewCount.replace('k', '000').replace('.', ''))
-                    )
-                    break
-                case 'ai-tools':
-                    filtered = filtered.filter(article =>
-                        article.tags.some(tag => tag.name === 'AI工具')
-                    )
-                    break
-                case 'monetization':
-                    filtered = filtered.filter(article =>
-                        article.tags.some(tag => tag.name === '变现心得')
-                    )
-                    break
-                case 'tech-guide':
-                    filtered = filtered.filter(article =>
-                        article.tags.some(tag => tag.name === '技术指南')
-                    )
-                    break
-                case 'case-study':
-                    filtered = filtered.filter(article =>
-                        article.tags.some(tag => tag.name === '实战案例')
-                    )
-                    break
-                case 'premium':
-                    filtered = filtered.filter(article => article.isPremium)
-                    break
-                default:
-                    break
-            }
+        switch (activeFilter) {
+            case 'latest':
+                filtered = filtered.sort((a, b) =>
+                    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+                )
+                break
+            case 'hot':
+                filtered = filtered.sort((a, b) =>
+                    parseInt(b.viewCount.replace('k', '000').replace('.', '')) -
+                    parseInt(a.viewCount.replace('k', '000').replace('.', ''))
+                )
+                break
+            case 'ai-tools':
+                filtered = filtered.filter(article =>
+                    article.tags.some(tag => tag.name === 'AI工具')
+                )
+                break
+            case 'monetization':
+                filtered = filtered.filter(article =>
+                    article.tags.some(tag => tag.name === '变现心得')
+                )
+                break
+            case 'tech-guide':
+                filtered = filtered.filter(article =>
+                    article.tags.some(tag => tag.name === '技术指南')
+                )
+                break
+            case 'case-study':
+                filtered = filtered.filter(article =>
+                    article.tags.some(tag => tag.name === '实战案例')
+                )
+                break
+            case 'trending':
+                filtered = filtered.filter(article =>
+                    article.tags.some(tag => tag.name === '前沿技术')
+                )
+                break
+            default:
+                break
         }
 
         return filtered
@@ -214,10 +277,16 @@ export default function WeeklyPage() {
         return filteredArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE)
     }, [filteredArticles, currentPage])
 
-    // 搜索变化时重置分页
+    // 搜索变化时重置分页并添加加载状态
     const handleSearch = (query: string) => {
+        setIsSearching(true)
         setSearchQuery(query)
         setCurrentPage(1)
+
+        // 模拟搜索延迟，提供更好的用户反馈
+        setTimeout(() => {
+            setIsSearching(false)
+        }, 300)
     }
 
     // 筛选变化时重置分页
@@ -243,29 +312,40 @@ export default function WeeklyPage() {
                 <Container size="xl">
                     {/* 页面头部 */}
                     <PageHeader
-                        title="AI变现周刊"
-                        subtitle="每周精选最新AI变现机会与实战指南"
-                        description="汇聚全球AI变现案例，从技术实现到商业模式，为你提供完整的AI创业路径指导。"
+                        title="精选AI变现周刊"
+                        subtitle="每周精选AI变现干货，助你快速实现财务自由"
+                        description=""
                         alignment="center"
+                        className="page-header"
                     />
 
                     {/* 搜索和筛选区域 */}
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 'var(--spacing-6)',
-                        marginBottom: '60px'
-                    }}>
-                        {/* 搜索栏 */}
-                        <div style={{
-                            maxWidth: '600px',
-                            margin: '0 auto',
-                            width: '100%'
+                    <div
+                        className="search-filter-container"
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 'var(--spacing-6)',
+                            marginBottom: '60px'
                         }}>
-                            <SearchBar
-                                placeholder="搜索文章标题、内容或标签..."
-                                onSearch={handleSearch}
-                            />
+                        {/* 搜索栏 - 按设计稿1:1还原 */}
+                        <div style={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'center'
+                        }}>
+                            <div style={{
+                                width: '100%',
+                                maxWidth: '1374px' // 按设计稿精确宽度
+                            }}>
+                                <SearchBar
+                                    placeholder="搜索AI变现技巧、工具和案例..."
+                                    onSearch={handleSearch}
+                                    showResultCount={searchQuery.trim().length > 0}
+                                    resultCount={filteredArticles.length}
+                                    isLoading={isSearching}
+                                />
+                            </div>
                         </div>
 
                         {/* 筛选器 */}
@@ -278,6 +358,7 @@ export default function WeeklyPage() {
                                 options={filterOptions}
                                 activeFilter={activeFilter}
                                 onFilterChange={handleFilterChange}
+                                className="article-filter"
                             />
                         </div>
                     </div>
@@ -285,12 +366,16 @@ export default function WeeklyPage() {
                     {/* 文章列表 */}
                     {paginatedArticles.length > 0 ? (
                         <>
-                            <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
-                                gap: 'var(--spacing-8)',
-                                marginBottom: '60px'
-                            }}>
+                            <div
+                                className="articles-grid"
+                                style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(3, 1fr)',
+                                    gap: '24px',
+                                    marginBottom: '60px',
+                                    maxWidth: '1375px',
+                                    margin: '0 auto 60px auto'
+                                }}>
                                 {paginatedArticles.map((article) => (
                                     <ArticleCard
                                         key={article.id}
@@ -316,14 +401,21 @@ export default function WeeklyPage() {
                                     />
                                 </div>
                             )}
+
+                            {/* 订阅AI变现周刊区域 - 按设计稿1:1还原 */}
+                            <div style={{ marginTop: '24px', marginBottom: '0px' }}>
+                                <SubscriptionSection />
+                            </div>
                         </>
                     ) : (
                         // 空状态
-                        <div style={{
-                            textAlign: 'center',
-                            padding: '120px 0',
-                            color: 'var(--color-text-secondary)'
-                        }}>
+                        <div
+                            className="empty-state"
+                            style={{
+                                textAlign: 'center',
+                                padding: '120px 0',
+                                color: 'var(--color-text-secondary)'
+                            }}>
                             <div style={{
                                 fontSize: '72px',
                                 marginBottom: '24px',
@@ -350,7 +442,7 @@ export default function WeeklyPage() {
                             <button
                                 onClick={() => {
                                     setSearchQuery('')
-                                    setActiveFilter('all')
+                                    setActiveFilter('latest')
                                     setCurrentPage(1)
                                 }}
                                 style={{
@@ -373,10 +465,19 @@ export default function WeeklyPage() {
 
             {/* 响应式样式 */}
             <style jsx>{`
+                @media (max-width: 1200px) {
+                    .articles-grid {
+                        grid-template-columns: repeat(2, 1fr) !important;
+                        gap: 20px !important;
+                        max-width: 900px !important;
+                    }
+                }
+
                 @media (max-width: 768px) {
                     .articles-grid {
                         grid-template-columns: 1fr !important;
                         gap: var(--spacing-6) !important;
+                        max-width: 400px !important;
                     }
                     
                     .search-filter-container {
@@ -388,6 +489,8 @@ export default function WeeklyPage() {
                         overflow-x: auto;
                         padding-bottom: var(--spacing-2);
                     }
+
+                    /* 订阅组件移动端适配由组件内部处理 */
                 }
 
                 @media (max-width: 480px) {

@@ -4,6 +4,11 @@ interface FilterOption {
     id: string
     label: string
     count?: number
+    colors?: {
+        background: string
+        border?: string
+        text: string
+    }
 }
 
 interface ArticleFilterProps {
@@ -35,24 +40,27 @@ export function ArticleFilter({
                         onClick={() => onFilterChange(option.id)}
                         style={{
                             background: isActive
-                                ? 'var(--gradient-primary)'
-                                : 'transparent',
-                            color: isActive
-                                ? '#FFFFFF'
+                                ? (option.colors?.background || 'var(--gradient-primary)')
+                                : (option.colors?.background || 'transparent'),
+                            color: isActive || option.colors
+                                ? (option.colors?.text || '#FFFFFF')
                                 : 'var(--color-text-muted)',
                             border: isActive
                                 ? 'none'
-                                : '1px solid var(--color-border-primary)',
-                            borderRadius: 'var(--radius-full)',
-                            padding: '8px 20px',
-                            fontSize: 'var(--font-size-sm)',
-                            fontWeight: '500',
+                                : option.colors?.border
+                                    ? `1px solid ${option.colors.border}`
+                                    : '1px solid var(--color-border-primary)',
+                            borderRadius: '9999px',
+                            padding: '9px 15px',
+                            fontSize: '14px',
+                            fontWeight: '400',
                             cursor: 'pointer',
                             transition: 'all 0.2s ease',
                             display: 'flex',
                             alignItems: 'center',
                             gap: 'var(--spacing-1)',
-                            whiteSpace: 'nowrap'
+                            whiteSpace: 'nowrap',
+                            boxShadow: option.colors && !isActive ? '0px 0px 8px 0px rgba(0, 0, 0, 0.20)' : 'none'
                         }}
                         className={`article-filter-button ${isActive ? 'article-filter-button--active' : ''}`}
                     >
