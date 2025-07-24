@@ -1,31 +1,51 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Container, Icon, GradientText, GradientButton, Input } from '@/components/ui'
+import { Container, Icon, GradientButton, Input } from '@/components/ui'
 import { UserSidebar } from '@/components/molecules'
+import Image from 'next/image'
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile')
   const [formData, setFormData] = useState({
     username: '张智创',
-    email: 'zhangzhichuang@example.com',
-    phone: '138****8888',
-    avatar: '/images/avatars/user-zhang.jpeg',
-    bio: 'AI爱好者，专注于人工智能在商业场景的应用研究',
-    company: '智创科技有限公司',
-    position: '产品经理',
-    website: 'https://zhangzhichuang.com',
-    notifications: {
-      email: true,
-      push: true,
-      updates: false,
-      marketing: false
-    },
-    privacy: {
-      profile: 'public',
-      activity: 'friends',
-      email: 'private'
-    }
+    phone: '138****5678',
+    email: 'zhang****@example.com',
+    bio: '介绍一下自己...'
+  })
+
+  // 安全设置相关状态
+  const [securityData, setSecurityData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+    twoFactorEnabled: false,
+    devices: [
+      {
+        id: 1,
+        name: 'Chrome (macOS)',
+        location: '北京',
+        lastActive: '当前设备',
+        isActive: true,
+        icon: 'device-desktop'
+      },
+      {
+        id: 2,
+        name: 'iPhone App',
+        location: '上海',
+        lastActive: '3天前',
+        isActive: false,
+        icon: 'device-mobile'
+      },
+      {
+        id: 3,
+        name: 'Edge (Windows)',
+        location: '深圳',
+        lastActive: '1周前',
+        isActive: false,
+        icon: 'device-desktop'
+      }
+    ]
   })
 
   const handleInputChange = (field: string, value: string) => {
@@ -35,644 +55,922 @@ export default function SettingsPage() {
     }))
   }
 
-  const handleToggle = (section: string, field: string) => {
-    setFormData(prev => {
-      if (section === 'notifications') {
-        return {
-          ...prev,
-          notifications: {
-            ...prev.notifications,
-            [field]: !prev.notifications[field as keyof typeof prev.notifications]
-          }
-        }
-      } else if (section === 'privacy') {
-        return {
-          ...prev,
-          privacy: {
-            ...prev.privacy,
-            [field]: prev.privacy[field as keyof typeof prev.privacy] === 'public' ? 'private' : 'public'
-          }
-        }
-      }
-      return prev
-    })
+  const handleSecurityChange = (field: string, value: string | boolean) => {
+    setSecurityData(prev => ({
+      ...prev,
+      [field]: value
+    }))
   }
 
-  const settingsSections = [
-    {
-      id: 'profile',
-      title: '个人信息',
-      icon: 'user-icon',
-      description: '管理您的基本信息'
-    },
-    {
-      id: 'security',
-      title: '安全设置',
-      icon: 'security-tips',
-      description: '密码和安全相关设置'
-    },
-    {
-      id: 'notifications',
-      title: '通知设置',
-      icon: 'notification-icon',
-      description: '管理通知偏好'
-    },
-    {
-      id: 'privacy',
-      title: '隐私设置',
-      icon: 'adjust-icon-detail',
-      description: '控制信息可见性'
+  const handleReset = () => {
+    if (activeTab === 'profile') {
+      setFormData({
+        username: '张智创',
+        phone: '138****5678',
+        email: 'zhang****@example.com',
+        bio: '介绍一下自己...'
+      })
+    } else if (activeTab === 'security') {
+      setSecurityData(prev => ({
+        ...prev,
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      }))
     }
-  ]
+  }
+
+  const handleSave = () => {
+    if (activeTab === 'profile') {
+      console.log('保存个人信息:', formData)
+    } else if (activeTab === 'security') {
+      console.log('保存安全设置:', securityData)
+    }
+  }
+
+  const handleRemoveDevice = (deviceId: number) => {
+    setSecurityData(prev => ({
+      ...prev,
+      devices: prev.devices.filter(device => device.id !== deviceId)
+    }))
+  }
 
   return (
-    <div className="min-h-screen bg-transparent"> {/* 改为透明，让粒子可见 */}
+    <div className="min-h-screen bg-transparent">
       <div className="flex">
-        {/* 左侧导航栏 - 使用UserSidebar组件 */}
+        {/* 左侧导航栏 */}
         <UserSidebar />
 
         {/* 右侧主内容区域 */}
         <main style={{ flex: 1 }}>
-          <div style={{ padding: '32px 40px' }}>
-            <Container size="xl">
+          <Container size="xl">
+            <div style={{ padding: '32px' }}>
               {/* 页面标题 */}
-              <div style={{ marginBottom: 'var(--card-gap-lg)' }}>
-                <h1 style={{
+              <div style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                minHeight: '32px',
+                marginBottom: '32px'
+              }}>
+                <div style={{
                   color: '#FFFFFF',
                   fontSize: '24px',
                   fontWeight: '700',
                   lineHeight: '32px',
-                  margin: 0
-                }}>设置</h1>
+                  width: '48px',
+                  alignItems: 'center',
+                  display: 'flex'
+                }}>
+                  设置
+                </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '32px' }}>
-                {/* 左侧设置导航 */}
+              {/* 主要内容卡片 */}
+              <div style={{
+                background: 'rgba(26, 26, 26, 0.30)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(42, 42, 42, 0.70)',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                gap: '16px',
+                display: 'flex',
+                flexDirection: 'column',
+                paddingLeft: '1px',
+                paddingRight: '1px',
+                paddingTop: '1px',
+                paddingBottom: '33px'
+              }}>
+                {/* 标签页导航 */}
                 <div style={{
-                  width: '280px',
-                  background: 'rgba(26, 26, 26, 0.30)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(42, 42, 42, 0.70)',
-                  borderRadius: '12px',
-                  padding: '20px',
-                  height: 'fit-content'
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.10)',
+                  display: 'flex',
+                  alignItems: 'stretch',
+                  paddingBottom: '1px',
+                  flexWrap: 'nowrap',
+                  overflow: 'hidden'
                 }}>
-                  <h3 style={{
-                    color: '#FFFFFF',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    lineHeight: '24px',
-                    margin: '0 0 16px 0'
-                  }}>设置分类</h3>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {settingsSections.map((section) => (
-                      <div
-                        key={section.id}
-                        onClick={() => setActiveTab(section.id)}
-                        style={{
-                          background: activeTab === section.id ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.20) 0%, rgba(139, 92, 246, 0.20) 100%)' : 'transparent',
-                          borderRadius: '8px',
-                          padding: '12px',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s ease',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '12px'
-                        }}
-                      >
-                        <Icon
-                          name={section.icon}
-                          size="sm"
-                          style={{
-                            color: activeTab === section.id ? '#FFFFFF' : '#9CA3AF'
-                          }}
-                        />
-                        <div>
-                          <div style={{
-                            color: activeTab === section.id ? '#FFFFFF' : '#D1D5DB',
-                            fontSize: '14px',
-                            fontWeight: '500',
-                            lineHeight: '20px',
-                            marginBottom: '2px'
-                          }}>{section.title}</div>
-                          <div style={{
-                            color: '#9CA3AF',
-                            fontSize: '12px',
-                            lineHeight: '16px'
-                          }}>{section.description}</div>
-                        </div>
-                      </div>
-                    ))}
+                  <div
+                    onClick={() => setActiveTab('profile')}
+                    style={{
+                      background: activeTab === 'profile'
+                        ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%)'
+                        : 'transparent',
+                      display: 'flex',
+                      minWidth: '140px',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      paddingLeft: '32px',
+                      paddingRight: '32px',
+                      paddingTop: '16px',
+                      paddingBottom: '16px',
+                      cursor: 'pointer',
+                      flexShrink: 0,
+                      marginRight: '32px'
+                    }}
+                  >
+                    <div style={{
+                      color: activeTab === 'profile' ? '#FFFFFF' : '#9CA3AF',
+                      fontWeight: '600',
+                      lineHeight: '24px',
+                      textAlign: 'center',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      display: 'flex',
+                      minHeight: '24px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      minWidth: '76px'
+                    }}>
+                      个人信息
+                    </div>
+                  </div>
+                  <div
+                    onClick={() => setActiveTab('security')}
+                    style={{
+                      background: activeTab === 'security'
+                        ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%)'
+                        : 'transparent',
+                      display: 'flex',
+                      minWidth: '140px',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      paddingLeft: '32px',
+                      paddingRight: '32px',
+                      paddingTop: '16px',
+                      paddingBottom: '16px',
+                      cursor: 'pointer',
+                      flexShrink: 0
+                    }}
+                  >
+                    <div style={{
+                      color: activeTab === 'security' ? '#FFFFFF' : '#9CA3AF',
+                      fontWeight: '600',
+                      lineHeight: '24px',
+                      textAlign: 'center',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      display: 'flex',
+                      minHeight: '24px',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      minWidth: '76px'
+                    }}>
+                      密码安全
+                    </div>
                   </div>
                 </div>
 
-                {/* 右侧设置内容 */}
-                <div style={{ flex: 1 }}>
-                  {/* 个人信息设置 */}
-                  {activeTab === 'profile' && (
+                {/* 个人信息界面 */}
+                {activeTab === 'profile' && (
+                  <>
+                    {/* 头像区域 */}
                     <div style={{
-                      background: 'rgba(26, 26, 26, 0.30)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(42, 42, 42, 0.70)',
+                      background: 'rgba(255, 255, 255, 0.10)',
+                      borderRadius: '9999px',
+                      width: '96px',
+                      overflow: 'hidden',
+                      marginTop: '16px',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      minHeight: '96px',
+                      position: 'relative'
+                    }}>
+                      <Image
+                        src="/images/avatars/settings-avatar.svg"
+                        alt="用户头像"
+                        width={96}
+                        height={96}
+                        style={{
+                          width: '96px',
+                          height: '96px',
+                          overflow: 'hidden',
+                          objectFit: 'cover'
+                        }}
+                      />
+                      {/* 编辑按钮 */}
+                      <div style={{
+                        position: 'absolute',
+                        bottom: '0px',
+                        right: '0px',
+                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                        borderRadius: '9999px',
+                        padding: '8px',
+                        display: 'flex',
+                        width: '32px',
+                        height: '32px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        cursor: 'pointer'
+                      }}>
+                        <Icon
+                          name="edit-avatar"
+                          size="xs"
+                          style={{
+                            width: '16px',
+                            height: '16px'
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* 更换头像文字 */}
+                    <div style={{
+                      color: '#D1D5DB',
+                      fontSize: '14px',
+                      lineHeight: '20px',
+                      alignItems: 'center',
+                      display: 'flex',
+                      textAlign: 'center',
+                      width: '100%',
+                      justifyContent: 'center',
+                      minHeight: '20px'
+                    }}>
+                      更换头像
+                    </div>
+
+                    {/* 表单区域 */}
+                    <div style={{
+                      marginTop: '16px',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      minHeight: '318px',
+                      paddingLeft: '264px'
+                    }}>
+                      <div style={{
+                        gap: '24px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'stretch'
+                      }}>
+                        {/* 用户名 */}
+                        <div style={{
+                          gap: '32px',
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'stretch',
+                          paddingLeft: '15px'
+                        }}>
+                          <div style={{
+                            color: '#9CA3AF',
+                            lineHeight: '24px',
+                            textAlign: 'right',
+                            width: '48px',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            display: 'flex',
+                            marginTop: '13px',
+                            minHeight: '24px'
+                          }}>
+                            用户名
+                          </div>
+                          <div style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.10)',
+                            borderRadius: '8px',
+                            width: '544px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            paddingLeft: '16px',
+                            paddingRight: '16px',
+                            paddingTop: '12px',
+                            paddingBottom: '12px'
+                          }}>
+                            <input
+                              type="text"
+                              value={formData.username}
+                              onChange={(e) => handleInputChange('username', e.target.value)}
+                              style={{
+                                width: '512px',
+                                background: 'transparent',
+                                border: 'none',
+                                outline: 'none',
+                                color: '#FFFFFF',
+                                lineHeight: '24px',
+                                fontSize: '16px',
+                                minHeight: '26px'
+                              }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* 手机号码 */}
+                        <div style={{
+                          gap: '32px',
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'stretch'
+                        }}>
+                          <div style={{
+                            color: '#9CA3AF',
+                            lineHeight: '24px',
+                            textAlign: 'right',
+                            width: '63px',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            display: 'flex',
+                            marginTop: '13px',
+                            minHeight: '24px'
+                          }}>
+                            手机号码
+                          </div>
+                          <div style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.10)',
+                            borderRadius: '8px',
+                            width: '544px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            paddingLeft: '16px',
+                            paddingRight: '16px',
+                            paddingTop: '12px',
+                            paddingBottom: '12px'
+                          }}>
+                            <input
+                              type="text"
+                              value={formData.phone}
+                              onChange={(e) => handleInputChange('phone', e.target.value)}
+                              style={{
+                                width: '512px',
+                                background: 'transparent',
+                                border: 'none',
+                                outline: 'none',
+                                color: '#FFFFFF',
+                                lineHeight: '24px',
+                                fontSize: '16px',
+                                minHeight: '26px'
+                              }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* 邮箱地址 */}
+                        <div style={{
+                          gap: '32px',
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'stretch'
+                        }}>
+                          <div style={{
+                            color: '#9CA3AF',
+                            lineHeight: '24px',
+                            textAlign: 'right',
+                            width: '63px',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            display: 'flex',
+                            marginTop: '13px',
+                            minHeight: '24px'
+                          }}>
+                            邮箱地址
+                          </div>
+                          <div style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.10)',
+                            borderRadius: '8px',
+                            width: '544px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            paddingLeft: '16px',
+                            paddingRight: '16px',
+                            paddingTop: '12px',
+                            paddingBottom: '12px'
+                          }}>
+                            <input
+                              type="email"
+                              value={formData.email}
+                              onChange={(e) => handleInputChange('email', e.target.value)}
+                              style={{
+                                width: '512px',
+                                background: 'transparent',
+                                border: 'none',
+                                outline: 'none',
+                                color: '#FFFFFF',
+                                lineHeight: '24px',
+                                fontSize: '16px',
+                                minHeight: '26px'
+                              }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* 个人简介 */}
+                        <div style={{
+                          gap: '32px',
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'stretch'
+                        }}>
+                          <div style={{
+                            color: '#9CA3AF',
+                            lineHeight: '24px',
+                            textAlign: 'right',
+                            width: '63px',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            display: 'flex',
+                            marginTop: '36px',
+                            minHeight: '24px'
+                          }}>
+                            个人简介
+                          </div>
+                          <div style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.10)',
+                            borderRadius: '8px',
+                            width: '544px',
+                            display: 'flex',
+                            alignItems: 'flex-end',
+                            justifyContent: 'center',
+                            minHeight: '96px',
+                            paddingLeft: '16px',
+                            paddingRight: '15px',
+                            paddingBottom: '6px'
+                          }}>
+                            <textarea
+                              value={formData.bio}
+                              onChange={(e) => handleInputChange('bio', e.target.value)}
+                              placeholder="介绍一下自己..."
+                              style={{
+                                width: '513px',
+                                minHeight: '72px',
+                                background: 'transparent',
+                                border: 'none',
+                                outline: 'none',
+                                color: formData.bio === '介绍一下自己...' ? '#9CA3AF' : '#FFFFFF',
+                                lineHeight: '24px',
+                                fontSize: '16px',
+                                resize: 'none'
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* 密码安全界面 */}
+                {activeTab === 'security' && (
+                  <div style={{
+                    marginTop: '32px',
+                    paddingLeft: '48px',
+                    paddingRight: '48px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '32px'
+                  }}>
+                    {/* 修改密码区域 */}
+                    <div style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
                       borderRadius: '12px',
                       padding: '24px'
                     }}>
-                      <h2 style={{
+                      <div style={{
                         color: '#FFFFFF',
                         fontSize: '18px',
                         fontWeight: '600',
                         lineHeight: '28px',
-                        margin: '0 0 20px 0'
-                      }}>个人信息</h2>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        {/* 头像设置 */}
+                        marginBottom: '24px'
+                      }}>
+                        修改密码
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '20px'
+                      }}>
+                        {/* 当前密码 */}
                         <div style={{
                           display: 'flex',
-                          alignItems: 'center',
-                          gap: '16px',
-                          paddingBottom: '20px',
-                          borderBottom: '1px solid rgba(42, 42, 42, 0.50)'
+                          flexDirection: 'column',
+                          gap: '8px'
                         }}>
-                          <div style={{
-                            width: '80px',
-                            height: '80px',
-                            borderRadius: '50%',
-                            background: 'linear-gradient(180deg, #374151 0%, #111827 100%)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}>
-                            <Icon name="user-icon" size="lg" style={{ color: '#FFFFFF' }} />
-                          </div>
-                          <div>
-                            <div style={{
-                              color: '#FFFFFF',
-                              fontSize: '16px',
-                              fontWeight: '500',
-                              lineHeight: '24px',
-                              marginBottom: '4px'
-                            }}>更改头像</div>
-                            <div style={{
-                              color: '#9CA3AF',
-                              fontSize: '12px',
-                              lineHeight: '16px',
-                              marginBottom: '8px'
-                            }}>支持 JPG、PNG 格式，建议尺寸 200x200</div>
-                            <GradientButton size="sm" variant="outline">
-                              选择文件
-                            </GradientButton>
-                          </div>
-                        </div>
-
-                        {/* 基本信息表单 */}
-                        <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 1fr',
-                          gap: '16px'
-                        }}>
-                          <Input
-                            label="用户名"
-                            value={formData.username}
-                            onChange={(e) => handleInputChange('username', e.target.value)}
-                            placeholder="请输入用户名"
-                          />
-                          <Input
-                            label="邮箱地址"
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => handleInputChange('email', e.target.value)}
-                            placeholder="请输入邮箱地址"
-                          />
-                        </div>
-
-                        <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 1fr',
-                          gap: '16px'
-                        }}>
-                          <Input
-                            label="手机号码"
-                            value={formData.phone}
-                            onChange={(e) => handleInputChange('phone', e.target.value)}
-                            placeholder="请输入手机号码"
-                          />
-                          <Input
-                            label="职位"
-                            value={formData.position}
-                            onChange={(e) => handleInputChange('position', e.target.value)}
-                            placeholder="请输入职位"
-                          />
-                        </div>
-
-                        <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 1fr',
-                          gap: '16px'
-                        }}>
-                          <Input
-                            label="公司"
-                            value={formData.company}
-                            onChange={(e) => handleInputChange('company', e.target.value)}
-                            placeholder="请输入公司名称"
-                          />
-                          <Input
-                            label="个人网站"
-                            value={formData.website}
-                            onChange={(e) => handleInputChange('website', e.target.value)}
-                            placeholder="请输入个人网站"
-                          />
-                        </div>
-
-                        <div>
                           <label style={{
                             color: '#D1D5DB',
                             fontSize: '14px',
                             fontWeight: '500',
-                            lineHeight: '20px',
-                            display: 'block',
-                            marginBottom: '8px'
-                          }}>个人简介</label>
-                          <textarea
-                            value={formData.bio}
-                            onChange={(e) => handleInputChange('bio', e.target.value)}
-                            placeholder="请输入个人简介"
-                            style={{
-                              width: '100%',
-                              height: '80px',
-                              background: 'rgba(18, 18, 18, 0.50)',
-                              backdropFilter: 'blur(4px)',
-                              border: '1px solid rgba(42, 42, 42, 0.70)',
-                              borderRadius: '8px',
-                              padding: '12px',
-                              color: '#FFFFFF',
-                              fontSize: '14px',
-                              lineHeight: '20px',
-                              resize: 'vertical'
-                            }}
-                          />
-                        </div>
-
-                        <div style={{
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                          gap: '12px',
-                          paddingTop: '20px',
-                          borderTop: '1px solid rgba(42, 42, 42, 0.50)'
-                        }}>
-                          <GradientButton variant="outline" size="md">
-                            取消
-                          </GradientButton>
-                          <GradientButton variant="primary" size="md">
-                            保存更改
-                          </GradientButton>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 安全设置 */}
-                  {activeTab === 'security' && (
-                    <div style={{
-                      background: 'rgba(26, 26, 26, 0.30)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(42, 42, 42, 0.70)',
-                      borderRadius: '12px',
-                      padding: '24px'
-                    }}>
-                      <h2 style={{
-                        color: '#FFFFFF',
-                        fontSize: '18px',
-                        fontWeight: '600',
-                        lineHeight: '28px',
-                        margin: '0 0 20px 0'
-                      }}>安全设置</h2>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        {/* 密码修改 */}
-                        <div style={{
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          borderRadius: '8px',
-                          padding: '20px'
-                        }}>
-                          <h3 style={{
-                            color: '#FFFFFF',
-                            fontSize: '16px',
-                            fontWeight: '500',
-                            lineHeight: '24px',
-                            margin: '0 0 12px 0'
-                          }}>修改密码</h3>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                            <Input
-                              label="当前密码"
-                              type="password"
-                              placeholder="请输入当前密码"
-                            />
-                            <Input
-                              label="新密码"
-                              type="password"
-                              placeholder="请输入新密码"
-                            />
-                            <Input
-                              label="确认新密码"
-                              type="password"
-                              placeholder="请再次输入新密码"
-                            />
-                            <div style={{ marginTop: '8px' }}>
-                              <GradientButton variant="primary" size="md">
-                                更新密码
-                              </GradientButton>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* 两步验证 */}
-                        <div style={{
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          borderRadius: '8px',
-                          padding: '20px'
-                        }}>
+                            lineHeight: '20px'
+                          }}>
+                            当前密码
+                          </label>
                           <div style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'flex-start',
-                            marginBottom: '12px'
-                          }}>
-                            <div>
-                              <h3 style={{
-                                color: '#FFFFFF',
-                                fontSize: '16px',
-                                fontWeight: '500',
-                                lineHeight: '24px',
-                                margin: '0 0 4px 0'
-                              }}>两步验证</h3>
-                              <p style={{
-                                color: '#9CA3AF',
-                                fontSize: '14px',
-                                lineHeight: '20px',
-                                margin: 0
-                              }}>增强账户安全性，推荐开启</p>
-                            </div>
-                            <GradientButton variant="outline" size="sm">
-                              设置
-                            </GradientButton>
-                          </div>
-                        </div>
-
-                        {/* 登录设备管理 */}
-                        <div style={{
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          borderRadius: '8px',
-                          padding: '20px'
-                        }}>
-                          <h3 style={{
-                            color: '#FFFFFF',
-                            fontSize: '16px',
-                            fontWeight: '500',
-                            lineHeight: '24px',
-                            margin: '0 0 16px 0'
-                          }}>登录设备</h3>
-
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            <div style={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              padding: '12px',
-                              background: 'rgba(255, 255, 255, 0.05)',
-                              borderRadius: '6px'
-                            }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <Icon name="device-icon" size="sm" style={{ color: '#22C55E' }} />
-                                <div>
-                                  <div style={{
-                                    color: '#FFFFFF',
-                                    fontSize: '14px',
-                                    fontWeight: '500',
-                                    lineHeight: '20px'
-                                  }}>Chrome (macOS)</div>
-                                  <div style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '12px',
-                                    lineHeight: '16px'
-                                  }}>当前设备 • 北京</div>
-                                </div>
-                              </div>
-                              <span style={{
-                                color: '#22C55E',
-                                fontSize: '12px',
-                                fontWeight: '500'
-                              }}>活跃</span>
-                            </div>
-
-                            <div style={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              padding: '12px',
-                              background: 'rgba(255, 255, 255, 0.05)',
-                              borderRadius: '6px'
-                            }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <Icon name="mobile-icon" size="sm" style={{ color: '#9CA3AF' }} />
-                                <div>
-                                  <div style={{
-                                    color: '#FFFFFF',
-                                    fontSize: '14px',
-                                    fontWeight: '500',
-                                    lineHeight: '20px'
-                                  }}>iPhone App</div>
-                                  <div style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '12px',
-                                    lineHeight: '16px'
-                                  }}>3天前 • 上海</div>
-                                </div>
-                              </div>
-                              <button style={{
-                                color: '#EF4444',
-                                fontSize: '12px',
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer'
-                              }}>移除</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 通知设置 */}
-                  {activeTab === 'notifications' && (
-                    <div style={{
-                      background: 'rgba(26, 26, 26, 0.30)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(42, 42, 42, 0.70)',
-                      borderRadius: '12px',
-                      padding: '24px'
-                    }}>
-                      <h2 style={{
-                        color: '#FFFFFF',
-                        fontSize: '18px',
-                        fontWeight: '600',
-                        lineHeight: '28px',
-                        margin: '0 0 20px 0'
-                      }}>通知设置</h2>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        {[
-                          { key: 'email', label: '邮件通知', description: '接收重要更新和提醒' },
-                          { key: 'push', label: '推送通知', description: '浏览器推送消息' },
-                          { key: 'updates', label: '产品更新', description: '新功能和改进通知' },
-                          { key: 'marketing', label: '营销邮件', description: '促销活动和优惠信息' }
-                        ].map((item) => (
-                          <div key={item.key} style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: '16px',
                             background: 'rgba(255, 255, 255, 0.05)',
-                            borderRadius: '8px'
+                            border: '1px solid rgba(255, 255, 255, 0.10)',
+                            borderRadius: '8px',
+                            padding: '12px 16px',
+                            display: 'flex',
+                            alignItems: 'center'
                           }}>
-                            <div>
-                              <div style={{
+                            <input
+                              type="password"
+                              value={securityData.currentPassword}
+                              onChange={(e) => handleSecurityChange('currentPassword', e.target.value)}
+                              placeholder="请输入当前密码"
+                              style={{
+                                flex: 1,
+                                background: 'transparent',
+                                border: 'none',
+                                outline: 'none',
                                 color: '#FFFFFF',
-                                fontSize: '16px',
-                                fontWeight: '500',
-                                lineHeight: '24px',
-                                marginBottom: '4px'
-                              }}>{item.label}</div>
-                              <div style={{
-                                color: '#9CA3AF',
                                 fontSize: '14px',
                                 lineHeight: '20px'
-                              }}>{item.description}</div>
-                            </div>
-                            <label style={{
-                              position: 'relative',
-                              display: 'inline-block',
-                              width: '44px',
-                              height: '24px',
-                              cursor: 'pointer'
-                            }}>
-                              <input
-                                type="checkbox"
-                                checked={formData.notifications[item.key as keyof typeof formData.notifications]}
-                                onChange={() => handleToggle('notifications', item.key)}
-                                style={{ opacity: 0, width: 0, height: 0 }}
-                              />
-                              <span style={{
-                                position: 'absolute',
-                                cursor: 'pointer',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                background: formData.notifications[item.key as keyof typeof formData.notifications]
-                                  ? 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)'
-                                  : 'rgba(55, 65, 81, 0.50)',
-                                transition: 'all 0.2s ease',
-                                borderRadius: '24px'
-                              }}>
-                                <span style={{
-                                  position: 'absolute',
-                                  height: '18px',
-                                  width: '18px',
-                                  left: formData.notifications[item.key as keyof typeof formData.notifications] ? '23px' : '3px',
-                                  bottom: '3px',
-                                  background: '#FFFFFF',
-                                  borderRadius: '50%',
-                                  transition: 'all 0.2s ease'
-                                }} />
-                              </span>
-                            </label>
+                              }}
+                            />
                           </div>
-                        ))}
+                        </div>
+
+                        {/* 新密码 */}
+                        <div style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '8px'
+                        }}>
+                          <label style={{
+                            color: '#D1D5DB',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            lineHeight: '20px'
+                          }}>
+                            新密码
+                          </label>
+                          <div style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.10)',
+                            borderRadius: '8px',
+                            padding: '12px 16px',
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}>
+                            <input
+                              type="password"
+                              value={securityData.newPassword}
+                              onChange={(e) => handleSecurityChange('newPassword', e.target.value)}
+                              placeholder="请输入新密码"
+                              style={{
+                                flex: 1,
+                                background: 'transparent',
+                                border: 'none',
+                                outline: 'none',
+                                color: '#FFFFFF',
+                                fontSize: '14px',
+                                lineHeight: '20px'
+                              }}
+                            />
+                          </div>
+                          <div style={{
+                            color: '#9CA3AF',
+                            fontSize: '12px',
+                            lineHeight: '16px'
+                          }}>
+                            密码长度至少8位，包含字母、数字和特殊字符
+                          </div>
+                        </div>
+
+                        {/* 确认新密码 */}
+                        <div style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '8px'
+                        }}>
+                          <label style={{
+                            color: '#D1D5DB',
+                            fontSize: '14px',
+                            fontWeight: '500',
+                            lineHeight: '20px'
+                          }}>
+                            确认新密码
+                          </label>
+                          <div style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.10)',
+                            borderRadius: '8px',
+                            padding: '12px 16px',
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}>
+                            <input
+                              type="password"
+                              value={securityData.confirmPassword}
+                              onChange={(e) => handleSecurityChange('confirmPassword', e.target.value)}
+                              placeholder="请再次输入新密码"
+                              style={{
+                                flex: 1,
+                                background: 'transparent',
+                                border: 'none',
+                                outline: 'none',
+                                color: '#FFFFFF',
+                                fontSize: '14px',
+                                lineHeight: '20px'
+                              }}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  )}
 
-                  {/* 隐私设置 */}
-                  {activeTab === 'privacy' && (
+                    {/* 两步验证区域 */}
                     <div style={{
-                      background: 'rgba(26, 26, 26, 0.30)',
-                      backdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(42, 42, 42, 0.70)',
+                      background: 'rgba(255, 255, 255, 0.05)',
                       borderRadius: '12px',
                       padding: '24px'
                     }}>
-                      <h2 style={{
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start'
+                      }}>
+                        <div>
+                          <div style={{
+                            color: '#FFFFFF',
+                            fontSize: '18px',
+                            fontWeight: '600',
+                            lineHeight: '28px',
+                            marginBottom: '8px'
+                          }}>
+                            两步验证
+                          </div>
+                          <div style={{
+                            color: '#9CA3AF',
+                            fontSize: '14px',
+                            lineHeight: '20px',
+                            marginBottom: '8px'
+                          }}>
+                            增强账户安全性，推荐开启
+                          </div>
+                          <div style={{
+                            color: '#9CA3AF',
+                            fontSize: '12px',
+                            lineHeight: '16px'
+                          }}>
+                            启用后登录时需要验证码确认身份
+                          </div>
+                        </div>
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px'
+                        }}>
+                          <div style={{
+                            color: securityData.twoFactorEnabled ? '#22C55E' : '#9CA3AF',
+                            fontSize: '14px',
+                            fontWeight: '500'
+                          }}>
+                            {securityData.twoFactorEnabled ? '已启用' : '未启用'}
+                          </div>
+                          <button
+                            onClick={() => handleSecurityChange('twoFactorEnabled', !securityData.twoFactorEnabled)}
+                            style={{
+                              background: securityData.twoFactorEnabled
+                                ? 'rgba(255, 255, 255, 0.10)'
+                                : 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                              border: securityData.twoFactorEnabled ? '1px solid rgba(255, 255, 255, 0.20)' : 'none',
+                              borderRadius: '8px',
+                              padding: '8px 16px',
+                              color: '#FFFFFF',
+                              fontSize: '14px',
+                              fontWeight: '500',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {securityData.twoFactorEnabled ? '关闭' : '启用'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 登录设备管理 */}
+                    <div style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      borderRadius: '12px',
+                      padding: '24px'
+                    }}>
+                      <div style={{
                         color: '#FFFFFF',
                         fontSize: '18px',
                         fontWeight: '600',
                         lineHeight: '28px',
-                        margin: '0 0 20px 0'
-                      }}>隐私设置</h2>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        {[
-                          { key: 'profile', label: '个人资料可见性', description: '控制他人查看您的基本信息', options: ['公开', '仅好友', '私密'] },
-                          { key: 'activity', label: '活动状态', description: '显示您的在线状态和活动', options: ['公开', '仅好友', '隐藏'] },
-                          { key: 'email', label: '邮箱可见性', description: '是否显示邮箱地址', options: ['公开', '仅好友', '私密'] }
-                        ].map((item) => (
-                          <div key={item.key} style={{
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            borderRadius: '8px',
-                            padding: '20px'
-                          }}>
+                        marginBottom: '24px'
+                      }}>
+                        登录设备管理
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '16px'
+                      }}>
+                        {securityData.devices.map((device) => (
+                          <div
+                            key={device.id}
+                            style={{
+                              background: 'rgba(255, 255, 255, 0.05)',
+                              borderRadius: '8px',
+                              padding: '16px',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center'
+                            }}
+                          >
                             <div style={{
-                              marginBottom: '16px'
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '12px'
                             }}>
-                              <h3 style={{
-                                color: '#FFFFFF',
-                                fontSize: '16px',
-                                fontWeight: '500',
-                                lineHeight: '24px',
-                                margin: '0 0 4px 0'
-                              }}>{item.label}</h3>
-                              <p style={{
-                                color: '#9CA3AF',
-                                fontSize: '14px',
-                                lineHeight: '20px',
-                                margin: 0
-                              }}>{item.description}</p>
+                              <div style={{
+                                width: '40px',
+                                height: '40px',
+                                background: 'rgba(255, 255, 255, 0.10)',
+                                borderRadius: '50%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}>
+                                <Icon
+                                  name={device.icon}
+                                  size="sm"
+                                  style={{
+                                    color: device.isActive ? '#22C55E' : '#9CA3AF'
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <div style={{
+                                  color: '#FFFFFF',
+                                  fontSize: '16px',
+                                  fontWeight: '500',
+                                  lineHeight: '24px'
+                                }}>
+                                  {device.name}
+                                </div>
+                                <div style={{
+                                  color: '#9CA3AF',
+                                  fontSize: '12px',
+                                  lineHeight: '16px'
+                                }}>
+                                  {device.lastActive} • {device.location}
+                                </div>
+                              </div>
                             </div>
                             <div style={{
                               display: 'flex',
-                              gap: '8px'
+                              alignItems: 'center',
+                              gap: '12px'
                             }}>
-                              {item.options.map((option) => (
+                              {device.isActive ? (
+                                <span style={{
+                                  color: '#22C55E',
+                                  fontSize: '12px',
+                                  fontWeight: '500',
+                                  background: 'rgba(34, 197, 94, 0.10)',
+                                  padding: '4px 8px',
+                                  borderRadius: '4px'
+                                }}>
+                                  活跃
+                                </span>
+                              ) : (
                                 <button
-                                  key={option}
-                                  onClick={() => handleInputChange(`privacy.${item.key}`, option.toLowerCase())}
+                                  onClick={() => handleRemoveDevice(device.id)}
                                   style={{
-                                    background: formData.privacy[item.key as keyof typeof formData.privacy] === option.toLowerCase()
-                                      ? 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)'
-                                      : 'rgba(255, 255, 255, 0.10)',
+                                    color: '#EF4444',
+                                    fontSize: '12px',
+                                    background: 'none',
                                     border: 'none',
-                                    borderRadius: '6px',
-                                    padding: '8px 16px',
-                                    color: '#FFFFFF',
-                                    fontSize: '14px',
                                     cursor: 'pointer',
-                                    transition: 'all 0.2s ease'
+                                    padding: '4px 8px',
+                                    borderRadius: '4px'
                                   }}
                                 >
-                                  {option}
+                                  移除
                                 </button>
-                              ))}
+                              )}
                             </div>
                           </div>
                         ))}
                       </div>
                     </div>
-                  )}
+
+                    {/* 安全提示 */}
+                    <div style={{
+                      background: 'rgba(34, 197, 94, 0.10)',
+                      border: '1px solid rgba(34, 197, 94, 0.30)',
+                      borderRadius: '8px',
+                      padding: '16px',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '12px'
+                    }}>
+                      <Icon
+                        name="shield-check"
+                        size="sm"
+                        style={{ color: '#22C55E', marginTop: '2px' }}
+                      />
+                      <div>
+                        <div style={{
+                          color: '#22C55E',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          lineHeight: '20px',
+                          marginBottom: '4px'
+                        }}>
+                          安全提示
+                        </div>
+                        <div style={{
+                          color: '#D1D5DB',
+                          fontSize: '13px',
+                          lineHeight: '18px'
+                        }}>
+                          • 定期更新密码，使用强密码组合
+                          <br />
+                          • 启用两步验证提高账户安全性
+                          <br />
+                          • 及时清理不使用的登录设备
+                          <br />
+                          • 不在公共场所或他人设备上登录
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 底部按钮 */}
+                <div style={{
+                  marginTop: '24px',
+                  gap: '16px',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'stretch',
+                  justifyContent: 'center'
+                }}>
+                  <button
+                    onClick={handleReset}
+                    style={{
+                      border: '1px solid rgba(255, 255, 255, 0.20)',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      paddingLeft: '24px',
+                      paddingRight: '24px',
+                      paddingTop: '9px',
+                      paddingBottom: '9px',
+                      background: 'transparent',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <div style={{
+                      color: '#FFFFFF',
+                      lineHeight: '24px',
+                      textAlign: 'center',
+                      width: '32px',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      display: 'flex',
+                      minHeight: '24px'
+                    }}>
+                      重置
+                    </div>
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    style={{
+                      background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      width: '80px',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      paddingLeft: '24px',
+                      paddingRight: '24px',
+                      paddingTop: '9px',
+                      paddingBottom: '9px',
+                      border: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <div style={{
+                      color: '#FFFFFF',
+                      lineHeight: '24px',
+                      textAlign: 'center',
+                      width: '32px',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      display: 'flex',
+                      minHeight: '24px'
+                    }}>
+                      保存
+                    </div>
+                  </button>
                 </div>
               </div>
-            </Container>
-          </div>
+            </div>
+          </Container>
         </main>
       </div>
     </div>

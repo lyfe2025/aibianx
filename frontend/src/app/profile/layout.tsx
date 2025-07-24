@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { BackToTopButton } from '@/components/ui'
+import { UserSidebar } from '@/components/molecules'
 import {
     LoginModal,
     RegisterModal,
@@ -12,10 +13,12 @@ import {
  * 个人中心专用布局组件 - ProfileLayout
  * 
  * ✅ 布局特点：
- * 1. 无顶部导航栏 - 个人中心使用左侧UserSidebar导航，不需要AppHeader
- * 2. 无底部菜单栏 - 由根布局的LayoutController统一控制，确保全站一致性
- * 3. 完整的弹窗支持 - 包含所有全局弹窗组件
- * 4. 返回顶部功能 - 保持与主站一致的用户体验
+ * 1. 左侧固定菜单 - UserSidebar统一管理个人中心导航
+ * 2. 右侧内容区域 - 动态展示各个子页面内容
+ * 3. 无顶部导航栏 - 个人中心使用左侧UserSidebar导航，不需要AppHeader
+ * 4. 无底部菜单栏 - 由根布局的LayoutController统一控制，确保全站一致性
+ * 5. 完整的弹窗支持 - 包含所有全局弹窗组件
+ * 6. 返回顶部功能 - 保持与主站一致的用户体验
  * 
  * 🎯 适用页面：
  * - 个人中心主页 (/profile)
@@ -24,8 +27,8 @@ import {
  * - 设置 (/profile/settings)
  * 
  * 📍 组件构成：
- * - UserSidebar：左侧导航菜单（在各页面中单独引用）
- * - 页面内容：由子页面控制
+ * - UserSidebar：左侧固定导航菜单（公共组件）
+ * - 页面内容区域：右侧动态内容，由子页面控制
  * - BackToTopButton：返回顶部按钮
  * - 全局弹窗：登录、注册、会员、支付等弹窗
  * 
@@ -33,6 +36,7 @@ import {
  * - 与主站布局(layout.tsx)的区别：移除了AppHeader顶部导航
  * - AppFooter底部菜单栏由根布局的LayoutController统一管理，确保全站一致性
  * - 个人中心页面不需要搜索引擎索引，设置了robots配置
+ * - 左侧菜单在所有profile子页面间共享，避免重复代码
  */
 
 export const metadata: Metadata = {
@@ -54,7 +58,7 @@ export default function ProfileLayout({
 }) {
     return (
         <>
-            {/* 个人中心页面结构 - 专用布局，仅包含页面内容 */}
+            {/* 个人中心页面结构 - 左右分栏布局 */}
             <div style={{
                 minHeight: '100vh',
                 display: 'flex',
@@ -62,15 +66,25 @@ export default function ProfileLayout({
                 background: 'transparent' // 改为透明，让粒子可见
             }}>
                 {/* 
-                  页面主要内容区域
-                  包含：UserSidebar（左侧导航） + 页面内容（右侧）
-                  
-                  ⚠️ 注意：AppHeader和AppFooter由根布局的LayoutController控制
-                  - AppHeader：个人中心页面不显示
-                  - AppFooter：个人中心页面正常显示，与其他页面保持一致
+                  页面主要内容区域 - 左右分栏布局
+                  左侧：UserSidebar固定导航菜单
+                  右侧：动态页面内容区域
                 */}
-                <main style={{ flex: 1 }}>
-                    {children}
+                <main style={{
+                    flex: 1,
+                    display: 'flex'
+                }}>
+                    {/* 左侧导航栏 - UserSidebar */}
+                    <UserSidebar />
+
+                    {/* 右侧内容区域 */}
+                    <div style={{
+                        flex: 1,
+                        minHeight: '100vh',
+                        background: 'transparent'
+                    }}>
+                        {children}
+                    </div>
                 </main>
             </div>
 

@@ -1,0 +1,1 @@
+export { InviteRecordTable } from './InviteRecordTable' 

@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react'
-import { Container, Icon, GradientText, GradientButton } from '@/components/ui'
-import { UserSidebar, BookmarkCard } from '@/components/molecules'
+import { Icon, GradientText, GradientButton } from '@/components/ui'
+import { BookmarkCard } from '@/components/molecules'
 
 export default function ProfilePage() {
   // 统计数据
@@ -67,15 +67,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-transparent"> {/* 改为透明，让粒子可见 */}
-      <div className="flex">
-        {/* 左侧导航栏 - 使用UserSidebar组件 */}
-        <UserSidebar />
-
-        {/* 右侧主内容区域 */}
-        <main style={{ flex: 1 }}>
-          <div style={{ padding: '32px 40px' }}>
-            <Container size="xl">
+    <div style={{ padding: '32px 40px', maxWidth: '1440px', margin: '0 auto' }}>
               {/* 页面标题 */}
               <div style={{ marginBottom: 'var(--card-gap-lg)' }}>
                 <h1 style={{
@@ -497,10 +489,6 @@ export default function ProfilePage() {
                   <Icon name="privilege-arrow" size="sm" style={{ color: '#60A5FA' }} />
                 </div>
               </div>
-            </Container>
-          </div>
-        </main>
-      </div>
     </div>
   )
 } 

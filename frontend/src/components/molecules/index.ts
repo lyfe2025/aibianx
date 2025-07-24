@@ -45,4 +45,10 @@ export { FreeResourcesSection } from './FreeResourcesSection'
 export { FinalCTASection } from './FinalCTASection'
 export { CountdownTimer } from './CountdownTimer'
 export { PaymentMethodCard } from './PaymentMethodCard'
-export { ThreeDSection } from './ThreeDSection' 
+export { ThreeDSection } from './ThreeDSection'
+
+// 订阅页面组件
+export { SubscriptionCard } from './SubscriptionCard'
+export { InviteRewardSection } from './InviteRewardSection'
+export { InviteRecordTable } from './InviteRecordTable'
+export { InviteRulesSection } from './InviteRulesSection' 
