@@ -7,7 +7,8 @@ import * as THREE from 'three'
  * 全局3D背景组件 - GlobalBackground3D
  * 
  * 设计理念：遍布全站的淡淡背景装饰，不干扰主要内容
- * - 极低透明度的几何体
+ * - 神经网络节点和连接线
+ * - 简洁的粒子效果
  * - 缓慢优雅的动画
  * - 简洁的AI主题元素
  * - 完美融入所有页面背景
@@ -89,7 +90,7 @@ export function GlobalBackground3D() {
             }
         }
 
-        // 3. 动态跟随相机的粒子系统 (300个，确保全程可见)
+        // 3. 创建粒子系统 (300个，确保全程可见)
         const particleCount = 300
         const particleGeometry = new THREE.BufferGeometry()
         const positions = new Float32Array(particleCount * 3)
@@ -159,7 +160,8 @@ export function GlobalBackground3D() {
             // 连接线轻微透明度变化
             connections.forEach((line, index) => {
                 const opacity = 0.05 + Math.sin(time * 1.0 + index) * 0.03
-                line.material.opacity = Math.max(0.02, opacity)
+                const material = line.material as THREE.LineBasicMaterial
+                material.opacity = Math.max(0.02, opacity)
             })
 
             // 粒子动态飘动（相对于初始位置）
@@ -201,7 +203,7 @@ export function GlobalBackground3D() {
             // 相机移动范围扩大到覆盖整个页面高度
             camera.position.y = (scrollRatio - 0.5) * 50 // 从-25移动到+25，覆盖更大范围
             camera.rotation.x = scrollRatio * 0.15 // 增强旋转效果
-            
+
             // Z轴适度调整
             camera.position.z = 30 + scrollRatio * 8 // 从30移动到38
 
@@ -211,7 +213,7 @@ export function GlobalBackground3D() {
                 // 粒子在相机周围重新分布，确保始终可见
                 const baseY = camera.position.y // 以相机Y位置为中心
                 const offsetY = initialPositions[i * 3 + 1] // 相对偏移
-                
+
                 // 更新Y轴位置：相机位置 + 相对偏移
                 positions[i * 3 + 1] = baseY + offsetY
             }
@@ -265,198 +267,306 @@ export function HeroBackground3D() {
     const mountRef = useRef<HTMLDivElement>(null)
     const animationIdRef = useRef<number | null>(null)
     const [isLoaded, setIsLoaded] = useState(false)
+    // 添加强制重新初始化状态
+    const [forceReload, setForceReload] = useState(0)
+    const sceneRef = useRef<THREE.Scene | null>(null)
+    const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
+    const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
 
     useEffect(() => {
-        if (!mountRef.current) return
+        // 强制清理之前的状态
+        setIsLoaded(false)
 
-        // 创建场景
-        const scene = new THREE.Scene()
+        // 延迟初始化确保DOM完全准备就绪
+        const initTimer = setTimeout(() => {
+            if (!mountRef.current) {
+                // DOM未准备好，延迟重试
+                setForceReload(prev => prev + 1)
+                return
+            }
 
-                 // 创建相机
-         const camera = new THREE.PerspectiveCamera(
-             75, // 更大视野角度，覆盖整个首屏
-             mountRef.current.clientWidth / mountRef.current.clientHeight,
-             0.1,
-             1000
-         )
-         camera.position.z = 25 // 更远距离，看到完整的3D效果
+            // 强制清理可能残留的renderer
+            if (rendererRef.current && mountRef.current.contains(rendererRef.current.domElement)) {
+                mountRef.current.removeChild(rendererRef.current.domElement)
+                rendererRef.current.dispose()
+                rendererRef.current = null
+            }
 
-        // 创建渲染器
-        const renderer = new THREE.WebGLRenderer({
-            alpha: true,
-            antialias: true
-        })
-        renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight)
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)) // 性能优化
-        renderer.setClearColor(0x000000, 0)
-        mountRef.current.appendChild(renderer.domElement)
+            // 创建场景
+            const scene = new THREE.Scene()
+            sceneRef.current = scene
 
-        // === 创建简洁的AI装饰元素 ===
+            // 创建相机
+            const camera = new THREE.PerspectiveCamera(
+                75, // 更大视野角度，覆盖整个首屏
+                mountRef.current.clientWidth / mountRef.current.clientHeight,
+                0.1,
+                1000
+            )
+            camera.position.z = 25 // 更远距离，看到完整的3D效果
+            cameraRef.current = camera
 
-                 // 1. 神经网络节点 (18个，遍布整个首屏)
-         const nodes: THREE.Mesh[] = []
-         for (let i = 0; i < 18; i++) {
-             const nodeGeometry = new THREE.SphereGeometry(0.12, 12, 12)
-             const nodeMaterial = new THREE.MeshBasicMaterial({
-                 color: 0x3B82F6,
-                 transparent: true,
-                 opacity: 0.3
-             })
-             const node = new THREE.Mesh(nodeGeometry, nodeMaterial)
-             
-             // 遍布整个首屏，包括上下左右
-             node.position.x = (Math.random() - 0.5) * 35  // 更大X轴范围
-             node.position.y = (Math.random() - 0.5) * 20  // 适配100vh高度的Y轴范围
-             node.position.z = (Math.random() - 0.5) * 15  // 更大Z轴范围
-             
-             scene.add(node)
-             nodes.push(node)
-         }
+            // 创建渲染器
+            const renderer = new THREE.WebGLRenderer({
+                alpha: true,
+                antialias: true,
+                preserveDrawingBuffer: false, // 添加这个选项优化性能
+                powerPreference: "high-performance"
+            })
 
-                 // 2. 中心区域连接线 (只在中间区域显示)
-         const connections: THREE.Line[] = []
-         // 筛选出中心区域的节点 (Y轴在-6到+2之间，适配新的高度范围)
-         const centerNodes = nodes.filter(node => 
-             node.position.y > -6 && node.position.y < 2 && 
-             Math.abs(node.position.x) < 15
-         )
-         
-         // 在中心节点间创建连接线
-         for (let i = 0; i < Math.min(6, centerNodes.length - 1); i++) {
-             const startNode = centerNodes[i]
-             const endNode = centerNodes[(i + 1) % centerNodes.length]
-             
-             if (startNode && endNode) {
-                 const lineGeometry = new THREE.BufferGeometry()
-                 const points = [startNode.position.clone(), endNode.position.clone()]
-                 lineGeometry.setFromPoints(points)
-                 
-                 const lineMaterial = new THREE.LineBasicMaterial({
-                     color: 0x8B5CF6,
-                     transparent: true,
-                     opacity: 0.2
-                 })
-                 
-                 const line = new THREE.Line(lineGeometry, lineMaterial)
-                 scene.add(line)
-                 connections.push(line)
-             }
-         }
+            // 检查WebGL是否可用
+            if (!renderer.getContext()) {
+                console.warn('WebGL not available, falling back to basic rendering')
+                setIsLoaded(true)
+                return
+            }
 
-                 // 3. 遍布首屏的粒子系统 (120个)
-         const particleCount = 120
-         const particleGeometry = new THREE.BufferGeometry()
-         const positions = new Float32Array(particleCount * 3)
-         const colors = new Float32Array(particleCount * 3)
+            renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight)
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)) // 性能优化
+            renderer.setClearColor(0x000000, 0)
 
-         for (let i = 0; i < particleCount; i++) {
-             // 遍布整个首屏空间，包括所有角落
-             positions[i * 3] = (Math.random() - 0.5) * 45      // 更大X轴范围
-             positions[i * 3 + 1] = (Math.random() - 0.5) * 25  // 适配100vh高度的Y轴范围
-             positions[i * 3 + 2] = (Math.random() - 0.5) * 25  // 更大Z轴范围
+            // 确保DOM元素存在再添加
+            if (mountRef.current) {
+                mountRef.current.appendChild(renderer.domElement)
+                rendererRef.current = renderer
+            } else {
+                renderer.dispose()
+                return
+            }
 
-             // 蓝紫色调
-             if (Math.random() < 0.5) {
-                 colors[i * 3] = 0.231     // 蓝色
-                 colors[i * 3 + 1] = 0.510
-                 colors[i * 3 + 2] = 0.965
-             } else {
-                 colors[i * 3] = 0.545     // 紫色
-                 colors[i * 3 + 1] = 0.361
-                 colors[i * 3 + 2] = 0.965
-             }
-         }
+            // === 创建简洁的AI装饰元素 ===
 
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-        particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+            // 1. 神经网络节点 (18个，遍布整个首屏)
+            const nodes: THREE.Mesh[] = []
+            for (let i = 0; i < 18; i++) {
+                const nodeGeometry = new THREE.SphereGeometry(0.12, 12, 12)
+                const nodeMaterial = new THREE.MeshBasicMaterial({
+                    color: 0x3B82F6,
+                    transparent: true,
+                    opacity: 0.3
+                })
+                const node = new THREE.Mesh(nodeGeometry, nodeMaterial)
 
-                 const particleMaterial = new THREE.PointsMaterial({
-             size: 0.08, // 稍大粒子尺寸，适配扩大的空间
-             vertexColors: true,
-             transparent: true,
-             opacity: 0.25, // 适中透明度
-             blending: THREE.AdditiveBlending
-         })
+                // 遍布整个首屏，包括上下左右
+                node.position.x = (Math.random() - 0.5) * 35  // 更大X轴范围
+                node.position.y = (Math.random() - 0.5) * 20  // 适配100vh高度的Y轴范围
+                node.position.z = (Math.random() - 0.5) * 15  // 更大Z轴范围
 
-        const particles = new THREE.Points(particleGeometry, particleMaterial)
-        scene.add(particles)
+                scene.add(node)
+                nodes.push(node)
+            }
 
-        // === 明显的动画循环 ===
-        let time = 0
-        const animate = () => {
-            time += 0.02 // 明显的时间增长
+            // 2. 中心区域连接线 (只在中间区域显示)
+            const connections: THREE.Line[] = []
+            // 筛选出中心区域的节点 (Y轴在-6到+2之间，适配新的高度范围)
+            const centerNodes = nodes.filter(node =>
+                node.position.y > -6 && node.position.y < 2 &&
+                Math.abs(node.position.x) < 15
+            )
 
-            // 节点明显脉冲动画
-            nodes.forEach((node, index) => {
-                const pulse = 1 + Math.sin(time * 2 + index) * 0.3
-                node.scale.setScalar(pulse)
+            // 在中心节点间创建连接线
+            for (let i = 0; i < Math.min(6, centerNodes.length - 1); i++) {
+                const startNode = centerNodes[i]
+                const endNode = centerNodes[(i + 1) % centerNodes.length]
 
-                // 明显的浮动
-                node.position.y += Math.sin(time * 1.2 + index) * 0.008
-                node.position.x += Math.cos(time * 0.8 + index) * 0.005
+                if (startNode && endNode) {
+                    const lineGeometry = new THREE.BufferGeometry()
+                    const points = [startNode.position.clone(), endNode.position.clone()]
+                    lineGeometry.setFromPoints(points)
 
-                // 定期的颜色变化
-                if (Math.random() > 0.98) {
-                    node.material.color.setHex(Math.random() > 0.5 ? 0x3B82F6 : 0x8B5CF6)
+                    const lineMaterial = new THREE.LineBasicMaterial({
+                        color: 0x8B5CF6,
+                        transparent: true,
+                        opacity: 0.2
+                    })
+
+                    const line = new THREE.Line(lineGeometry, lineMaterial)
+                    scene.add(line)
+                    connections.push(line)
                 }
-            })
-
-            // 连接线明显透明度变化
-            connections.forEach((line, index) => {
-                const opacity = 0.15 + Math.sin(time * 1.5 + index) * 0.1
-                line.material.opacity = Math.max(0.05, opacity)
-            })
-
-            // 粒子明显飘动
-            const positions = particles.geometry.attributes.position.array as Float32Array
-            for (let i = 0; i < positions.length; i += 3) {
-                positions[i + 1] += Math.sin(time * 0.8 + i) * 0.01  // 明显Y轴浮动
-                positions[i] += Math.cos(time * 0.6 + i) * 0.008     // 明显X轴移动
-                positions[i + 2] += Math.sin(time * 0.4 + i) * 0.005 // Z轴微动
             }
-            particles.geometry.attributes.position.needsUpdate = true
 
-            // 明显旋转
-            particles.rotation.y += 0.004
-            particles.rotation.x += 0.001
+            // 3. 创建粒子系统
+            const particleCount = 150
+            const particleGeometry = new THREE.BufferGeometry()
+            const positions = new Float32Array(particleCount * 3)
+            const colors = new Float32Array(particleCount * 3)
 
-            renderer.render(scene, camera)
-            animationIdRef.current = requestAnimationFrame(animate)
-        }
+            for (let i = 0; i < particleCount; i++) {
+                // 遍布整个首屏空间，包括所有角落
+                positions[i * 3] = (Math.random() - 0.5) * 45      // 更大X轴范围
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 25  // 适配100vh高度的Y轴范围
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 25  // 更大Z轴范围
 
-        // 响应式处理
-        const handleResize = () => {
-            if (!mountRef.current || !renderer) return
+                // 蓝紫色调
+                if (Math.random() < 0.5) {
+                    colors[i * 3] = 0.231     // 蓝色
+                    colors[i * 3 + 1] = 0.510
+                    colors[i * 3 + 2] = 0.965
+                } else {
+                    colors[i * 3] = 0.545     // 紫色
+                    colors[i * 3 + 1] = 0.361
+                    colors[i * 3 + 2] = 0.965
+                }
+            }
 
-            const width = mountRef.current.clientWidth
-            const height = mountRef.current.clientHeight
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+            particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
-            camera.aspect = width / height
-            camera.updateProjectionMatrix()
-            renderer.setSize(width, height)
-        }
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 0.08, // 稍大粒子尺寸，适配扩大的空间
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.25, // 适中透明度
+                blending: THREE.AdditiveBlending
+            })
 
-        window.addEventListener('resize', handleResize)
+            const particles = new THREE.Points(particleGeometry, particleMaterial)
+            scene.add(particles)
 
-        // 启动动画
-        animate()
-        setIsLoaded(true)
+            // === 明显的动画循环 ===
+            let time = 0
+            const animate = () => {
+                // 检查组件是否仍然挂载
+                if (!mountRef.current || !sceneRef.current || !rendererRef.current) {
+                    return
+                }
 
-        // 清理函数
+                time += 0.02 // 明显的时间增长
+
+                // 节点明显脉冲动画
+                nodes.forEach((node, index) => {
+                    const pulse = 1 + Math.sin(time * 2 + index) * 0.3
+                    node.scale.setScalar(pulse)
+
+                    // 明显的浮动
+                    node.position.y += Math.sin(time * 1.2 + index) * 0.008
+                    node.position.x += Math.cos(time * 0.8 + index) * 0.005
+
+                    // 定期的颜色变化
+                    if (Math.random() > 0.98) {
+                        const material = node.material as THREE.MeshBasicMaterial
+                        material.color.setHex(Math.random() > 0.5 ? 0x3B82F6 : 0x8B5CF6)
+                    }
+                })
+
+                // 连接线明显透明度变化
+                connections.forEach((line, index) => {
+                    const opacity = 0.15 + Math.sin(time * 1.5 + index) * 0.1
+                    const material = line.material as THREE.LineBasicMaterial
+                    material.opacity = Math.max(0.05, opacity)
+                })
+
+                // 粒子明显飘动
+                const positions = particles.geometry.attributes.position.array as Float32Array
+                for (let i = 0; i < positions.length; i += 3) {
+                    positions[i + 1] += Math.sin(time * 0.8 + i) * 0.01  // 明显Y轴浮动
+                    positions[i] += Math.cos(time * 0.6 + i) * 0.008     // 明显X轴移动
+                    positions[i + 2] += Math.sin(time * 0.4 + i) * 0.005 // Z轴微动
+                }
+                particles.geometry.attributes.position.needsUpdate = true
+
+                // 明显旋转
+                particles.rotation.y += 0.004
+                particles.rotation.x += 0.001
+
+                try {
+                    renderer.render(scene, camera)
+                    animationIdRef.current = requestAnimationFrame(animate)
+                } catch (error) {
+                    console.warn('Three.js render error:', error)
+                    // 渲染出错时停止动画
+                    return
+                }
+            }
+
+            // 响应式处理
+            const handleResize = () => {
+                if (!mountRef.current || !renderer || !camera) return
+
+                const width = mountRef.current.clientWidth
+                const height = mountRef.current.clientHeight
+
+                camera.aspect = width / height
+                camera.updateProjectionMatrix()
+                renderer.setSize(width, height)
+            }
+
+            window.addEventListener('resize', handleResize)
+
+            // 启动动画
+            animate()
+            setIsLoaded(true)
+
+            // 清理函数
+            return () => {
+                window.removeEventListener('resize', handleResize)
+
+                if (animationIdRef.current) {
+                    cancelAnimationFrame(animationIdRef.current)
+                    animationIdRef.current = null
+                }
+
+                // 清理Three.js资源
+                if (sceneRef.current) {
+                    sceneRef.current.clear()
+                    sceneRef.current = null
+                }
+
+                if (rendererRef.current) {
+                    if (mountRef.current && mountRef.current.contains(rendererRef.current.domElement)) {
+                        mountRef.current.removeChild(rendererRef.current.domElement)
+                    }
+                    rendererRef.current.dispose()
+                    rendererRef.current = null
+                }
+
+                // 清理几何体和材质
+                nodes.forEach(node => {
+                    if (node.geometry) node.geometry.dispose()
+                    if (node.material) {
+                        if (Array.isArray(node.material)) {
+                            node.material.forEach(material => material.dispose())
+                        } else {
+                            node.material.dispose()
+                        }
+                    }
+                })
+
+                connections.forEach(line => {
+                    if (line.geometry) line.geometry.dispose()
+                    if (line.material) {
+                        if (Array.isArray(line.material)) {
+                            line.material.forEach(material => material.dispose())
+                        } else {
+                            line.material.dispose()
+                        }
+                    }
+                })
+
+                // 清理粒子系统资源
+                if (particleGeometry) particleGeometry.dispose()
+                if (particleMaterial) particleMaterial.dispose()
+            }
+        }, 100) // 延迟100ms确保DOM完全准备就绪
+
+        // 清理计时器
         return () => {
-            window.removeEventListener('resize', handleResize)
-
-            if (animationIdRef.current) {
-                cancelAnimationFrame(animationIdRef.current)
-            }
-
-            if (mountRef.current && renderer.domElement) {
-                mountRef.current.removeChild(renderer.domElement)
-            }
-
-            scene.clear()
-            renderer.dispose()
+            clearTimeout(initTimer)
         }
+    }, [forceReload])
+
+    // 添加错误边界处理
+    useEffect(() => {
+        const errorHandler = (event: ErrorEvent) => {
+            if (event.message.includes('WebGL') || event.message.includes('Three')) {
+                console.warn('WebGL error detected, attempting to reinitialize:', event.message)
+                setForceReload(prev => prev + 1)
+            }
+        }
+
+        window.addEventListener('error', errorHandler)
+        return () => window.removeEventListener('error', errorHandler)
     }, [])
 
     return (
@@ -470,7 +580,8 @@ export function HeroBackground3D() {
                 height: '100vh', // 使用视口单位确保全屏覆盖
                 zIndex: 2, // 在遮罩层之上，显示3D效果
                 pointerEvents: 'none', // 不干扰用户交互
-                opacity: 0.9 // 提高透明度，让动画更明显
+                opacity: isLoaded ? 0.9 : 0, // 提高透明度，让动画更明显
+                transition: 'opacity 0.5s ease-in-out' // 平滑过渡效果
             }}
         />
     )

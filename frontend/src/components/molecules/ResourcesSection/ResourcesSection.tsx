@@ -1,5 +1,7 @@
 'use client'
 
+import { GradientText } from '@/components/ui'
+
 export function ResourcesSection() {
     // 免费资源数据
     const freeResources = [
@@ -49,24 +51,25 @@ export function ResourcesSection() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'flex-start',
-                marginBottom: '50px'
+                marginBottom: 'var(--section-spacing-md)'
             }}>
                 <div style={{ fontSize: '72px' }}>📊</div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
-                    <h2 style={{
-                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        fontSize: '32px',
-                        fontWeight: 700,
-                        lineHeight: '45px',
-                        margin: '0 0 20px 0'
-                    }}>
+                    <GradientText
+                        as="h2"
+                        size="5xl"
+                        weight="bold"
+                        style={{
+                            lineHeight: '45px',
+                            margin: '0 0 20px 0'
+                        }}
+                    >
                         免费精选资源
-                    </h2>
+                    </GradientText>
                     <p style={{
-                        color: '#9CA3AF',
-                        fontSize: '18px',
+                        color: 'var(--color-text-muted)',
+                        fontSize: 'var(--font-size-xl)',
+                        fontFamily: 'var(--font-family-primary)',
                         lineHeight: '25px'
                     }}>
                         立即获取这些高质量的AI变现指南，加速你的成功之路

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { GradientButton, Icon } from '@/components/ui'
+import { GradientButton, Icon, GradientText } from '@/components/ui'
 
 interface ContactMethod {
     icon: string
@@ -59,26 +59,26 @@ export function ContactSection({
 
     return (
         <section className={className} style={{
-            padding: '80px 0'
+            padding: 'var(--page-padding-top-md) 0 var(--page-padding-bottom-md)'
         }}>
             {/* 标题区域 */}
             <div style={{
                 textAlign: 'center',
-                marginBottom: '60px'
+                marginBottom: 'var(--section-spacing-md)'
             }}>
-                <h2 style={{
-                    fontSize: 'var(--font-size-7xl)',
-                    fontWeight: '700',
-                    background: 'var(--gradient-primary)',
-                    backgroundClip: 'text',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    marginBottom: 'var(--spacing-4)'
-                }}>
+                <GradientText
+                    as="h2"
+                    size="7xl"
+                    weight="bold"
+                    style={{
+                        marginBottom: 'var(--title-margin-bottom-md)'
+                    }}
+                >
                     {title}
-                </h2>
+                </GradientText>
                 <p style={{
                     fontSize: 'var(--font-size-2xl)',
+                    fontFamily: 'var(--font-family-primary)',
                     color: 'var(--color-text-secondary)',
                     maxWidth: '600px',
                     margin: '0 auto',
@@ -103,7 +103,7 @@ export function ContactSection({
                         fontSize: 'var(--font-size-4xl)',
                         fontWeight: '700',
                         color: 'var(--color-text-primary)',
-                        marginBottom: 'var(--spacing-6)'
+                        marginBottom: 'var(--title-margin-bottom-md)'
                     }}>
                         联系方式
                     </h3>
@@ -185,7 +185,7 @@ export function ContactSection({
                         fontSize: 'var(--font-size-4xl)',
                         fontWeight: '700',
                         color: 'var(--color-text-primary)',
-                        marginBottom: 'var(--spacing-6)',
+                        marginBottom: 'var(--title-margin-bottom-md)',
                         textAlign: 'center'
                     }}>
                         发送消息

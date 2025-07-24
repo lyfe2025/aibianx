@@ -87,6 +87,165 @@ a {
   --spacing-16: 64px;
   --spacing-20: 80px;
 
+  /* 📏 扩展间距系统 - 完整规范 */
+
+  /* === 基础间距变量 === */
+  /* 微小间距 (1-4) */
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  /* 最小间距，用于微调 */
+  --spacing-2: 8px;
+  /* 小元素间距，如图标与文字 */
+  --spacing-3: 12px;
+  /* 紧密元素间距 */
+  --spacing-4: 16px;
+  /* 标准元素间距 */
+
+  /* 常用间距 (5-12) */
+  --spacing-5: 20px;
+  /* 中等元素间距 */
+  --spacing-6: 24px;
+  /* 卡片内部间距 */
+  --spacing-7: 28px;
+  /* 加大元素间距 */
+  --spacing-8: 32px;
+  /* 大间距，区块内部 */
+  --spacing-10: 40px;
+  /* 加大区块间距 */
+  --spacing-12: 48px;
+  /* 大区块间距 */
+
+  /* 大间距 (14-24) */
+  --spacing-14: 56px;
+  /* 较大区块间距 */
+  --spacing-16: 64px;
+  /* 大区块间距 */
+  --spacing-18: 72px;
+  /* 很大区块间距 */
+  --spacing-20: 80px;
+  /* 超大区块间距 */
+  --spacing-24: 96px;
+  /* 特大区块间距 */
+
+  /* 超大间距 (28-40) */
+  --spacing-28: 112px;
+  /* 页面级大间距 */
+  --spacing-32: 128px;
+  /* 页面级超大间距 */
+  --spacing-36: 144px;
+  /* 特殊页面间距 */
+  --spacing-40: 160px;
+  /* 最大页面间距 */
+
+  /* === 语义化间距变量 === */
+
+  /* 页面级间距 */
+  --page-padding-top-sm: var(--spacing-12);
+  /* 48px - 小页面顶部间距 */
+  --page-padding-top-md: 48px;
+  /* 48px - 中等页面顶部间距 */
+  --page-padding-top-lg: var(--spacing-20);
+  /* 80px - 大页面顶部间距 */
+  --page-padding-top-xl: var(--spacing-24);
+  /* 96px - 超大页面顶部间距 */
+
+  --page-padding-bottom-sm: var(--spacing-12);
+  /* 48px - 小页面底部间距 */
+  --page-padding-bottom-md: 48px;
+  /* 48px - 中等页面底部间距 */
+  --page-padding-bottom-lg: var(--spacing-18);
+  /* 72px - 大页面底部间距 */
+  --page-padding-bottom-xl: var(--spacing-20);
+  /* 80px - 超大页面底部间距 */
+
+  /* 区块间距 */
+  --section-spacing-sm: 36px;
+  /* 36px - 小区块间距 */
+  --section-spacing-md: 64px;
+  /* 64px - 中等区块间距，标题到内容的标准距离 */
+  --section-spacing-lg: 80px;
+  /* 80px - 大区块间距 */
+  --section-spacing-xl: var(--spacing-24);
+  /* 96px - 超大区块间距 */
+
+  /* 组件间距 */
+  --component-padding-sm: var(--spacing-4);
+  /* 16px - 小组件内边距 */
+  --component-padding-md: var(--spacing-6);
+  /* 24px - 中等组件内边距 */
+  --component-padding-lg: var(--spacing-8);
+  /* 32px - 大组件内边距 */
+  --component-padding-xl: var(--spacing-10);
+  /* 40px - 超大组件内边距 */
+
+  /* 卡片间距 */
+  --card-padding-sm: var(--spacing-4);
+  /* 16px - 小卡片内边距 */
+  --card-padding-md: var(--spacing-6);
+  /* 24px - 中等卡片内边距 */
+  --card-padding-lg: var(--spacing-8);
+  /* 32px - 大卡片内边距 */
+  --card-padding-xl: var(--spacing-10);
+  /* 40px - 超大卡片内边距 */
+
+  --card-gap-sm: var(--spacing-4);
+  /* 16px - 小卡片间距 */
+  --card-gap-md: var(--spacing-6);
+  /* 24px - 中等卡片间距 */
+  --card-gap-lg: var(--spacing-8);
+  /* 32px - 大卡片间距 */
+  --card-gap-xl: var(--spacing-12);
+  /* 48px - 超大卡片间距 */
+
+  /* 标题间距 */
+  --title-margin-bottom-sm: var(--spacing-4);
+  /* 16px - 小标题底部间距 */
+  --title-margin-bottom-md: var(--spacing-5);
+  /* 20px - 中等标题底部间距 */
+  --title-margin-bottom-lg: var(--spacing-6);
+  /* 24px - 大标题底部间距 */
+  --title-margin-bottom-xl: var(--spacing-8);
+  /* 32px - 超大标题底部间距 */
+
+  /* 按钮间距 */
+  --button-padding-sm: var(--spacing-2) var(--spacing-5);
+  /* 8px 20px */
+  --button-padding-md: var(--spacing-3) var(--spacing-6);
+  /* 12px 24px */
+  --button-padding-lg: var(--spacing-4) var(--spacing-8);
+  /* 16px 32px */
+
+  --button-gap-sm: var(--spacing-2);
+  /* 8px - 小按钮间距 */
+  --button-gap-md: var(--spacing-4);
+  /* 16px - 中等按钮间距 */
+  --button-gap-lg: var(--spacing-6);
+  /* 24px - 大按钮间距 */
+
+  /* 表单间距 */
+  --form-item-gap: var(--spacing-4);
+  /* 16px - 表单项间距 */
+  --form-section-gap: var(--spacing-8);
+  /* 32px - 表单区块间距 */
+  --form-padding: var(--spacing-6);
+  /* 24px - 表单内边距 */
+
+  /* 导航间距 */
+  --nav-item-gap: var(--spacing-8);
+  /* 32px - 导航项间距 */
+  --nav-padding: var(--spacing-4) var(--spacing-6);
+  /* 16px 24px - 导航内边距 */
+
+  /* 特殊用途间距 */
+  --header-height: 98px;
+  /* Header高度 */
+  --header-offset: var(--header-height);
+  /* Header偏移量 */
+  --hero-padding-top: 135px;
+  /* Hero区域顶部间距 */
+  --hero-padding-bottom: var(--spacing-20);
+  /* Hero区域底部间距 */
+
   /* 圆角 */
   --radius-sm: 6px;
   --radius-md: 8px;
@@ -127,6 +286,56 @@ a {
 }
 
 /* ===== 基础组件样式 ===== */
+
+/* 渐变文字效果 */
+.gradient-text {
+  background: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: var(--font-family-primary);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Hero区域副标题样式 - 最高优先级强制覆盖 */
+.hero-subtitle,
+.hero-subtitle *,
+div.hero-subtitle,
+section .hero-subtitle {
+  color: #D1D5DB !important;
+}
+
+/* 确保在所有加载阶段都保持灰色 */
+.hero-subtitle {
+  color: #D1D5DB !important;
+  -webkit-text-fill-color: #D1D5DB !important;
+  /* 禁用可能的颜色动画和过渡 */
+  transition: none !important;
+  animation: none !important;
+  /* 确保不被任何渐变文字类影响 */
+  background: none !important;
+  background-clip: initial !important;
+  -webkit-background-clip: initial !important;
+}
+
+/* 🔧 终极覆盖规则 - 最高优先级 */
+html body section div.hero-subtitle,
+html body div.hero-subtitle,
+body div.hero-subtitle,
+div.hero-subtitle {
+  color: #D1D5DB !important;
+  -webkit-text-fill-color: #D1D5DB !important;
+}
+
+/* 🔧 防止任何可能的继承覆盖 */
+div.hero-subtitle,
+div.hero-subtitle *,
+.hero-subtitle,
+.hero-subtitle * {
+  color: #D1D5DB !important;
+  -webkit-text-fill-color: #D1D5DB !important;
+}
 
 /* 玻璃卡片效果 */
 .glass-card {

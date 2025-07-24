@@ -38,7 +38,7 @@ export function PrivacyContent({ onBack }: PrivacyContentProps) {
             </button>
 
             {/* 标题 */}
-            <div style={{ textAlign: 'center', marginBottom: 'var(--spacing-4)' }}>
+            <div style={{ textAlign: 'center', marginBottom: 'var(--title-margin-bottom-md)' }}>
                 <GradientText size="2xl" weight="bold">AI变现之路隐私政策</GradientText>
                 <p style={{
                     color: 'var(--color-text-muted)',

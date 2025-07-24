@@ -68,7 +68,7 @@ export function ArticleHeader({
                     fontWeight: '500',
                     padding: '6px 12px',
                     borderRadius: 'var(--radius-sm)',
-                    marginBottom: 'var(--spacing-4)'
+                    marginBottom: 'var(--title-margin-bottom-md)'
                 }}>
                     <Icon name="membership-exclusive" size="xs" />
                     会员专享内容
@@ -81,7 +81,7 @@ export function ArticleHeader({
                 fontWeight: '700',
                 color: 'var(--color-text-primary)',
                 lineHeight: '1.2',
-                marginBottom: 'var(--spacing-4)'
+                marginBottom: 'var(--title-margin-bottom-md)'
             }}>
                 {title}
             </h1>

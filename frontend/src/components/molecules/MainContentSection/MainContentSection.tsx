@@ -63,8 +63,8 @@ export function MainContentSection() {
 
     return (
         <section style={{
-            paddingTop: '48px',
-            paddingBottom: '112px',
+            paddingTop: '24px !important',
+            paddingBottom: '32px !important',
             background: 'transparent' // 改为透明，让粒子可见
         }}>
             <Container size="xl">
@@ -354,7 +354,7 @@ export function MainContentSection() {
                             borderRadius: '16px',
                             display: 'flex',
                             flexDirection: 'column',
-                            marginBottom: '32px'
+                            marginBottom: 'var(--card-gap-lg)'
                         }}>
                             <h3 style={{
                                 color: '#FFFFFF',
@@ -503,7 +503,7 @@ export function MainContentSection() {
                             borderRadius: '16px',
                             display: 'flex',
                             flexDirection: 'column',
-                            marginBottom: '32px'
+                            marginBottom: 'var(--card-gap-lg)'
                         }}>
                             <h3 style={{
                                 color: '#FFFFFF',

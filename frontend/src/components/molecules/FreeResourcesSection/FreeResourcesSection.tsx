@@ -56,7 +56,9 @@ export function FreeResourcesSection() {
     ]
 
     return (
-        <section className={styles.freeResourcesSection}>
+                <section 
+            className={styles.freeResourcesSection}
+        >
             <Container>
                 {/* 区块标题 - 1:1还原设计稿 */}
                 <div className={styles.titleContainer}>

@@ -1,0 +1,1 @@
+export { BackgroundDecoration } from './BackgroundDecoration' 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Container, Icon } from '@/components/ui'
+import { Container, Icon, GradientText } from '@/components/ui'
 
 /**
  * 最终行动召唤区块组件 - FinalCTASection
@@ -57,8 +57,8 @@ export function FinalCTASection() {
 
     return (
         <section style={{
-            paddingTop: '112px',
-            paddingBottom: '96px',
+            paddingTop: '48px',
+            paddingBottom: '48px',
             background: 'transparent', // 改为透明，让粒子可见
             position: 'relative',
             overflow: 'hidden'
@@ -81,7 +81,7 @@ export function FinalCTASection() {
                     {/* 左侧内容 - 精确按设计稿布局 */}
                     <div style={{
                         marginTop: '32px',
-                        marginBottom: '32px',
+                        marginBottom: 'var(--card-gap-lg)',
                         marginLeft: '32px',
                         gap: '8px',
                         display: 'flex',
@@ -90,29 +90,29 @@ export function FinalCTASection() {
                         flex: '1',
                         minWidth: '450px'
                     }}>
-                        {/* 主标题 - 精确按设计稿样式 */}
-                        <div style={{
-                            background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                            backgroundClip: 'text',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            fontSize: '36px',
-                            fontWeight: '700',
-                            lineHeight: '40px',
-                            width: '400px',
-                            alignItems: 'center',
-                            display: 'flex',
-                            textOverflow: 'ellipsis',
-                            marginRight: '19px',
-                            minHeight: '40px'
-                        }}>
+                        {/* 主标题 - 使用GradientText统一样式 */}
+                        <GradientText
+                            as="h2"
+                            size="6xl"
+                            weight="bold"
+                            style={{
+                                lineHeight: '40px',
+                                width: '400px',
+                                alignItems: 'center',
+                                display: 'flex',
+                                textOverflow: 'ellipsis',
+                                marginRight: '19px',
+                                minHeight: '40px'
+                            }}
+                        >
                             成为AI时代的赢家
-                        </div>
+                        </GradientText>
 
-                        {/* 副标题 - 精确按设计稿样式 */}
+                        {/* 副标题 - 使用CSS变量统一样式 */}
                         <div style={{
-                            color: '#D1D5DB',
-                            fontSize: '20px',
+                            color: 'var(--color-text-secondary)',
+                            fontSize: 'var(--font-size-2xl)',
+                            fontFamily: 'var(--font-family-primary)',
                             lineHeight: '28px',
                             width: '400px',
                             alignItems: 'center',
@@ -188,39 +188,39 @@ export function FinalCTASection() {
                         width: '500px',
                         position: 'relative',
                         marginTop: '32px',
-                        marginBottom: '32px',
+                        marginBottom: 'var(--card-gap-lg)',
                         marginRight: '32px',
                         gap: '8px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'stretch'
                     }}>
-                        {/* 表单标题 - 精确按设计稿样式 */}
-                        <div style={{
-                            background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                            backgroundClip: 'text',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            fontSize: '24px',
-                            fontWeight: '700',
-                            lineHeight: '32px',
-                            textAlign: 'center',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            display: 'flex',
-                            textOverflow: 'ellipsis',
-                            marginTop: '32px',
-                            marginLeft: '33px',
-                            marginRight: '33px',
-                            minHeight: '32px'
-                        }}>
+                        {/* 表单标题 - 使用GradientText统一样式 */}
+                        <GradientText
+                            as="h3"
+                            size="3xl"
+                            weight="bold"
+                            style={{
+                                lineHeight: '32px',
+                                textAlign: 'center',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                display: 'flex',
+                                textOverflow: 'ellipsis',
+                                marginTop: '32px',
+                                marginLeft: '33px',
+                                marginRight: '33px',
+                                minHeight: '32px'
+                            }}
+                        >
                             获取独家AI变现指南
-                        </div>
+                        </GradientText>
 
-                        {/* 表单描述 - 精确按设计稿样式 */}
+                        {/* 表单描述 - 使用CSS变量统一样式 */}
                         <div style={{
-                            color: '#9CA3AF',
-                            fontSize: '16px',
+                            color: 'var(--color-text-muted)',
+                            fontSize: 'var(--font-size-lg)',
+                            fontFamily: 'var(--font-family-primary)',
                             lineHeight: '24px',
                             textAlign: 'center',
                             justifyContent: 'center',
@@ -411,7 +411,7 @@ export function FinalCTASection() {
                             display: 'flex',
                             textOverflow: 'ellipsis',
                             marginTop: '16px',
-                            marginBottom: '32px',
+                            marginBottom: 'var(--card-gap-lg)',
                             marginLeft: '33px',
                             marginRight: '33px',
                             minHeight: '20px'

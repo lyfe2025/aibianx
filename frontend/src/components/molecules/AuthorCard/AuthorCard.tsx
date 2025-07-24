@@ -58,7 +58,7 @@ export function AuthorCard({
                     display: 'flex',
                     justifyContent: 'center',
                     gap: 'var(--spacing-6)',
-                    marginBottom: 'var(--spacing-4)'
+                    marginBottom: 'var(--title-margin-bottom-md)'
                 }}>
                     {author.followersCount && (
                         <div style={{ textAlign: 'center' }}>
@@ -102,7 +102,7 @@ export function AuthorCard({
                 fontSize: 'var(--font-size-base)',
                 color: 'var(--color-text-secondary)',
                 lineHeight: '1.6',
-                marginBottom: 'var(--spacing-4)',
+                marginBottom: 'var(--title-margin-bottom-md)',
                 textAlign: 'left'
             }}>
                 {author.bio}

@@ -100,7 +100,7 @@ export function ForgotPasswordForm({ onSubmit, isLoading: externalLoading }: For
                     fontSize: 'var(--font-size-3xl)',
                     fontWeight: '700',
                     color: 'var(--color-text-primary)',
-                    marginBottom: 'var(--spacing-4)'
+                    marginBottom: 'var(--title-margin-bottom-md)'
                 }}>
                     邮件已发送
                 </h3>
@@ -109,7 +109,7 @@ export function ForgotPasswordForm({ onSubmit, isLoading: externalLoading }: For
                     fontSize: 'var(--font-size-base)',
                     color: 'var(--color-text-secondary)',
                     lineHeight: '1.5',
-                    marginBottom: 'var(--spacing-6)'
+                    marginBottom: 'var(--title-margin-bottom-md)'
                 }}>
                     我们已向 <span style={{ color: 'var(--color-text-primary)' }}>{formData.email}</span> 发送了密码重置链接
                     <br />
@@ -121,7 +121,7 @@ export function ForgotPasswordForm({ onSubmit, isLoading: externalLoading }: For
                     border: '1px solid rgba(59, 130, 246, 0.3)',
                     borderRadius: 'var(--radius-lg)',
                     padding: 'var(--spacing-4)',
-                    marginBottom: 'var(--spacing-6)'
+                    marginBottom: 'var(--title-margin-bottom-md)'
                 }}>
                     <p style={{
                         fontSize: 'var(--font-size-sm)',

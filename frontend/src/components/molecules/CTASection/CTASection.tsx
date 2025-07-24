@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { GradientButton } from '@/components/ui'
+import { GradientButton, GradientText } from '@/components/ui'
 
 export function CTASection() {
     const [finalFormData, setFinalFormData] = useState({
@@ -50,21 +50,22 @@ export function CTASection() {
                         🚀
                     </div>
 
-                    <h2 style={{
-                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        fontSize: '36px',
-                        fontWeight: 700,
-                        lineHeight: '40px',
-                        marginBottom: '20px'
-                    }}>
+                    <GradientText
+                        as="h2"
+                        size="6xl"
+                        weight="bold"
+                        style={{
+                            lineHeight: '40px',
+                            marginBottom: '20px'
+                        }}
+                    >
                         成为AI时代的赢家
-                    </h2>
+                    </GradientText>
 
                     <p style={{
-                        color: '#D1D5DB',
-                        fontSize: '20px',
+                        color: 'var(--color-text-secondary)',
+                        fontSize: 'var(--font-size-2xl)',
+                        fontFamily: 'var(--font-family-primary)',
                         lineHeight: '28px',
                         marginBottom: '30px'
                     }}>
@@ -247,7 +248,7 @@ export function CTASection() {
                         </div>
                     </div>
 
-                    <div style={{ marginBottom: '60px' }}>
+                    <div style={{ marginBottom: 'var(--section-spacing-md)' }}>
                         <GradientButton
                             size="md"
                             fullWidth

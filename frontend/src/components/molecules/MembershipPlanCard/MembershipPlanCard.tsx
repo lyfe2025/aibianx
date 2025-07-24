@@ -142,7 +142,7 @@ export function MembershipPlanCard({
             </div>
 
             {/* 功能列表 */}
-            <div style={{ marginBottom: 'var(--spacing-6)' }}>
+            <div style={{ marginBottom: 'var(--title-margin-bottom-md)' }}>
                 <h4 style={{
                     fontSize: 'var(--font-size-sm)',
                     fontWeight: 600,

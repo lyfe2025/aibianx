@@ -96,7 +96,7 @@ export default function SettingsPage() {
           <div style={{ padding: '32px 40px' }}>
             <Container size="xl">
               {/* 页面标题 */}
-              <div style={{ marginBottom: '32px' }}>
+              <div style={{ marginBottom: 'var(--card-gap-lg)' }}>
                 <h1 style={{
                   color: '#FFFFFF',
                   fontSize: '24px',

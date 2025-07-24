@@ -23,7 +23,7 @@ export function FeaturesSection({
 }: FeaturesSectionProps) {
     return (
         <section className={className} style={{
-            padding: '120px 0',
+            padding: 'var(--page-padding-top-xl) 0 var(--page-padding-bottom-xl)',
             position: 'relative'
         }}>
             {/* 背景装饰 */}
@@ -59,14 +59,14 @@ export function FeaturesSection({
                 {/* 标题区域 */}
                 <div style={{
                     textAlign: 'center',
-                    marginBottom: '80px'
+                    marginBottom: 'var(--section-spacing-lg)'
                 }}>
                     <GradientText
                         size="7xl"
                         weight="bold"
                         style={{
                             display: 'block',
-                            marginBottom: 'var(--spacing-6)'
+                            marginBottom: 'var(--title-margin-bottom-md)'
                         }}
                     >
                         {title}
@@ -87,7 +87,7 @@ export function FeaturesSection({
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
                     gap: 'var(--spacing-8)',
-                    marginBottom: '80px'
+                    marginBottom: 'var(--section-spacing-lg)'
                 }}>
                     {features.map((feature, index) => (
                         <div
@@ -140,7 +140,7 @@ export function FeaturesSection({
                                 fontSize: 'var(--font-size-3xl)',
                                 fontWeight: '700',
                                 color: 'var(--color-text-primary)',
-                                marginBottom: 'var(--spacing-4)',
+                                marginBottom: 'var(--title-margin-bottom-md)',
                                 position: 'relative',
                                 zIndex: 1
                             }}>
@@ -168,7 +168,7 @@ export function FeaturesSection({
                     <p style={{
                         fontSize: 'var(--font-size-xl)',
                         color: 'var(--color-text-secondary)',
-                        marginBottom: 'var(--spacing-6)',
+                        marginBottom: 'var(--title-margin-bottom-md)',
                         lineHeight: '1.6'
                     }}>
                         准备好开始你的AI变现之旅了吗？立即加入我们，解锁更多专业内容和工具！

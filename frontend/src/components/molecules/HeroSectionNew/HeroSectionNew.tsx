@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Container, GradientButton, GradientText, Input, BackgroundDecoration, HeroBackground3D, AIBrainModel } from '@/components/ui'
 
 /**
@@ -17,6 +17,104 @@ export function HeroSectionNew() {
     const [email, setEmail] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
+    const subtitle1Ref = useRef<HTMLDivElement>(null)
+    const subtitle2Ref = useRef<HTMLDivElement>(null)
+
+    // 🔧 使用ref直接控制副标题颜色，实时监控并修复
+    useEffect(() => {
+        const forceSubtitleColor = (element: HTMLElement, label: string) => {
+            if (!element) return
+
+            // 移除所有可能干扰的样式
+            element.style.removeProperty('background')
+            element.style.removeProperty('background-image')
+            element.style.removeProperty('background-clip')
+            element.style.removeProperty('-webkit-background-clip')
+            element.style.removeProperty('-webkit-text-fill-color')
+
+                        // 强制设置颜色 - 多种方式确保生效（使用与周刊相同的颜色）
+            element.style.setProperty('color', '#9CA3AF', 'important')
+            element.style.setProperty('background', 'none', 'important')
+            element.style.setProperty('-webkit-text-fill-color', 'unset', 'important')
+            element.style.setProperty('text-fill-color', 'unset', 'important')
+            
+            // 直接设置属性
+            element.setAttribute('style', 
+                element.getAttribute('style')?.replace(/color:\s*[^;]+;?/g, '') + 
+                ';color: #9CA3AF !important;'
+            )
+
+            console.log(`🔧 修复${label}颜色`, element.style.color)
+        }
+
+        // 立即修复两个副标题
+        if (subtitle1Ref.current) {
+            forceSubtitleColor(subtitle1Ref.current, '第一行副标题')
+        }
+        if (subtitle2Ref.current) {
+            forceSubtitleColor(subtitle2Ref.current, '第二行副标题')
+        }
+
+        // 创建MutationObserver监控这两个特定元素
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    const target = mutation.target as HTMLElement
+                    if (target === subtitle1Ref.current) {
+                        const currentColor = target.style.color
+                        if (!currentColor.includes('#9CA3AF') && !currentColor.includes('156, 163, 175')) {
+                            console.log('🚨 第一行副标题颜色被修改，立即修复:', currentColor)
+                            forceSubtitleColor(target, '第一行副标题')
+                        }
+                    }
+                    if (target === subtitle2Ref.current) {
+                        const currentColor = target.style.color
+                        if (!currentColor.includes('#9CA3AF') && !currentColor.includes('156, 163, 175')) {
+                            console.log('🚨 第二行副标题颜色被修改，立即修复:', currentColor)
+                            forceSubtitleColor(target, '第二行副标题')
+                        }
+                    }
+                }
+            })
+        })
+
+        // 监控两个副标题元素
+        if (subtitle1Ref.current) {
+            observer.observe(subtitle1Ref.current, {
+                attributes: true,
+                attributeFilter: ['style']
+            })
+        }
+        if (subtitle2Ref.current) {
+            observer.observe(subtitle2Ref.current, {
+                attributes: true,
+                attributeFilter: ['style']
+            })
+        }
+
+        // 定期强制检查（作为最后防线）
+        const intervalId = setInterval(() => {
+            if (subtitle1Ref.current) {
+                const computedStyle = window.getComputedStyle(subtitle1Ref.current)
+                if (computedStyle.color !== 'rgb(156, 163, 175)') {
+                    console.log('🔄 定期检查：第一行副标题颜色异常，强制修复:', computedStyle.color)
+                    forceSubtitleColor(subtitle1Ref.current, '第一行副标题')
+                }
+            }
+            if (subtitle2Ref.current) {
+                const computedStyle = window.getComputedStyle(subtitle2Ref.current)
+                if (computedStyle.color !== 'rgb(156, 163, 175)') {
+                    console.log('🔄 定期检查：第二行副标题颜色异常，强制修复:', computedStyle.color)
+                    forceSubtitleColor(subtitle2Ref.current, '第二行副标题')
+                }
+            }
+        }, 500) // 每500ms检查一次
+
+        return () => {
+            observer.disconnect()
+            clearInterval(intervalId)
+        }
+    }, []) // 空依赖数组，确保只在组件挂载时运行
 
     const handleSubscribe = async () => {
         if (!email.trim()) {
@@ -84,13 +182,16 @@ export function HeroSectionNew() {
 
 
 
-            {/* 主要内容容器 - 修复换行问题，增加宽度 */}
+            {/* 主要内容容器 - 彻底避免SSR水合问题 */}
             <div style={{
-                width: '800px', // 增加宽度确保中文文字不换行
-                maxWidth: '90vw', // 在小屏幕上自适应
+                width: '100%', // 🔧 使用100%避免固定像素值造成的问题
+                maxWidth: '800px', // 🔧 使用固定最大宽度，避免vw单位造成的SSR差异
+                margin: '0 auto', // 居中显示
+                padding: '0 20px', // 添加内边距确保小屏幕显示正常
                 fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                 fontSize: '13.33px',
                 fontWeight: '400',
+                color: 'inherit', // 重置颜色继承，让子元素可以正确设置自己的颜色
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'stretch',
@@ -98,64 +199,78 @@ export function HeroSectionNew() {
                 position: 'relative',
                 zIndex: 10 // 确保显示在所有背景层之上
             }}>
-                {/* 主标题 - 修复换行问题 */}
-                <div style={{
-                    background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                    backgroundClip: 'text',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    fontSize: '64px',
-                    fontWeight: '700',
-                    lineHeight: '76.8px',
-                    textAlign: 'center',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    display: 'flex',
-                    whiteSpace: 'nowrap', // 防止换行
-                    overflow: 'hidden',
-                    marginLeft: '2px',
-                    marginRight: '2px',
-                    minHeight: '77px',
-                    marginBottom: '9.90px' // 替代gap使用margin
-                }}>
+                {/* 主标题 - 使用GradientText组件，添加与周刊相同的动画 */}
+                <GradientText
+                    as="h1"
+                    size="8xl"
+                    weight="bold"
+                    className="hero-title-animation"
+                    style={{
+                        textAlign: 'center',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        whiteSpace: 'nowrap', // 防止换行
+                        overflow: 'hidden',
+                        lineHeight: '76.8px',
+                        marginLeft: '2px',
+                        marginRight: '2px',
+                        minHeight: '77px',
+                        marginBottom: '9.90px' // 替代gap使用margin
+                    }}
+                >
                     AI变现从这里开始
-                </div>
+                </GradientText>
 
-                {/* 第一行副标题 - 修复换行问题 */}
-                <div style={{
-                    color: '#D1D5DB',
-                    fontSize: '20px',
-                    lineHeight: '30px',
-                    textAlign: 'center',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    display: 'flex',
-                    whiteSpace: 'nowrap', // 防止换行
-                    overflow: 'hidden',
-                    marginLeft: '9px',
-                    marginRight: '9px',
-                    minHeight: '30px',
-                    marginBottom: '0px' // 与第二行紧密连接
-                }}>
+                                {/* 第一行副标题 - 使用与周刊相同的颜色和动画 */}
+                <h2 
+                    ref={subtitle1Ref}
+                    className="hero-subtitle-animation"
+                    style={{
+                        color: '#9CA3AF', // 与周刊PageHeader完全相同的颜色
+                        fontSize: '20px',
+                        fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                        fontWeight: '400',
+                        lineHeight: '30px',
+                        textAlign: 'center' as const,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                        whiteSpace: 'nowrap' as const,
+                        overflow: 'hidden',
+                        marginLeft: '9px',
+                        marginRight: '9px',
+                        minHeight: '30px',
+                        marginBottom: '0px',
+                        margin: '0'
+                    }}
+                >
                     每周获取独家AI变现策略和工具，助你快速实现财务自由
-                </div>
+                </h2>
 
-                {/* 第二行副标题 - 修复换行问题 */}
-                <div style={{
-                    color: '#D1D5DB',
-                    fontSize: '20px',
-                    lineHeight: '30px',
-                    textAlign: 'center',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    display: 'flex',
-                    whiteSpace: 'nowrap', // 防止换行
-                    overflow: 'hidden',
-                    minHeight: '30px',
-                    marginBottom: '40px' // 替代表单的marginTop
-                }}>
+                                {/* 第二行副标题 - 使用与周刊相同的颜色和动画 */}
+                <h2 
+                    ref={subtitle2Ref}
+                    className="hero-subtitle-animation"
+                    style={{
+                        color: '#9CA3AF', // 与周刊PageHeader完全相同的颜色
+                        fontSize: '20px',
+                        fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                        fontWeight: '400',
+                        lineHeight: '30px',
+                        textAlign: 'center' as const,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                        whiteSpace: 'nowrap' as const,
+                        overflow: 'hidden',
+                        minHeight: '30px',
+                        marginBottom: '40px',
+                        margin: '0 0 40px 0'
+                    }}
+                >
                     订阅每周精选的AI变现干货，抢占AI红利时代的第一波机会
-                </div>
+                </h2>
 
                 {/* 邮箱订阅表单 - 修复换行问题 */}
                 <div style={{
@@ -267,16 +382,17 @@ export function HeroSectionNew() {
                     </div>
                 </div>
 
-                {/* AI神经网络大脑3D模型 - 绝对定位，避免被容器切割 */}
+                {/* AI神经网络大脑3D模型 - 限制在邮箱输入框下方的小区域 */}
                 <div style={{
                     position: 'absolute',
-                    bottom: '-300px', // 大幅向下延伸，确保完全不被切割
+                    top: '420px', // 位于邮箱输入框下方
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    width: '100%',
-                    maxWidth: '800px',
-                    zIndex: 8, // 在背景3D之上，但在主要内容之下
-                    pointerEvents: 'none' // 不干扰用户交互
+                    width: '600px', // 缩小宽度
+                    height: '200px', // 限制高度
+                    zIndex: 5, // 在背景之上，但在主要内容之下
+                    pointerEvents: 'none', // 不干扰用户交互
+                    overflow: 'hidden' // 确保3D内容不溢出
                 }}>
                     <AIBrainModel />
                 </div>
@@ -284,6 +400,27 @@ export function HeroSectionNew() {
 
             {/* 响应式样式 - 修复换行问题 */}
             <style jsx>{`
+                /* 标题动画 - 与周刊页面保持一致 */
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .hero-title-animation {
+                    animation: fadeInUp 1s ease-out;
+                    transform: translateZ(0);
+                }
+
+                .hero-subtitle-animation {
+                    animation: fadeInUp 1s ease-out 0.2s both;
+                    transform: translateZ(0);
+                }
                 /* 中等屏幕适配 (768px - 1199px) */
                 @media (max-width: 1199px) {
                     section > div {

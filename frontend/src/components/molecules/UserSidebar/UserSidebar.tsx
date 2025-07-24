@@ -37,22 +37,22 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
         {
             href: '/',
             label: '首页',
-            icon: 'nav-indicator'
+            icon: 'home-icon'
         },
         {
             href: '/profile',
             label: '个人中心',
-            icon: 'user-icon'
+            icon: 'profile-user-center'
         },
         {
             href: '/profile/bookmarks',
             label: '我的收藏',
-            icon: 'collect-icon-detail'
+            icon: 'bookmark-icon'
         },
         {
             href: '/profile/subscription',
             label: '我的订阅',
-            icon: 'rocket-icon'
+            icon: 'subscription-icon'
         }
     ]
 
@@ -60,7 +60,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
         {
             href: '/profile/settings',
             label: '设置',
-            icon: 'adjust-icon-detail'
+            icon: 'settings-icon'
         }
     ]
 
@@ -83,7 +83,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
             <div className={styles.userProfile}>
                 <div className={styles.userAvatar}>
                     <Avatar
-                        src="/images/avatars/author-li-mingyang.jpeg"
+                        src="/images/avatars/user-zhang-zhichuang.svg"
                         alt="张智创"
                         size="lg"
                         className={styles.avatarImage}
@@ -111,7 +111,9 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
             </nav>
 
             {/* 分割线 */}
-            <div className={styles.navDivider}></div>
+            <div className={styles.navDivider}>
+                <Icon name="divider-profile" className={styles.dividerIcon} />
+            </div>
 
             {/* 设置菜单 */}
             <nav className={styles.settingsNavigation}>
@@ -132,7 +134,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                     className={styles.navItem}
                     title="退出登录并返回首页"
                 >
-                    <Icon name="arrow-left" size="sm" className={styles.navIcon} />
+                    <Icon name="logout-icon" size="sm" className={styles.navIcon} />
                     <span className={styles.navLabel}>退出</span>
                 </button>
             </nav>

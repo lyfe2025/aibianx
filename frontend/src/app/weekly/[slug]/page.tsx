@@ -397,7 +397,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
             paddingLeft: '20px',
             paddingRight: '20px'
         }}>
-            <Container size="xl" style={{ maxWidth: '1240px' }}>
+            <Container size="xl">
                 {/* 主要内容区域 - 毛玻璃卡片 */}
                 <div
                     className="glass-card"

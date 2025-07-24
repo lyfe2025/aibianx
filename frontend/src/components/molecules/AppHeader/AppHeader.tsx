@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useModalStore } from '@/stores'
-import { Icon } from '@/components/ui'
+import { Icon, GradientText } from '@/components/ui'
 import Image from 'next/image'
 
 /**
@@ -101,10 +101,7 @@ export function AppHeader() {
         openModal('login')
     }
 
-    const handleSearch = () => {
-        // TODO: 实现搜索功能
-        console.log('Search clicked')
-    }
+
 
     const handleUserMenu = () => {
         // TODO: 实现用户菜单功能
@@ -177,21 +174,19 @@ export function AppHeader() {
                             }}
                         />
                     </div>
-                    <div style={{
-                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                        backgroundClip: 'text',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        fontFamily: 'var(--font-family-primary)',
-                        fontSize: '24px',
-                        lineHeight: '1', // 使用相对行高确保文字紧凑
-                        fontWeight: '600',
-                        display: 'flex',
-                        alignItems: 'center', // 确保与logo在同一水平线
-                        whiteSpace: 'nowrap' // 防止文字换行
-                    }}>
+                    <GradientText
+                        as="span"
+                        size="3xl"
+                        weight="semibold"
+                        style={{
+                            lineHeight: '1', // 使用相对行高确保文字紧凑
+                            display: 'flex',
+                            alignItems: 'center', // 确保与logo在同一水平线
+                            whiteSpace: 'nowrap' // 防止文字换行
+                        }}
+                    >
                         AI变现之路
-                    </div>
+                    </GradientText>
                 </Link>
 
                 {/* 右侧导航区域 */}
@@ -337,46 +332,6 @@ export function AppHeader() {
                         </div>
                     </nav>
 
-                    {/* 搜索图标按钮 - 精确位置和样式 */}
-                    <button
-                        onClick={handleSearch}
-                        style={{
-                            background: 'rgba(26, 26, 26, 0.50)',
-                            borderStyle: 'solid',
-                            borderColor: 'rgba(59, 130, 246, 0.20)',
-                            borderWidth: '1px',
-                            borderRadius: '8px',
-                            padding: '10px',
-                            display: 'flex',
-                            width: '40px',
-                            height: '40px', // 明确设置高度
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginLeft: '32px',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)' // 平滑hover效果
-                        }}
-                        className="icon-button inner-border"
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.40)'
-                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.70)'
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.20)'
-                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.50)'
-                        }}
-                    >
-                        <Icon
-                            name="search-icon"
-                            style={{
-                                color: 'rgb(156, 163, 175)',
-                                width: '20px',
-                                height: '20px',
-                                backgroundSize: 'cover'
-                            }}
-                        />
-                    </button>
-
                     {/* 用户图标按钮 - 精确位置和样式 */}
                     <button
                         onClick={handleUserMenu}
@@ -392,7 +347,7 @@ export function AppHeader() {
                             height: '40px', // 明确设置高度
                             justifyContent: 'center',
                             alignItems: 'center',
-                            marginLeft: '12px',
+                            marginLeft: '32px',
                             cursor: 'pointer',
                             transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
                         }}
@@ -413,6 +368,48 @@ export function AppHeader() {
                                 width: '20px',
                                 height: '20px',
                                 backgroundSize: 'cover'
+                            }}
+                        />
+                    </button>
+
+                    {/* 主题切换按钮 - 暗亮模式切换 */}
+                    <button
+                        onClick={() => {
+                            // TODO: 实现主题切换功能
+                            console.log('Theme toggle clicked')
+                        }}
+                        style={{
+                            background: 'rgba(26, 26, 26, 0.50)',
+                            borderStyle: 'solid',
+                            borderColor: 'rgba(59, 130, 246, 0.20)',
+                            borderWidth: '1px',
+                            borderRadius: '8px',
+                            padding: '10px',
+                            display: 'flex',
+                            width: '40px',
+                            height: '40px', // 与其他按钮高度一致
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginLeft: '12px',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                        }}
+                        className="icon-button inner-border"
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.40)'
+                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.70)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.20)'
+                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.50)'
+                        }}
+                        title="切换主题"
+                    >
+                        <Icon
+                            name="theme-toggle-light"
+                            style={{
+                                width: '20px',
+                                height: '20px'
                             }}
                         />
                     </button>

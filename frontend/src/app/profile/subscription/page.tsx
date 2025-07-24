@@ -63,7 +63,7 @@ export default function SubscriptionPage() {
           <div style={{ padding: '32px 40px' }}>
             <Container size="xl">
               {/* 页面标题 */}
-              <div style={{ marginBottom: '32px' }}>
+              <div style={{ marginBottom: 'var(--card-gap-lg)' }}>
                 <h1 style={{
                   color: '#FFFFFF',
                   fontSize: '24px',
@@ -80,7 +80,7 @@ export default function SubscriptionPage() {
                 border: '1px solid rgba(255, 255, 255, 0.10)',
                 borderRadius: '12px',
                 padding: '25px',
-                marginBottom: '32px'
+                marginBottom: 'var(--card-gap-lg)'
               }}>
                 <div style={{
                   display: 'flex',
@@ -169,7 +169,7 @@ export default function SubscriptionPage() {
               </div>
 
               {/* 订阅历史 */}
-              <div style={{ marginBottom: '32px' }}>
+              <div style={{ marginBottom: 'var(--card-gap-lg)' }}>
                 <h2 style={{
                   color: '#FFFFFF',
                   fontSize: '20px',

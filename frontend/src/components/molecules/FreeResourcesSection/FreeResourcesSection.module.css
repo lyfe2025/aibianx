@@ -2,11 +2,12 @@
 
 /* 桌面端 (1440px+) - 1:1还原设计稿 */
 .freeResourcesSection {
-    padding-top: 160px;
-    /* 从212px减少到160px，减少52px */
-    padding-bottom: 64px;
-    /* 从48px增加到64px，增加16px，让底部间隔更协调 */
-    background: transparent; /* 改为透明，让粒子可见 */
+    padding-top: 48px !important;
+    /* 强制应用48px，减少间距使布局更紧凑 */
+    padding-bottom: 48px !important;
+    /* 强制应用48px，减少间距使布局更紧凑 */
+    background: transparent;
+    /* 改为透明，让粒子可见 */
     position: relative;
 }
 
@@ -26,10 +27,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    /* 从16px增加到20px，增加4px，让主副标题间隔更舒适 */
-    margin-bottom: 48px;
-    /* 从32px增加到48px，增加16px，让标题和卡片间隔更协调 */
+    gap: 16px;
+    /* 从20px减少到16px，减少4px，让主副标题间隔更紧凑 */
+    margin-bottom: 32px;
+    /* 从48px减少到32px，减少16px，让标题和卡片间隔更合理 */
     text-align: center;
     width: 100%;
     max-width: 1440px;
@@ -291,10 +292,10 @@
 /* 小屏幕 (480px - 767px) */
 @media (max-width: 767px) {
     .freeResourcesSection {
-        padding-top: 100px;
-        /* 从120px减少到100px，减少20px */
-        padding-bottom: 40px;
-        /* 从32px增加到40px，增加8px */
+        padding-top: 40px !important;
+        /* 移动端强制应用40px，保持紧凑布局 */
+        padding-bottom: 40px !important;
+        /* 移动端强制应用40px，保持紧凑布局 */
     }
 
     .titleContainer {
@@ -367,10 +368,10 @@
 /* 超小屏幕 (320px - 479px) */
 @media (max-width: 479px) {
     .freeResourcesSection {
-        padding-top: 60px;
-        /* 从80px减少到60px，减少20px */
-        padding-bottom: 32px;
-        /* 从24px增加到32px，增加8px */
+        padding-top: 32px !important;
+        /* 超小屏幕强制应用32px，保持更紧凑的布局 */
+        padding-bottom: 32px !important;
+        /* 超小屏幕强制应用32px，保持更紧凑的布局 */
     }
 
     .titleContainer {

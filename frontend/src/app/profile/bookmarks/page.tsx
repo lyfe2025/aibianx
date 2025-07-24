@@ -100,7 +100,7 @@ export default function BookmarksPage() {
         <main style={{ flex: 1 }}>
           <div style={{ padding: '32px 40px' }}>
             <Container size="xl">
-              <div style={{ marginBottom: '32px' }}>
+              <div style={{ marginBottom: 'var(--card-gap-lg)' }}>
                 {/* 页面标题 */}
                 <h1 style={{
                   color: '#FFFFFF',
@@ -221,7 +221,7 @@ export default function BookmarksPage() {
                 border: '1px solid rgba(42, 42, 42, 0.70)',
                 borderRadius: '12px',
                 padding: '21px',
-                marginBottom: '32px'
+                marginBottom: 'var(--card-gap-lg)'
               }}>
                 <div style={{
                   display: 'flex',

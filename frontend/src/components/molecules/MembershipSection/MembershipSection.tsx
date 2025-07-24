@@ -59,12 +59,12 @@ export function MembershipSection({
 
     return (
         <section className={className} style={{
-            padding: '80px 0'
+            padding: 'var(--page-padding-top-md) 0 var(--page-padding-bottom-md)'
         }}>
             {/* 标题区域 */}
             <div style={{
                 textAlign: 'center',
-                marginBottom: '60px'
+                marginBottom: 'var(--section-spacing-md)'
             }}>
                 <h2 style={{
                     fontSize: 'var(--font-size-7xl)',
@@ -73,7 +73,7 @@ export function MembershipSection({
                     backgroundClip: 'text',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
-                    marginBottom: 'var(--spacing-4)'
+                    marginBottom: 'var(--title-margin-bottom-md)'
                 }}>
                     {title}
                 </h2>
@@ -134,7 +134,7 @@ export function MembershipSection({
                     {/* 倒计时 */}
                     <div style={{
                         position: 'relative',
-                        marginBottom: 'var(--spacing-6)'
+                        marginBottom: 'var(--title-margin-bottom-md)'
                     }}>
                         <h3 style={{
                             fontSize: 'var(--font-size-3xl)',
@@ -148,7 +148,7 @@ export function MembershipSection({
                         <div style={{
                             display: 'flex',
                             gap: 'var(--spacing-3)',
-                            marginBottom: 'var(--spacing-4)'
+                            marginBottom: 'var(--title-margin-bottom-md)'
                         }}>
                             {[
                                 { value: timeLeft.days, label: '天' },
@@ -184,7 +184,7 @@ export function MembershipSection({
                     {/* 价格信息 */}
                     <div style={{
                         position: 'relative',
-                        marginBottom: 'var(--spacing-6)'
+                        marginBottom: 'var(--title-margin-bottom-md)'
                     }}>
                         <div style={{
                             display: 'flex',
@@ -237,13 +237,13 @@ export function MembershipSection({
                     {/* 会员特权列表 */}
                     <div style={{
                         position: 'relative',
-                        marginBottom: 'var(--spacing-6)'
+                        marginBottom: 'var(--title-margin-bottom-md)'
                     }}>
                         <h4 style={{
                             fontSize: 'var(--font-size-xl)',
                             fontWeight: '600',
                             color: 'var(--color-text-primary)',
-                            marginBottom: 'var(--spacing-4)'
+                            marginBottom: 'var(--title-margin-bottom-md)'
                         }}>
                             会员特权：
                         </h4>

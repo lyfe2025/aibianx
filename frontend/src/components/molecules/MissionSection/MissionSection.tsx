@@ -1,6 +1,6 @@
 'use client'
 
-import { Icon } from '@/components/ui'
+import { Icon, GradientText } from '@/components/ui'
 
 interface MissionItem {
     icon: string
@@ -24,26 +24,26 @@ export function MissionSection({
 }: MissionSectionProps) {
     return (
         <section className={className} style={{
-            padding: '80px 0',
+            padding: 'var(--page-padding-top-md) 0 var(--page-padding-bottom-md)',
             textAlign: 'center'
         }}>
             {/* 标题区域 */}
             <div style={{
-                marginBottom: '60px'
+                marginBottom: 'var(--section-spacing-md)'
             }}>
-                <h2 style={{
-                    fontSize: 'var(--font-size-7xl)',
-                    fontWeight: '700',
-                    background: 'var(--gradient-primary)',
-                    backgroundClip: 'text',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    marginBottom: 'var(--spacing-4)'
-                }}>
+                <GradientText
+                    as="h2"
+                    size="7xl"
+                    weight="bold"
+                    style={{
+                        marginBottom: 'var(--title-margin-bottom-md)'
+                    }}
+                >
                     {title}
-                </h2>
+                </GradientText>
                 <p style={{
                     fontSize: 'var(--font-size-2xl)',
+                    fontFamily: 'var(--font-family-primary)',
                     color: 'var(--color-text-secondary)',
                     maxWidth: '600px',
                     margin: '0 auto',
@@ -91,7 +91,7 @@ export function MissionSection({
                             fontSize: 'var(--font-size-3xl)',
                             fontWeight: '700',
                             color: 'var(--color-text-primary)',
-                            marginBottom: 'var(--spacing-4)'
+                            marginBottom: 'var(--title-margin-bottom-md)'
                         }}>
                             {mission.title}
                         </h3>

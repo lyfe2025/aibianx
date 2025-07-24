@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Container, Icon, GradientText, GradientButton } from '@/components/ui'
-import { UserSidebar } from '@/components/molecules'
+import { UserSidebar, BookmarkCard } from '@/components/molecules'
 
 export default function ProfilePage() {
   // 统计数据
@@ -10,25 +10,25 @@ export default function ProfilePage() {
     {
       title: '已购课程',
       value: '12',
-      icon: 'collect-icon-detail',
+      icon: 'courses-icon',
       gradient: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)'
     },
     {
       title: '学习进度',
       value: '45%',
-      icon: 'success-check',
+      icon: 'progress-icon',
       gradient: 'linear-gradient(135deg, #22C55E 15%, #34D399 85%)'
     },
     {
       title: '收藏资源',
       value: '28',
-      icon: 'like-icon-detail',
+      icon: 'resources-icon',
       gradient: 'linear-gradient(135deg, #A855F7 15%, #EC4899 85%)'
     },
     {
       title: '积分',
       value: '3,250',
-      icon: 'membership-check',
+      icon: 'points-icon',
       gradient: 'linear-gradient(135deg, #FB923C 15%, #F59E0B 85%)'
     }
   ]
@@ -38,28 +38,33 @@ export default function ProfilePage() {
     {
       title: 'Midjourney高级提示词大全',
       category: 'AI工具',
-      image: '/images/articles/midjourney-article.jpeg',
+      image: '/images/midjourney-prompts.jpeg',
       collectedAt: '收藏于 3 天前'
     },
     {
       title: 'AI辅助内容创作工作流',
       category: '教程',
-      image: '/images/articles/ai-content-automation.svg',
+      image: '/images/ai-content-workflow.jpeg',
       collectedAt: '收藏于 3 天前'
     },
     {
       title: 'GPT-4高级应用案例',
       category: '案例',
-      image: '/images/articles/gpt4-article.jpeg',
+      image: '/images/gpt4-advanced-cases.jpeg',
       collectedAt: '收藏于 3 天前'
     },
     {
       title: 'AI变现新思路：垂直领域应用',
       category: '文章',
-      image: '/images/articles/ai-revenue-model.jpeg',
+      image: '/images/ai-monetization-vertical.jpeg',
       collectedAt: '收藏于 3 天前'
     }
   ]
+
+  const handleBookmarkClick = (item: typeof bookmarkedItems[0]) => {
+    console.log('点击收藏内容:', item.title)
+    // 这里可以添加跳转到文章详情页面的逻辑
+  }
 
   return (
     <div className="min-h-screen bg-transparent"> {/* 改为透明，让粒子可见 */}
@@ -72,7 +77,7 @@ export default function ProfilePage() {
           <div style={{ padding: '32px 40px' }}>
             <Container size="xl">
               {/* 页面标题 */}
-              <div style={{ marginBottom: '32px' }}>
+              <div style={{ marginBottom: 'var(--card-gap-lg)' }}>
                 <h1 style={{
                   color: '#FFFFFF',
                   fontSize: '24px',
@@ -169,7 +174,7 @@ export default function ProfilePage() {
                       alignItems: 'center',
                       gap: '8px'
                     }}>
-                      <Icon name="guidance-icon" size="xs" style={{ color: '#FFFFFF' }} />
+                      <Icon name="strategy-icon" size="xs" style={{ color: '#FFFFFF' }} />
                       <span style={{ color: '#FFFFFF', fontSize: '14px' }}>邀请攻略</span>
                     </div>
                     <div style={{
@@ -180,7 +185,7 @@ export default function ProfilePage() {
                       alignItems: 'center',
                       gap: '8px'
                     }}>
-                      <Icon name="rocket-icon" size="xs" style={{ color: '#FFFFFF' }} />
+                      <Icon name="record-icon" size="xs" style={{ color: '#FFFFFF' }} />
                       <span style={{ color: '#FFFFFF', fontSize: '14px' }}>提现记录</span>
                     </div>
                   </div>
@@ -210,7 +215,7 @@ export default function ProfilePage() {
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
-                      <Icon name="share-link-detail" size="lg" style={{ color: '#FFFFFF' }} />
+                      <Icon name="invite-code-icon" size="lg" style={{ color: '#FFFFFF' }} />
                     </div>
                     <div>
                       <div style={{
@@ -232,7 +237,7 @@ export default function ProfilePage() {
                           fontSize: '20px',
                           lineHeight: '28px'
                         }}>AI7859</span>
-                        <Icon name="share-link-detail" size="xs" style={{ color: '#60A5FA' }} />
+                        <Icon name="copy-icon" size="xs" style={{ color: '#60A5FA' }} />
                         <span style={{ color: '#60A5FA', fontSize: '14px' }}>复制</span>
                       </div>
                     </div>
@@ -252,7 +257,7 @@ export default function ProfilePage() {
                         justifyContent: 'center',
                         margin: '0 auto 8px'
                       }}>
-                        <Icon name="users-stat" size="md" style={{ color: '#FFFFFF' }} />
+                        <Icon name="invited-count-icon" size="md" style={{ color: '#FFFFFF' }} />
                       </div>
                       <div style={{
                         color: '#D1D5DB',
@@ -280,7 +285,7 @@ export default function ProfilePage() {
                         justifyContent: 'center',
                         margin: '0 auto 8px'
                       }}>
-                        <Icon name="clock-icon" size="md" style={{ color: '#FFFFFF' }} />
+                        <Icon name="pending-activation-icon" size="md" style={{ color: '#FFFFFF' }} />
                       </div>
                       <div style={{
                         color: '#D1D5DB',
@@ -308,7 +313,7 @@ export default function ProfilePage() {
                         justifyContent: 'center',
                         margin: '0 auto 8px'
                       }}>
-                        <Icon name="rocket-icon" size="md" style={{ color: '#FFFFFF' }} />
+                        <Icon name="commission-icon" size="md" style={{ color: '#FFFFFF' }} />
                       </div>
                       <div style={{
                         color: '#D1D5DB',
@@ -349,7 +354,7 @@ export default function ProfilePage() {
                   cursor: 'pointer'
                 }}>
                   <span style={{ marginRight: '4px' }}>查看全部</span>
-                  <Icon name="arrow-right" size="xs" style={{ color: '#60A5FA' }} />
+                  <Icon name="arrow-right-blue" size="xs" style={{ color: '#60A5FA' }} />
                 </div>
               </div>
 
@@ -360,60 +365,14 @@ export default function ProfilePage() {
                 marginBottom: '40px'
               }}>
                 {bookmarkedItems.map((item, index) => (
-                  <div key={index} style={{
-                    background: 'rgba(26, 26, 26, 0.30)',
-                    backdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(42, 42, 42, 0.70)',
-                    borderRadius: '12px',
-                    overflow: 'hidden'
-                  }}>
-                    <div style={{
-                      width: '100%',
-                      height: '128px',
-                      backgroundImage: `url(${item.image})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      position: 'relative',
-                      padding: '8px'
-                    }}>
-                      <div style={{
-                        background: 'rgba(0, 0, 0, 0.50)',
-                        borderRadius: '9999px',
-                        padding: '4px 8px',
-                        color: '#FFFFFF',
-                        fontSize: '12px',
-                        display: 'inline-block'
-                      }}>{item.category}</div>
-                    </div>
-                    <div style={{ padding: '12px' }}>
-                      <h4 style={{
-                        color: '#FFFFFF',
-                        fontSize: '14px',
-                        fontWeight: '500',
-                        lineHeight: '18px',
-                        margin: '0 0 8px 0'
-                      }}>{item.title}</h4>
-                      <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                      }}>
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px'
-                        }}>
-                          <Icon name="clock-icon" size="xs" style={{ color: '#FACC15' }} />
-                          <span style={{
-                            color: '#FACC15',
-                            fontSize: '12px',
-                            lineHeight: '16px'
-                          }}>{item.collectedAt}</span>
-                        </div>
-                        <Icon name="share-link-detail" size="xs" style={{ color: '#9CA3AF' }} />
-                      </div>
-                    </div>
-                  </div>
+                  <BookmarkCard
+                    key={index}
+                    title={item.title}
+                    category={item.category}
+                    image={item.image}
+                    collectedAt={item.collectedAt}
+                    onClick={() => handleBookmarkClick(item)}
+                  />
                 ))}
               </div>
 
@@ -439,7 +398,7 @@ export default function ProfilePage() {
                   cursor: 'pointer'
                 }}>
                   <span style={{ marginRight: '4px' }}>订阅历史</span>
-                  <Icon name="arrow-right" size="xs" style={{ color: '#60A5FA' }} />
+                  <Icon name="arrow-right-blue" size="xs" style={{ color: '#60A5FA' }} />
                 </div>
               </div>
 
@@ -490,7 +449,7 @@ export default function ProfilePage() {
                   </div>
                   <GradientButton size="md" variant="primary">
                     立即续费
-                    <Icon name="arrow-right" size="xs" style={{ marginLeft: '8px' }} />
+                    <Icon name="renew-icon" size="xs" style={{ marginLeft: '8px' }} />
                   </GradientButton>
                 </div>
 
@@ -518,7 +477,7 @@ export default function ProfilePage() {
                       borderRadius: '50%',
                       padding: '10px'
                     }}>
-                      <Icon name="membership-check" size="sm" style={{ color: '#EAB308' }} />
+                      <Icon name="privilege-icon" size="sm" style={{ color: '#EAB308' }} />
                     </div>
                     <div>
                       <div style={{
@@ -535,7 +494,7 @@ export default function ProfilePage() {
                       }}>查看您的专属会员权益和使用方式</div>
                     </div>
                   </div>
-                  <Icon name="arrow-right" size="sm" style={{ color: '#60A5FA' }} />
+                  <Icon name="privilege-arrow" size="sm" style={{ color: '#60A5FA' }} />
                 </div>
               </div>
             </Container>

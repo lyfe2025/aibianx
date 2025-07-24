@@ -1,0 +1,14 @@
+
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+	<defs>
+		<clipPath id="clipPath0:0:0">
+			<path d="M0 0L16 0L16 16L0 16L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clipPath0:0:0)">
+		<path d="M-0.5 0C-0.5 0.27614 -0.27614 0.5 0 0.5L7.5 0.5C7.77614 0.5 8 0.27614 8 0C8 -0.27614 7.77614 -0.5 7.5 -0.5L0 -0.5C-0.27614 -0.5 -0.5 -0.27614 -0.5 0ZM9 0C9 0.27614 9.22386 0.5 9.5 0.5L12 0.5C12.2761 0.5 12.5 0.27614 12.5 0C12.5 -0.27614 12.2761 -0.5 12 -0.5L9.5 -0.5C9.22386 -0.5 9 -0.27614 9 0ZM-0.5 4C-0.5 4.27614 -0.27614 4.5 0 4.5L2.5 4.5C2.77614 4.5 3 4.27614 3 4C3 3.72386 2.77614 3.5 2.5 3.5L0 3.5C-0.27614 3.5 -0.5 3.72386 -0.5 4ZM4 4C4 4.27614 4.22386 4.5 4.5 4.5L12 4.5C12.2761 4.5 12.5 4.27614 12.5 4C12.5 3.72386 12.2761 3.5 12 3.5L4.5 3.5C4.22386 3.5 4 3.72386 4 4ZM-0.5 8C-0.5 8.27614 -0.27614 8.5 0 8.5L7.5 8.5C7.77614 8.5 8 8.27614 8 8C8 7.72386 7.77614 7.5 7.5 7.5L0 7.5C-0.27614 7.5 -0.5 7.72386 -0.5 8ZM9 8C9 8.27614 9.22386 8.5 9.5 8.5L12 8.5C12.2761 8.5 12.5 8.27614 12.5 8C12.5 7.72386 12.2761 7.5 12 7.5L9.5 7.5C9.22386 7.5 9 7.72386 9 8Z" fill-rule="evenodd" transform="matrix(1 0 0 1 2 4)" fill="rgb(255, 255, 255)"/>
+		<circle cx="1" cy="1" r="1" stroke-width="1" transform="matrix(1 0 0 1 9.5 3)" stroke="rgb(255, 255, 255)" fill="transparent"/>
+		<circle cx="1" cy="1" r="1" stroke-width="1" transform="matrix(1 0 0 1 4.5 7)" stroke="rgb(255, 255, 255)" fill="transparent"/>
+		<circle cx="1" cy="1" r="1" stroke-width="1" transform="matrix(1 0 0 1 9.5 11)" stroke="rgb(255, 255, 255)" fill="transparent"/>
+	</g>
+</svg>

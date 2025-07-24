@@ -1,0 +1,134 @@
+.search-filter {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.search-filter__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+/* 筛选按钮组 */
+.filter-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.filter-button {
+    background: rgba(26, 26, 26, 0.60);
+    border: 1px solid rgba(42, 42, 42, 0.70);
+    border-radius: 8px;
+    padding: 9px 17px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+    line-height: 20px;
+}
+
+.filter-button:hover {
+    background: rgba(26, 26, 26, 0.80);
+    border-color: rgba(59, 130, 246, 0.30);
+}
+
+.filter-button--active {
+    background: rgba(26, 26, 26, 0.60);
+    border-color: rgba(59, 130, 246, 0.50);
+}
+
+.filter-button__label {
+    white-space: nowrap;
+}
+
+.filter-icon,
+.chevron-icon {
+    color: var(--color-text-primary);
+    flex-shrink: 0;
+}
+
+/* 搜索控制区域 */
+.search-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.search-input-wrapper {
+    width: 256px;
+}
+
+.search-input {
+    background: rgba(26, 26, 26, 0.60);
+    border: 1px solid rgba(42, 42, 42, 0.70);
+    border-radius: 8px;
+    width: 100%;
+}
+
+.search-input::placeholder {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-base);
+}
+
+/* 视图控制按钮 */
+.view-controls {
+    display: flex;
+    border: 1px solid rgba(42, 42, 42, 0.70);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.view-button {
+    background: rgba(26, 26, 26, 0.60);
+    border: none;
+    padding: 8px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--color-text-muted);
+}
+
+.view-button:first-child {
+    border-right: 1px solid rgba(42, 42, 42, 0.70);
+}
+
+.view-button:hover {
+    background: rgba(59, 130, 246, 0.10);
+    color: var(--color-text-secondary);
+}
+
+.view-button--active {
+    background: rgba(59, 130, 246, 0.20);
+    color: var(--color-text-primary);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .search-filter__content {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .filter-buttons {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .search-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .search-input-wrapper {
+        flex: 1;
+        max-width: none;
+    }
+}

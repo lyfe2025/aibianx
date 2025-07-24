@@ -117,7 +117,7 @@ export function MembershipModal() {
 
                             <div style={{
                                 textAlign: 'center',
-                                marginBottom: 'var(--spacing-4)'
+                                marginBottom: 'var(--title-margin-bottom-md)'
                             }}>
                                 <h3 style={{
                                     fontSize: 'var(--font-size-lg)',

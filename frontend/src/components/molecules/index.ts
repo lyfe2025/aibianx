@@ -35,6 +35,7 @@ export * from './CollectionCard'
 export * from './SearchFilter'
 export * from './InviteSection'
 export * from './SettingsForm'
+export * from './BookmarkCard'
 
 // 新设计稿首页组件
 export { HeroSectionNew } from './HeroSectionNew'
