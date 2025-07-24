@@ -31,7 +31,8 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
         { label: '筛选', value: '筛选' }
     ]
 
-    const handleSearchChange = (value: string) => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
         setSearchQuery(value)
         onSearch?.(value)
     }
@@ -69,7 +70,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
                             placeholder="搜索收藏内容"
                             value={searchQuery}
                             onChange={handleSearchChange}
-                            leftIcon="search-icon"
+                            icon="search-icon"
                             className={styles.searchInput}
                         />
                     </div>

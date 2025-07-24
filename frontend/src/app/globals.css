@@ -815,6 +815,36 @@ a {
   }
 }
 
+/* ===== Container 容器样式 ===== */
+
+/* 基础容器样式 */
+.container {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* 容器尺寸变体 */
+.container--sm {
+  max-width: 640px;
+  padding: 0 var(--spacing-4);
+}
+
+.container--md {
+  max-width: 768px;
+  padding: 0 var(--spacing-6);
+}
+
+.container--lg {
+  max-width: 1024px;
+  padding: 0 var(--spacing-6);
+}
+
+.container--xl {
+  max-width: 1440px;
+  padding: 0 var(--spacing-8);
+}
+
 /* ===== 工具类样式 ===== */
 
 /* 隐藏类 */
@@ -1078,4 +1108,14 @@ html {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* 主内容区域文章卡片样式 */
+.main-content-article-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.main-content-article-card:active {
+  transform: translateY(0);
 }

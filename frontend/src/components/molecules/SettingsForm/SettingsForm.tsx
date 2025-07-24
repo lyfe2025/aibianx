@@ -102,7 +102,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                     <Input
                         label="昵称"
                         value={formData.nickname}
-                        onChange={(value) => handleInputChange('nickname', value)}
+                        onChange={(e) => handleInputChange('nickname', e.target.value)}
                         disabled={!isEditing}
                         placeholder="请输入昵称"
                     />
@@ -110,14 +110,14 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                         label="邮箱"
                         type="email"
                         value={formData.email}
-                        onChange={(value) => handleInputChange('email', value)}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
                         disabled={!isEditing}
                         placeholder="请输入邮箱地址"
                     />
                     <Input
                         label="手机号"
                         value={formData.phone}
-                        onChange={(value) => handleInputChange('phone', value)}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
                         disabled={!isEditing}
                         placeholder="请输入手机号"
                     />
@@ -166,21 +166,21 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                         label="当前密码"
                         type="password"
                         value={formData.currentPassword}
-                        onChange={(value) => handleInputChange('currentPassword', value)}
+                        onChange={(e) => handleInputChange('currentPassword', e.target.value)}
                         placeholder="请输入当前密码"
                     />
                     <Input
                         label="新密码"
                         type="password"
                         value={formData.newPassword}
-                        onChange={(value) => handleInputChange('newPassword', value)}
+                        onChange={(e) => handleInputChange('newPassword', e.target.value)}
                         placeholder="请输入新密码"
                     />
                     <Input
                         label="确认密码"
                         type="password"
                         value={formData.confirmPassword}
-                        onChange={(value) => handleInputChange('confirmPassword', value)}
+                        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                         placeholder="请再次输入新密码"
                     />
                 </div>
@@ -294,7 +294,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
           <button
             key={tab.key}
             className={`${styles.tabButton} ${activeTab === tab.key ? styles.tabButtonActive : ''}`}
-            onClick={() => setActiveTab(tab.key as 'basic' | 'security' | 'notification')}
+            onClick={() => setActiveTab(tab.key as 'profile' | 'security' | 'notifications')}
           >
             <Icon name={tab.icon} size="sm" />
             {tab.label}

@@ -57,9 +57,6 @@ export function FreeResourcesSection() {
 
     return (
         <section className={styles.freeResourcesSection}>
-            {/* 装饰性渐变背景 */}
-            <div className={styles.decorationBg} />
-
             <Container>
                 {/* 区块标题 - 1:1还原设计稿 */}
                 <div className={styles.titleContainer}>

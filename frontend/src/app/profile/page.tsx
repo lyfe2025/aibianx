@@ -344,12 +344,11 @@ export default function ProfilePage() {
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '4px',
                   color: '#60A5FA',
                   fontSize: '14px',
                   cursor: 'pointer'
                 }}>
-                  <span>查看全部</span>
+                  <span style={{ marginRight: '4px' }}>查看全部</span>
                   <Icon name="arrow-right" size="xs" style={{ color: '#60A5FA' }} />
                 </div>
               </div>
@@ -435,12 +434,11 @@ export default function ProfilePage() {
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '4px',
                   color: '#60A5FA',
                   fontSize: '14px',
                   cursor: 'pointer'
                 }}>
-                  <span>订阅历史</span>
+                  <span style={{ marginRight: '4px' }}>订阅历史</span>
                   <Icon name="arrow-right" size="xs" style={{ color: '#60A5FA' }} />
                 </div>
               </div>

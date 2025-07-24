@@ -82,8 +82,8 @@ export function ArticlesSection() {
                 </div>
 
                 {/* 文章列表 */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    {articles.map((article) => (
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {articles.map((article, index) => (
                         <div
                             key={article.id}
                             style={{
@@ -91,8 +91,8 @@ export function ArticlesSection() {
                                 borderRadius: '12px',
                                 padding: '16px',
                                 margin: '0 1px',
-                                display: 'flex',
-                                gap: '16px'
+                                marginBottom: index < articles.length - 1 ? '16px' : '0',
+                                display: 'flex'
                             }}
                         >
                             {/* 文章封面 */}
@@ -106,7 +106,9 @@ export function ArticlesSection() {
                                 justifyContent: 'center',
                                 color: '#FFFFFF',
                                 fontSize: '14px',
-                                fontWeight: 600
+                                fontWeight: 600,
+                                marginRight: '16px',
+                                flexShrink: 0
                             }}>
                                 封面图
                             </div>
@@ -175,7 +177,9 @@ export function ArticlesSection() {
                         color: '#FFFFFF',
                         fontSize: '13.33px',
                         lineHeight: '15px',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        minWidth: '120px',
+                        whiteSpace: 'nowrap'
                     }}>
                         查看更多
                     </button>

@@ -57,7 +57,20 @@ export const Icon = ({
         xl: 32
     }
 
-    const iconSize = sizeMap[size]
+    // 从style中提取width和height，如果存在则优先使用
+    const parseSize = (size: string | number | undefined): number | null => {
+        if (!size) return null
+        if (typeof size === 'number') return size
+        // 提取数字部分，如 "24px" -> 24
+        const match = String(size).match(/(\d+)/)
+        return match ? parseInt(match[1]) : null
+    }
+    
+    const customWidth = parseSize(props.style?.width)
+    const customHeight = parseSize(props.style?.height)
+    
+    const iconWidth = customWidth || sizeMap[size]
+    const iconHeight = customHeight || sizeMap[size]
 
     // 获取图标路径，优先使用映射，否则使用根目录
     const iconPath = iconPathMap[name] ? `icons/${iconPathMap[name]}.svg` : `icons/${name}.svg`
@@ -71,8 +84,8 @@ export const Icon = ({
             <Image
                 src={`/${iconPath}`}
                 alt={name}
-                width={iconSize}
-                height={iconSize}
+                width={iconWidth}
+                height={iconHeight}
                 style={{ display: 'block' }}
             />
         </span>

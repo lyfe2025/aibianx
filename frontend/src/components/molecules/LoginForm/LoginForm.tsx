@@ -284,7 +284,6 @@ export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormPro
                         openModal('register')
                     }}
                     style={{
-                        background: 'none',
                         border: 'none',
                         background: 'var(--gradient-primary)',
                         backgroundClip: 'text',

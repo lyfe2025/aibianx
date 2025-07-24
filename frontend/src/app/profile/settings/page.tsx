@@ -648,7 +648,7 @@ export default function SettingsPage() {
                                   key={option}
                                   onClick={() => handleInputChange(`privacy.${item.key}`, option.toLowerCase())}
                                   style={{
-                                    background: formData.privacy[item.key] === option.toLowerCase()
+                                    background: formData.privacy[item.key as keyof typeof formData.privacy] === option.toLowerCase()
                                       ? 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)'
                                       : 'rgba(255, 255, 255, 0.10)',
                                     border: 'none',

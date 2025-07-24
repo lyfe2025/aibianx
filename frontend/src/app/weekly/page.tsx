@@ -127,6 +127,120 @@ const mockArticles: ArticleCardData[] = [
         ],
         slug: 'ai-painting-workflow',
         isPremium: true
+    },
+    {
+        id: '7',
+        title: 'AI自动化内容创作：打造个人品牌的完整流程',
+        excerpt: '学习如何利用AI工具进行内容自动化创作，包括文章生成、视频脚本、社交媒体内容等全方位指南。',
+        coverImage: '/images/articles/ai-content-automation.svg',
+        author: {
+            name: '李明阳',
+            avatar: '/images/avatars/author-li-mingyang.jpeg'
+        },
+        publishedAt: '2024-11-22',
+        readingTime: '20分钟',
+        viewCount: '2.8k',
+        tags: [
+            { name: '技术指南', color: '#3B82F6' },
+            { name: '变现心得', color: '#F97316' }
+        ],
+        slug: 'ai-content-automation',
+        isPremium: false
+    },
+    {
+        id: '8',
+        title: 'AI助手开发实战：从零开始构建智能客服系统',
+        excerpt: '详细介绍如何开发一个智能客服AI助手，包括自然语言处理、意图识别、知识库搭建等关键技术。',
+        coverImage: '/images/articles/ai-assistant.svg',
+        author: {
+            name: '张先生',
+            avatar: '/images/avatars/user-zhang.jpeg'
+        },
+        publishedAt: '2024-11-18',
+        readingTime: '25分钟',
+        viewCount: '3.2k',
+        tags: [
+            { name: 'AI工具', color: '#8B5CF6' },
+            { name: '技术指南', color: '#3B82F6' }
+        ],
+        slug: 'ai-assistant-development',
+        isPremium: true
+    },
+    {
+        id: '9',
+        title: 'AI MCN运营秘籍：如何管理百万粉丝的AI创作团队',
+        excerpt: '分享AI时代MCN机构的运营策略，包括创作者招募、内容规划、商业变现等核心经验。',
+        coverImage: '/images/articles/ai-mcn.svg',
+        author: {
+            name: '李明阳',
+            avatar: '/images/avatars/author-li-mingyang.jpeg'
+        },
+        publishedAt: '2024-11-15',
+        readingTime: '18分钟',
+        viewCount: '4.1k',
+        tags: [
+            { name: '变现心得', color: '#F97316' },
+            { name: '实战案例', color: '#F59E0B' }
+        ],
+        slug: 'ai-mcn-operation',
+        isPremium: false
+    },
+    {
+        id: '10',
+        title: 'AI变现模式深度解析：2024年最新盈利策略',
+        excerpt: '全面分析当前AI领域的各种变现模式，包括SaaS服务、API接口、知识付费等多种商业模式的优劣势。',
+        coverImage: '/images/articles/ai-revenue-model.jpeg',
+        author: {
+            name: '张先生',
+            avatar: '/images/avatars/user-zhang.jpeg'
+        },
+        publishedAt: '2024-11-12',
+        readingTime: '22分钟',
+        viewCount: '5.3k',
+        tags: [
+            { name: '变现心得', color: '#F97316' },
+            { name: '前沿技术', color: '#60A5FA' }
+        ],
+        slug: 'ai-revenue-model-analysis',
+        isPremium: true
+    },
+    {
+        id: '11',
+        title: 'Midjourney工作流实战：从创意到变现的完整路径',
+        excerpt: '深入探讨Midjourney在商业项目中的应用，包括创意构思、参数调优、批量生成、版权处理等实用技巧。',
+        coverImage: '/images/articles/midjourney-workflow.jpeg',
+        author: {
+            name: '李明阳',
+            avatar: '/images/avatars/author-li-mingyang.jpeg'
+        },
+        publishedAt: '2024-11-08',
+        readingTime: '16分钟',
+        viewCount: '2.7k',
+        tags: [
+            { name: 'AI工具', color: '#8B5CF6' },
+            { name: '实战案例', color: '#F59E0B' }
+        ],
+        slug: 'midjourney-workflow-practice',
+        isPremium: false
+    },
+    {
+        id: '12',
+        title: 'ChatGPT企业级应用：构建智能化办公解决方案',
+        excerpt: '介绍如何在企业环境中部署ChatGPT，包括数据安全、权限管理、定制化开发等企业级需求的解决方案。',
+        coverImage: '/images/articles/chatgpt-article.jpeg',
+        author: {
+            name: '张先生',
+            avatar: '/images/avatars/user-zhang.jpeg'
+        },
+        publishedAt: '2024-11-05',
+        readingTime: '28分钟',
+        viewCount: '3.9k',
+        tags: [
+            { name: '技术指南', color: '#3B82F6' },
+            { name: 'AI工具', color: '#8B5CF6' }
+        ],
+        slug: 'chatgpt-enterprise-application',
+        isPremium: true
     }
 ]
 
@@ -144,7 +258,7 @@ const filterOptions = [
     {
         id: 'tech-guide',
         label: '技术指南',
-        count: 9,
+        count: 5,
         colors: {
             background: 'rgba(12, 30, 71, 0.80)',
             border: 'rgba(59, 130, 246, 0.40)',
@@ -154,7 +268,7 @@ const filterOptions = [
     {
         id: 'monetization',
         label: '变现心得',
-        count: 6,
+        count: 3,
         colors: {
             background: 'rgba(58, 23, 8, 0.80)',
             border: 'rgba(249, 115, 22, 0.40)',
@@ -164,7 +278,7 @@ const filterOptions = [
     {
         id: 'case-study',
         label: '实战案例',
-        count: 7,
+        count: 4,
         colors: {
             background: 'rgba(12, 40, 23, 0.80)',
             border: 'rgba(16, 185, 129, 0.40)',
@@ -174,7 +288,7 @@ const filterOptions = [
     {
         id: 'ai-tools',
         label: 'AI工具',
-        count: 15,
+        count: 7,
         colors: {
             background: 'rgba(30, 12, 71, 0.80)',
             border: 'rgba(139, 92, 246, 0.40)',
@@ -184,7 +298,7 @@ const filterOptions = [
     {
         id: 'trending',
         label: '前沿技术',
-        count: 5,
+        count: 3,
         colors: {
             background: 'rgba(30, 58, 138, 0.80)',
             border: 'rgba(96, 165, 250, 0.40)',
@@ -194,7 +308,7 @@ const filterOptions = [
     {
         id: 'hot',
         label: '热门趋势',
-        count: 8,
+        count: 12,
         colors: {
             background: 'rgba(127, 29, 29, 0.80)',
             border: 'rgba(252, 165, 165, 0.40)',
@@ -431,9 +545,9 @@ export default function WeeklyPage() {
                                     display: 'grid',
                                     gridTemplateColumns: 'repeat(3, 1fr)',
                                     gap: '24px',
-                                    marginBottom: '60px',
+                                    marginBottom: '48px', // 减少底部间距，让分页更贴近文章
                                     maxWidth: '1375px',
-                                    margin: '0 auto 60px auto'
+                                    margin: '0 auto 48px auto' // 减少底部间距
                                 }}>
                                 {paginatedArticles.map((article) => (
                                     <ArticleCard
@@ -445,24 +559,28 @@ export default function WeeklyPage() {
                                 ))}
                             </div>
 
-                            {/* 分页导航 */}
+                            {/* 分页导航 - 优化间距，提升用户体验 */}
                             {totalPages > 1 && (
                                 <div style={{
                                     display: 'flex',
                                     justifyContent: 'center',
-                                    marginTop: '80px'
+                                    marginTop: '0px', // 移除上边距，让分页更贴近文章
+                                    marginBottom: '60px' // 增加下边距，给订阅区域更多空间
                                 }}>
                                     <Pagination
                                         currentPage={currentPage}
                                         totalPages={totalPages}
                                         onPageChange={handlePageChange}
-                                        showFirstLast={true}
+                                        showFirstLast={false}
                                     />
                                 </div>
                             )}
 
                             {/* 订阅AI变现周刊区域 - 按设计稿1:1还原 */}
-                            <div style={{ marginTop: '24px', marginBottom: '0px' }}>
+                            <div style={{
+                                marginTop: totalPages > 1 ? '0px' : '60px', // 有分页时无上边距，无分页时保持间距
+                                marginBottom: '0px'
+                            }}>
                                 <SubscriptionSection />
                             </div>
                         </>
@@ -576,7 +694,9 @@ export default function WeeklyPage() {
                                             fontWeight: '500',
                                             cursor: 'pointer',
                                             transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                                            boxShadow: '0 4px 20px rgba(59, 130, 246, 0.3)'
+                                            boxShadow: '0 4px 20px rgba(59, 130, 246, 0.3)',
+                                            minWidth: '150px',
+                                            whiteSpace: 'nowrap'
                                         }}
                                         onMouseEnter={(e) => {
                                             e.currentTarget.style.transform = 'translateY(-2px)'
@@ -626,7 +746,9 @@ export default function WeeklyPage() {
                                             padding: '12px 24px',
                                             fontSize: 'var(--font-size-base)',
                                             cursor: 'pointer',
-                                            transition: 'all 0.2s ease'
+                                            transition: 'all 0.2s ease',
+                                            minWidth: '150px',
+                                            whiteSpace: 'nowrap'
                                         }}
                                     >
                                         查看最新文章

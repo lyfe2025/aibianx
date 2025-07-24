@@ -24,7 +24,7 @@ export function SearchBar({
     const [shortcutKey, setShortcutKey] = useState('') // 修复SSR问题：初始为空
     const [isClient, setIsClient] = useState(false) // 追踪是否在客户端
     const inputRef = useRef<HTMLInputElement>(null)
-    const debounceTimeoutRef = useRef<NodeJS.Timeout>()
+    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
     // 修复SSR问题：只在客户端设置快捷键
     useEffect(() => {
@@ -49,7 +49,7 @@ export function SearchBar({
 
     // 检测键盘快捷键显示
     useEffect(() => {
-        setShowShortcut(!isFocused && !query && !isLoading && isClient && shortcutKey)
+        setShowShortcut(!isFocused && !query && !isLoading && isClient && !!shortcutKey)
     }, [isFocused, query, isLoading, isClient, shortcutKey])
 
     // 防抖搜索 - P0-2: 优化搜索门槛，1字符时延迟更长
@@ -144,14 +144,14 @@ export function SearchBar({
     return (
         <div className={className}>
             <form onSubmit={handleSubmit} role="search">
-                {/* 外层毛玻璃容器 - 移除灰色背景，保持透明 */}
+                {/* 外层毛玻璃容器 - 未聚焦时无边框 */}
                 <div style={{
-                    background: 'transparent', // 移除灰色背景，保持完全透明
+                    background: 'transparent', // 保持完全透明
                     backdropFilter: 'blur(8px)', // 减少模糊效果
                     WebkitBackdropFilter: 'blur(8px)',
                     border: isFocused
                         ? '1px solid rgba(59, 130, 246, 0.40)' // 聚焦时蓝色边框
-                        : '1px solid rgba(42, 42, 42, 0.30)', // 非聚焦时更淡的边框
+                        : '1px solid transparent', // 非聚焦时透明边框（无边框效果）
                     borderRadius: '16px',
                     padding: '16px 20px',
                     width: '100%',
@@ -160,7 +160,7 @@ export function SearchBar({
                     // 保持微妙的阴影效果
                     boxShadow: isFocused
                         ? '0 4px 20px rgba(59, 130, 246, 0.15)'
-                        : '0 2px 8px rgba(0, 0, 0, 0.05)',
+                        : 'none', // 未聚焦时无阴影
                 }}>
                     {/* 内层搜索输入框 - 优化视觉设计 */}
                     <div style={{

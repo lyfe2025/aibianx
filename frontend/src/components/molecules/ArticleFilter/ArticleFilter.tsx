@@ -41,10 +41,8 @@ export function ArticleFilter({
                         style={{
                             background: isActive
                                 ? (option.colors?.background || 'var(--gradient-primary)')
-                                : (option.colors?.background || 'transparent'),
-                            color: isActive || option.colors
-                                ? (option.colors?.text || '#FFFFFF')
-                                : 'var(--color-text-muted)',
+                                : 'transparent',
+                            color: option.colors?.text || (isActive ? '#FFFFFF' : 'var(--color-text-muted)'),
                             border: isActive
                                 ? 'none'
                                 : option.colors?.border

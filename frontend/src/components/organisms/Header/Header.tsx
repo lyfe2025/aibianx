@@ -88,7 +88,7 @@ export function Header() {
                     </div>
 
                     {/* 右侧操作区 */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-4)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
                         {/* 搜索图标 */}
                         <button
                             style={{
@@ -97,7 +97,8 @@ export function Header() {
                                 cursor: 'pointer',
                                 padding: 'var(--spacing-2)',
                                 color: 'var(--color-text-secondary)',
-                                transition: 'color 0.2s ease'
+                                transition: 'color 0.2s ease',
+                                marginRight: 'var(--spacing-4)'
                             }}
                         >
                             <Icon name="search-icon" size="md" />
@@ -106,8 +107,8 @@ export function Header() {
                         {/* 用户状态区域 */}
                         {isAuthenticated ? (
                             // 已登录状态
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
-                                <Icon name="notification-icon" size="md" />
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Icon name="notification-icon" size="md" style={{ marginRight: 'var(--spacing-3)' }} />
                                 <Avatar
                                     src={user?.avatar}
                                     alt={user?.username || '用户头像'}
@@ -116,14 +117,14 @@ export function Header() {
                             </div>
                         ) : (
                             // 未登录状态
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-3)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
                                 {/* 桌面端按钮 */}
                                 <div
                                     className="desktop-auth-buttons"
                                     style={{
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: 'var(--spacing-3)'
+                                        marginRight: 'var(--spacing-3)'
                                     }}
                                 >
                                     <button
@@ -136,7 +137,8 @@ export function Header() {
                                             padding: '8px 16px',
                                             fontSize: 'var(--font-size-sm)',
                                             cursor: 'pointer',
-                                            transition: 'all 0.2s ease'
+                                            transition: 'all 0.2s ease',
+                                            marginRight: 'var(--spacing-3)'
                                         }}
                                     >
                                         登录

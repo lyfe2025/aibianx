@@ -25,7 +25,7 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
     const [displayValue, setDisplayValue] = useState(value.endsWith('万+') ? '0万+' : '0+')
     const [isVisible, setIsVisible] = useState(false)
     const elementRef = useRef<HTMLDivElement>(null)
-    const animationRef = useRef<number>()
+    const animationRef = useRef<number | null>(null)
     const hasAnimatedRef = useRef(false)
 
     // 解析目标数值

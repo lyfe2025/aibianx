@@ -37,27 +37,27 @@ import './globals.css'
  * - 全局样式引用
  */
 
-export const metadata: Metadata = {
+const siteConfig = {
+  name: 'AI变现之路',
+  description: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具。助你掌握AI变现技能，实现财务突破。',
+  keywords: ['AI变现', 'AI商业化', 'ChatGPT', 'Midjourney', '人工智能', 'AI工具', 'AI赚钱', 'AI创业', 'AI教程', 'AI应用'],
+}
+
+const metadata: Metadata = {
   title: {
-    default: 'AI变现之路 - 专业的AI商业化平台',
-    template: '%s | AI变现之路'
+    default: `${siteConfig.name} - 专业的AI商业化平台`,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具。从技术指南到商业案例，助你掌握AI变现技能，实现财务突破。',
-  keywords: ['AI变现', 'ChatGPT', 'Midjourney', 'AI工具', 'AI创业', '人工智能', '技术变现', 'AI应用'],
-  authors: [{ name: 'AI变现之路团队' }],
-  creator: 'AI变现之路',
-  publisher: 'AI变现之路',
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  authors: [
+    {
+      name: 'AI变现之路团队',
+      url: '/about',
     },
-  },
+  ],
+  creator: 'AI变现之路',
+  metadataBase: new URL('https://aibianx.com'),
   openGraph: {
     type: 'website',
     locale: 'zh_CN',
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     description: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具。助你掌握AI变现技能，实现财务突破。',
     images: [
       {
-        url: 'https://aibianx.com/images/og-image.jpg',
+        url: '/og-image.jpg', // 使用本地资源
         width: 1200,
         height: 630,
         alt: 'AI变现之路 - 专业的AI商业化平台',
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     creator: '@aibianx',
     title: 'AI变现之路 - 专业的AI商业化平台',
     description: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具。助你掌握AI变现技能，实现财务突破。',
-    images: ['https://aibianx.com/images/og-image.jpg'],
+    images: ['/og-image.jpg'], // 使用本地资源
   },
   verification: {
     google: 'your-google-verification-code',
@@ -118,7 +118,7 @@ export default function RootLayout({
                 "name": "AI变现之路",
                 "logo": {
                   "@type": "ImageObject",
-                  "url": "https://aibianx.com/images/logo.png"
+                  "url": "/icons/logo-main.svg"
                 }
               },
               "potentialAction": {
