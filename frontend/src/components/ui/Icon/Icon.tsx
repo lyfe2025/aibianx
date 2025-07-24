@@ -65,10 +65,10 @@ export const Icon = ({
         const match = String(size).match(/(\d+)/)
         return match ? parseInt(match[1]) : null
     }
-    
+
     const customWidth = parseSize(props.style?.width)
     const customHeight = parseSize(props.style?.height)
-    
+
     const iconWidth = customWidth || sizeMap[size]
     const iconHeight = customHeight || sizeMap[size]
 

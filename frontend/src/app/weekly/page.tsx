@@ -15,6 +15,22 @@ import type { ArticleCardData } from '@/components/molecules/ArticleCard/Article
 // 模拟文章数据
 const mockArticles: ArticleCardData[] = [
     {
+        id: 'midjourney-monetization-guide',
+        title: 'Midjourney变现指南：如何利用AI绘画技术月入过万',
+        excerpt: '在AI技术飞速发展的今天，Midjourney已经成为数字艺术创作领域的一颗璀璨明星。本文将系统地介绍如何利用Midjourney进行商业化变现，帮助你从零开始，逐步实现月入过万的目标。',
+        coverImage: '/images/articles/midjourney-guide.svg',
+        author: {
+            name: '李明阳',
+            avatar: '/images/avatars/author-li-mingyang.jpeg'
+        },
+        publishedAt: '2023-11-22',
+        readingTime: '12分钟',
+        viewCount: '2.4k',
+        tags: ['变现心得', 'AI工具'],
+        slug: 'midjourney-monetization-guide',
+        isPremium: false
+    },
+    {
         id: '1',
         title: '如何利用ChatGPT API搭建付费咨询机器人，月入过万的实战指南',
         excerpt: '从零开始教你搭建一个基于ChatGPT API的智能咨询机器人，包含完整的技术方案、商业模式设计和变现策略，助你实现AI创业的第一桶金。',
@@ -26,10 +42,7 @@ const mockArticles: ArticleCardData[] = [
         publishedAt: '2024-12-10',
         readingTime: '15分钟',
         viewCount: '2.4k',
-        tags: [
-            { name: '技术指南', color: '#3B82F6' },
-            { name: 'AI工具', color: '#8B5CF6' }
-        ],
+        tags: ['技术指南', 'AI工具'],
         slug: 'chatgpt-api-consulting-bot',
         isPremium: false
     },
@@ -45,10 +58,7 @@ const mockArticles: ArticleCardData[] = [
         publishedAt: '2024-12-06',
         readingTime: '18分钟',
         viewCount: '1.8k',
-        tags: [
-            { name: '技术指南', color: '#3B82F6' },
-            { name: '前沿技术', color: '#60A5FA' }
-        ],
+        tags: ['技术指南', '前沿技术'],
         slug: 'gpt4-copywriting-system',
         isPremium: false
     },
@@ -64,10 +74,7 @@ const mockArticles: ArticleCardData[] = [
         publishedAt: '2024-12-04',
         readingTime: '12分钟',
         viewCount: '3.1k',
-        tags: [
-            { name: 'AI工具', color: '#8B5CF6' },
-            { name: '实战案例', color: '#F59E0B' }
-        ],
+        tags: ['AI工具', '实战案例'],
         slug: 'midjourney-monetization-guide',
         isPremium: false
     },
@@ -82,164 +89,73 @@ const mockArticles: ArticleCardData[] = [
         },
         publishedAt: '2024-12-02',
         readingTime: '14分钟',
-        viewCount: '2.2k',
-        tags: [
-            { name: '技术指南', color: '#3B82F6' },
-            { name: 'AI工具', color: '#8B5CF6' }
-        ],
-        slug: 'no-code-ai-development',
+        viewCount: '1.5k',
+        tags: ['技术指南', '前沿技术'],
+        slug: 'nocode-ai-development',
         isPremium: false
     },
     {
         id: '5',
-        title: 'AI语音克隆技术商业应用：声音变现的新蓝海',
-        excerpt: '探索AI语音技术的商业化应用场景，从配音服务到个人IP打造，详解声音经济时代的变现机会。',
-        coverImage: '/images/articles/ai-voice.svg',
-        author: {
-            name: '李明阳',
-            avatar: '/images/avatars/author-li-mingyang.jpeg'
-        },
-        publishedAt: '2024-11-28',
-        readingTime: '10分钟',
-        viewCount: '1.5k',
-        tags: [
-            { name: 'AI工具', color: '#8B5CF6' },
-            { name: '前沿技术', color: '#60A5FA' }
-        ],
-        slug: 'ai-voice-cloning-business',
-        isPremium: true
-    },
-    {
-        id: '6',
-        title: 'AI绘画工作流优化：提升效率10倍的专业技巧',
-        excerpt: '深度分析AI绘画的工作流程优化方法，包含prompt优化、批处理技巧、质量控制等专业内容。',
-        coverImage: '/images/articles/ai-art-guide.svg',
-        author: {
-            name: '张先生',
-            avatar: '/images/avatars/user-zhang.jpeg'
-        },
-        publishedAt: '2024-11-25',
-        readingTime: '16分钟',
-        viewCount: '1.9k',
-        tags: [
-            { name: 'AI工具', color: '#8B5CF6' },
-            { name: '实战案例', color: '#F59E0B' }
-        ],
-        slug: 'ai-painting-workflow',
-        isPremium: true
-    },
-    {
-        id: '7',
-        title: 'AI自动化内容创作：打造个人品牌的完整流程',
-        excerpt: '学习如何利用AI工具进行内容自动化创作，包括文章生成、视频脚本、社交媒体内容等全方位指南。',
+        title: 'AI内容自动化：搭建智能内容生产流水线',
+        excerpt: '学会整合多个AI工具，构建高效的内容自动化生产流程，从创意生成到发布全流程自动化。',
         coverImage: '/images/articles/ai-content-automation.svg',
         author: {
             name: '李明阳',
             avatar: '/images/avatars/author-li-mingyang.jpeg'
         },
-        publishedAt: '2024-11-22',
-        readingTime: '20分钟',
-        viewCount: '2.8k',
-        tags: [
-            { name: '技术指南', color: '#3B82F6' },
-            { name: '变现心得', color: '#F97316' }
-        ],
+        publishedAt: '2024-11-28',
+        readingTime: '16分钟',
+        viewCount: '2.2k',
+        tags: ['增长黑客', 'AI工具'],
         slug: 'ai-content-automation',
-        isPremium: false
+        isPremium: true
     },
     {
-        id: '8',
-        title: 'AI助手开发实战：从零开始构建智能客服系统',
-        excerpt: '详细介绍如何开发一个智能客服AI助手，包括自然语言处理、意图识别、知识库搭建等关键技术。',
+        id: '6',
+        title: 'AI辅助创业：从想法到产品的完整路径',
+        excerpt: '利用AI工具降低创业门槛，包括市场调研、产品设计、营销推广等各个环节的AI应用实践。',
         coverImage: '/images/articles/ai-assistant.svg',
         author: {
             name: '张先生',
             avatar: '/images/avatars/user-zhang.jpeg'
         },
-        publishedAt: '2024-11-18',
-        readingTime: '25分钟',
-        viewCount: '3.2k',
-        tags: [
-            { name: 'AI工具', color: '#8B5CF6' },
-            { name: '技术指南', color: '#3B82F6' }
-        ],
-        slug: 'ai-assistant-development',
+        publishedAt: '2024-11-25',
+        readingTime: '20分钟',
+        viewCount: '1.9k',
+        tags: ['实战案例', '增长黑客'],
+        slug: 'ai-assisted-entrepreneurship',
         isPremium: true
     },
     {
-        id: '9',
-        title: 'AI MCN运营秘籍：如何管理百万粉丝的AI创作团队',
-        excerpt: '分享AI时代MCN机构的运营策略，包括创作者招募、内容规划、商业变现等核心经验。',
+        id: '7',
+        title: 'AI艺术变现全攻略：数字艺术的商业化之路',
+        excerpt: '深入探讨AI艺术创作的各种变现模式，从NFT销售到定制服务，帮你找到适合的商业路径。',
+        coverImage: '/images/articles/ai-art-guide.svg',
+        author: {
+            name: '李明阳',
+            avatar: '/images/avatars/author-li-mingyang.jpeg'
+        },
+        publishedAt: '2024-11-22',
+        readingTime: '13分钟',
+        viewCount: '2.8k',
+        tags: ['变现心得', 'AI工具'],
+        slug: 'ai-art-monetization',
+        isPremium: false
+    },
+    {
+        id: '8',
+        title: 'ChatGPT私域运营：AI驱动的用户增长策略',
+        excerpt: '运用ChatGPT优化私域运营流程，提升用户留存和转化率，打造高效的AI驱动增长体系。',
         coverImage: '/images/articles/ai-mcn.svg',
         author: {
-            name: '李明阳',
-            avatar: '/images/avatars/author-li-mingyang.jpeg'
-        },
-        publishedAt: '2024-11-15',
-        readingTime: '18分钟',
-        viewCount: '4.1k',
-        tags: [
-            { name: '变现心得', color: '#F97316' },
-            { name: '实战案例', color: '#F59E0B' }
-        ],
-        slug: 'ai-mcn-operation',
-        isPremium: false
-    },
-    {
-        id: '10',
-        title: 'AI变现模式深度解析：2024年最新盈利策略',
-        excerpt: '全面分析当前AI领域的各种变现模式，包括SaaS服务、API接口、知识付费等多种商业模式的优劣势。',
-        coverImage: '/images/articles/ai-revenue-model.jpeg',
-        author: {
             name: '张先生',
             avatar: '/images/avatars/user-zhang.jpeg'
         },
-        publishedAt: '2024-11-12',
-        readingTime: '22分钟',
-        viewCount: '5.3k',
-        tags: [
-            { name: '变现心得', color: '#F97316' },
-            { name: '前沿技术', color: '#60A5FA' }
-        ],
-        slug: 'ai-revenue-model-analysis',
-        isPremium: true
-    },
-    {
-        id: '11',
-        title: 'Midjourney工作流实战：从创意到变现的完整路径',
-        excerpt: '深入探讨Midjourney在商业项目中的应用，包括创意构思、参数调优、批量生成、版权处理等实用技巧。',
-        coverImage: '/images/articles/midjourney-workflow.jpeg',
-        author: {
-            name: '李明阳',
-            avatar: '/images/avatars/author-li-mingyang.jpeg'
-        },
-        publishedAt: '2024-11-08',
-        readingTime: '16分钟',
-        viewCount: '2.7k',
-        tags: [
-            { name: 'AI工具', color: '#8B5CF6' },
-            { name: '实战案例', color: '#F59E0B' }
-        ],
-        slug: 'midjourney-workflow-practice',
-        isPremium: false
-    },
-    {
-        id: '12',
-        title: 'ChatGPT企业级应用：构建智能化办公解决方案',
-        excerpt: '介绍如何在企业环境中部署ChatGPT，包括数据安全、权限管理、定制化开发等企业级需求的解决方案。',
-        coverImage: '/images/articles/chatgpt-article.jpeg',
-        author: {
-            name: '张先生',
-            avatar: '/images/avatars/user-zhang.jpeg'
-        },
-        publishedAt: '2024-11-05',
-        readingTime: '28分钟',
-        viewCount: '3.9k',
-        tags: [
-            { name: '技术指南', color: '#3B82F6' },
-            { name: 'AI工具', color: '#8B5CF6' }
-        ],
-        slug: 'chatgpt-enterprise-application',
+        publishedAt: '2024-11-20',
+        readingTime: '17分钟',
+        viewCount: '1.7k',
+        tags: ['增长黑客', '技术指南'],
+        slug: 'chatgpt-private-domain',
         isPremium: true
     }
 ]
@@ -335,7 +251,7 @@ export default function WeeklyPage() {
             filtered = filtered.filter(article =>
                 article.title.toLowerCase().includes(query) ||
                 article.excerpt?.toLowerCase().includes(query) ||
-                article.tags.some(tag => tag.name.toLowerCase().includes(query))
+                article.tags.some(tag => tag.toLowerCase().includes(query))
             )
         }
 
@@ -354,27 +270,27 @@ export default function WeeklyPage() {
                 break
             case 'ai-tools':
                 filtered = filtered.filter(article =>
-                    article.tags.some(tag => tag.name === 'AI工具')
+                    article.tags.some(tag => tag === 'AI工具')
                 )
                 break
             case 'monetization':
                 filtered = filtered.filter(article =>
-                    article.tags.some(tag => tag.name === '变现心得')
+                    article.tags.some(tag => tag === '变现心得')
                 )
                 break
             case 'tech-guide':
                 filtered = filtered.filter(article =>
-                    article.tags.some(tag => tag.name === '技术指南')
+                    article.tags.some(tag => tag === '技术指南')
                 )
                 break
             case 'case-study':
                 filtered = filtered.filter(article =>
-                    article.tags.some(tag => tag.name === '实战案例')
+                    article.tags.some(tag => tag === '实战案例')
                 )
                 break
             case 'trending':
                 filtered = filtered.filter(article =>
-                    article.tags.some(tag => tag.name === '前沿技术')
+                    article.tags.some(tag => tag === '前沿技术')
                 )
                 break
             default:

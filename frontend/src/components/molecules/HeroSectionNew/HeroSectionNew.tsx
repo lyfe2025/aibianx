@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Container, GradientButton, GradientText, Input, BackgroundDecoration } from '@/components/ui'
+import { Container, GradientButton, GradientText, Input, BackgroundDecoration, HeroBackground3D, AIBrainModel } from '@/components/ui'
 
 /**
  * 新版英雄区块组件 - HeroSectionNew
@@ -16,6 +16,7 @@ import { Container, GradientButton, GradientText, Input, BackgroundDecoration } 
 export function HeroSectionNew() {
     const [email, setEmail] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isFocused, setIsFocused] = useState(false)
 
     const handleSubscribe = async () => {
         if (!email.trim()) {
@@ -41,37 +42,47 @@ export function HeroSectionNew() {
         <section style={{
             position: 'relative',
             paddingTop: '135px', // 为固定头部留出空间
-            paddingBottom: '64px',
-            overflow: 'hidden',
-            background: 'var(--color-bg-primary)',
+            paddingBottom: '80px', // 适中的底部空间
+            overflow: 'visible', // 允许3D模型溢出显示，不被切割
+            background: 'transparent', // 改为透明，让粒子可见
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            minHeight: '500px'
+            minHeight: '100vh' // 恰好一个屏幕高度，3D模型现在使用绝对定位
         }}>
+            {/* 
+                渐变过渡遮罩层 - 实现3D粒子到CSS粒子的自然过渡
+                顶部完全遮挡，底部逐渐透明，形成平滑衔接
+            */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: `linear-gradient(
+                    to bottom,
+                    var(--color-bg-primary) 0%,          /* 顶部完全遮挡 */
+                    var(--color-bg-primary) 60%,         /* 中上部分继续遮挡 */
+                    rgba(3, 3, 3, 0.8) 75%,             /* 开始过渡 */
+                    rgba(3, 3, 3, 0.4) 85%,             /* 渐变透明 */
+                    rgba(3, 3, 3, 0.1) 95%,             /* 接近透明 */
+                    transparent 100%                     /* 底部完全透明 */
+                )`,
+                zIndex: 1 // 高于CSS粒子背景(0.5)，低于3D效果(2+)
+            }} />
+
+            {/* 3D背景装饰 - 淡淡的AI元素 */}
+            <HeroBackground3D />
+
             {/* 背景装饰 - 设计稿蓝色渐变 */}
-            <BackgroundDecoration 
+            <BackgroundDecoration
                 position="top-left"
                 animation={{ type: 'float', duration: '8s' }}
+                zIndex={2} // 确保在遮罩层之上
             />
 
-            {/* 右侧装饰效果 - 粉色渐变 */}
-            <BackgroundDecoration 
-                position="custom"
-                customPosition={{
-                    top: '300px',
-                    right: '-125px'
-                }}
-                size={{ width: '500px', height: '500px' }}
-                gradient={{
-                    fromColor: '255, 154, 158',
-                    toColor: '254, 207, 239',
-                    fromOpacity: 0.15,
-                    toOpacity: 0.08
-                }}
-                blur={80}
-                animation={{ type: 'pulse', duration: '6s', delay: '2s' }}
-            />
+
 
             {/* 主要内容容器 - 修复换行问题，增加宽度 */}
             <div style={{
@@ -85,7 +96,7 @@ export function HeroSectionNew() {
                 alignItems: 'stretch',
                 paddingTop: '42.78px',
                 position: 'relative',
-                zIndex: 1
+                zIndex: 10 // 确保显示在所有背景层之上
             }}>
                 {/* 主标题 - 修复换行问题 */}
                 <div style={{
@@ -155,8 +166,8 @@ export function HeroSectionNew() {
                 }}>
                     {/* 邮箱输入框 - 修复换行问题 */}
                     <div style={{
-                        background: 'rgba(18, 18, 18, 0.50)',
-                        border: '1px solid #2A2A2A',
+                        background: isFocused ? 'rgba(18, 18, 18, 0.70)' : 'rgba(18, 18, 18, 0.50)',
+                        border: `1px solid ${isFocused ? '#3B82F6' : '#2A2A2A'}`,
                         borderRadius: '8px 0 0 8px',
                         width: '327px',
                         height: '56px',
@@ -167,7 +178,9 @@ export function HeroSectionNew() {
                         paddingRight: '20px',
                         paddingTop: '16px',
                         paddingBottom: '15.99px',
-                        flexShrink: 0 // 防止压缩
+                        flexShrink: 0, // 防止压缩
+                        transition: 'all 0.2s ease',
+                        boxShadow: isFocused ? '0 0 0 2px rgba(59, 130, 246, 0.1)' : 'none'
                     }}>
                         <div style={{
                             width: '287px',
@@ -178,9 +191,11 @@ export function HeroSectionNew() {
                         }}>
                             <input
                                 type="email"
-                                placeholder="输入您的邮箱"
+                                placeholder="请输入您的邮箱"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                onFocus={() => setIsFocused(true)}
+                                onBlur={() => setIsFocused(false)}
                                 style={{
                                     width: '100%',
                                     height: '24px',
@@ -205,84 +220,113 @@ export function HeroSectionNew() {
                         </div>
                     </div>
 
-                    {/* 订阅按钮 - 精确按设计稿样式 */}
+                    {/* 订阅按钮 - 修复换行问题 */}
                     <div style={{
                         background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
                         borderRadius: '0 8px 8px 0',
-                        width: '113px',
+                        width: '120px', // 增加宽度确保中文不换行
                         height: '56px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        paddingLeft: '29.5px',
-                        paddingRight: '29.5px',
+                        paddingLeft: '20px',
+                        paddingRight: '20px',
                         paddingTop: '19px',
                         paddingBottom: '18.99px',
                         cursor: 'pointer',
-                        transition: 'all 0.2s ease'
+                        transition: 'all 0.2s ease',
+                        flexShrink: 0 // 防止压缩
                     }}
-                    onClick={handleSubscribe}
-                    onMouseOver={(e) => {
-                        if (!isSubmitting) {
-                            e.currentTarget.style.opacity = '0.9'
-                        }
-                    }}
-                    onMouseOut={(e) => {
-                        if (!isSubmitting) {
-                            e.currentTarget.style.opacity = '1'
-                        }
-                    }}
+                        onClick={handleSubscribe}
+                        onMouseOver={(e) => {
+                            if (!isSubmitting) {
+                                e.currentTarget.style.opacity = '0.9'
+                            }
+                        }}
+                        onMouseOut={(e) => {
+                            if (!isSubmitting) {
+                                e.currentTarget.style.opacity = '1'
+                            }
+                        }}
                     >
                         <div style={{
-                            width: '54px',
                             color: '#FFFFFF',
                             fontFamily: 'Arial',
-                            fontSize: '13.33px',
+                            fontSize: '14px',
                             lineHeight: '18px',
                             textAlign: 'center',
                             justifyContent: 'center',
                             alignItems: 'center',
                             display: 'flex',
-                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap', // 防止换行
+                            overflow: 'hidden',
                             minHeight: '18px'
                         }}>
                             {isSubmitting ? '订阅中...' : '立即订阅'}
                         </div>
                     </div>
                 </div>
+
+                {/* AI神经网络大脑3D模型 - 绝对定位，避免被容器切割 */}
+                <div style={{
+                    position: 'absolute',
+                    bottom: '-300px', // 大幅向下延伸，确保完全不被切割
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '100%',
+                    maxWidth: '800px',
+                    zIndex: 8, // 在背景3D之上，但在主要内容之下
+                    pointerEvents: 'none' // 不干扰用户交互
+                }}>
+                    <AIBrainModel />
+                </div>
             </div>
 
-            {/* 响应式样式 */}
+            {/* 响应式样式 - 修复换行问题 */}
             <style jsx>{`
                 /* 中等屏幕适配 (768px - 1199px) */
                 @media (max-width: 1199px) {
                     section > div {
                         width: 100% !important;
-                        max-width: 800px !important;
+                        max-width: 90vw !important;
                         padding: 0 var(--spacing-6) !important;
+                    }
+                    
+                    /* 主标题在中等屏幕确保不换行 */
+                    section > div > div:first-child {
+                        font-size: 48px !important;
+                        line-height: 56px !important;
+                        white-space: nowrap !important;
+                    }
+                    
+                    /* 副标题在中等屏幕允许换行 */
+                    section > div > div:nth-child(2),
+                    section > div > div:nth-child(3) {
+                        white-space: normal !important;
+                        text-align: center !important;
+                        max-width: 600px !important;
+                        margin-left: auto !important;
+                        margin-right: auto !important;
                     }
                     
                     /* 表单布局调整 */
                     section > div > div:nth-child(4) {
                         flex-direction: column !important;
+                        align-items: center !important;
                         gap: 16px !important;
-                        margin-left: 0 !important;
-                        margin-right: 0 !important;
                     }
                     
                     /* 输入框调整 */
                     section > div > div:nth-child(4) > div:first-child {
                         width: 100% !important;
-                        margin-left: 0 !important;
+                        max-width: 400px !important;
                         border-radius: 8px !important;
                     }
                     
                     /* 按钮调整 */
                     section > div > div:nth-child(4) > div:last-child {
-                        width: 100% !important;
+                        width: 200px !important;
                         border-radius: 8px !important;
-                        max-width: 200px !important;
-                        margin: 0 auto !important;
                     }
                 }
                 
@@ -294,43 +338,55 @@ export function HeroSectionNew() {
                     }
                     
                     section > div {
+                        width: 95vw !important;
                         padding: 0 var(--spacing-4) !important;
                     }
                     
-                    /* 主标题字体调整 */
+                    /* 主标题字体调整，确保不换行 */
                     section > div > div:first-child {
-                        font-size: 48px !important;
-                        line-height: 56px !important;
+                        font-size: 36px !important;
+                        line-height: 44px !important;
+                        white-space: nowrap !important;
+                        overflow: hidden !important;
                     }
                     
-                    /* 副标题字体调整 */
+                    /* 副标题字体调整，允许换行 */
                     section > div > div:nth-child(2),
                     section > div > div:nth-child(3) {
-                        font-size: 18px !important;
-                        line-height: 26px !important;
+                        font-size: 16px !important;
+                        line-height: 24px !important;
+                        white-space: normal !important;
                         margin-left: 0 !important;
                         margin-right: 0 !important;
-                    }
-                    
-                    /* 表单间距调整 */
-                    section > div > div:nth-child(4) {
-                        margin-top: 32px !important;
+                        text-align: center !important;
                     }
                 }
                 
                 /* 超小屏幕 (480px及以下) */
                 @media (max-width: 480px) {
-                    /* 主标题进一步缩小 */
+                    /* 主标题进一步缩小，确保不换行 */
                     section > div > div:first-child {
-                        font-size: 36px !important;
-                        line-height: 44px !important;
+                        font-size: 28px !important;
+                        line-height: 36px !important;
+                        white-space: nowrap !important;
                     }
                     
                     /* 副标题进一步缩小 */
                     section > div > div:nth-child(2),
                     section > div > div:nth-child(3) {
-                        font-size: 16px !important;
-                        line-height: 24px !important;
+                        font-size: 14px !important;
+                        line-height: 20px !important;
+                        white-space: normal !important;
+                    }
+                    
+                    /* 表单在超小屏幕的调整 */
+                    section > div > div:nth-child(4) > div:first-child {
+                        width: 100% !important;
+                        max-width: 280px !important;
+                    }
+                    
+                    section > div > div:nth-child(4) > div:last-child {
+                        width: 150px !important;
                     }
                 }
             `}</style>

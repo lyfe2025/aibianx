@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Avatar, Icon } from '@/components/ui'
+import { Avatar, Icon, TagList } from '@/components/ui'
 
 export interface ArticleCardData {
     id: string
@@ -15,10 +15,8 @@ export interface ArticleCardData {
     publishedAt: string
     readingTime: string
     viewCount: string
-    tags: Array<{
-        name: string
-        color: string
-    }>
+    // 更新标签类型：使用字符串数组，由TagList组件处理样式
+    tags: string[]
     slug: string
     isPremium?: boolean
 }
@@ -131,34 +129,16 @@ export function ArticleCard({
                             </p>
                         )}
 
-                        {/* 标签 */}
-                        <div style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            gap: 'var(--spacing-2)',
-                            marginBottom: 'var(--spacing-3)'
-                        }}>
-                            {article.tags.slice(0, 3).map((tag, index) => (
-                                <span
-                                    key={index}
-                                    style={{
-                                        background: `rgba(${tag.color === '#3B82F6' ? '59, 130, 246' :
-                                                tag.color === '#8B5CF6' ? '139, 92, 246' :
-                                                    tag.color === '#10B981' ? '16, 185, 129' :
-                                                        tag.color === '#F97316' ? '249, 115, 22' : '107, 114, 128'
-                                            }, 0.1)`,
-                                        color: tag.color,
-                                        border: `1px solid ${tag.color}40`,
-                                        borderRadius: 'var(--radius-sm)',
-                                        padding: '4px 8px',
-                                        fontSize: 'var(--font-size-xs)',
-                                        fontWeight: '500'
-                                    }}
-                                >
-                                    {tag.name}
-                                </span>
-                            ))}
-                        </div>
+                        {/* 标签 - 使用新的TagList组件 */}
+                        <TagList
+                            tags={article.tags}
+                            size="sm"
+                            maxCount={3}
+                            style={{
+                                marginBottom: 'var(--spacing-3)',
+                                gap: 'var(--spacing-2)'
+                            }}
+                        />
                     </div>
 
                     {/* 作者和元信息 */}
@@ -178,17 +158,30 @@ export function ArticleCard({
                                 src={article.author.avatar}
                                 alt={article.author.name}
                                 size="sm"
-                                fallback={article.author.name.charAt(0)}
                             />
-                            <span style={{
-                                fontSize: 'var(--font-size-sm)',
-                                color: 'var(--color-text-secondary)'
-                            }}>
-                                {article.author.name}
-                            </span>
+                            <div>
+                                <div style={{
+                                    fontSize: 'var(--font-size-sm)',
+                                    fontWeight: '500',
+                                    color: 'var(--color-text-primary)',
+                                    lineHeight: '1.2'
+                                }}>
+                                    {article.author.name}
+                                </div>
+                                <div style={{
+                                    fontSize: 'var(--font-size-xs)',
+                                    color: 'var(--color-text-muted)',
+                                    lineHeight: '1.2'
+                                }}>
+                                    {new Date(article.publishedAt).toLocaleDateString('zh-CN', {
+                                        month: 'short',
+                                        day: 'numeric'
+                                    })}
+                                </div>
+                            </div>
                         </div>
 
-                        {/* 文章元信息 */}
+                        {/* 元信息 */}
                         <div style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -196,23 +189,22 @@ export function ArticleCard({
                             fontSize: 'var(--font-size-xs)',
                             color: 'var(--color-text-muted)'
                         }}>
-                            <span style={{
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '4px'
+                            }}>
+                                <Icon name="clock-icon" size="xs" />
+                                {article.readingTime}
+                            </div>
+                            <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '4px'
                             }}>
                                 <Icon name="eye-icon" size="xs" />
                                 {article.viewCount}
-                            </span>
-                            <span style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px'
-                            }}>
-                                <Icon name="reading-time-icon" size="xs" />
-                                {article.readingTime}
-                            </span>
-                            <span>{article.publishedAt}</span>
+                            </div>
                         </div>
                     </div>
                 </div>

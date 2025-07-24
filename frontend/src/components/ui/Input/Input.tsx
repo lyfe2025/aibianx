@@ -104,6 +104,24 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                             backdropFilter: 'blur(4px)',
                             WebkitBackdropFilter: 'blur(4px)'
                         }}
+                        onFocus={(e) => {
+                            if (!error) {
+                                e.target.style.borderColor = 'var(--color-border-active)'
+                                e.target.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
+                            }
+                            // 如果原有props有onFocus，也要调用
+                            if (props.onFocus) {
+                                props.onFocus(e)
+                            }
+                        }}
+                        onBlur={(e) => {
+                            e.target.style.borderColor = error ? '#EF4444' : 'var(--color-border-primary)'
+                            e.target.style.boxShadow = 'none'
+                            // 如果原有props有onBlur，也要调用
+                            if (props.onBlur) {
+                                props.onBlur(e)
+                            }
+                        }}
                         {...props}
                     />
 

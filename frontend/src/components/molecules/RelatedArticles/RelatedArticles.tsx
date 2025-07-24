@@ -28,17 +28,31 @@ export function RelatedArticles({
     if (articles.length === 0) return null
 
     return (
-        <div className={`glass-card ${className}`} style={{
-            padding: 'var(--spacing-6)'
-        }}>
+        <div
+            className={`glass-card ${className}`}
+            style={{
+                background: 'rgba(26, 26, 26, 0.85)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(42, 42, 42, 0.70)',
+                borderRadius: '12px',
+                padding: '32px 36px 36px 36px',
+                marginTop: '48px'
+            }}
+        >
             {/* 标题 */}
             <h3 style={{
-                fontSize: 'var(--font-size-2xl)',
+                fontSize: '20px',
                 fontWeight: '700',
-                color: 'var(--color-text-primary)',
-                marginBottom: 'var(--spacing-5)',
-                paddingBottom: 'var(--spacing-3)',
-                borderBottom: '1px solid var(--color-border-primary)'
+                color: '#FFFFFF',
+                marginBottom: '28px',
+                paddingBottom: '16px',
+                borderBottom: '1px solid rgba(42, 42, 42, 0.70)',
+                fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                lineHeight: '28px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
             }}>
                 {title}
             </h3>
@@ -47,31 +61,35 @@ export function RelatedArticles({
             <div style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 'var(--spacing-4)'
+                gap: '20px'
             }}>
-                {articles.map((article) => (
+                {articles.map((article, index) => (
                     <Link key={article.id} href={`/weekly/${article.slug}`}>
-                        <article 
+                        <article
                             className="related-article-card"
                             style={{
-                            padding: 'var(--spacing-4)',
-                            background: 'rgba(255, 255, 255, 0.02)',
-                            border: '1px solid var(--color-border-primary)',
-                            borderRadius: 'var(--radius-lg)',
-                            transition: 'all 0.2s ease',
-                            cursor: 'pointer'
-                        }}>
+                                padding: '20px',
+                                background: 'rgba(255, 255, 255, 0.02)',
+                                border: '1px solid rgba(42, 42, 42, 0.70)',
+                                borderRadius: '12px',
+                                transition: 'all 0.2s ease',
+                                cursor: 'pointer',
+                                marginBottom: index < articles.length - 1 ? '0' : '0'
+                            }}
+                        >
                             {/* 文章标题 */}
                             <h4 style={{
-                                fontSize: 'var(--font-size-lg)',
+                                fontSize: '16px',
                                 fontWeight: '600',
-                                color: 'var(--color-text-primary)',
-                                lineHeight: '1.4',
-                                marginBottom: 'var(--spacing-2)',
-                                display: '-webkit-box',
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical',
-                                overflow: 'hidden'
+                                color: '#FFFFFF',
+                                lineHeight: '24px',
+                                marginBottom: '8px',
+                                fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                display: 'flex',
+                                alignItems: 'center'
                             }}>
                                 {article.isPremium && (
                                     <span style={{
@@ -79,26 +97,35 @@ export function RelatedArticles({
                                         alignItems: 'center',
                                         gap: '4px',
                                         color: '#FFD700',
-                                        fontSize: 'var(--font-size-xs)',
-                                        marginRight: 'var(--spacing-2)'
+                                        fontSize: '12px',
+                                        marginRight: '8px',
+                                        flexShrink: 0
                                     }}>
                                         <Icon name="membership-exclusive" size="xs" />
                                     </span>
                                 )}
-                                {article.title}
+                                <span style={{
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                }}>
+                                    {article.title}
+                                </span>
                             </h4>
 
                             {/* 文章摘要 */}
                             {article.excerpt && (
                                 <p style={{
-                                    fontSize: 'var(--font-size-sm)',
-                                    color: 'var(--color-text-secondary)',
-                                    lineHeight: '1.5',
-                                    marginBottom: 'var(--spacing-3)',
+                                    fontSize: '14px',
+                                    color: '#D1D5DB',
+                                    lineHeight: '20px',
+                                    marginBottom: '12px',
+                                    fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                                     display: '-webkit-box',
                                     WebkitLineClamp: 2,
                                     WebkitBoxOrient: 'vertical',
-                                    overflow: 'hidden'
+                                    overflow: 'hidden',
+                                    wordBreak: 'break-word'
                                 }}>
                                     {article.excerpt}
                                 </p>
@@ -108,30 +135,66 @@ export function RelatedArticles({
                             <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: 'var(--spacing-3)',
-                                fontSize: 'var(--font-size-xs)',
-                                color: 'var(--color-text-muted)'
+                                gap: '12px',
+                                fontSize: '12px',
+                                color: '#9CA3AF',
+                                fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                                flexWrap: 'nowrap',
+                                overflow: 'hidden'
                             }}>
-                                <span>{new Date(article.publishedAt).toLocaleDateString('zh-CN', {
-                                    month: 'short',
-                                    day: 'numeric'
-                                })}</span>
-                                <span>•</span>
+                                <span style={{
+                                    whiteSpace: 'nowrap',
+                                    flexShrink: 0
+                                }}>
+                                    {new Date(article.publishedAt).toLocaleDateString('zh-CN', {
+                                        month: 'short',
+                                        day: 'numeric'
+                                    })}
+                                </span>
+
+                                <span style={{
+                                    flexShrink: 0,
+                                    color: '#6B7280'
+                                }}>•</span>
+
                                 <span style={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: '4px'
+                                    gap: '4px',
+                                    whiteSpace: 'nowrap',
+                                    flexShrink: 0
                                 }}>
-                                    <Icon name="reading-time-icon" size="xs" />
+                                    <Icon
+                                        name="clock-icon"
+                                        size="xs"
+                                        style={{
+                                            width: '12px',
+                                            height: '12px'
+                                        }}
+                                    />
                                     {article.readingTime}
                                 </span>
-                                <span>•</span>
+
+                                <span style={{
+                                    flexShrink: 0,
+                                    color: '#6B7280'
+                                }}>•</span>
+
                                 <span style={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: '4px'
+                                    gap: '4px',
+                                    whiteSpace: 'nowrap',
+                                    flexShrink: 0
                                 }}>
-                                    <Icon name="eye-icon" size="xs" />
+                                    <Icon
+                                        name="eye-icon"
+                                        size="xs"
+                                        style={{
+                                            width: '12px',
+                                            height: '12px'
+                                        }}
+                                    />
                                     {article.viewCount}
                                 </span>
                             </div>
@@ -139,6 +202,54 @@ export function RelatedArticles({
                     </Link>
                 ))}
             </div>
+
+            {/* 响应式样式 */}
+            <style jsx>{`
+                @media (max-width: 768px) {
+                    .glass-card {
+                        margin: 0 10px !important;
+                        padding: 20px 16px !important;
+                        margin-top: 32px !important;
+                    }
+                    
+                    h3 {
+                        font-size: 18px !important;
+                        margin-bottom: 20px !important;
+                        padding-bottom: 12px !important;
+                    }
+                    
+                    .related-article-card {
+                        padding: 16px !important;
+                    }
+                    
+                    h4 {
+                        font-size: 15px !important;
+                        line-height: 22px !important;
+                    }
+                    
+                    p {
+                        font-size: 13px !important;
+                        line-height: 18px !important;
+                        margin-bottom: 10px !important;
+                    }
+                    
+                    .meta-info {
+                        font-size: 11px !important;
+                        gap: 8px !important;
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .glass-card {
+                        padding: 16px 12px !important;
+                    }
+                    
+                    h3 {
+                        font-size: 16px !important;
+                        margin-bottom: 16px !important;
+                    }
+                }
+            `}</style>
         </div>
     )
 } 

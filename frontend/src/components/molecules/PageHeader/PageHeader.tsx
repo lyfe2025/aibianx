@@ -42,7 +42,6 @@ export function PageHeader({
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'stretch',
-                gap: '9px',
                 position: 'relative',
                 zIndex: 1
             }}>
@@ -59,7 +58,8 @@ export function PageHeader({
                         alignItems: 'center',
                         display: 'flex',
                         textOverflow: 'ellipsis',
-                        minHeight: '67px'
+                        height: '67px', // 使用固定高度而不是minHeight
+                        margin: '0'
                     }}
                 >
                     {title}
@@ -76,8 +76,8 @@ export function PageHeader({
                         alignItems: 'center',
                         display: 'flex',
                         textOverflow: 'ellipsis',
-                        minHeight: '56px',
-                        margin: '0'
+                        height: '56px', // 使用固定高度而不是minHeight
+                        margin: '9px 0 0 0' // 精确控制上边距
                     }}>
                         {subtitle}
                     </h2>
@@ -89,14 +89,16 @@ export function PageHeader({
                         color: 'var(--color-text-muted)',
                         lineHeight: '1.6',
                         textAlign: 'center',
-                        margin: '0'
+                        margin: '16px 0 0 0' // 描述文字的上边距
                     }}>
                         {description}
                     </p>
                 )}
 
                 {children && (
-                    <div className={styles.childrenAnimation}>
+                    <div className={styles.childrenAnimation} style={{
+                        marginTop: '20px' // 子元素的上边距
+                    }}>
                         {children}
                     </div>
                 )}

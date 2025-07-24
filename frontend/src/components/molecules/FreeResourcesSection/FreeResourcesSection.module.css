@@ -6,7 +6,7 @@
     /* 从212px减少到160px，减少52px */
     padding-bottom: 64px;
     /* 从48px增加到64px，增加16px，让底部间隔更协调 */
-    background: var(--color-bg-primary);
+    background: transparent; /* 改为透明，让粒子可见 */
     position: relative;
 }
 

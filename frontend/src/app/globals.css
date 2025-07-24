@@ -136,12 +136,22 @@ a {
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-xl);
   transition: var(--transition-normal);
+  /* 🔧 防止点击时的黑色闪烁 */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .glass-card--hover:hover {
   border-color: var(--color-border-active);
   box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
   transform: translateY(-2px);
+}
+
+/* 🎯 毛玻璃卡片点击状态优化 */
+.glass-card--hover:active {
+  border-color: var(--color-border-active);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.15);
+  transform: translateY(0) !important;
 }
 
 .glass-card--active {
@@ -162,11 +172,20 @@ a {
   transition: var(--transition-normal);
   text-decoration: none;
   outline: none;
+  /* 🔧 防止浏览器默认点击效果 */
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* 🎯 全局按钮点击状态优化 - 防止黑色闪烁 */
+.btn:active:not(:disabled) {
+  transform: translateY(0) !important;
+  transition: transform 0.1s ease !important;
 }
 
 /* 渐变按钮 */
@@ -182,7 +201,8 @@ a {
 }
 
 .btn--gradient:active:not(:disabled) {
-  transform: translateY(0);
+  transform: translateY(0) !important;
+  box-shadow: 0px 0px 15px 0px rgba(139, 92, 246, 0.50) !important;
 }
 
 /* 轮廓按钮 */
@@ -195,6 +215,11 @@ a {
 .btn--outline:hover:not(:disabled) {
   border-color: var(--color-border-active);
   background: rgba(59, 130, 246, 0.1);
+}
+
+.btn--outline:active:not(:disabled) {
+  background: rgba(59, 130, 246, 0.2) !important;
+  transform: translateY(0) !important;
 }
 
 /* 按钮尺寸 */
@@ -271,10 +296,20 @@ a {
   background: rgba(18, 18, 18, 0.50) !important;
 }
 
+.main-content-article-card:active {
+  background: rgba(18, 18, 18, 0.60) !important;
+  transform: translateY(0) !important;
+}
+
 /* 免费资源卡片 */
 .free-resource-card:hover {
   transform: translateY(-4px) !important;
   box-shadow: 0px 8px 25px -4px rgba(0, 0, 0, 0.20), 0px 20px 35px -3px rgba(0, 0, 0, 0.15) !important;
+}
+
+.free-resource-card:active {
+  transform: translateY(-2px) !important;
+  box-shadow: 0px 4px 15px -2px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* 相关文章卡片 */
@@ -284,10 +319,22 @@ a {
   transform: translateY(-1px) !important;
 }
 
+.related-article-card:active {
+  border-color: var(--color-border-active) !important;
+  background: rgba(59, 130, 246, 0.10) !important;
+  transform: translateY(0) !important;
+}
+
 /* 文章筛选按钮 */
 .article-filter-button:not(.article-filter-button--active):hover {
   color: var(--color-text-primary) !important;
   border-color: var(--color-border-active) !important;
+}
+
+.article-filter-button:not(.article-filter-button--active):active {
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-active) !important;
+  background: rgba(59, 130, 246, 0.15) !important;
 }
 
 /* 联系方式卡片 */
@@ -296,9 +343,19 @@ a {
   background: rgba(59, 130, 246, 0.05) !important;
 }
 
+.contact-method-card:active {
+  border-color: var(--color-border-active) !important;
+  background: rgba(59, 130, 246, 0.10) !important;
+}
+
 /* 联系方式链接 */
 .contact-method-link:hover {
   text-decoration: underline !important;
+}
+
+.contact-method-link:active {
+  text-decoration: underline !important;
+  color: var(--color-primary-blue) !important;
 }
 
 /* 文章操作按钮 */
@@ -307,9 +364,19 @@ a {
   border-color: var(--color-border-active) !important;
 }
 
+.article-action-button:not(.article-action-button--liked):not(.article-action-button--bookmarked):active {
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-active) !important;
+  background: rgba(59, 130, 246, 0.15) !important;
+}
+
 /* Footer联系链接 */
 .footer-contact-link:hover {
   color: #FFFFFF !important;
+}
+
+.footer-contact-link:active {
+  color: var(--color-primary-blue) !important;
 }
 
 /* ===== 头部图标按钮样式 ===== */
@@ -317,6 +384,10 @@ a {
 /* 图标按钮基础样式 */
 .icon-button {
   transition: all 0.2s ease !important;
+  /* 🔧 防止移动端点击黑色闪烁 */
+  -webkit-tap-highlight-color: transparent !important;
+  user-select: none !important;
+  outline: none !important;
 }
 
 /* 图标按钮hover效果 */
@@ -326,9 +397,45 @@ a {
   transform: translateY(-1px) !important;
 }
 
+/* 🎯 图标按钮点击状态优化 - 防止黑色闪烁 */
+.icon-button:active {
+  transform: translateY(0) !important;
+  background: rgba(59, 130, 246, 0.15) !important;
+  border-color: rgba(59, 130, 246, 0.50) !important;
+  transition: all 0.1s ease !important;
+}
+
 /* 图标按钮中的图标hover效果 */
 .icon-button:hover svg {
   color: #FFFFFF !important;
+}
+
+/* 🌟 通用可点击元素点击状态优化 */
+button,
+.clickable,
+[role="button"],
+[tabindex="0"] {
+  -webkit-tap-highlight-color: transparent !important;
+  user-select: none !important;
+  outline: none !important;
+}
+
+/* 🎯 通用点击反馈效果 */
+button:active:not(:disabled),
+.clickable:active,
+[role="button"]:active,
+[tabindex="0"]:active {
+  transform: scale(0.98) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* 🔧 覆盖浏览器默认的焦点样式 */
+button:focus-visible,
+.clickable:focus-visible,
+[role="button"]:focus-visible,
+[tabindex="0"]:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5) !important;
+  outline-offset: 2px !important;
 }
 
 /* ===== 响应式设计 ===== */
@@ -404,6 +511,12 @@ a {
   body main {
     padding-top: 0px !important;
   }
+}
+
+/* 全局页面头部样式 - 确保所有屏幕尺寸一致 */
+.page-header {
+  padding: 40px 0 20px !important;
+  text-align: center !important;
 }
 
 /* 平板端样式 (768px - 1023px) */
@@ -531,12 +644,6 @@ a {
   /* 调整卡片内边距 */
   .glass-card {
     padding: var(--spacing-4) !important;
-  }
-
-  /* 调整页面头部 */
-  .page-header {
-    padding: 40px 0 20px !important;
-    text-align: center !important;
   }
 
   /* 调整区块间距 */
@@ -1118,4 +1225,5 @@ html {
 
 .main-content-article-card:active {
   transform: translateY(0);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }

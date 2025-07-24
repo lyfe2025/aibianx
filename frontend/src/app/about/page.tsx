@@ -1,7 +1,7 @@
 'use client'
 
 import { Container, Icon, GradientText, GlassCard, GradientButton, AnimatedNumber } from '@/components/ui'
-import { CountdownTimer } from '@/components/molecules'
+import { CountdownTimer, PageHeader } from '@/components/molecules'
 import { useModalStore } from '@/stores'
 
 export default function AboutPage() {
@@ -29,73 +29,27 @@ export default function AboutPage() {
 
     return (
         <div style={{
-            background: '#030303',
             color: '#FFFFFF',
             fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
             minHeight: '100vh',
-            position: 'relative'
+            paddingTop: '80px' // 为固定头部留出空间
         }}>
-            {/* 背景装饰光效 */}
-            <div style={{
-                position: 'absolute',
-                top: '72px',
-                left: '432px',
-                width: '15px',
-                height: '15px',
-                background: 'rgba(59, 130, 246, 0.57)',
-                filter: 'blur(5px)',
-                borderRadius: '7.5px'
-            }} />
-
-            <div style={{
-                position: 'absolute',
-                top: '87px',
-                left: '1058px',
-                width: '22px',
-                height: '22px',
-                background: 'rgba(139, 92, 246, 0.57)',
-                filter: 'blur(6px)',
-                borderRadius: '11px'
-            }} />
-
-            {/* 主要内容 */}
-            <div style={{
-                paddingTop: '95px',
-                paddingBottom: '80px'
-            }}>
+            <div style={{ paddingBottom: '80px' }}>
                 <Container size="xl">
                     {/* Hero 区域 */}
-                    <section style={{
-                        textAlign: 'center',
-                        marginBottom: '75px'
-                    }}>
-                        <GradientText
-                            size="8xl"
-                            weight="bold"
-                            style={{
-                                marginBottom: '20px',
-                                lineHeight: '76.8px'
-                            }}
-                        >
-                            关于AI变现之路
-                        </GradientText>
-
-                        <p style={{
-                            color: '#9CA3AF',
-                            fontSize: '20px',
-                            lineHeight: '28px',
-                            textAlign: 'center',
-                            maxWidth: '792px',
-                            margin: '0 auto'
-                        }}>
-                            我们致力于探索AI技术的商业价值，帮助创作者、开发者和企业 通过人工智能技术实现商业创新与价值转化
-                        </p>
-                    </section>
+                    <PageHeader
+                        title="关于AI变现之路"
+                        subtitle="我们致力于探索AI技术的商业价值，帮助创作者、开发者和企业 通过人工智能技术实现商业创新与价值转化"
+                        description=""
+                        alignment="center"
+                        className="page-header"
+                    />
 
                     {/* 我们的使命标题 */}
                     <div style={{
                         textAlign: 'center',
                         marginBottom: '74px'
+                        // 移除marginTop，与周刊页面保持一致的间距
                     }}>
                         <GradientText
                             size="6xl"

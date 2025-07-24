@@ -42,7 +42,7 @@ export function AIStepsSectionNew() {
         <section style={{
             paddingTop: '30px',
             paddingBottom: '60px',
-            background: 'var(--color-bg-primary)',
+            background: 'transparent', // 改为透明，让粒子可见
             position: 'relative'
         }}>
             {/* 主容器 - 严格按设计稿1060px宽度 */}

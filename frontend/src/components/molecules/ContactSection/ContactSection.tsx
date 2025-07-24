@@ -274,7 +274,7 @@ export function ContactSection({
                                     e.target.style.borderColor = 'var(--color-border-primary)'
                                     e.target.style.boxShadow = 'none'
                                 }}
-                                placeholder="请输入您的邮箱地址"
+                                placeholder="请输入您的邮箱"
                             />
                         </div>
 

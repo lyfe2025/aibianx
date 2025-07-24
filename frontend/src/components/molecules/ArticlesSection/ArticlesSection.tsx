@@ -65,15 +65,53 @@ export function ArticlesSection() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             style={{
+                                // 🎯 优化背景切换 - 使用渐变的不同透明度而不是突然变化
                                 background: tab.active
-                                    ? 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)'
-                                    : 'transparent',
-                                borderRadius: tab.active ? '9999px' : '0',
-                                padding: tab.active ? '10px 24px' : '10px 0',
+                                    ? 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)' // 完全不透明的渐变
+                                    : 'linear-gradient(90deg, rgba(59, 130, 246, 0) 0%, rgba(139, 92, 246, 0) 100%)', // 完全透明的相同渐变
+                                // 🎯 统一边框半径 - 避免形状突然变化
+                                borderRadius: '9999px', // 统一使用圆角，不再切换
+                                // 🎯 统一内边距 - 避免布局抖动
+                                padding: '10px 24px', // 统一内边距，不再切换
                                 color: tab.active ? '#FFFFFF' : '#9CA3AF',
                                 fontSize: '14px',
                                 lineHeight: '20px',
-                                cursor: 'pointer'
+                                cursor: 'pointer',
+                                // 🎯 添加平滑过渡效果
+                                transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
+                                // 🔧 防止点击时的突兀效果
+                                WebkitTapHighlightColor: 'transparent',
+                                userSelect: 'none',
+                                // 🎯 添加轻微的阴影效果增强视觉反馈
+                                boxShadow: tab.active
+                                    ? '0 2px 8px rgba(59, 130, 246, 0.3)'
+                                    : '0 2px 8px rgba(0, 0, 0, 0)',
+                                // 🎯 确保按钮有合适的最小宽度
+                                minWidth: '60px',
+                                textAlign: 'center',
+                                whiteSpace: 'nowrap',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                            // 🎯 添加悬停状态的平滑处理
+                            onMouseEnter={(e) => {
+                                if (!tab.active) {
+                                    e.currentTarget.style.background = 'linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)'
+                                    e.currentTarget.style.color = '#D1D5DB'
+                                }
+                            }}
+                            onMouseLeave={(e) => {
+                                if (!tab.active) {
+                                    e.currentTarget.style.background = 'linear-gradient(90deg, rgba(59, 130, 246, 0) 0%, rgba(139, 92, 246, 0) 100%)'
+                                    e.currentTarget.style.color = '#9CA3AF'
+                                }
+                            }}
+                            onMouseDown={(e) => {
+                                e.currentTarget.style.transform = 'translateY(1px)'
+                            }}
+                            onMouseUp={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)'
                             }}
                         >
                             {tab.label}

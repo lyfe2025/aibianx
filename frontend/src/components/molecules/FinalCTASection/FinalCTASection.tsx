@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Container, GradientText, GradientButton, Icon, BackgroundDecoration } from '@/components/ui'
+import { Container, Icon } from '@/components/ui'
 
 /**
  * 最终行动召唤区块组件 - FinalCTASection
@@ -59,7 +59,7 @@ export function FinalCTASection() {
         <section style={{
             paddingTop: '112px',
             paddingBottom: '96px',
-            background: 'var(--color-bg-primary)',
+            background: 'transparent', // 改为透明，让粒子可见
             position: 'relative',
             overflow: 'hidden'
         }}>
@@ -248,7 +248,8 @@ export function FinalCTASection() {
                             marginTop: '16px',
                             marginLeft: '33px',
                             marginRight: '33px',
-                            flexDirection: 'row'
+                            flexDirection: 'row',
+                            transition: 'all 0.2s ease'
                         }}>
                             <Icon name="input-email-icon" size="sm" style={{
                                 width: '20px',
@@ -267,6 +268,22 @@ export function FinalCTASection() {
                                     placeholder="您的称呼"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
+                                    onFocus={(e) => {
+                                        const container = e.target.parentElement?.parentElement
+                                        if (container) {
+                                            container.style.borderColor = '#3B82F6'
+                                            container.style.background = 'rgba(18, 18, 18, 0.70)'
+                                            container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
+                                        }
+                                    }}
+                                    onBlur={(e) => {
+                                        const container = e.target.parentElement?.parentElement
+                                        if (container) {
+                                            container.style.borderColor = 'rgba(59, 130, 246, 0.30)'
+                                            container.style.background = 'rgba(18, 18, 18, 0.50)'
+                                            container.style.boxShadow = 'none'
+                                        }
+                                    }}
                                     style={{
                                         width: '368px',
                                         height: '20px',
@@ -299,7 +316,8 @@ export function FinalCTASection() {
                             marginTop: '16px',
                             marginLeft: '33px',
                             marginRight: '33px',
-                            flexDirection: 'row'
+                            flexDirection: 'row',
+                            transition: 'all 0.2s ease'
                         }}>
                             <Icon name="input-email-icon" size="sm" style={{
                                 width: '20px',
@@ -315,9 +333,25 @@ export function FinalCTASection() {
                             }}>
                                 <input
                                     type="email"
-                                    placeholder="您的邮箱"
+                                    placeholder="请输入您的邮箱"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                    onFocus={(e) => {
+                                        const container = e.target.parentElement?.parentElement
+                                        if (container) {
+                                            container.style.borderColor = '#3B82F6'
+                                            container.style.background = 'rgba(18, 18, 18, 0.70)'
+                                            container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
+                                        }
+                                    }}
+                                    onBlur={(e) => {
+                                        const container = e.target.parentElement?.parentElement
+                                        if (container) {
+                                            container.style.borderColor = 'rgba(59, 130, 246, 0.30)'
+                                            container.style.background = 'rgba(18, 18, 18, 0.50)'
+                                            container.style.boxShadow = 'none'
+                                        }
+                                    }}
                                     style={{
                                         width: '368px',
                                         height: '20px',

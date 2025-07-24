@@ -41,7 +41,7 @@ export const LayoutController = memo(function LayoutController({ children }: Lay
             minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
-            background: 'var(--color-bg-primary)' // 确保根容器背景色
+            background: 'transparent' // 改为透明，让粒子可见
         }}>
             {/* 
               智能头部导航控制 - AppHeader
@@ -53,7 +53,7 @@ export const LayoutController = memo(function LayoutController({ children }: Lay
             {/* 页面主要内容区域 - 使用过渡效果包装 */}
             <main style={{
                 flex: 1,
-                background: 'var(--color-bg-primary)', // 确保主内容区背景色
+                background: 'transparent', // 改为透明，让粒子可以透过
                 marginTop: !isProfilePage ? '-98px' : '0', // 个人中心外的页面内容上移到菜单下方
                 paddingTop: !isProfilePage ? '98px' : '0', // 保证内容不被菜单遮挡
                 position: 'relative',

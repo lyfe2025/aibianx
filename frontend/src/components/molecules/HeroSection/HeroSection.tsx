@@ -55,9 +55,19 @@ export function HeroSection() {
             }}>
                 <input
                     type="email"
-                    placeholder="输入您的邮箱"
+                    placeholder="请输入您的邮箱"
                     value={heroEmail}
                     onChange={(e) => setHeroEmail(e.target.value)}
+                    onFocus={(e) => {
+                        e.target.style.borderColor = '#3B82F6'
+                        e.target.style.background = 'rgba(18, 18, 18, 0.70)'
+                        e.target.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
+                    }}
+                    onBlur={(e) => {
+                        e.target.style.borderColor = '#2A2A2A'
+                        e.target.style.background = 'rgba(18, 18, 18, 0.50)'
+                        e.target.style.boxShadow = 'none'
+                    }}
                     style={{
                         flex: 1,
                         background: 'rgba(18, 18, 18, 0.50)',
@@ -67,7 +77,8 @@ export function HeroSection() {
                         color: '#757575',
                         fontSize: '13.33px',
                         lineHeight: '19px',
-                        outline: 'none'
+                        outline: 'none',
+                        transition: 'all 0.2s ease'
                     }}
                 />
                 <div style={{

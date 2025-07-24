@@ -62,7 +62,7 @@ export default function ProfilePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-primary)]">
+    <div className="min-h-screen bg-transparent"> {/* 改为透明，让粒子可见 */}
       <div className="flex">
         {/* 左侧导航栏 - 使用UserSidebar组件 */}
         <UserSidebar />

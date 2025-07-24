@@ -65,7 +65,7 @@ export function MainContentSection() {
         <section style={{
             paddingTop: '48px',
             paddingBottom: '112px',
-            background: 'var(--color-bg-primary)'
+            background: 'transparent' // 改为透明，让粒子可见
         }}>
             <Container size="xl">
                 <div style={{
@@ -97,23 +97,54 @@ export function MainContentSection() {
                                     key={filter}
                                     onClick={() => setActiveFilter(filter)}
                                     style={{
+                                        // 🎯 优化背景切换 - 使用渐变的不同透明度而不是突然变化
                                         background: filter === activeFilter
-                                            ? 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)'
-                                            : 'transparent',
+                                            ? 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)' // 完全不透明的渐变
+                                            : 'linear-gradient(90deg, rgba(59, 130, 246, 0) 0%, rgba(139, 92, 246, 0) 100%)', // 完全透明的相同渐变
                                         border: 'none',
-                                        borderRadius: filter === activeFilter ? '9999px' : '0',
+                                        // 🎯 统一边框半径 - 避免形状突然变化
+                                        borderRadius: '9999px', // 统一使用圆角，不再切换
                                         padding: '8px 24px', // 统一所有按钮的内边距，避免点击后挤压
                                         color: filter === activeFilter ? '#FFFFFF' : '#9CA3AF',
                                         fontSize: '14px',
                                         lineHeight: '21px',
                                         cursor: 'pointer',
-                                        transition: 'all 0.2s ease',
+                                        // 🎯 优化过渡效果 - 使用更快的过渡和平滑的缓动函数
+                                        transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
                                         minWidth: '72px', // 增加最小宽度确保文字固定位置
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         whiteSpace: 'nowrap', // 防止文字换行
-                                        marginRight: index < filterOptions.length - 1 ? '48px' : '0'
+                                        marginRight: index < filterOptions.length - 1 ? '48px' : '0',
+                                        // 🔧 防止点击时的突兀效果
+                                        WebkitTapHighlightColor: 'transparent',
+                                        userSelect: 'none',
+                                        // 🎯 添加轻微的阴影效果增强视觉反馈
+                                        boxShadow: filter === activeFilter
+                                            ? '0 2px 8px rgba(59, 130, 246, 0.3)'
+                                            : '0 2px 8px rgba(0, 0, 0, 0)',
+                                        // 🎯 增强激活状态的视觉效果
+                                        transform: filter === activeFilter ? 'translateY(0)' : 'translateY(0)',
+                                    }}
+                                    // 🎯 添加悬停和点击状态的平滑处理
+                                    onMouseEnter={(e) => {
+                                        if (filter !== activeFilter) {
+                                            e.currentTarget.style.background = 'linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)'
+                                            e.currentTarget.style.color = '#D1D5DB'
+                                        }
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        if (filter !== activeFilter) {
+                                            e.currentTarget.style.background = 'linear-gradient(90deg, rgba(59, 130, 246, 0) 0%, rgba(139, 92, 246, 0) 100%)'
+                                            e.currentTarget.style.color = '#9CA3AF'
+                                        }
+                                    }}
+                                    onMouseDown={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(1px)'
+                                    }}
+                                    onMouseUp={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0)'
                                     }}
                                 >
                                     {filter}
@@ -168,18 +199,18 @@ export function MainContentSection() {
                                             paddingTop: '18px'
                                         }}>
                                             {/* 标题 */}
-                                                                        <h3 style={{
-                                color: '#FFFFFF',
-                                fontSize: '18px',
-                                fontWeight: '700',
-                                lineHeight: '28px',
-                                margin: 0,
-                                width: article.id === 2 ? '419px' : article.id === 3 ? '450px' : '380px',
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                marginBottom: '28px'
-                            }}>
+                                            <h3 style={{
+                                                color: '#FFFFFF',
+                                                fontSize: '18px',
+                                                fontWeight: '700',
+                                                lineHeight: '28px',
+                                                margin: 0,
+                                                width: article.id === 2 ? '419px' : article.id === 3 ? '450px' : '380px',
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                marginBottom: '28px'
+                                            }}>
                                                 {article.title}
                                             </h3>
 
@@ -552,7 +583,7 @@ export function MainContentSection() {
                                     width: '306.57px',
                                     marginBottom: '16px'
                                 }}>
-                                                                         &ldquo;通过AI变现之路的指导，我在两个月内实现了月入过万的目标，资源非常实用！&rdquo;
+                                    &ldquo;通过AI变现之路的指导，我在两个月内实现了月入过万的目标，资源非常实用！&rdquo;
                                 </div>
                                 <div style={{
                                     display: 'flex',
@@ -644,13 +675,30 @@ export function MainContentSection() {
                                     padding: '12px 16px',
                                     width: '288px',
                                     display: 'flex',
-                                    alignItems: 'center'
+                                    alignItems: 'center',
+                                    transition: 'all 0.2s ease'
                                 }}>
                                     <input
                                         type="email"
-                                        placeholder="您的邮箱"
+                                        placeholder="请输入您的邮箱"
                                         value={subscribeEmail}
                                         onChange={(e) => setSubscribeEmail(e.target.value)}
+                                        onFocus={(e) => {
+                                            const container = e.target.parentElement
+                                            if (container) {
+                                                container.style.borderColor = '#3B82F6'
+                                                container.style.background = 'rgba(18, 18, 18, 0.70)'
+                                                container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
+                                            }
+                                        }}
+                                        onBlur={(e) => {
+                                            const container = e.target.parentElement
+                                            if (container) {
+                                                container.style.borderColor = '#2A2A2A'
+                                                container.style.background = 'rgba(18, 18, 18, 0.50)'
+                                                container.style.boxShadow = 'none'
+                                            }
+                                        }}
                                         style={{
                                             width: '256px',
                                             height: '20px',

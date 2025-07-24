@@ -24,6 +24,7 @@ import {
  * - 所有组件都使用纯CSS实现，确保100%设计稿还原
  * - 响应式设计已内置在各个组件中
  * - 模态框组件用于处理用户登录、注册、会员订阅等交互
+ * - 全局3D背景效果已集成到layout.tsx中，遍布所有页面
  */
 export default function HomePage() {
   return (

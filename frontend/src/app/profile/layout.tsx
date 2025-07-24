@@ -59,7 +59,7 @@ export default function ProfileLayout({
                 minHeight: '100vh',
                 display: 'flex',
                 flexDirection: 'column',
-                background: 'var(--color-bg-primary)'
+                background: 'transparent' // 改为透明，让粒子可见
             }}>
                 {/* 
                   页面主要内容区域

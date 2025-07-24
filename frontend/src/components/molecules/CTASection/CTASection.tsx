@@ -165,7 +165,8 @@ export function CTASection() {
                             padding: '17.5px 17px',
                             display: 'flex',
                             gap: '14px',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            transition: 'all 0.2s ease'
                         }}>
                             <div style={{ color: '#3B82F6', fontSize: '20px' }}>👤</div>
                             <input
@@ -173,6 +174,22 @@ export function CTASection() {
                                 placeholder="您的称呼"
                                 value={finalFormData.name}
                                 onChange={(e) => setFinalFormData(prev => ({ ...prev, name: e.target.value }))}
+                                onFocus={(e) => {
+                                    const container = e.target.parentElement
+                                    if (container) {
+                                        container.style.borderColor = '#3B82F6'
+                                        container.style.background = 'rgba(18, 18, 18, 0.70)'
+                                        container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
+                                    }
+                                }}
+                                onBlur={(e) => {
+                                    const container = e.target.parentElement
+                                    if (container) {
+                                        container.style.borderColor = 'rgba(59, 130, 246, 0.30)'
+                                        container.style.background = 'rgba(18, 18, 18, 0.50)'
+                                        container.style.boxShadow = 'none'
+                                    }
+                                }}
                                 style={{
                                     flex: 1,
                                     background: 'transparent',
@@ -192,14 +209,31 @@ export function CTASection() {
                             padding: '17.5px 17px',
                             display: 'flex',
                             gap: '14px',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            transition: 'all 0.2s ease'
                         }}>
                             <div style={{ color: '#3B82F6', fontSize: '20px' }}>📧</div>
                             <input
                                 type="email"
-                                placeholder="您的邮箱"
+                                placeholder="请输入您的邮箱"
                                 value={finalFormData.email}
                                 onChange={(e) => setFinalFormData(prev => ({ ...prev, email: e.target.value }))}
+                                onFocus={(e) => {
+                                    const container = e.target.parentElement
+                                    if (container) {
+                                        container.style.borderColor = '#3B82F6'
+                                        container.style.background = 'rgba(18, 18, 18, 0.70)'
+                                        container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
+                                    }
+                                }}
+                                onBlur={(e) => {
+                                    const container = e.target.parentElement
+                                    if (container) {
+                                        container.style.borderColor = 'rgba(59, 130, 246, 0.30)'
+                                        container.style.background = 'rgba(18, 18, 18, 0.50)'
+                                        container.style.boxShadow = 'none'
+                                    }
+                                }}
                                 style={{
                                     flex: 1,
                                     background: 'transparent',

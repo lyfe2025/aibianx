@@ -132,7 +132,7 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
                     type="email"
                     value={email}
                     onChange={handleEmailChange}
-                    placeholder="输入您的邮箱"
+                    placeholder="请输入您的邮箱"
                     style={{
                         background: 'rgba(18, 18, 18, 0.50)',
                         border: `1px solid ${!isValidEmail ? '#EF4444' : '#2A2A2A'}`,

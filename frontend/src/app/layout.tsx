@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { BackToTopButton, GlobalCountdownInit } from '@/components/ui'
+import { BackToTopButton, GlobalCountdownInit, DynamicParticleBackground } from '@/components/ui'
 import { LayoutController } from '@/components/molecules/LayoutController'
 import {
   LoginModal,
@@ -27,6 +27,7 @@ import './globals.css'
  * - 个人中心页面 (/profile/*) - 不包含AppHeader，由profile/layout.tsx控制
  * 
  * 🔧 组件构成：
+ * - GlobalBackground3D：全站3D背景效果
  * - LayoutController：动态布局控制器（客户端组件）
  * - BackToTopButton：返回顶部按钮
  * - 全局弹窗：登录、注册、会员、支付等弹窗
@@ -95,6 +96,8 @@ const metadata: Metadata = {
   },
 }
 
+export { metadata }
+
 export default function RootLayout({
   children,
 }: {
@@ -131,6 +134,12 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {/* 
+          全站粒子背景效果 - DynamicParticleBackground
+          使用动态导入，完全避免SSR水合问题，绝对稳定可靠
+        */}
+        <DynamicParticleBackground />
+
         {/* 
           动态布局控制器 - LayoutController
           根据页面路径智能控制AppHeader的显示

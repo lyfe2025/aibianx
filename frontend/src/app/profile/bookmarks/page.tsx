@@ -91,7 +91,7 @@ export default function BookmarksPage() {
   const filters = ['全部', '最近收藏', '筛选']
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-primary)]">
+    <div className="min-h-screen bg-transparent"> {/* 改为透明，让粒子可见 */}
       <div className="flex">
         {/* 左侧导航栏 - 使用UserSidebar组件 */}
         <UserSidebar />
@@ -155,7 +155,8 @@ export default function BookmarksPage() {
                       width: '256px',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '10px'
+                      gap: '10px',
+                      transition: 'all 0.2s ease'
                     }}>
                       <Icon name="search-icon" size="sm" style={{ color: '#9CA3AF' }} />
                       <input
@@ -163,6 +164,22 @@ export default function BookmarksPage() {
                         placeholder="搜索收藏内容"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={(e) => {
+                          const container = e.target.parentElement
+                          if (container) {
+                            container.style.borderColor = '#3B82F6'
+                            container.style.background = 'rgba(26, 26, 26, 0.80)'
+                            container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
+                          }
+                        }}
+                        onBlur={(e) => {
+                          const container = e.target.parentElement
+                          if (container) {
+                            container.style.borderColor = 'rgba(42, 42, 42, 0.70)'
+                            container.style.background = 'rgba(26, 26, 26, 0.60)'
+                            container.style.boxShadow = 'none'
+                          }
+                        }}
                         style={{
                           background: 'transparent',
                           border: 'none',
