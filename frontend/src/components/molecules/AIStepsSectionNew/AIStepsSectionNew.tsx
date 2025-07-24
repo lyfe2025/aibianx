@@ -1,3 +1,5 @@
+'use client'
+
 import { Container, GradientText } from '@/components/ui'
 
 /**

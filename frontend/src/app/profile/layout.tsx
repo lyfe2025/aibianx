@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { BackToTopButton } from '@/components/ui'
 import { UserSidebar } from '@/components/molecules'
 import {
     LoginModal,
@@ -18,7 +17,7 @@ import {
  * 3. 无顶部导航栏 - 个人中心使用左侧UserSidebar导航，不需要AppHeader
  * 4. 无底部菜单栏 - 由根布局的LayoutController统一控制，确保全站一致性
  * 5. 完整的弹窗支持 - 包含所有全局弹窗组件
- * 6. 返回顶部功能 - 保持与主站一致的用户体验
+ * 6. 继承主布局的公共组件 - 返回顶部按钮由主布局提供，避免重复
  * 
  * 🎯 适用页面：
  * - 个人中心主页 (/profile)
@@ -29,7 +28,6 @@ import {
  * 📍 组件构成：
  * - UserSidebar：左侧固定导航菜单（公共组件）
  * - 页面内容区域：右侧动态内容，由子页面控制
- * - BackToTopButton：返回顶部按钮
  * - 全局弹窗：登录、注册、会员、支付等弹窗
  * 
  * ⚠️ 重要说明：
@@ -37,6 +35,7 @@ import {
  * - AppFooter底部菜单栏由根布局的LayoutController统一管理，确保全站一致性
  * - 个人中心页面不需要搜索引擎索引，设置了robots配置
  * - 左侧菜单在所有profile子页面间共享，避免重复代码
+ * - BackToTopButton由主布局提供，不在此重复添加
  */
 
 export const metadata: Metadata = {
@@ -89,14 +88,9 @@ export default function ProfileLayout({
             </div>
 
             {/* 
-              全站返回顶部按钮 - BackToTopButton
-              保持与主站一致的用户体验
-            */}
-            <BackToTopButton />
-
-            {/* 
               全站弹窗组件 - 确保在个人中心也能正常使用
               包含：登录、注册、忘记密码、会员升级、支付等弹窗
+              注意：BackToTopButton已由主布局提供，此处不重复添加
             */}
             <LoginModal />
             <RegisterModal />

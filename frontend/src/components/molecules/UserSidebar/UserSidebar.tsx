@@ -18,7 +18,7 @@ interface UserSidebarProps {
  * 1. 首页跳转 - 点击"首页"直接跳转到主页 (/)
  * 2. 退出登录 - 点击"退出"注销并跳转到首页
  * 3. 页面导航 - 个人中心各子页面间的跳转
- * 4. 路由高亮 - 当前页面的菜单项自动高亮显示
+ * 4. 精确路由高亮 - 只有当前页面的菜单项高亮显示，避免多选
  * 
  * 🎯 导航路径：
  * - 首页: / (直接跳转)
@@ -27,6 +27,15 @@ interface UserSidebarProps {
  * - 我的订阅: /profile/subscription
  * - 设置: /profile/settings
  * - 退出: 执行logout()并跳转到首页
+ * 
+ * 🔧 路径匹配逻辑：
+ * - 精确匹配：首页和个人中心必须完全匹配路径
+ * - 前缀匹配：子页面使用startsWith，但排除父级路径
+ * - 优先级：子路径优先于父路径匹配
+ * 
+ * 🎨 图标资源：
+ * - 使用从设计稿下载的本地SVG图标
+ * - 确保图标风格与设计稿完全一致
  */
 export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
     const pathname = usePathname()
@@ -37,22 +46,22 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
         {
             href: '/',
             label: '首页',
-            icon: 'home-icon'
+            icon: 'profile-sidebar-home'
         },
         {
             href: '/profile',
             label: '个人中心',
-            icon: 'profile-user-center'
+            icon: 'profile-sidebar-center'
         },
         {
             href: '/profile/bookmarks',
             label: '我的收藏',
-            icon: 'bookmark-icon'
+            icon: 'profile-sidebar-bookmark'
         },
         {
             href: '/profile/subscription',
             label: '我的订阅',
-            icon: 'subscription-icon'
+            icon: 'profile-sidebar-subscription'
         }
     ]
 
@@ -60,15 +69,32 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
         {
             href: '/profile/settings',
             label: '设置',
-            icon: 'settings-icon'
+            icon: 'profile-sidebar-settings'
         }
     ]
 
+    /**
+     * 精确的路由匹配函数
+     * 解决多个菜单项同时高亮的问题
+     */
     const isActiveRoute = (href: string) => {
+        // 首页：必须完全匹配 "/"
+        if (href === '/') {
+            return pathname === '/'
+        }
+
+        // 个人中心主页：必须完全匹配 "/profile"
         if (href === '/profile') {
             return pathname === '/profile'
         }
-        return pathname?.startsWith(href)
+
+        // 子页面：精确匹配，避免父路径干扰
+        if (href.startsWith('/profile/')) {
+            return pathname === href
+        }
+
+        // 其他路径：使用startsWith匹配
+        return pathname?.startsWith(href) || false
     }
 
     // 退出登录处理：清除用户状态并跳转到首页
@@ -134,7 +160,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                     className={styles.navItem}
                     title="退出登录并返回首页"
                 >
-                    <Icon name="logout-icon" size="sm" className={styles.navIcon} />
+                    <Icon name="profile-sidebar-logout" size="sm" className={styles.navIcon} />
                     <span className={styles.navLabel}>退出</span>
                 </button>
             </nav>

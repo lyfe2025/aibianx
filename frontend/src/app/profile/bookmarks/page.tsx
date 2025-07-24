@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Icon, GradientText, Container } from '@/components/ui'
+import { Icon, GradientText, Container, Input } from '@/components/ui'
 import { BookmarkCard } from '@/components/molecules'
 
 export default function BookmarksPage() {
@@ -202,42 +202,19 @@ export default function BookmarksPage() {
                   flexShrink: 0
                 }}>
                   {/* 搜索框 */}
-                  <div style={{
-                    background: 'rgba(26, 26, 26, 0.60)',
-                    border: '1px solid rgba(42, 42, 42, 0.70)',
-                    borderRadius: '8px',
-                    width: '256px',
-                    minWidth: '256px',
-                    gap: '10px',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingLeft: '12px',
-                    paddingRight: '16px',
-                    paddingTop: '8px',
-                    paddingBottom: '8px'
-                  }}>
-                    <Icon name="search-bookmark-icon" size="sm" style={{
-                      color: '#9CA3AF',
-                      width: '18px',
-                      height: '18px',
-                      flexShrink: 0
-                    }} />
-                    <input
+                  <div style={{ width: '256px', minWidth: '256px' }}>
+                    <Input
                       type="text"
                       placeholder="搜索收藏内容"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        outline: 'none',
+                      icon={<Icon name="search-bookmark-icon" size="sm" style={{
                         color: '#9CA3AF',
-                        fontSize: 'var(--font-size-base)',
-                        lineHeight: '20px',
-                        width: '100%',
-                        minWidth: 0
-                      }}
+                        width: '18px',
+                        height: '18px'
+                      }} />}
+                      fullWidth={false}
+                      style={{ width: '256px' }}
                     />
                   </div>
 
@@ -598,10 +575,6 @@ export default function BookmarksPage() {
                   }}>&gt;</span>
                 </div>
               </div>
-            </div>
-          </Container>
-        </main>
-      </div>
     </div>
   )
 } 
