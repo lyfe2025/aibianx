@@ -294,7 +294,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
           <button
             key={tab.key}
             className={`${styles.tabButton} ${activeTab === tab.key ? styles.tabButtonActive : ''}`}
-            onClick={() => setActiveTab(tab.key as any)}
+            onClick={() => setActiveTab(tab.key as 'basic' | 'security' | 'notification')}
           >
             <Icon name={tab.icon} size="sm" />
             {tab.label}

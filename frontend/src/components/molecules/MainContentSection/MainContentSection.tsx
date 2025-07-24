@@ -420,7 +420,7 @@ export function MainContentSection() {
                                     lineHeight: '24px',
                                     margin: 0
                                 }}>
-                                    "通过AI变现之路的指导，我在两个月内实现了月入过万的目标，资源非常实用！"
+                                    &ldquo;通过AI变现之路的指导，我在两个月内实现了月入过万的目标，资源非常实用！&rdquo;
                                 </p>
                                 <div style={{
                                     display: 'flex',

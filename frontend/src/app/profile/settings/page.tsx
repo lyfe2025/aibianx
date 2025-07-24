@@ -36,13 +36,26 @@ export default function SettingsPage() {
   }
 
   const handleToggle = (section: string, field: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: !prev[section][field]
+    setFormData(prev => {
+      if (section === 'notifications') {
+        return {
+          ...prev,
+          notifications: {
+            ...prev.notifications,
+            [field]: !prev.notifications[field as keyof typeof prev.notifications]
+          }
+        }
+      } else if (section === 'privacy') {
+        return {
+          ...prev,
+          privacy: {
+            ...prev.privacy,
+            [field]: prev.privacy[field as keyof typeof prev.privacy] === 'public' ? 'private' : 'public'
+          }
+        }
       }
-    }))
+      return prev
+    })
   }
 
   const settingsSections = [
@@ -546,7 +559,7 @@ export default function SettingsPage() {
                             }}>
                               <input
                                 type="checkbox"
-                                checked={formData.notifications[item.key]}
+                                checked={formData.notifications[item.key as keyof typeof formData.notifications]}
                                 onChange={() => handleToggle('notifications', item.key)}
                                 style={{ opacity: 0, width: 0, height: 0 }}
                               />
@@ -557,7 +570,7 @@ export default function SettingsPage() {
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
-                                background: formData.notifications[item.key]
+                                background: formData.notifications[item.key as keyof typeof formData.notifications]
                                   ? 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)'
                                   : 'rgba(55, 65, 81, 0.50)',
                                 transition: 'all 0.2s ease',
@@ -567,7 +580,7 @@ export default function SettingsPage() {
                                   position: 'absolute',
                                   height: '18px',
                                   width: '18px',
-                                  left: formData.notifications[item.key] ? '23px' : '3px',
+                                  left: formData.notifications[item.key as keyof typeof formData.notifications] ? '23px' : '3px',
                                   bottom: '3px',
                                   background: '#FFFFFF',
                                   borderRadius: '50%',

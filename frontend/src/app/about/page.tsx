@@ -1,9 +1,32 @@
 'use client'
 
-import { Container, Icon, GradientText, GlassCard, GradientButton, Input } from '@/components/ui'
+import { Container, Icon, GradientText, GlassCard, GradientButton, AnimatedNumber } from '@/components/ui'
 import { CountdownTimer } from '@/components/molecules'
+import { useModalStore } from '@/stores'
 
 export default function AboutPage() {
+    const { openModal } = useModalStore()
+
+    // 处理立即开通会员按钮点击
+    const handleUpgrade = () => {
+        const defaultPlan = {
+            name: '年度会员',
+            price: 299,
+            originalPrice: 399,
+            period: '年',
+            features: [
+                '200+ AI变现教程和指南',
+                '每周更新实战案例',
+                '专属社区和导师指导',
+                'AI工具专属优惠'
+            ]
+        }
+
+        openModal('payment', {
+            payment: { plan: defaultPlan }
+        })
+    }
+
     return (
         <div style={{
             background: '#030303',
@@ -44,7 +67,7 @@ export default function AboutPage() {
                     {/* Hero 区域 */}
                     <section style={{
                         textAlign: 'center',
-                        marginBottom: '120px'
+                        marginBottom: '75px'
                     }}>
                         <GradientText
                             size="8xl"
@@ -69,145 +92,10 @@ export default function AboutPage() {
                         </p>
                     </section>
 
-                    {/* 三个使命卡片 */}
-                    <section style={{
-                        display: 'flex',
-                        gap: '40px',
-                        marginBottom: '120px',
-                        paddingLeft: '120px',
-                        paddingRight: '120px'
-                    }}>
-                        {/* 分享知识 */}
-                        <GlassCard variant="default" style={{
-                            flex: 1,
-                            padding: '34px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '14px'
-                        }}>
-                            <div style={{
-                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                borderRadius: '12px',
-                                padding: '14px',
-                                width: '60px',
-                                height: '60px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginBottom: '10px'
-                            }}>
-                                <Icon name="share-knowledge-feature" size="lg" />
-                            </div>
-
-                            <h3 style={{
-                                color: '#FFFFFF',
-                                fontSize: '24px',
-                                fontWeight: '700',
-                                lineHeight: '38.4px',
-                                margin: '0'
-                            }}>
-                                分享知识
-                            </h3>
-
-                            <p style={{
-                                color: '#9CA3AF',
-                                fontSize: '16px',
-                                lineHeight: '25.6px',
-                                margin: '0'
-                            }}>
-                                汇集AI领域最前沿的变现技巧与商业模式，为读者提供实用且深入的AI应用知识，帮助大家快速掌握AI技术的商业化路径。
-                            </p>
-                        </GlassCard>
-
-                        {/* 推动创新 */}
-                        <GlassCard variant="default" style={{
-                            flex: 1,
-                            padding: '34px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '14px'
-                    }}>
-                        <div style={{
-                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                borderRadius: '12px',
-                                padding: '14px',
-                                width: '60px',
-                                height: '60px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginBottom: '10px'
-                            }}>
-                                <Icon name="drive-innovation-new" size="lg" />
-                            </div>
-
-                            <h3 style={{
-                                color: '#FFFFFF',
-                                fontSize: '24px',
-                                fontWeight: '700',
-                                lineHeight: '38.4px',
-                                margin: '0'
-                            }}>
-                                推动创新
-                            </h3>
-
-                            <p style={{
-                                color: '#9CA3AF',
-                                fontSize: '16px',
-                                lineHeight: '25.6px',
-                                margin: '0'
-                            }}>
-                                激发创作者和企业的创新思维，探索AI与各行业的融合可能性，推动新兴商业模式的孵化与发展，创造更多商业价值。
-                            </p>
-                        </GlassCard>
-
-                        {/* 赋能变现 */}
-                        <GlassCard variant="default" style={{
-                            flex: 1,
-                            padding: '34px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '14px'
-                        }}>
-                            <div style={{
-                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                borderRadius: '12px',
-                                padding: '14px',
-                                width: '60px',
-                                height: '60px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginBottom: '10px'
-                            }}>
-                                <Icon name="enable-monetization-new" size="lg" />
-                            </div>
-
-                            <h3 style={{
-                                color: '#FFFFFF',
-                                fontSize: '24px',
-                                fontWeight: '700',
-                                lineHeight: '38.4px',
-                                margin: '0'
-                            }}>
-                                赋能变现
-                            </h3>
-
-                            <p style={{
-                                color: '#9CA3AF',
-                                fontSize: '16px',
-                                lineHeight: '25.6px',
-                                margin: '0'
-                            }}>
-                                提供可落地的AI变现方法与工具，帮助个人创作者和企业挖掘AI技术的盈利潜力，实现技术到财富的高效转化。
-                            </p>
-                        </GlassCard>
-                    </section>
-
                     {/* 我们的使命标题 */}
                     <div style={{
                         textAlign: 'center',
-                        marginBottom: '120px'
+                        marginBottom: '74px'
                     }}>
                         <GradientText
                             size="6xl"
@@ -218,12 +106,152 @@ export default function AboutPage() {
                         >
                             我们的使命
                         </GradientText>
+                    </div>
+
+                    {/* 三个使命卡片 */}
+                    <section style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        width: '100%',
+                        marginBottom: '74px'
+                    }}>
+                        <div style={{
+                            display: 'flex',
+                            gap: '40px',
+                            width: '1200px'
+                        }}>
+                            {/* 分享知识 */}
+                            <GlassCard variant="default" style={{
+                                flex: 1,
+                                padding: '34px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '14px'
+                            }}>
+                                <div style={{
+                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
+                                    borderRadius: '12px',
+                                    padding: '14px',
+                                    width: '60px',
+                                    height: '60px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginBottom: '10px'
+                                }}>
+                                    <Icon name="share-knowledge-feature" size="lg" />
+                                </div>
+
+                                <h3 style={{
+                                    color: '#FFFFFF',
+                                    fontSize: '24px',
+                                    fontWeight: '700',
+                                    lineHeight: '38.4px',
+                                    margin: '0'
+                                }}>
+                                    分享知识
+                                </h3>
+
+                                <p style={{
+                                    color: '#9CA3AF',
+                                    fontSize: '16px',
+                                    lineHeight: '25.6px',
+                                    margin: '0'
+                                }}>
+                                    汇集AI领域最前沿的变现技巧与商业模式，为读者提供实用且深入的AI应用知识，帮助大家快速掌握AI技术的商业化路径。
+                                </p>
+                            </GlassCard>
+
+                            {/* 推动创新 */}
+                            <GlassCard variant="default" style={{
+                                flex: 1,
+                                padding: '34px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '14px'
+                            }}>
+                                <div style={{
+                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
+                                    borderRadius: '12px',
+                                    padding: '14px',
+                                    width: '60px',
+                                    height: '60px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginBottom: '10px'
+                                }}>
+                                    <Icon name="drive-innovation-new" size="lg" />
+                                </div>
+
+                                <h3 style={{
+                                    color: '#FFFFFF',
+                                    fontSize: '24px',
+                                    fontWeight: '700',
+                                    lineHeight: '38.4px',
+                                    margin: '0'
+                                }}>
+                                    推动创新
+                                </h3>
+
+                                <p style={{
+                                    color: '#9CA3AF',
+                                    fontSize: '16px',
+                                    lineHeight: '25.6px',
+                                    margin: '0'
+                                }}>
+                                    激发创作者和企业的创新思维，探索AI与各行业的融合可能性，推动新兴商业模式的孵化与发展，创造更多商业价值。
+                                </p>
+                            </GlassCard>
+
+                            {/* 赋能变现 */}
+                            <GlassCard variant="default" style={{
+                                flex: 1,
+                                padding: '34px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '14px'
+                            }}>
+                                <div style={{
+                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
+                                    borderRadius: '12px',
+                                    padding: '14px',
+                                    width: '60px',
+                                    height: '60px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginBottom: '10px'
+                                }}>
+                                    <Icon name="enable-monetization-new" size="lg" />
+                                </div>
+
+                                <h3 style={{
+                                    color: '#FFFFFF',
+                                    fontSize: '24px',
+                                    fontWeight: '700',
+                                    lineHeight: '38.4px',
+                                    margin: '0'
+                                }}>
+                                    赋能变现
+                                </h3>
+
+                                <p style={{
+                                    color: '#9CA3AF',
+                                    fontSize: '16px',
+                                    lineHeight: '25.6px',
+                                    margin: '0'
+                                }}>
+                                    提供可落地的AI变现方法与工具，帮助个人创作者和企业挖掘AI技术的盈利潜力，实现技术到财富的高效转化。
+                                </p>
+                            </GlassCard>
                         </div>
+                    </section>
 
                     {/* 成为会员区域 */}
                     <section style={{
                         textAlign: 'center',
-                        marginBottom: '120px'
+                        marginBottom: '74px'
                     }}>
                         <GradientText
                             size="6xl"
@@ -251,8 +279,8 @@ export default function AboutPage() {
                             display: 'flex',
                             gap: '32px',
                             alignItems: 'flex-start',
-                            paddingLeft: '120px',
-                            paddingRight: '120px'
+                            justifyContent: 'center',
+                            width: '100%'
                         }}>
                             {/* 左侧会员专享卡片 */}
                             <GlassCard variant="default" style={{
@@ -309,7 +337,9 @@ export default function AboutPage() {
                                 </div>
 
                                 {/* 倒计时 */}
-                                <CountdownTimer style={{ marginBottom: '19px' }} />
+                                <div style={{ marginBottom: '19px' }}>
+                                    <CountdownTimer />
+                                </div>
 
                                 {/* 特权介绍 */}
                                 <div style={{
@@ -352,8 +382,8 @@ export default function AboutPage() {
                                     flexDirection: 'column',
                                     gap: '11px',
                                     marginBottom: '31px'
-                        }}>
-                            {[
+                                }}>
+                                    {[
                                         { text: '200+ AI变现教程和指南', badge: 'New!', badgeColor: '#FF6B6B' },
                                         { text: '每周更新实战案例', badge: '独家', badgeColor: '#3B82F6' },
                                         { text: '专属社区和导师指导' },
@@ -448,10 +478,12 @@ export default function AboutPage() {
                                     size="lg"
                                     variant="primary"
                                     fullWidth
+                                    onClick={handleUpgrade}
                                     style={{
                                         borderRadius: '9999px',
                                         padding: '15px 114px',
-                                        boxShadow: '0px 4px 12px 0px rgba(139, 92, 246, 0.25)'
+                                        boxShadow: '0px 4px 12px 0px rgba(139, 92, 246, 0.25)',
+                                        whiteSpace: 'nowrap'
                                     }}
                                 >
                                     立即开通会员
@@ -490,7 +522,8 @@ export default function AboutPage() {
                                         fontSize: '24px',
                                         fontWeight: '700',
                                         lineHeight: '38.4px',
-                                        margin: '0'
+                                        margin: '0',
+                                        textAlign: 'left'
                                     }}>
                                         实时更新的AI工具库
                                     </h3>
@@ -499,7 +532,8 @@ export default function AboutPage() {
                                         color: '#9CA3AF',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
-                                        margin: '0'
+                                        margin: '0',
+                                        textAlign: 'left'
                                     }}>
                                         我们持续跟踪和评估最新的AI工具，为会员提供详细的使用指南和变现策略，让你始终站在技术前沿。
                                     </p>
@@ -530,7 +564,8 @@ export default function AboutPage() {
                                         fontSize: '24px',
                                         fontWeight: '700',
                                         lineHeight: '38.4px',
-                                        margin: '0'
+                                        margin: '0',
+                                        textAlign: 'left'
                                     }}>
                                         成功案例库
                                     </h3>
@@ -539,7 +574,8 @@ export default function AboutPage() {
                                         color: '#9CA3AF',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
-                                        margin: '0'
+                                        margin: '0',
+                                        textAlign: 'left'
                                     }}>
                                         学习1000+成功案例的实操步骤和策略，涵盖各个行业和技能水平，快速找到适合你的变现方式。
                                     </p>
@@ -551,8 +587,8 @@ export default function AboutPage() {
                                     display: 'flex',
                                     flexDirection: 'column',
                                     gap: '30px'
-                                    }}>
-                                        <div style={{
+                                }}>
+                                    <div style={{
                                         background: 'rgba(30, 61, 89, 0.30)',
                                         borderRadius: '16px',
                                         padding: '20px',
@@ -570,7 +606,8 @@ export default function AboutPage() {
                                         fontSize: '24px',
                                         fontWeight: '700',
                                         lineHeight: '38.4px',
-                                        margin: '0'
+                                        margin: '0',
+                                        textAlign: 'left'
                                     }}>
                                         专业社区支持
                                     </h3>
@@ -579,7 +616,8 @@ export default function AboutPage() {
                                         color: '#9CA3AF',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
-                                        margin: '0'
+                                        margin: '0',
+                                        textAlign: 'left'
                                     }}>
                                         加入由成功AI创业者和专家组成的私密社区，随时获取指导、分享经验并发现合作机会。
                                     </p>
@@ -610,7 +648,8 @@ export default function AboutPage() {
                                         fontSize: '24px',
                                         fontWeight: '700',
                                         lineHeight: '38.4px',
-                                        margin: '0'
+                                        margin: '0',
+                                        textAlign: 'left'
                                     }}>
                                         一对一咨询
                                     </h3>
@@ -619,7 +658,8 @@ export default function AboutPage() {
                                         color: '#9CA3AF',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
-                                        margin: '0'
+                                        margin: '0',
+                                        textAlign: 'left'
                                     }}>
                                         高级会员每月可享受与AI领域专家的一对一咨询，解决你在AI创业和变现过程中遇到的具体问题。
                                     </p>
@@ -631,7 +671,7 @@ export default function AboutPage() {
                     {/* 为什么选择我们 */}
                     <section style={{
                         textAlign: 'center',
-                        marginBottom: '120px'
+                        marginBottom: '73px'
                     }}>
                         <GradientText
                             size="6xl"
@@ -656,127 +696,132 @@ export default function AboutPage() {
 
                         <div style={{
                             display: 'flex',
-                            gap: '24px',
-                            paddingLeft: '120px',
-                            paddingRight: '120px'
+                            justifyContent: 'center',
+                            width: '100%'
                         }}>
-                            {/* 实战经验 */}
-                            <GlassCard variant="default" style={{
-                                flex: 1,
-                                padding: '34px',
+                            <div style={{
                                 display: 'flex',
-                                flexDirection: 'column',
-                                gap: '20px'
+                                gap: '24px',
+                                width: '1200px'
                             }}>
-                                <div style={{
+                                {/* 实战经验 */}
+                                <GlassCard variant="default" style={{
+                                    flex: 1,
+                                    padding: '34px',
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '12px',
-                                    marginTop: '23px'
+                                    flexDirection: 'column',
+                                    gap: '20px'
                                 }}>
-                                    <Icon name="practical-experience-new" size="md" />
-                                    <h3 style={{
-                                        color: '#FFFFFF',
-                                        fontSize: '24px',
-                                        fontWeight: '700',
-                                        lineHeight: '38.4px',
-                                        margin: '0'
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '12px',
+                                        marginTop: '23px'
                                     }}>
-                                        实战经验
-                                    </h3>
-                                </div>
+                                        <Icon name="practical-experience-new" size="md" />
+                                        <h3 style={{
+                                            color: '#FFFFFF',
+                                            fontSize: '24px',
+                                            fontWeight: '700',
+                                            lineHeight: '38.4px',
+                                            margin: '0'
+                                        }}>
+                                            实战经验
+                                        </h3>
+                                    </div>
 
-                                <p style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    margin: '0',
-                                    textAlign: 'left'
-                                }}>
-                                    所有内容都基于实际变现案例和经验，而非纯理论。我们的团队成员都有丰富的AI变现实战经历，能够提供有价值的指导。
-                                </p>
-                            </GlassCard>
+                                    <p style={{
+                                        color: '#9CA3AF',
+                                        fontSize: '16px',
+                                        lineHeight: '25.6px',
+                                        margin: '0',
+                                        textAlign: 'left'
+                                    }}>
+                                        所有内容都基于实际变现案例和经验，而非纯理论。我们的团队成员都有丰富的AI变现实战经历，能够提供有价值的指导。
+                                    </p>
+                                </GlassCard>
 
-                            {/* 持续更新 */}
-                            <GlassCard variant="default" style={{
-                                flex: 1,
-                                padding: '34px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '20px'
-                            }}>
-                                <div style={{
+                                {/* 持续更新 */}
+                                <GlassCard variant="default" style={{
+                                    flex: 1,
+                                    padding: '34px',
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '12px',
-                                    marginTop: '21px'
+                                    flexDirection: 'column',
+                                    gap: '20px'
                                 }}>
-                                    <Icon name="continuous-update-new" size="md" />
-                                    <h3 style={{
-                                        color: '#FFFFFF',
-                                        fontSize: '24px',
-                                        fontWeight: '700',
-                                        lineHeight: '38.4px',
-                                        margin: '0'
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '12px',
+                                        marginTop: '21px'
                                     }}>
-                                        持续更新
-                                    </h3>
-                                </div>
+                                        <Icon name="continuous-update-new" size="md" />
+                                        <h3 style={{
+                                            color: '#FFFFFF',
+                                            fontSize: '24px',
+                                            fontWeight: '700',
+                                            lineHeight: '38.4px',
+                                            margin: '0'
+                                        }}>
+                                            持续更新
+                                        </h3>
+                                    </div>
 
-                                <p style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    margin: '0',
-                                    textAlign: 'left'
-                                }}>
-                                    我们每周更新最新的AI工具、变现策略和成功案例，确保您始终站在行业前沿，把握最新的AI变现机会。
-                                </p>
-                            </GlassCard>
+                                    <p style={{
+                                        color: '#9CA3AF',
+                                        fontSize: '16px',
+                                        lineHeight: '25.6px',
+                                        margin: '0',
+                                        textAlign: 'left'
+                                    }}>
+                                        我们每周更新最新的AI工具、变现策略和成功案例，确保您始终站在行业前沿，把握最新的AI变现机会。
+                                    </p>
+                                </GlassCard>
 
-                            {/* 社区支持 */}
-                            <GlassCard variant="default" style={{
-                                flex: 1,
-                                padding: '34px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '20px'
-                            }}>
-                                <div style={{
+                                {/* 社区支持 */}
+                                <GlassCard variant="default" style={{
+                                    flex: 1,
+                                    padding: '34px',
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '12px',
-                                    marginTop: '21px'
+                                    flexDirection: 'column',
+                                    gap: '20px'
                                 }}>
-                                    <Icon name="community-advantage-new" size="md" />
-                                    <h3 style={{
-                                        color: '#FFFFFF',
-                                        fontSize: '24px',
-                                        fontWeight: '700',
-                                        lineHeight: '38.4px',
-                                        margin: '0'
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '12px',
+                                        marginTop: '21px'
                                     }}>
-                                        社区支持
-                                    </h3>
-                                </div>
+                                        <Icon name="community-advantage-new" size="md" />
+                                        <h3 style={{
+                                            color: '#FFFFFF',
+                                            fontSize: '24px',
+                                            fontWeight: '700',
+                                            lineHeight: '38.4px',
+                                            margin: '0'
+                                        }}>
+                                            社区支持
+                                        </h3>
+                                    </div>
 
-                                <p style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    margin: '0',
-                                    textAlign: 'left'
-                                }}>
-                                    加入我们活跃的会员社区，与其他AI变现实践者交流经验，结识志同道合的伙伴，共同成长。
-                                </p>
-                            </GlassCard>
+                                    <p style={{
+                                        color: '#9CA3AF',
+                                        fontSize: '16px',
+                                        lineHeight: '25.6px',
+                                        margin: '0',
+                                        textAlign: 'left'
+                                    }}>
+                                        加入我们活跃的会员社区，与其他AI变现实践者交流经验，结识志同道合的伙伴，共同成长。
+                                    </p>
+                                </GlassCard>
+                            </div>
                         </div>
                     </section>
 
                     {/* 平台数据 */}
                     <section style={{
                         textAlign: 'center',
-                        marginBottom: '120px'
+                        marginBottom: '73px'
                     }}>
                         <GradientText
                             size="6xl"
@@ -791,43 +836,49 @@ export default function AboutPage() {
 
                         <div style={{
                             display: 'flex',
-                            gap: '24px',
-                            paddingLeft: '120px',
-                            paddingRight: '120px'
+                            justifyContent: 'center',
+                            width: '100%'
                         }}>
-                            {[
-                                { value: '30万+', label: '月活跃用户' },
-                                { value: '500+', label: '精选案例' },
-                                { value: '120+', label: '周刊期数' },
-                                { value: '50+', label: '合作伙伴' }
-                            ].map((stat, index) => (
-                                <GlassCard key={index} variant="default" style={{
-                                    flex: 1,
-                                    padding: '27px 75px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '9px',
-                                    alignItems: 'center'
-                                }}>
-                                    <GradientText
-                                        size="7xl"
-                                        weight="bold"
-                                        style={{
-                                            lineHeight: '76.8px'
-                                        }}
-                                    >
-                                        {stat.value}
-                                    </GradientText>
-
-                                    <span style={{
-                                        color: '#9CA3AF',
-                                        fontSize: '16px',
-                                        lineHeight: '25.6px'
+                            <div style={{
+                                display: 'flex',
+                                gap: '24px',
+                                width: '1200px'
+                            }}>
+                                {[
+                                    { value: '30万+', label: '月活跃用户' },
+                                    { value: '500+', label: '精选案例' },
+                                    { value: '120+', label: '周刊期数' },
+                                    { value: '50+', label: '合作伙伴' }
+                                ].map((stat, index) => (
+                                    <GlassCard key={index} variant="default" style={{
+                                        flex: 1,
+                                        padding: '27px 75px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '9px',
+                                        alignItems: 'center'
                                     }}>
-                                        {stat.label}
-                                    </span>
-                                </GlassCard>
-                            ))}
+                                        <AnimatedNumber
+                                            value={stat.value}
+                                            duration={2000}
+                                            delay={index * 200}
+                                            size="7xl"
+                                            weight="bold"
+                                            style={{
+                                                lineHeight: '76.8px'
+                                            }}
+                                        />
+
+                                        <span style={{
+                                            color: '#9CA3AF',
+                                            fontSize: '16px',
+                                            lineHeight: '25.6px'
+                                        }}>
+                                            {stat.label}
+                                        </span>
+                                    </GlassCard>
+                                ))}
+                            </div>
                         </div>
                     </section>
 
@@ -849,196 +900,282 @@ export default function AboutPage() {
 
                         <div style={{
                             display: 'flex',
-                            gap: '16px',
-                            paddingLeft: '120px',
-                            paddingRight: '120px',
-                            alignItems: 'flex-start'
+                            justifyContent: 'center',
+                            width: '100%'
                         }}>
-                            {/* 左侧联系图标 */}
                             <div style={{
                                 display: 'flex',
-                                flexDirection: 'column',
-                                gap: '24px'
+                                gap: '16px',
+                                alignItems: 'flex-start',
+                                width: '1200px'
                             }}>
+                                {/* 左侧联系图标 */}
                                 <div style={{
-                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                    borderRadius: '8px',
-                                    padding: '4px',
-                                    width: '40px',
-                                    height: '40px',
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
+                                    flexDirection: 'column',
+                                    gap: '24px',
+                                    marginTop: '0.21px'
                                 }}>
-                                    <Icon name="email-contact-new" size="lg" />
+                                    <div style={{
+                                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
+                                        borderRadius: '8px',
+                                        padding: '4px',
+                                        width: '40px',
+                                        height: '40px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Icon name="email-contact-new" size="lg" />
+                                    </div>
+                                    <div style={{
+                                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
+                                        borderRadius: '8px',
+                                        padding: '4px',
+                                        width: '40px',
+                                        height: '40px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Icon name="phone-contact-new" size="lg" />
+                                    </div>
+                                    <div style={{
+                                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
+                                        borderRadius: '8px',
+                                        padding: '4px',
+                                        width: '40px',
+                                        height: '40px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <Icon name="email-contact-new" size="lg" />
+                                    </div>
                                 </div>
+
+                                {/* 中间联系信息 */}
                                 <div style={{
-                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                    borderRadius: '8px',
-                                    padding: '4px',
-                                    width: '40px',
-                                    height: '40px',
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
+                                    flexDirection: 'column',
+                                    gap: '38px',
+                                    marginTop: '7px'
                                 }}>
-                                    <Icon name="phone-contact-new" size="lg" />
+                                    <span style={{
+                                        color: '#9CA3AF',
+                                        fontSize: '16px',
+                                        lineHeight: '25.6px',
+                                        textAlign: 'left',
+                                        width: '178px',
+                                        height: '26px',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}>
+                                        contact@aibianzai.com
+                                    </span>
+                                    <span style={{
+                                        color: '#9CA3AF',
+                                        fontSize: '16px',
+                                        lineHeight: '25.6px',
+                                        textAlign: 'left',
+                                        width: '192px',
+                                        height: '26px',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}>
+                                        400-888-XXXX
+                                    </span>
+                                    <span style={{
+                                        color: '#9CA3AF',
+                                        fontSize: '16px',
+                                        lineHeight: '25.6px',
+                                        textAlign: 'left',
+                                        width: '192px',
+                                        height: '26px',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}>
+                                        北京市海淀区科技园区88号
+                                    </span>
                                 </div>
+
+                                {/* 右侧表单区域 - 垂直布局 */}
                                 <div style={{
-                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                    borderRadius: '8px',
-                                    padding: '4px',
-                                    width: '40px',
-                                    height: '40px',
+                                    flex: 1,
+                                    marginLeft: '157px',
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
+                                    flexDirection: 'column',
+                                    gap: '0px'
                                 }}>
-                                    <Icon name="email-contact-new" size="lg" />
+                                    {/* 联系邮箱标签 */}
+                                    <div style={{
+                                        color: '#9CA3AF',
+                                        fontSize: '16px',
+                                        lineHeight: '25.6px',
+                                        textAlign: 'left',
+                                        marginBottom: '8px'
+                                    }}>
+                                        联系邮箱
+                                    </div>
+
+                                    {/* 姓名输入框 */}
+                                    <input
+                                        placeholder="请输入您的姓名"
+                                        style={{
+                                            background: 'rgba(18, 18, 18, 0.50)',
+                                            border: '1px solid #2A2A2A',
+                                            borderRadius: '8px',
+                                            padding: '12px 16px',
+                                            width: '100%',
+                                            height: '46px',
+                                            color: '#FFFFFF',
+                                            fontSize: '14px',
+                                            lineHeight: '20px',
+                                            fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                                            outline: 'none',
+                                            backdropFilter: 'blur(4px)',
+                                            WebkitBackdropFilter: 'blur(4px)',
+                                            transition: 'all 0.2s ease',
+                                            marginBottom: '9px'
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.style.borderColor = '#3B82F6'
+                                            e.target.style.background = 'rgba(18, 18, 18, 0.70)'
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.style.borderColor = '#2A2A2A'
+                                            e.target.style.background = 'rgba(18, 18, 18, 0.50)'
+                                        }}
+                                    />
+
+                                    {/* 邮箱输入框 */}
+                                    <input
+                                        placeholder="请输入您的邮箱"
+                                        style={{
+                                            background: 'rgba(18, 18, 18, 0.50)',
+                                            border: '1px solid #2A2A2A',
+                                            borderRadius: '8px',
+                                            padding: '12px 16px',
+                                            width: '100%',
+                                            height: '46px',
+                                            color: '#FFFFFF',
+                                            fontSize: '14px',
+                                            lineHeight: '20px',
+                                            fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                                            outline: 'none',
+                                            backdropFilter: 'blur(4px)',
+                                            WebkitBackdropFilter: 'blur(4px)',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.style.borderColor = '#3B82F6'
+                                            e.target.style.background = 'rgba(18, 18, 18, 0.70)'
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.style.borderColor = '#2A2A2A'
+                                            e.target.style.background = 'rgba(18, 18, 18, 0.50)'
+                                        }}
+                                    />
+
+                                    {/* 留言内容标签 */}
+                                    <div style={{
+                                        color: '#9CA3AF',
+                                        fontSize: '16px',
+                                        lineHeight: '25.6px',
+                                        textAlign: 'left',
+                                        whiteSpace: 'nowrap',
+                                        marginTop: '29px',
+                                        marginBottom: '8px'
+                                    }}>
+                                        留言内容
+                                    </div>
+
+                                    {/* 留言文本框 */}
+                                    <textarea
+                                        placeholder="请输入您想咨询或合作的内容"
+                                        style={{
+                                            background: 'rgba(18, 18, 18, 0.50)',
+                                            border: '1px solid #2A2A2A',
+                                            borderRadius: '8px',
+                                            padding: '12px 16px',
+                                            width: '100%',
+                                            height: '172px',
+                                            color: '#FFFFFF',
+                                            fontSize: '14px',
+                                            lineHeight: '20px',
+                                            resize: 'none',
+                                            fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                                            outline: 'none',
+                                            backdropFilter: 'blur(4px)',
+                                            WebkitBackdropFilter: 'blur(4px)',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.style.borderColor = '#3B82F6'
+                                            e.target.style.background = 'rgba(18, 18, 18, 0.70)'
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.style.borderColor = '#2A2A2A'
+                                            e.target.style.background = 'rgba(18, 18, 18, 0.50)'
+                                        }}
+                                    />
+
+
                                 </div>
-                            </div>
-
-                            {/* 中间联系信息 */}
-                            <div style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '38px',
-                                marginTop: '7px'
-                            }}>
-                                <span style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    textAlign: 'left'
-                                }}>
-                                    contact@aibianzai.com
-                                </span>
-                                <span style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    textAlign: 'left'
-                                }}>
-                                    400-888-XXXX
-                                </span>
-                                <span style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    textAlign: 'left'
-                                }}>
-                                    北京市海淀区科技园区88号
-                                </span>
-                            </div>
-
-                            {/* 右侧表单 */}
-                            <div style={{
-                                flex: 1,
-                                marginLeft: '157px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '7px'
-                            }}>
-                                <label style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    textAlign: 'left',
-                                    marginBottom: '8px'
-                                }}>
-                                    联系邮箱
-                                </label>
-
-                                <Input
-                                    placeholder="请输入您的姓名"
-                                    style={{
-                                        marginBottom: '9px'
-                                    }}
-                                />
-
-                                <Input
-                                    placeholder="请输入您的邮箱"
-                                    style={{
-                                        marginBottom: '9px'
-                                    }}
-                                />
-
-                                <label style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    textAlign: 'left',
-                                    marginBottom: '1px'
-                                }}>
-                                    留言内容
-                                </label>
                             </div>
                         </div>
 
-                        {/* 底部说明和表单 */}
+                        {/* 底部说明文字 */}
                         <div style={{
                             display: 'flex',
-                            gap: '42px',
-                            paddingLeft: '120px',
-                            paddingRight: '120px',
-                            alignItems: 'flex-start',
-                            marginTop: '1px'
+                            justifyContent: 'center',
+                            width: '100%',
+                            marginTop: '29px'
                         }}>
-                            <p style={{
-                                color: '#9CA3AF',
-                                fontSize: '16px',
-                                lineHeight: '25.6px',
-                                textAlign: 'left',
-                                width: '378px',
-                                margin: '0',
-                                marginTop: '1px'
-                            }}>
-                                我们欢迎各类合作洽谈，包括内容贡献、案例分享、品牌合作、投资咨询等。如果您对AI变现有独特见解或实践经验，也欢迎与我们联系，共同推动AI产业发展！
-                            </p>
-
                             <div style={{
-                                flex: 1,
-                                marginLeft: '1px'
+                                width: '1200px'
                             }}>
-                                <textarea
-                                    placeholder="请输入您想咨询或合作的内容"
-                                    style={{
-                                        background: 'rgba(18, 18, 18, 0.50)',
-                                        border: '1px solid #2A2A2A',
-                                        borderRadius: '8px',
-                                        padding: '12px 16px',
-                                        width: '100%',
-                                        height: '172px',
-                                        color: '#757575',
-                                        fontSize: '14px',
-                                        lineHeight: '20px',
-                                        resize: 'none',
-                                        fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif"
-                                    }}
-                                />
+                                <p style={{
+                                    color: '#9CA3AF',
+                                    fontSize: '16px',
+                                    lineHeight: '16px',
+                                    textAlign: 'left',
+                                    margin: '0',
+                                    marginTop: '1.41px',
+                                    width: '378.85px'
+                                }}>
+                                    我们欢迎各类合作洽谈，包括内容贡献、案例分享、品牌合作、投资咨询等。如果您对AI变现有独特见解或实践经验，也欢迎与我们联系，共同推动AI产业发展！
+                                </p>
                             </div>
                         </div>
 
                         {/* 提交按钮 */}
                         <div style={{
                             display: 'flex',
-                            justifyContent: 'flex-end',
-                            paddingRight: '120px',
-                            marginTop: '17px'
+                            justifyContent: 'center',
+                            width: '100%',
+                            marginTop: '12px'
                         }}>
-                            <GradientButton
-                                size="sm"
-                                variant="primary"
-                                style={{
-                                    borderRadius: '9999px',
-                                    padding: '17px 28px',
-                                    fontSize: '13.33px',
-                                    fontFamily: 'Arial',
-                                    lineHeight: '15px'
-                                }}
-                            >
-                                提交信息
-                            </GradientButton>
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                                width: '1200px'
+                            }}>
+                                <GradientButton
+                                    size="sm"
+                                    variant="primary"
+                                    style={{
+                                        borderRadius: '9999px',
+                                        padding: '17px 28px',
+                                        fontSize: '13.33px',
+                                        fontFamily: 'Arial',
+                                        lineHeight: '15px',
+                                        width: '110px'
+                                    }}
+                                >
+                                    提交信息
+                                </GradientButton>
+                            </div>
                         </div>
                     </section>
                 </Container>

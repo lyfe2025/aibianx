@@ -1,46 +1,31 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
+import { useCountdownStore, startGlobalCountdown, stopGlobalCountdown } from '@/stores'
 
 interface CountdownTimerProps {
     className?: string
+    targetDate?: Date
 }
 
-export function CountdownTimer({ className }: CountdownTimerProps) {
-    const [timeLeft, setTimeLeft] = useState({
-        days: 2,
-        hours: 23,
-        minutes: 59,
-        seconds: 57
-    })
+export function CountdownTimer({ className, targetDate }: CountdownTimerProps) {
+    const { timeLeft, isActive, initializeCountdown } = useCountdownStore()
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setTimeLeft(prev => {
-                let { days, hours, minutes, seconds } = prev
+        // 初始化倒计时（如果提供了targetDate就使用，否则使用默认值）
+        if (targetDate) {
+            initializeCountdown(targetDate)
+        } else if (!useCountdownStore.getState().targetDate) {
+            initializeCountdown()
+        }
 
-                if (seconds > 0) {
-                    seconds--
-                } else if (minutes > 0) {
-                    seconds = 59
-                    minutes--
-                } else if (hours > 0) {
-                    seconds = 59
-                    minutes = 59
-                    hours--
-                } else if (days > 0) {
-                    seconds = 59
-                    minutes = 59
-                    hours = 23
-                    days--
-                }
+        // 启动全局倒计时
+        startGlobalCountdown()
 
-                return { days, hours, minutes, seconds }
-            })
-        }, 1000)
-
-        return () => clearInterval(timer)
-    }, [])
+        return () => {
+            // 组件卸载时不停止全局倒计时，让其他组件可以继续使用
+        }
+    }, [targetDate, initializeCountdown])
 
     return (
         <div className={className}>

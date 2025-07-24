@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { BackToTopButton } from '@/components/ui'
+import { BackToTopButton, GlobalCountdownInit } from '@/components/ui'
 import { LayoutController } from '@/components/molecules/LayoutController'
 import {
   LoginModal,
@@ -100,6 +100,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  useEffect(() => {
+    // 启动全局倒计时
+    startGlobalCountdown()
+  }, [])
+
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>

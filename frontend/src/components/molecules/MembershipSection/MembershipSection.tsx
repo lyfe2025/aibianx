@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { GradientButton, Icon } from '@/components/ui'
-import { useModalStore } from '@/stores'
+import { useModalStore, useCountdownStore } from '@/stores'
 
 interface MembershipFeature {
     icon: string
@@ -36,41 +35,7 @@ export function MembershipSection({
     className = ''
 }: MembershipSectionProps) {
     const { openModal } = useModalStore()
-    const [timeLeft, setTimeLeft] = useState({
-        days: 7,
-        hours: 12,
-        minutes: 35,
-        seconds: 42
-    })
-
-    // 模拟倒计时（实际项目中应该使用真实的倒计时逻辑）
-    useState(() => {
-        const timer = setInterval(() => {
-            setTimeLeft(prev => {
-                let { days, hours, minutes, seconds } = prev
-
-                if (seconds > 0) {
-                    seconds--
-                } else if (minutes > 0) {
-                    minutes--
-                    seconds = 59
-                } else if (hours > 0) {
-                    hours--
-                    minutes = 59
-                    seconds = 59
-                } else if (days > 0) {
-                    days--
-                    hours = 23
-                    minutes = 59
-                    seconds = 59
-                }
-
-                return { days, hours, minutes, seconds }
-            })
-        }, 1000)
-
-        return () => clearInterval(timer)
-    })
+    const { timeLeft } = useCountdownStore()
 
     const handleUpgrade = () => {
         // 直接打开支付弹窗，传递默认的年度会员计划信息

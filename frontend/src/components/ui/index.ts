@@ -1,4 +1,5 @@
 // UI 组件统一导出
+export { AnimatedNumber } from './AnimatedNumber'
 export { Avatar } from './Avatar'
 export { GradientButton } from './Button'
 export { GradientText } from './Text'
@@ -9,4 +10,5 @@ export { Input } from './Input'
 export { BaseModal, ModalOverlay } from './Modal'
 export { BackToTopButton } from './BackToTopButton'
 export { BackgroundDecoration } from './BackgroundDecoration'
-export { PageTransition } from './PageTransition' 
+export { PageTransition } from './PageTransition'
+export { GlobalCountdownInit } from './GlobalCountdownInit' 

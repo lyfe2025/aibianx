@@ -1,10 +1,17 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { BaseModal } from '@/components/ui/Modal/BaseModal'
 import { GradientButton, Icon } from '@/components/ui'
 import { CountdownTimer } from '@/components/molecules/CountdownTimer/CountdownTimer'
-import { PaymentMethodCard, PaymentMethod } from '@/components/molecules/PaymentMethodCard/PaymentMethodCard'
+import { useCountdownStore } from '@/stores'
+// PaymentMethodCard 已被内联实现，不再需要导入
+interface PaymentMethod {
+    id: string
+    name: string
+    icon: string
+    color: string
+}
 import { useModalStore } from '@/stores'
 
 // 支付方式配置
@@ -53,11 +60,8 @@ export const PaymentModal: React.FC = () => {
     // 获取计划信息，优先使用传入的数据，否则使用默认值
     const plan = data.payment?.plan || DEFAULT_PLAN
 
-    // 计算限时优惠结束时间（3天后）
-    const countdownTarget = useMemo(() => {
-        const now = new Date()
-        return new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000) // 3天后
-    }, [])
+    // 使用全局倒计时状态
+    const { targetDate } = useCountdownStore()
 
     const handlePaymentMethodSelect = (methodId: string) => {
         setSelectedPaymentMethod(methodId)
@@ -92,131 +96,110 @@ export const PaymentModal: React.FC = () => {
         <BaseModal
             isOpen={isThisModalOpen}
             onClose={closeModal}
-            title="会员特权"
-            subtitle="解锁全部AI变现资源和高级功能"
-            maxWidth="sm"
+            title="开通会员"
+            subtitle="立即享受AI变现资源和专业指导"
+            maxWidth="md"
         >
             <div style={{
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 'var(--spacing-6)'
+                gap: '16px'
             }}>
-                {/* 价格区域 */}
+                {/* 价格和优惠信息区域 - 紧凑布局 */}
                 <div style={{
                     background: 'rgba(59, 130, 246, 0.05)',
                     border: '1px dashed var(--color-primary-blue)',
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '17px',
-                    marginLeft: '6px',
-                    width: '340px'
+                    borderRadius: '12px',
+                    padding: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
                 }}>
-                    {/* 价格信息 */}
                     <div style={{
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginBottom: 'var(--spacing-2)'
+                        alignItems: 'baseline',
+                        gap: '8px'
                     }}>
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 'var(--spacing-1)'
+                        <span style={{
+                            background: 'var(--gradient-primary)',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            fontSize: '32px',
+                            fontWeight: '700',
+                            lineHeight: '1'
                         }}>
+                            ¥{plan.price}
+                        </span>
+                        <span style={{
+                            color: 'var(--color-text-muted)',
+                            fontSize: '14px'
+                        }}>
+                            /{plan.period}
+                        </span>
+                        {plan.originalPrice && (
                             <span style={{
-                                background: 'var(--gradient-primary)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                fontSize: 'var(--font-size-4xl)',
-                                fontWeight: '600',
-                                lineHeight: '42px'
+                                color: 'var(--color-text-disabled)',
+                                fontSize: '14px',
+                                textDecoration: 'line-through'
                             }}>
-                                ¥{plan.price}
+                                ¥{plan.originalPrice}
                             </span>
-                            <span style={{
-                                color: 'var(--color-text-muted)',
-                                fontSize: 'var(--font-size-base)',
-                                lineHeight: '20px',
-                                marginTop: '11px'
-                            }}>
-                                /{plan.period}
-                            </span>
-                            {plan.originalPrice && (
-                                <span style={{
-                                    color: 'var(--color-text-disabled)',
-                                    fontSize: 'var(--font-size-base)',
-                                    textDecoration: 'line-through',
-                                    lineHeight: '20px',
-                                    marginTop: '11px',
-                                    marginLeft: 'var(--spacing-2)'
-                                }}>
-                                    ¥{plan.originalPrice}
-                                </span>
-                            )}
-                        </div>
+                        )}
+                    </div>
 
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
                         {plan.originalPrice && (
                             <div style={{
                                 background: '#EF4444',
-                                borderRadius: 'var(--radius-full)',
-                                padding: '2px 8px',
-                                marginTop: '11px'
+                                borderRadius: '12px',
+                                padding: '2px 8px'
                             }}>
                                 <span style={{
                                     color: '#FFFFFF',
-                                    fontSize: 'var(--font-size-xs)',
-                                    fontWeight: '500',
-                                    lineHeight: '16px'
+                                    fontSize: '12px',
+                                    fontWeight: '600'
                                 }}>
                                     7.5折
                                 </span>
                             </div>
                         )}
+                        <CountdownTimer />
                     </div>
-
-                    <p style={{
-                        color: 'var(--color-text-muted)',
-                        fontSize: 'var(--font-size-base)',
-                        lineHeight: '20px',
-                        margin: 0
-                    }}>
-                        会员特权包含所有AI变现资源和高级功能
-                    </p>
                 </div>
 
-                {/* 会员特权列表 */}
+                {/* 会员特权 - 网格布局，更紧凑 */}
                 <div>
                     <h3 style={{
                         color: 'var(--color-text-primary)',
-                        fontSize: 'var(--font-size-lg)',
-                        fontWeight: '500',
-                        lineHeight: '24px',
-                        margin: '0 0 var(--spacing-3) 6px'
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        margin: '0 0 12px 0'
                     }}>
                         会员特权
                     </h3>
 
                     <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 'var(--spacing-4)',
-                        marginLeft: '6px'
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '8px'
                     }}>
                         {plan.features.map((feature, index) => (
                             <div key={index} style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: 'var(--spacing-3)'
+                                gap: '8px',
+                                padding: '6px'
                             }}>
                                 <Icon
                                     name="modals/member-check-icon"
                                     size="sm"
-                                    style={{ color: 'var(--color-text-primary)' }}
+                                    style={{ color: 'var(--color-primary-blue)', flexShrink: 0 }}
                                 />
                                 <span style={{
                                     color: 'var(--color-text-primary)',
-                                    fontSize: 'var(--font-size-lg)',
-                                    lineHeight: '24px'
+                                    fontSize: '14px',
+                                    lineHeight: '20px'
                                 }}>
                                     {feature}
                                 </span>
@@ -225,44 +208,47 @@ export const PaymentModal: React.FC = () => {
                     </div>
                 </div>
 
-                {/* 限时优惠倒计时 */}
+                {/* 支付方式 - 水平排列 */}
                 <div>
                     <h3 style={{
                         color: 'var(--color-text-muted)',
-                        fontSize: 'var(--font-size-base)',
-                        lineHeight: '20px',
-                        margin: '0 0 var(--spacing-2) 0'
+                        fontSize: '14px',
+                        margin: '0 0 8px 0'
                     }}>
-                        限时优惠
-                    </h3>
-
-                    <CountdownTimer targetDate={countdownTarget} />
-                </div>
-
-                {/* 支付方式选择 */}
-                <div>
-                    <h3 style={{
-                        color: 'var(--color-text-muted)',
-                        fontSize: 'var(--font-size-base)',
-                        lineHeight: '20px',
-                        margin: '0 0 var(--spacing-2) 0'
-                    }}>
-                        请选择支付方式
+                        选择支付方式
                     </h3>
 
                     <div style={{
                         display: 'flex',
-                        flexDirection: 'column',
-                        gap: 'var(--spacing-3)',
-                        marginRight: '6px'
+                        gap: '8px'
                     }}>
                         {PAYMENT_METHODS.map((method) => (
-                            <PaymentMethodCard
+                            <div
                                 key={method.id}
-                                method={method}
-                                isSelected={selectedPaymentMethod === method.id}
-                                onSelect={handlePaymentMethodSelect}
-                            />
+                                onClick={() => handlePaymentMethodSelect(method.id)}
+                                style={{
+                                    flex: 1,
+                                    padding: '12px',
+                                    border: `2px solid ${selectedPaymentMethod === method.id ? 'var(--color-primary-blue)' : 'var(--color-border-primary)'}`,
+                                    borderRadius: '8px',
+                                    background: selectedPaymentMethod === method.id ? 'rgba(59, 130, 246, 0.05)' : 'transparent',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '4px'
+                                }}
+                            >
+                                <Icon name={method.icon} size="sm" />
+                                <span style={{
+                                    color: 'var(--color-text-primary)',
+                                    fontSize: '12px',
+                                    textAlign: 'center'
+                                }}>
+                                    {method.name}
+                                </span>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -273,73 +259,56 @@ export const PaymentModal: React.FC = () => {
                     fullWidth
                     disabled={isLoading}
                     onClick={handlePayment}
-                    style={{ marginRight: '6px' }}
+                    style={{
+                        marginTop: '8px',
+                        padding: '16px',
+                        fontSize: '16px',
+                        fontWeight: '600'
+                    }}
                 >
-                    {isLoading ? '支付中...' : `确认支付 ¥${plan.price}`}
+                    {isLoading ? '支付中...' : `立即支付 ¥${plan.price}`}
                 </GradientButton>
 
-                {/* 底部帮助信息 */}
+                {/* 底部帮助信息 - 精简版 */}
                 <div style={{
                     display: 'flex',
-                    flexDirection: 'column',
                     alignItems: 'center',
-                    gap: 'var(--spacing-3)',
-                    marginTop: 'var(--spacing-4)'
+                    justifyContent: 'center',
+                    gap: '16px',
+                    marginTop: '8px',
+                    paddingTop: '12px',
+                    borderTop: '1px solid var(--color-border-primary)'
                 }}>
-                    {/* 帮助链接 */}
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 'var(--spacing-1)'
+                        gap: '4px',
+                        cursor: 'pointer'
                     }}>
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 'var(--spacing-1)',
-                            cursor: 'pointer'
-                        }}>
-                            <Icon name="modals/help-icon" size="xs" style={{
-                                color: 'var(--color-text-muted)'
-                            }} />
-                            <span style={{
-                                color: 'var(--color-text-muted)',
-                                fontSize: 'var(--font-size-base)',
-                                lineHeight: '20px'
-                            }}>
-                                支付帮助
-                            </span>
-                        </div>
-
-                        <Icon name="modals/divider-line" size="xs" style={{
-                            color: 'var(--color-text-muted)',
-                            margin: '0 var(--spacing-3)'
+                        <Icon name="modals/help-icon" size="xs" style={{
+                            color: 'var(--color-text-muted)'
                         }} />
-
                         <span style={{
                             color: 'var(--color-text-muted)',
-                            fontSize: 'var(--font-size-base)',
-                            lineHeight: '20px',
-                            cursor: 'pointer'
+                            fontSize: '12px'
                         }}>
-                            联系客服
+                            支付帮助
                         </span>
                     </div>
 
-                    {/* 安全提示 */}
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 'var(--spacing-1)'
+                        gap: '4px'
                     }}>
                         <Icon name="modals/secure-payment" size="xs" style={{
                             color: 'var(--color-text-disabled)'
                         }} />
                         <span style={{
                             color: 'var(--color-text-disabled)',
-                            fontSize: 'var(--font-size-xs)',
-                            lineHeight: '16px'
+                            fontSize: '12px'
                         }}>
-                            安全支付 全程加密
+                            安全支付
                         </span>
                     </div>
                 </div>
