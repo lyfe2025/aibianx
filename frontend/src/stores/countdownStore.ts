@@ -39,7 +39,13 @@ export const useCountdownStore = create<CountdownStore>()(
 
             initializeCountdown: (targetDate?: Date) => {
                 const target = targetDate || getDefaultTargetDate()
-                set({ targetDate: target, isActive: true })
+                
+                // 确保 target 是有效的 Date 对象
+                const validTarget = target instanceof Date && !isNaN(target.getTime()) 
+                    ? target 
+                    : getDefaultTargetDate()
+                
+                set({ targetDate: validTarget, isActive: true })
 
                 // 立即计算一次时间
                 get().updateCountdown()
@@ -49,9 +55,21 @@ export const useCountdownStore = create<CountdownStore>()(
                 const { targetDate } = get()
                 if (!targetDate) return
 
+                // 确保 targetDate 是 Date 对象，如果是字符串则转换为 Date
+                const target = targetDate instanceof Date 
+                    ? targetDate 
+                    : new Date(targetDate)
+
+                // 验证 Date 对象的有效性
+                if (isNaN(target.getTime())) {
+                    console.warn('Invalid target date, resetting countdown')
+                    get().resetCountdown()
+                    return
+                }
+
                 const now = new Date().getTime()
-                const target = targetDate.getTime()
-                const difference = target - now
+                const targetTime = target.getTime()
+                const difference = targetTime - now
 
                 if (difference <= 0) {
                     // 倒计时结束
@@ -86,7 +104,34 @@ export const useCountdownStore = create<CountdownStore>()(
             partialize: (state) => ({
                 targetDate: state.targetDate,
                 isActive: state.isActive
-            })
+            }),
+            // 自定义存储配置，正确处理 Date 对象
+            storage: {
+                getItem: (name) => {
+                    const str = localStorage.getItem(name)
+                    if (!str) return null
+                    
+                    try {
+                        const data = JSON.parse(str)
+                        // 如果有 targetDate 字段，将其转换回 Date 对象
+                        if (data.state?.targetDate) {
+                            data.state.targetDate = new Date(data.state.targetDate)
+                        }
+                        return data
+                    } catch (error) {
+                        console.warn('Failed to parse countdown storage:', error)
+                        return null
+                    }
+                },
+                setItem: (name, value) => {
+                    try {
+                        localStorage.setItem(name, JSON.stringify(value))
+                    } catch (error) {
+                        console.warn('Failed to save countdown storage:', error)
+                    }
+                },
+                removeItem: (name) => localStorage.removeItem(name)
+            }
         }
     )
 )
@@ -101,8 +146,10 @@ export const startGlobalCountdown = () => {
 
     const store = useCountdownStore.getState()
 
-    // 如果没有目标日期，初始化一个
-    if (!store.targetDate) {
+    // 如果没有目标日期或目标日期无效，重新初始化
+    if (!store.targetDate || 
+        (typeof store.targetDate === 'string') ||
+        (store.targetDate instanceof Date && isNaN(store.targetDate.getTime()))) {
         store.initializeCountdown()
     }
 

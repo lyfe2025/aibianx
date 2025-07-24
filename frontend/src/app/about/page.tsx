@@ -905,98 +905,124 @@ export default function AboutPage() {
                         }}>
                             <div style={{
                                 display: 'flex',
-                                gap: '16px',
                                 alignItems: 'flex-start',
-                                width: '1200px'
+                                width: '1200px',
+                                gap: '157px'
                             }}>
-                                {/* 左侧联系图标 */}
+                                {/* 左侧联系信息容器 */}
                                 <div style={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    gap: '24px',
-                                    marginTop: '0.21px'
+                                    maxWidth: '400px'
                                 }}>
+                                    {/* 联系方式列表 */}
                                     <div style={{
-                                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                        borderRadius: '8px',
-                                        padding: '4px',
-                                        width: '40px',
-                                        height: '40px',
                                         display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
+                                        flexDirection: 'column',
+                                        gap: '24px'
                                     }}>
-                                        <Icon name="email-contact-new" size="lg" />
-                                    </div>
-                                    <div style={{
-                                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                        borderRadius: '8px',
-                                        padding: '4px',
-                                        width: '40px',
-                                        height: '40px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Icon name="phone-contact-new" size="lg" />
-                                    </div>
-                                    <div style={{
-                                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                        borderRadius: '8px',
-                                        padding: '4px',
-                                        width: '40px',
-                                        height: '40px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Icon name="email-contact-new" size="lg" />
-                                    </div>
-                                </div>
+                                        {/* 邮箱联系方式 */}
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '16px'
+                                        }}>
+                                            <div style={{
+                                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
+                                                borderRadius: '8px',
+                                                padding: '4px',
+                                                width: '40px',
+                                                height: '40px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                flexShrink: 0
+                                            }}>
+                                                <Icon name="email-contact-new" size="lg" />
+                                            </div>
+                                            <span style={{
+                                                color: '#9CA3AF',
+                                                fontSize: '16px',
+                                                lineHeight: '25.6px',
+                                                textAlign: 'left'
+                                            }}>
+                                                contact@aibianzai.com
+                                            </span>
+                                        </div>
 
-                                {/* 中间联系信息 */}
-                                <div style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '38px',
-                                    marginTop: '7px'
-                                }}>
-                                    <span style={{
-                                        color: '#9CA3AF',
-                                        fontSize: '16px',
-                                        lineHeight: '25.6px',
-                                        textAlign: 'left',
-                                        width: '178px',
-                                        height: '26px',
-                                        display: 'flex',
-                                        alignItems: 'center'
+                                        {/* 电话联系方式 */}
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '16px'
+                                        }}>
+                                            <div style={{
+                                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
+                                                borderRadius: '8px',
+                                                padding: '4px',
+                                                width: '40px',
+                                                height: '40px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                flexShrink: 0
+                                            }}>
+                                                <Icon name="phone-contact-new" size="lg" />
+                                            </div>
+                                            <span style={{
+                                                color: '#9CA3AF',
+                                                fontSize: '16px',
+                                                lineHeight: '25.6px',
+                                                textAlign: 'left'
+                                            }}>
+                                                400-888-XXXX
+                                            </span>
+                                        </div>
+
+                                        {/* 地址联系方式 */}
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '16px'
+                                        }}>
+                                            <div style={{
+                                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
+                                                borderRadius: '8px',
+                                                padding: '4px',
+                                                width: '40px',
+                                                height: '40px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                flexShrink: 0
+                                            }}>
+                                                <Icon name="email-contact-new" size="lg" />
+                                            </div>
+                                            <span style={{
+                                                color: '#9CA3AF',
+                                                fontSize: '16px',
+                                                lineHeight: '25.6px',
+                                                textAlign: 'left'
+                                            }}>
+                                                北京市海淀区科技园区88号
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* 说明文字 */}
+                                    <div style={{
+                                        marginTop: '32px'
                                     }}>
-                                        contact@aibianzai.com
-                                    </span>
-                                    <span style={{
-                                        color: '#9CA3AF',
-                                        fontSize: '16px',
-                                        lineHeight: '25.6px',
-                                        textAlign: 'left',
-                                        width: '192px',
-                                        height: '26px',
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }}>
-                                        400-888-XXXX
-                                    </span>
-                                    <span style={{
-                                        color: '#9CA3AF',
-                                        fontSize: '16px',
-                                        lineHeight: '25.6px',
-                                        textAlign: 'left',
-                                        width: '192px',
-                                        height: '26px',
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }}>
-                                        北京市海淀区科技园区88号
-                                    </span>
+                                        <p style={{
+                                            color: '#9CA3AF',
+                                            fontSize: '16px',
+                                            lineHeight: '25.6px',
+                                            textAlign: 'left',
+                                            margin: '0'
+                                        }}>
+                                            我们欢迎各类合作洽谈，包括内容贡献、案例分享、品牌合作、投资咨询等。如果您对AI变现有独特见解或实践经验，也欢迎与我们联系，共同推动AI产业发展！
+                                        </p>
+                                    </div>
                                 </div>
 
                                 {/* 右侧表单区域 - 垂直布局 */}
@@ -1125,36 +1151,14 @@ export default function AboutPage() {
                             </div>
                         </div>
 
-                        {/* 底部说明文字 */}
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            width: '100%',
-                            marginTop: '29px'
-                        }}>
-                            <div style={{
-                                width: '1200px'
-                            }}>
-                                <p style={{
-                                    color: '#9CA3AF',
-                                    fontSize: '16px',
-                                    lineHeight: '16px',
-                                    textAlign: 'left',
-                                    margin: '0',
-                                    marginTop: '1.41px',
-                                    width: '378.85px'
-                                }}>
-                                    我们欢迎各类合作洽谈，包括内容贡献、案例分享、品牌合作、投资咨询等。如果您对AI变现有独特见解或实践经验，也欢迎与我们联系，共同推动AI产业发展！
-                                </p>
-                            </div>
-                        </div>
+
 
                         {/* 提交按钮 */}
                         <div style={{
                             display: 'flex',
                             justifyContent: 'center',
                             width: '100%',
-                            marginTop: '12px'
+                            marginTop: '24px'
                         }}>
                             <div style={{
                                 display: 'flex',

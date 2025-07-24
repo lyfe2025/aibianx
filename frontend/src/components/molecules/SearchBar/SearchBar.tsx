@@ -144,23 +144,23 @@ export function SearchBar({
     return (
         <div className={className}>
             <form onSubmit={handleSubmit} role="search">
-                {/* 外层毛玻璃容器 - 优化视觉设计 */}
+                {/* 外层毛玻璃容器 - 移除灰色背景，保持透明 */}
                 <div style={{
-                    background: 'rgba(26, 26, 26, 0.30)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
+                    background: 'transparent', // 移除灰色背景，保持完全透明
+                    backdropFilter: 'blur(8px)', // 减少模糊效果
+                    WebkitBackdropFilter: 'blur(8px)',
                     border: isFocused
-                        ? '1px solid rgba(59, 130, 246, 0.40)' // 聚焦时蓝色边框，稍微降低透明度
-                        : '1px solid rgba(42, 42, 42, 0.50)', // 非聚焦时更淡的边框
+                        ? '1px solid rgba(59, 130, 246, 0.40)' // 聚焦时蓝色边框
+                        : '1px solid rgba(42, 42, 42, 0.30)', // 非聚焦时更淡的边框
                     borderRadius: '16px',
-                    padding: '16px 20px', // 减少垂直内边距，让搜索框更紧凑
+                    padding: '16px 20px',
                     width: '100%',
-                    transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)', // 更平滑的过渡
+                    transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                     opacity: disabled ? 0.5 : 1,
-                    // 添加微妙的阴影增强层次感
+                    // 保持微妙的阴影效果
                     boxShadow: isFocused
                         ? '0 4px 20px rgba(59, 130, 246, 0.15)'
-                        : '0 2px 8px rgba(0, 0, 0, 0.1)',
+                        : '0 2px 8px rgba(0, 0, 0, 0.05)',
                 }}>
                     {/* 内层搜索输入框 - 优化视觉设计 */}
                     <div style={{

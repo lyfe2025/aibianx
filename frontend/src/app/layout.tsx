@@ -100,11 +100,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  useEffect(() => {
-    // 启动全局倒计时
-    startGlobalCountdown()
-  }, [])
-
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
@@ -158,6 +153,9 @@ export default function RootLayout({
         <ForgotPasswordModal />
         <MembershipModal />
         <PaymentModal />
+
+        {/* 全局倒计时初始化 */}
+        <GlobalCountdownInit />
       </body>
     </html>
   )
