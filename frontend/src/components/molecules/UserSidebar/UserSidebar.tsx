@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Icon, Avatar } from '@/components/ui'
@@ -41,6 +41,13 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
     const pathname = usePathname()
     const router = useRouter()
     const { logout } = useUserStore()
+    
+    // SSR兼容：确保服务端和客户端初始状态一致
+    const [isClient, setIsClient] = useState(false)
+    
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
 
     const navigationItems = [
         {
@@ -74,10 +81,15 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
     ]
 
     /**
-     * 精确的路由匹配函数
-     * 解决多个菜单项同时高亮的问题
+     * 精确的路由匹配函数 - SSR兼容版本
+     * 解决多个菜单项同时高亮的问题和SSR水合错误
      */
     const isActiveRoute = (href: string) => {
+        // SSR期间返回false，避免水合错误
+        if (!isClient) {
+            return false
+        }
+
         // 首页：必须完全匹配 "/"
         if (href === '/') {
             return pathname === '/'

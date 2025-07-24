@@ -268,14 +268,14 @@ a {
   --transition-slow: 0.5s ease;
 }
 
-/* ===== 输入框强制样式 ===== */
-/* 确保Input组件的毛玻璃效果正确应用 */
-.input,
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"],
-textarea {
+/* ===== 个人中心设置页面专用样式 ===== */
+/* 只在设置页面应用特殊输入框样式 */
+.settings-page .input,
+.settings-page input[type="text"],
+.settings-page input[type="email"],
+.settings-page input[type="password"],
+.settings-page input[type="tel"],
+.settings-page textarea {
   background: rgba(18, 18, 18, 0.50) !important;
   backdrop-filter: blur(4px) !important;
   -webkit-backdrop-filter: blur(4px) !important;
@@ -284,47 +284,108 @@ textarea {
   font-family: var(--font-family-primary) !important;
 }
 
-.input:focus,
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="tel"]:focus,
-textarea:focus {
+.settings-page .input:focus,
+.settings-page input[type="text"]:focus,
+.settings-page input[type="email"]:focus,
+.settings-page input[type="password"]:focus,
+.settings-page input[type="tel"]:focus,
+.settings-page textarea:focus {
   border-color: #3B82F6 !important;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
   outline: none !important;
 }
 
 /* 特殊处理：确保个人简介文本域只有一层边框 */
-.bio-textarea:focus {
+.settings-page .bio-textarea:focus {
   border: 1px solid #3B82F6 !important;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
   outline: none !important;
 }
 
-.input::placeholder,
-input::placeholder,
-textarea::placeholder {
+/* 设置页面头像区域优化 */
+.avatar-edit-button:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+}
+
+.avatar-edit-text:hover {
+  color: var(--color-text-primary) !important;
+}
+
+/* 设置页面头像容器悬浮效果 */
+.avatar-container:hover {
+  border-color: rgba(59, 130, 246, 0.4) !important;
+  box-shadow: 0 0 24px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* 设置页面表单区域优化 */
+.settings-form-card {
+  transition: all 0.3s ease !important;
+}
+
+.settings-form-card:hover {
+  background: rgba(26, 26, 26, 0.4) !important;
+  border-color: rgba(42, 42, 42, 0.6) !important;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .settings-form-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .settings-form-label {
+    text-align: left !important;
+    width: 100% !important;
+    padding-top: 0 !important;
+  }
+
+  .settings-form-card {
+    margin: 0 24px !important;
+    padding: 24px !important;
+  }
+
+  .settings-avatar {
+    width: 96px !important;
+    height: 96px !important;
+  }
+
+  .settings-buttons {
+    flex-direction: column !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  .settings-buttons button {
+    width: 100% !important;
+  }
+}
+
+/* 设置页面专用占位符样式 */
+.settings-page .input::placeholder,
+.settings-page input::placeholder,
+.settings-page textarea::placeholder {
   color: #9CA3AF !important;
   opacity: 1 !important;
 }
 
-/* 输入框标签样式 */
-.input-label {
+/* 设置页面专用输入框标签样式 */
+.settings-page .input-label {
   color: var(--color-text-secondary) !important;
   font-size: var(--font-size-sm) !important;
   font-weight: 500 !important;
   margin-bottom: var(--spacing-2) !important;
 }
 
-/* 输入框帮助文本和错误文本 */
-.input-helper {
+/* 设置页面专用输入框帮助文本和错误文本 */
+.settings-page .input-helper {
   color: var(--color-text-muted) !important;
   font-size: var(--font-size-xs) !important;
   margin-top: var(--spacing-1) !important;
 }
 
-.input-error {
+.settings-page .input-error {
   color: #EF4444 !important;
   font-size: var(--font-size-xs) !important;
   margin-top: var(--spacing-1) !important;
