@@ -85,9 +85,9 @@ export default function ProfilePage() {
       }}>
         {userStats.map((stat, index) => (
           <div key={index} style={{
-            background: 'rgba(26, 26, 26, 0.30)',
+            background: 'var(--color-bg-secondary)',
             backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(42, 42, 42, 0.70)',
+            border: '1px solid var(--color-border-primary)',
             borderRadius: '12px',
             padding: '21px',
             display: 'flex',
@@ -251,9 +251,9 @@ export default function ProfilePage() {
       </div>
 
       <div style={{
-        background: 'rgba(26, 26, 26, 0.30)',
+        background: 'var(--color-bg-secondary)',
         backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(42, 42, 42, 0.70)',
+        border: '1px solid var(--color-border-primary)',
         borderRadius: '12px',
         padding: '21px',
         // 防换行保护

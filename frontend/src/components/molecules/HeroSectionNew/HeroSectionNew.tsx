@@ -163,24 +163,27 @@ export function HeroSectionNew() {
             {/* 
                 渐变过渡遮罩层 - 实现3D粒子到CSS粒子的自然过渡
                 顶部完全遮挡，底部逐渐透明，形成平滑衔接
+                亮色模式下隐藏此效果
             */}
-            <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: `linear-gradient(
-                    to bottom,
-                    var(--color-bg-primary) 0%,          /* 顶部完全遮挡 */
-                    var(--color-bg-primary) 60%,         /* 中上部分继续遮挡 */
-                    rgba(3, 3, 3, 0.8) 75%,             /* 开始过渡 */
-                    rgba(3, 3, 3, 0.4) 85%,             /* 渐变透明 */
-                    rgba(3, 3, 3, 0.1) 95%,             /* 接近透明 */
-                    transparent 100%                     /* 底部完全透明 */
-                )`,
-                zIndex: 1 // 高于CSS粒子背景(0.5)，低于3D效果(2+)
-            }} />
+            {theme === 'dark' && (
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: `linear-gradient(
+                        to bottom,
+                        var(--color-bg-primary) 0%,          /* 顶部完全遮挡 */
+                        var(--color-bg-primary) 60%,         /* 中上部分继续遮挡 */
+                        rgba(3, 3, 3, 0.8) 75%,             /* 开始过渡 */
+                        rgba(3, 3, 3, 0.4) 85%,             /* 渐变透明 */
+                        rgba(3, 3, 3, 0.1) 95%,             /* 接近透明 */
+                        transparent 100%                     /* 底部完全透明 */
+                    )`,
+                    zIndex: 1 // 高于CSS粒子背景(0.5)，低于3D效果(2+)
+                }} />
+            )}
 
             {/* 3D背景装饰 - 淡淡的AI元素 */}
             <HeroBackground3D />
@@ -327,7 +330,7 @@ export function HeroSectionNew() {
                                 style={{
                                     width: '100%',
                                     height: '24px',
-                                    color: email ? '#FFFFFF' : '#757575',
+                                    color: email ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                                     fontFamily: 'Arial',
                                     fontSize: '14px',
                                     lineHeight: '18px',
@@ -687,8 +690,8 @@ export function HeroSectionNew() {
             `}</style>
 
             {/* Toast 通知容器 */}
-            <ToastContainer 
-                toasts={toasts} 
+            <ToastContainer
+                toasts={toasts}
                 onRemoveToast={removeToast}
                 position="top-center"
             />

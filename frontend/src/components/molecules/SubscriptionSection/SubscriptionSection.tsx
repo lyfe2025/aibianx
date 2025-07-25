@@ -72,10 +72,10 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
             style={{
                 width: '1374px',
                 height: '149px',
-                background: 'rgba(26, 26, 26, 0.30)',
+                background: 'var(--color-bg-secondary)',
                 backdropFilter: 'blur(16px)',
                 WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(42, 42, 42, 0.70)',
+                border: '1px solid var(--color-border-primary)',
                 borderRadius: '20px',
                 display: 'flex',
                 alignItems: 'stretch',
@@ -102,7 +102,7 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
             >
                 <h3
                     style={{
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontSize: '24px',
                         fontWeight: 700,
                         lineHeight: '32px',
@@ -141,7 +141,7 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
                         padding: '16px',
                         width: '334px',
                         height: '55px',
-                        color: '#FFFFFF', // 用户输入的文字为白色
+                        color: 'var(--color-text-primary)', // 用户输入的文字
                         fontFamily: 'Arial',
                         fontSize: '13.33px',
                         lineHeight: '15px',

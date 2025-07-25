@@ -88,9 +88,9 @@ export function ResourcesSection() {
                         key={resource.id}
                         style={{
                             width: '280px',
-                            background: 'rgba(26, 26, 26, 0.30)',
+                            background: 'var(--color-bg-secondary)',
                             backdropFilter: 'blur(12px)',
-                            border: '1px solid rgba(42, 42, 42, 0.70)',
+                                                          border: '1px solid var(--color-border-primary)',
                             borderRadius: '16px',
                             padding: '25px',
                             display: 'flex',
@@ -141,7 +141,7 @@ export function ResourcesSection() {
                             paddingLeft: '20px'
                         }}>
                             <h3 style={{
-                                color: '#FFFFFF',
+                                color: 'var(--color-text-primary)',
                                 fontSize: '18px',
                                 fontWeight: 700,
                                 lineHeight: '25px',

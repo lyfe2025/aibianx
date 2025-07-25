@@ -47,9 +47,9 @@ export function ArticlesSection() {
             marginBottom: '142px'
         }}>
             <div style={{
-                background: 'rgba(26, 26, 26, 0.30)',
+                                                background: 'var(--color-bg-secondary)',
                 backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(42, 42, 42, 0.70)',
+                border: '1px solid var(--color-border-primary)',
                 borderRadius: '16px',
                 padding: '37px 0 79px 0'
             }}>
@@ -73,7 +73,7 @@ export function ArticlesSection() {
                                 borderRadius: '9999px', // 统一使用圆角，不再切换
                                 // 🎯 统一内边距 - 避免布局抖动
                                 padding: '10px 24px', // 统一内边距，不再切换
-                                color: tab.active ? '#FFFFFF' : '#9CA3AF',
+                                color: tab.active ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                                 fontSize: '14px',
                                 lineHeight: '20px',
                                 cursor: 'pointer',
@@ -154,7 +154,7 @@ export function ArticlesSection() {
                             {/* 文章内容 */}
                             <div style={{ flex: 1, paddingTop: '18px' }}>
                                 <h3 style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '18px',
                                     fontWeight: 700,
                                     lineHeight: '25px',

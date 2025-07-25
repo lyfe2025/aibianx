@@ -76,10 +76,10 @@ export function MainContentSection() {
                 }}>
                     {/* 左侧文章列表区域 - 精确宽度822px */}
                     <div style={{
-                        background: 'rgba(26, 26, 26, 0.30)',
+                        background: 'var(--color-bg-secondary)',
                         backdropFilter: 'blur(12px)',
                         WebkitBackdropFilter: 'blur(12px)',
-                        border: '1px solid rgba(42, 42, 42, 0.70)',
+                        border: '1px solid var(--color-border-primary)',
                         borderRadius: '16px',
                         width: '822px',
                         display: 'flex',
@@ -105,7 +105,7 @@ export function MainContentSection() {
                                         // 🎯 统一边框半径 - 避免形状突然变化
                                         borderRadius: '9999px', // 统一使用圆角，不再切换
                                         padding: '8px 24px', // 统一所有按钮的内边距，避免点击后挤压
-                                        color: filter === activeFilter ? '#FFFFFF' : '#9CA3AF',
+                                        color: filter === activeFilter ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                                         fontSize: '14px',
                                         lineHeight: '21px',
                                         cursor: 'pointer',
@@ -200,7 +200,7 @@ export function MainContentSection() {
                                         }}>
                                             {/* 标题 */}
                                             <h3 style={{
-                                                color: '#FFFFFF',
+                                                color: 'var(--color-text-primary)',
                                                 fontSize: '18px',
                                                 fontWeight: '700',
                                                 lineHeight: '28px',
@@ -347,10 +347,10 @@ export function MainContentSection() {
                     }}>
                         {/* 为什么选择我们 */}
                         <div style={{
-                            background: 'rgba(26, 26, 26, 0.30)',
+                            background: 'var(--color-bg-secondary)',
                             backdropFilter: 'blur(12px)',
                             WebkitBackdropFilter: 'blur(12px)',
-                            border: '1px solid rgba(42, 42, 42, 0.70)',
+                            border: '1px solid var(--color-border-primary)',
                             borderRadius: '16px',
                             display: 'flex',
                             flexDirection: 'column',
@@ -496,10 +496,10 @@ export function MainContentSection() {
 
                         {/* 他们都在用 */}
                         <div style={{
-                            background: 'rgba(26, 26, 26, 0.30)',
+                            background: 'var(--color-bg-secondary)',
                             backdropFilter: 'blur(12px)',
                             WebkitBackdropFilter: 'blur(12px)',
-                            border: '1px solid rgba(42, 42, 42, 0.70)',
+                            border: '1px solid var(--color-border-primary)',
                             borderRadius: '16px',
                             display: 'flex',
                             flexDirection: 'column',

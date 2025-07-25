@@ -1,6 +1,7 @@
 'use client'
 
 import { CSSProperties } from 'react'
+import { useThemeStore } from '@/stores'
 
 interface BackgroundDecorationProps {
     /**
@@ -89,17 +90,23 @@ export function BackgroundDecoration({
     position = 'top-left',
     customPosition,
     size = { width: '600px', height: '600px' },
-    gradient = {
-        fromColor: '79, 172, 254',
-        toColor: '0, 242, 254',
-        fromOpacity: 0.10,
-        toOpacity: 0.05
-    },
+    gradient,
     blur = 100,
     zIndex = 0,
     animation = { type: 'none' },
     className = ''
 }: BackgroundDecorationProps) {
+    const { theme } = useThemeStore()
+    
+    // 根据主题设置默认透明度
+    const defaultGradient = {
+        fromColor: '79, 172, 254',
+        toColor: '0, 242, 254',
+        fromOpacity: theme === 'light' ? 0.015 : 0.10,
+        toOpacity: theme === 'light' ? 0.008 : 0.05
+    }
+    
+    const finalGradient = gradient || defaultGradient
 
     // 预设位置配置
     const positionStyles: Record<string, CSSProperties> = {
@@ -145,7 +152,7 @@ export function BackgroundDecoration({
         position: 'absolute',
         width: size.width,
         height: size.height,
-        background: `linear-gradient(90deg, rgba(${gradient.fromColor}, ${gradient.fromOpacity}) 0%, rgba(${gradient.toColor}, ${gradient.toOpacity}) 100%)`,
+        background: `linear-gradient(90deg, rgba(${finalGradient.fromColor}, ${finalGradient.fromOpacity}) 0%, rgba(${finalGradient.toColor}, ${finalGradient.toOpacity}) 100%)`,
         filter: `blur(${blur}px)`,
         borderRadius: '50%',
         zIndex: zIndex,
@@ -174,11 +181,11 @@ export function BackgroundDecoration({
                 
                 @keyframes backgroundPulse {
                     0%, 100% {
-                        opacity: ${gradient.fromOpacity};
+                        opacity: ${finalGradient.fromOpacity};
                         transform: scale(1);
                     }
                     50% {
-                        opacity: ${gradient.fromOpacity * 1.5};
+                        opacity: ${finalGradient.fromOpacity * 1.5};
                         transform: scale(1.1);
                     }
                 }

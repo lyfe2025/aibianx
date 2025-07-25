@@ -250,7 +250,7 @@ export function AppHeader() {
                                     <Link
                                         href="/"
                                         style={{
-                                            color: isActiveRoute('/') ? '#FFFFFF' : '#9CA3AF',
+                                            color: isActiveRoute('/') ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                                             lineHeight: '24px',
                                             height: '24px',
                                             alignItems: 'center',
@@ -290,7 +290,7 @@ export function AppHeader() {
                                     <Link
                                         href="/weekly"
                                         style={{
-                                            color: isActiveRoute('/weekly') ? '#FFFFFF' : '#9CA3AF',
+                                            color: isActiveRoute('/weekly') ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                                             lineHeight: '24px',
                                             height: '24px',
                                             alignItems: 'center',
@@ -330,7 +330,7 @@ export function AppHeader() {
                                     <Link
                                         href="/about"
                                         style={{
-                                            color: isActiveRoute('/about') ? '#FFFFFF' : '#9CA3AF',
+                                            color: isActiveRoute('/about') ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                                             lineHeight: '24px',
                                             height: '24px',
                                             alignItems: 'center',
@@ -370,9 +370,9 @@ export function AppHeader() {
                             <button
                                 onClick={handleUserMenu}
                                 style={{
-                                    background: 'rgba(26, 26, 26, 0.50)',
+                                    background: 'var(--color-bg-glass)',
                                     borderStyle: 'solid',
-                                    borderColor: 'rgba(59, 130, 246, 0.20)',
+                                    borderColor: 'var(--color-border-primary)',
                                     borderWidth: '1px',
                                     borderRadius: '8px',
                                     padding: '10px',
@@ -389,16 +389,16 @@ export function AppHeader() {
                                 className="icon-button"
                             >
                                 <Icon name="user-icon" size="sm" style={{
-                                    color: '#9CA3AF'
+                                    color: 'var(--color-text-muted)'
                                 }} />
                             </button>
 
-                            <button 
+                            <button
                                 onClick={toggleTheme}
                                 style={{
-                                    background: 'rgba(26, 26, 26, 0.50)',
+                                    background: 'var(--color-bg-glass)',
                                     borderStyle: 'solid',
-                                    borderColor: 'rgba(59, 130, 246, 0.20)',
+                                    borderColor: 'var(--color-border-primary)',
                                     borderWidth: '1px',
                                     borderRadius: '8px',
                                     padding: '10px',
@@ -415,12 +415,12 @@ export function AppHeader() {
                                 className="icon-button"
                                 title={theme === 'dark' ? '切换到亮色主题' : '切换到暗色主题'}
                             >
-                                <Icon 
-                                    name={isClient ? (theme === 'dark' ? 'theme-toggle-light' : 'theme-toggle-dark') : 'theme-toggle-light'} 
-                                    size="sm" 
+                                <Icon
+                                    name={isClient ? (theme === 'dark' ? 'theme-toggle-light' : 'theme-toggle-dark') : 'theme-toggle-light'}
+                                    size="sm"
                                     style={{
-                                        color: '#9CA3AF'
-                                    }} 
+                                        color: 'var(--color-text-muted)'
+                                    }}
                                 />
                             </button>
 
@@ -457,9 +457,9 @@ export function AppHeader() {
                             onClick={toggleMobileMenu}
                             className="mobile-menu-button"
                             style={{
-                                background: 'rgba(26, 26, 26, 0.50)',
+                                background: 'var(--color-bg-glass)',
                                 borderStyle: 'solid',
-                                borderColor: 'rgba(59, 130, 246, 0.20)',
+                                borderColor: 'var(--color-border-primary)',
                                 borderWidth: '1px',
                                 borderRadius: '8px',
                                 padding: '12px',
@@ -575,7 +575,7 @@ export function AppHeader() {
                             href="/"
                             onClick={() => setIsMobileMenuOpen(false)}
                             style={{
-                                color: isActiveRoute('/') ? '#FFFFFF' : '#D1D5DB',
+                                color: isActiveRoute('/') ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                                 fontSize: '18px',
                                 fontWeight: isActiveRoute('/') ? '600' : '400',
                                 textDecoration: 'none',
@@ -592,7 +592,7 @@ export function AppHeader() {
                             href="/weekly"
                             onClick={() => setIsMobileMenuOpen(false)}
                             style={{
-                                color: isActiveRoute('/weekly') ? '#FFFFFF' : '#D1D5DB',
+                                color: isActiveRoute('/weekly') ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                                 fontSize: '18px',
                                 fontWeight: isActiveRoute('/weekly') ? '600' : '400',
                                 textDecoration: 'none',
@@ -609,7 +609,7 @@ export function AppHeader() {
                             href="/about"
                             onClick={() => setIsMobileMenuOpen(false)}
                             style={{
-                                color: isActiveRoute('/about') ? '#FFFFFF' : '#D1D5DB',
+                                color: isActiveRoute('/about') ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                                 fontSize: '18px',
                                 fontWeight: isActiveRoute('/about') ? '600' : '400',
                                 textDecoration: 'none',
@@ -634,11 +634,11 @@ export function AppHeader() {
                         <button
                             onClick={toggleTheme}
                             style={{
-                                background: 'rgba(26, 26, 26, 0.60)',
-                                border: '1px solid rgba(59, 130, 246, 0.20)',
+                                background: 'var(--color-bg-glass)',
+                                border: '1px solid var(--color-border-primary)',
                                 borderRadius: '12px',
                                 padding: '16px',
-                                color: '#D1D5DB',
+                                color: 'var(--color-text-secondary)',
                                 fontSize: '16px',
                                 fontWeight: '500',
                                 cursor: 'pointer',
@@ -660,11 +660,11 @@ export function AppHeader() {
                         <button
                             onClick={handleUserMenu}
                             style={{
-                                background: 'rgba(26, 26, 26, 0.60)',
-                                border: '1px solid rgba(59, 130, 246, 0.20)',
+                                background: 'var(--color-bg-glass)',
+                                border: '1px solid var(--color-border-primary)',
                                 borderRadius: '12px',
                                 padding: '16px',
-                                color: '#D1D5DB',
+                                color: 'var(--color-text-secondary)',
                                 fontSize: '16px',
                                 fontWeight: '500',
                                 cursor: 'pointer',

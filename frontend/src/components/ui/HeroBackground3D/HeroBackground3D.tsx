@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
+import { useThemeStore } from '@/stores'
 
 /**
  * 全局3D背景组件 - GlobalBackground3D
@@ -18,6 +19,22 @@ export function GlobalBackground3D() {
     const mountRef = useRef<HTMLDivElement>(null)
     const animationIdRef = useRef<number | null>(null)
     const [isLoaded, setIsLoaded] = useState(false)
+    const { theme } = useThemeStore()
+    const [containerOpacity, setContainerOpacity] = useState(theme === 'light' ? 0.05 : 0.9)
+    
+    // 用于平滑过渡的透明度状态
+    const targetOpacityRef = useRef({
+        nodes: theme === 'light' ? 0.008 : 0.15,
+        lines: theme === 'light' ? 0.004 : 0.08,
+        particles: theme === 'light' ? 0.02 : 0.6,
+        container: theme === 'light' ? 0.05 : 0.9
+    })
+    const currentOpacityRef = useRef({
+        nodes: theme === 'light' ? 0.008 : 0.15,
+        lines: theme === 'light' ? 0.004 : 0.08,
+        particles: theme === 'light' ? 0.02 : 0.6,
+        container: theme === 'light' ? 0.05 : 0.9
+    })
 
     useEffect(() => {
         if (!mountRef.current) return
@@ -46,14 +63,15 @@ export function GlobalBackground3D() {
 
         // === 创建全页面AI装饰元素 ===
 
-        // 1. 神经网络节点 (50个，遍布整个页面和滚动区域)
+                // 1. 神经网络节点 (50个，遍布整个页面和滚动区域)
         const nodes: THREE.Mesh[] = []
+        
         for (let i = 0; i < 50; i++) {
             const nodeGeometry = new THREE.SphereGeometry(0.08, 12, 12)
             const nodeMaterial = new THREE.MeshBasicMaterial({
                 color: 0x3B82F6,
                 transparent: true,
-                opacity: 0.15 // 更低透明度，适合全页面背景
+                opacity: currentOpacityRef.current.nodes
             })
             const node = new THREE.Mesh(nodeGeometry, nodeMaterial)
 
@@ -66,8 +84,9 @@ export function GlobalBackground3D() {
             nodes.push(node)
         }
 
-        // 2. 连接线系统 (适度增加，覆盖更多区域)
+                // 2. 连接线系统 (适度增加，覆盖更多区域)
         const connections: THREE.Line[] = []
+        
         // 创建随机连接线，连接附近的节点
         for (let i = 0; i < Math.min(15, nodes.length - 1); i++) {
             const startNode = nodes[i]
@@ -81,7 +100,7 @@ export function GlobalBackground3D() {
                 const lineMaterial = new THREE.LineBasicMaterial({
                     color: 0x8B5CF6,
                     transparent: true,
-                    opacity: 0.08 // 极低透明度
+                    opacity: currentOpacityRef.current.lines
                 })
 
                 const line = new THREE.Line(lineGeometry, lineMaterial)
@@ -130,11 +149,11 @@ export function GlobalBackground3D() {
         particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
         particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
-        const particleMaterial = new THREE.PointsMaterial({
+                const particleMaterial = new THREE.PointsMaterial({
             size: 0.2, // 进一步增大粒子尺寸
             vertexColors: true,
             transparent: true,
-            opacity: 0.6, // 显著提高透明度
+            opacity: currentOpacityRef.current.particles,
             blending: THREE.AdditiveBlending,
             sizeAttenuation: false // 禁用距离衰减
         })
@@ -147,7 +166,33 @@ export function GlobalBackground3D() {
         const animate = () => {
             time += 0.008 // 更慢的时间增长，适合全页面背景
 
-            // 节点轻微脉冲动画
+            // 平滑过渡透明度
+            const lerpFactor = 0.02 // 过渡速度，越小越平滑
+            currentOpacityRef.current.nodes = THREE.MathUtils.lerp(
+                currentOpacityRef.current.nodes, 
+                targetOpacityRef.current.nodes, 
+                lerpFactor
+            )
+            currentOpacityRef.current.lines = THREE.MathUtils.lerp(
+                currentOpacityRef.current.lines, 
+                targetOpacityRef.current.lines, 
+                lerpFactor
+            )
+            currentOpacityRef.current.particles = THREE.MathUtils.lerp(
+                currentOpacityRef.current.particles, 
+                targetOpacityRef.current.particles, 
+                lerpFactor
+            )
+            currentOpacityRef.current.container = THREE.MathUtils.lerp(
+                currentOpacityRef.current.container, 
+                targetOpacityRef.current.container, 
+                lerpFactor
+            )
+
+            // 更新容器透明度
+            setContainerOpacity(currentOpacityRef.current.container)
+
+            // 节点轻微脉冲动画和透明度更新
             nodes.forEach((node, index) => {
                 const pulse = 1 + Math.sin(time * 1.5 + index) * 0.15
                 node.scale.setScalar(pulse)
@@ -155,13 +200,19 @@ export function GlobalBackground3D() {
                 // 轻微的浮动
                 node.position.y += Math.sin(time * 0.8 + index) * 0.004
                 node.position.x += Math.cos(time * 0.5 + index) * 0.002
+
+                // 更新节点透明度
+                const material = node.material as THREE.MeshBasicMaterial
+                material.opacity = currentOpacityRef.current.nodes
             })
 
             // 连接线轻微透明度变化
             connections.forEach((line, index) => {
-                const opacity = 0.05 + Math.sin(time * 1.0 + index) * 0.03
+                const baseOpacity = currentOpacityRef.current.lines
+                const variance = baseOpacity * 0.3 // 相对变化
+                const opacity = baseOpacity + Math.sin(time * 1.0 + index) * variance
                 const material = line.material as THREE.LineBasicMaterial
-                material.opacity = Math.max(0.02, opacity)
+                material.opacity = Math.max(baseOpacity * 0.2, opacity)
             })
 
             // 粒子动态飘动（相对于初始位置）
@@ -174,6 +225,10 @@ export function GlobalBackground3D() {
                 positions[i + 2] = initialPositions[i + 2] + Math.sin(time * 0.2 + index) * 0.3  // Z轴飘动
             }
             particles.geometry.attributes.position.needsUpdate = true
+
+            // 更新粒子透明度
+            const particlesMaterial = particles.material as THREE.PointsMaterial
+            particlesMaterial.opacity = currentOpacityRef.current.particles
 
             // 整体轻微旋转
             particles.rotation.y += 0.001
@@ -245,6 +300,16 @@ export function GlobalBackground3D() {
         }
     }, [])
 
+    // 单独处理主题变化，只更新目标透明度
+    useEffect(() => {
+        targetOpacityRef.current = {
+            nodes: theme === 'light' ? 0.008 : 0.15,
+            lines: theme === 'light' ? 0.004 : 0.08,
+            particles: theme === 'light' ? 0.02 : 0.6,
+            container: theme === 'light' ? 0.05 : 0.9
+        }
+    }, [theme])
+
     return (
         <div
             ref={mountRef}
@@ -256,7 +321,8 @@ export function GlobalBackground3D() {
                 height: '100vh',
                 zIndex: -10, // 确保在所有页面内容之下（LayoutController的main有zIndex:1）
                 pointerEvents: 'none', // 不干扰用户交互
-                opacity: 0.9 // 进一步提高整体透明度，确保粒子清晰可见
+                opacity: containerOpacity,
+                transition: 'opacity 0.6s ease' // 平滑的透明度过渡
             }}
         />
     )
@@ -267,11 +333,24 @@ export function HeroBackground3D() {
     const mountRef = useRef<HTMLDivElement>(null)
     const animationIdRef = useRef<number | null>(null)
     const [isLoaded, setIsLoaded] = useState(false)
+    const { theme } = useThemeStore()
     // 添加强制重新初始化状态
     const [forceReload, setForceReload] = useState(0)
     const sceneRef = useRef<THREE.Scene | null>(null)
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
     const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
+    
+    // 用于平滑过渡的透明度状态
+    const targetHeroOpacityRef = useRef({
+        nodes: theme === 'light' ? 0.01 : 0.3,
+        lines: theme === 'light' ? 0.005 : 0.2,
+        particles: theme === 'light' ? 0.015 : 0.25
+    })
+    const currentHeroOpacityRef = useRef({
+        nodes: theme === 'light' ? 0.01 : 0.3,
+        lines: theme === 'light' ? 0.005 : 0.2,
+        particles: theme === 'light' ? 0.015 : 0.25
+    })
 
     useEffect(() => {
         // 强制清理之前的状态
@@ -338,12 +417,13 @@ export function HeroBackground3D() {
 
             // 1. 神经网络节点 (18个，遍布整个首屏)
             const nodes: THREE.Mesh[] = []
+            
             for (let i = 0; i < 18; i++) {
                 const nodeGeometry = new THREE.SphereGeometry(0.12, 12, 12)
                 const nodeMaterial = new THREE.MeshBasicMaterial({
                     color: 0x3B82F6,
                     transparent: true,
-                    opacity: 0.3
+                    opacity: currentHeroOpacityRef.current.nodes
                 })
                 const node = new THREE.Mesh(nodeGeometry, nodeMaterial)
 
@@ -358,6 +438,7 @@ export function HeroBackground3D() {
 
             // 2. 中心区域连接线 (只在中间区域显示)
             const connections: THREE.Line[] = []
+            
             // 筛选出中心区域的节点 (Y轴在-6到+2之间，适配新的高度范围)
             const centerNodes = nodes.filter(node =>
                 node.position.y > -6 && node.position.y < 2 &&
@@ -377,7 +458,7 @@ export function HeroBackground3D() {
                     const lineMaterial = new THREE.LineBasicMaterial({
                         color: 0x8B5CF6,
                         transparent: true,
-                        opacity: 0.2
+                        opacity: currentHeroOpacityRef.current.lines
                     })
 
                     const line = new THREE.Line(lineGeometry, lineMaterial)
@@ -417,7 +498,7 @@ export function HeroBackground3D() {
                 size: 0.08, // 稍大粒子尺寸，适配扩大的空间
                 vertexColors: true,
                 transparent: true,
-                opacity: 0.25, // 适中透明度
+                opacity: currentHeroOpacityRef.current.particles,
                 blending: THREE.AdditiveBlending
             })
 
@@ -434,7 +515,25 @@ export function HeroBackground3D() {
 
                 time += 0.02 // 明显的时间增长
 
-                // 节点明显脉冲动画
+                // 平滑过渡透明度
+                const lerpFactor = 0.02
+                currentHeroOpacityRef.current.nodes = THREE.MathUtils.lerp(
+                    currentHeroOpacityRef.current.nodes, 
+                    targetHeroOpacityRef.current.nodes, 
+                    lerpFactor
+                )
+                currentHeroOpacityRef.current.lines = THREE.MathUtils.lerp(
+                    currentHeroOpacityRef.current.lines, 
+                    targetHeroOpacityRef.current.lines, 
+                    lerpFactor
+                )
+                currentHeroOpacityRef.current.particles = THREE.MathUtils.lerp(
+                    currentHeroOpacityRef.current.particles, 
+                    targetHeroOpacityRef.current.particles, 
+                    lerpFactor
+                )
+
+                // 节点明显脉冲动画和透明度更新
                 nodes.forEach((node, index) => {
                     const pulse = 1 + Math.sin(time * 2 + index) * 0.3
                     node.scale.setScalar(pulse)
@@ -443,18 +542,22 @@ export function HeroBackground3D() {
                     node.position.y += Math.sin(time * 1.2 + index) * 0.008
                     node.position.x += Math.cos(time * 0.8 + index) * 0.005
 
+                    // 更新节点透明度
+                    const material = node.material as THREE.MeshBasicMaterial
+                    material.opacity = currentHeroOpacityRef.current.nodes
+
                     // 定期的颜色变化
                     if (Math.random() > 0.98) {
-                        const material = node.material as THREE.MeshBasicMaterial
                         material.color.setHex(Math.random() > 0.5 ? 0x3B82F6 : 0x8B5CF6)
                     }
                 })
 
                 // 连接线明显透明度变化
                 connections.forEach((line, index) => {
-                    const opacity = 0.15 + Math.sin(time * 1.5 + index) * 0.1
+                    const baseOpacity = currentHeroOpacityRef.current.lines
+                    const opacity = baseOpacity + Math.sin(time * 1.5 + index) * (baseOpacity * 0.5)
                     const material = line.material as THREE.LineBasicMaterial
-                    material.opacity = Math.max(0.05, opacity)
+                    material.opacity = Math.max(baseOpacity * 0.2, opacity)
                 })
 
                 // 粒子明显飘动
@@ -465,6 +568,10 @@ export function HeroBackground3D() {
                     positions[i + 2] += Math.sin(time * 0.4 + i) * 0.005 // Z轴微动
                 }
                 particles.geometry.attributes.position.needsUpdate = true
+
+                // 更新粒子透明度
+                const particlesMaterial = particles.material as THREE.PointsMaterial
+                particlesMaterial.opacity = currentHeroOpacityRef.current.particles
 
                 // 明显旋转
                 particles.rotation.y += 0.004
@@ -567,7 +674,16 @@ export function HeroBackground3D() {
 
         window.addEventListener('error', errorHandler)
         return () => window.removeEventListener('error', errorHandler)
-    }, [])
+    }, [forceReload])
+
+    // 单独处理主题变化，只更新目标透明度
+    useEffect(() => {
+        targetHeroOpacityRef.current = {
+            nodes: theme === 'light' ? 0.01 : 0.3,
+            lines: theme === 'light' ? 0.005 : 0.2,
+            particles: theme === 'light' ? 0.015 : 0.25
+        }
+    }, [theme])
 
     return (
         <div

@@ -66,7 +66,7 @@ export function FinalCTASection() {
             <Container>
                 {/* 主要内容容器 - 精确按设计稿尺寸 */}
                 <div style={{
-                    background: 'rgba(26, 26, 26, 0.20)',
+                    background: 'var(--color-bg-secondary)',
                     borderRadius: '16px',
                     position: 'relative',
                     zIndex: 1,
@@ -182,8 +182,8 @@ export function FinalCTASection() {
 
                     {/* 右侧订阅表单 - 精确按设计稿布局 */}
                     <div style={{
-                        background: 'rgba(26, 26, 26, 0.30)',
-                        border: '1px solid rgba(42, 42, 42, 0.80)',
+                        background: 'var(--color-bg-secondary)',
+                        border: '1px solid var(--color-border-primary)',
                         borderRadius: '16px',
                         width: '500px',
                         position: 'relative',

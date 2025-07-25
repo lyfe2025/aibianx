@@ -402,10 +402,10 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                 <div
                     className="glass-card"
                     style={{
-                        background: 'rgba(26, 26, 26, 0.30)',
+                        background: 'var(--color-bg-secondary)',
                         backdropFilter: 'blur(12px)',
                         WebkitBackdropFilter: 'blur(12px)',
-                        border: '1px solid rgba(42, 42, 42, 0.70)',
+                        border: '1px solid var(--color-border-primary)',
                         borderRadius: '16px',
                         padding: '49.95px 31px 31px 31px',
                         display: 'flex',
@@ -626,7 +626,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                             <button
                                 onClick={handleLike}
                                 style={{
-                                    background: 'rgba(26, 26, 26, 0.50)',
+                                    background: 'var(--color-bg-glass)',
                                     borderRadius: '8px',
                                     display: 'flex',
                                     gap: '6px',
@@ -636,7 +636,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                                     border: 'none',
                                     cursor: 'pointer',
                                     transition: 'all 0.2s ease',
-                                    color: isLiked ? '#EF4444' : '#9CA3AF',
+                                    color: isLiked ? '#EF4444' : 'var(--color-text-muted)',
                                     whiteSpace: 'nowrap',
                                     minWidth: 'auto',
                                     flexShrink: 0
@@ -660,7 +660,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                             <button
                                 onClick={handleBookmark}
                                 style={{
-                                    background: 'rgba(26, 26, 26, 0.50)',
+                                    background: 'var(--color-bg-glass)',
                                     borderRadius: '8px',
                                     display: 'flex',
                                     gap: '6px',
@@ -692,7 +692,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
 
                             {/* 调整按钮 */}
                             <button style={{
-                                background: 'rgba(26, 26, 26, 0.50)',
+                                background: 'var(--color-bg-glass)',
                                 borderRadius: '8px',
                                 display: 'flex',
                                 gap: '6px',
@@ -733,7 +733,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                             <button
                                 onClick={handleShare}
                                 style={{
-                                    background: 'rgba(26, 26, 26, 0.50)',
+                                    background: 'var(--color-bg-glass)',
                                     borderRadius: '18px',
                                     padding: '10px',
                                     display: 'flex',
@@ -750,7 +750,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                                 <Icon name="share-link-detail" size="sm" />
                             </button>
                             <button style={{
-                                background: 'rgba(26, 26, 26, 0.50)',
+                                background: 'var(--color-bg-glass)',
                                 borderRadius: '18px',
                                 padding: '10px',
                                 display: 'flex',
@@ -766,7 +766,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                                 <Icon name="share-wechat-detail" size="sm" />
                             </button>
                             <button style={{
-                                background: 'rgba(26, 26, 26, 0.50)',
+                                background: 'var(--color-bg-glass)',
                                 borderRadius: '18px',
                                 padding: '10px',
                                 display: 'flex',

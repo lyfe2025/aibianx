@@ -51,9 +51,9 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
 
     return (
         <div style={{
-            background: 'rgba(26, 26, 26, 0.30)',
+            background: 'var(--color-bg-secondary)',
             backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(42, 42, 42, 0.70)',
+            border: '1px solid var(--color-border-primary)',
             borderRadius: '12px',
             width: '100%',
             overflow: 'hidden',

@@ -28,7 +28,7 @@ export function CTASection() {
         <section style={{
             position: 'relative',
             zIndex: 1,
-            background: 'rgba(26, 26, 26, 0.20)',
+            background: 'var(--color-bg-secondary)',
             backdropFilter: 'blur(16px)',
             borderRadius: '20px',
             margin: '0 64px 62px 64px',
@@ -110,9 +110,9 @@ export function CTASection() {
                 {/* 右侧：获取独家AI变现指南表单 */}
                 <div style={{
                     width: '468px',
-                    background: 'rgba(26, 26, 26, 0.30)',
+                    background: 'var(--color-bg-secondary)',
                     backdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(42, 42, 42, 0.80)',
+                    border: '1px solid var(--color-border-primary)',
                     borderRadius: '16px',
                     padding: '32px 21px 17px 21px'
                 }}>

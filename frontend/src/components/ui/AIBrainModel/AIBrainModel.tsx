@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
+import { useThemeStore } from '@/stores'
 
 /**
  * 简化3D粒子组件
@@ -21,6 +22,11 @@ export const AIBrainModel: React.FC = () => {
     const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
     const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
     const animationIdRef = useRef<number | null>(null)
+    const { theme } = useThemeStore()
+
+    // 用于平滑过渡的透明度状态
+    const targetOpacityRef = useRef(theme === 'light' ? 0.01 : 0.6)
+    const currentOpacityRef = useRef(theme === 'light' ? 0.01 : 0.6)
 
     useEffect(() => {
         // 强制清理之前的状态
@@ -106,7 +112,7 @@ export const AIBrainModel: React.FC = () => {
                     size: 0.05,
                     vertexColors: true,
                     transparent: true,
-                    opacity: 0.6,
+                    opacity: currentOpacityRef.current,
                     blending: THREE.AdditiveBlending
                 })
 
@@ -124,6 +130,13 @@ export const AIBrainModel: React.FC = () => {
 
                     time += 0.01
 
+                    // 平滑过渡透明度
+                    currentOpacityRef.current = THREE.MathUtils.lerp(
+                        currentOpacityRef.current,
+                        targetOpacityRef.current,
+                        0.02
+                    )
+
                     // 简单的粒子动画
                     const positions = particles.geometry.attributes.position.array as Float32Array
                     for (let i = 0; i < positions.length; i += 3) {
@@ -131,6 +144,10 @@ export const AIBrainModel: React.FC = () => {
                         positions[i] += Math.cos(time + i * 0.1) * 0.003 // x轴微动
                     }
                     particles.geometry.attributes.position.needsUpdate = true
+
+                    // 更新粒子透明度
+                    const material = particles.material as THREE.PointsMaterial
+                    material.opacity = currentOpacityRef.current
 
                     // 整体旋转
                     particles.rotation.y += 0.002
@@ -181,6 +198,11 @@ export const AIBrainModel: React.FC = () => {
             cameraRef.current = null
         }
     }, [forceReload]) // 依赖forceReload，确保重新初始化
+
+    // 单独处理主题变化，只更新目标透明度
+    useEffect(() => {
+        targetOpacityRef.current = theme === 'light' ? 0.01 : 0.6
+    }, [theme])
 
     return (
         <div

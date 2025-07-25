@@ -417,7 +417,7 @@ export default function AboutPage() {
                             <GlassCard variant="default" style={{
                                 width: '391px',
                                 padding: '34px',
-                                background: 'linear-gradient(135deg, rgba(26, 26, 26, 0.60) 25%, rgba(26, 26, 26, 0.30) 75%)',
+                                background: 'var(--color-bg-glass)',
                                 boxShadow: '0px 8px 24px 0px rgba(0, 0, 0, 0.20)',
                                 display: 'flex',
                                 flexDirection: 'column',
