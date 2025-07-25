@@ -269,7 +269,7 @@ export function AppHeader() {
                                         }}
                                         className="nav-link"
                                     >
-                                        首页
+                                        {t('nav.home')}
                                     </Link>
                                     {isActiveRoute('/') && (
                                         <div style={{
@@ -309,7 +309,7 @@ export function AppHeader() {
                                         }}
                                         className="nav-link"
                                     >
-                                        周刊
+                                        {t('nav.weekly')}
                                     </Link>
                                     {isActiveRoute('/weekly') && (
                                         <div style={{
@@ -349,7 +349,7 @@ export function AppHeader() {
                                         }}
                                         className="nav-link"
                                     >
-                                        关于
+                                        {t('nav.about')}
                                     </Link>
                                     {isActiveRoute('/about') && (
                                         <div style={{
@@ -390,7 +390,7 @@ export function AppHeader() {
                                     flexShrink: 0
                                 }}
                                 className="icon-button"
-                                title={isClient ? (language === 'zh' ? '切换到英文' : '切换到中文') : '语言切换'}
+                                title={isClient ? (language === 'zh' ? `${t('language.switchTo')} English` : `${t('language.switchTo')}${t('language.chinese')}`) : t('language.switchTo')}
                             >
                                 <Icon
                                     name="globe"
@@ -453,7 +453,7 @@ export function AppHeader() {
                                 }}
                                 className="btn btn--gradient"
                             >
-                                登录
+                                {t('buttons.login')}
                             </button>
                         </div>
 
@@ -590,7 +590,7 @@ export function AppHeader() {
                                 touchAction: 'manipulation'
                             }}
                         >
-                            首页
+                            {t('nav.home')}
                         </Link>
 
                         <Link
@@ -607,7 +607,7 @@ export function AppHeader() {
                                 touchAction: 'manipulation'
                             }}
                         >
-                            周刊
+                            {t('nav.weekly')}
                         </Link>
 
                         <Link
@@ -624,7 +624,7 @@ export function AppHeader() {
                                 touchAction: 'manipulation'
                             }}
                         >
-                            关于
+                            {t('nav.about')}
                         </Link>
                     </nav>
 
@@ -658,7 +658,7 @@ export function AppHeader() {
                             }}
                         >
                             <Icon name="globe" size="sm" />
-                            {isClient ? (language === 'zh' ? 'English' : '中文') : '中文'}
+                            {isClient ? (language === 'zh' ? t('language.english') : t('language.chinese')) : t('language.chinese')}
                         </button>
 
                         {/* 主题切换按钮 */}
@@ -684,7 +684,7 @@ export function AppHeader() {
                             }}
                         >
                             <Icon name={isClient ? (theme === 'dark' ? 'theme-toggle-light' : 'theme-toggle-dark') : 'theme-toggle-light'} size="sm" />
-                            {isClient ? (theme === 'dark' ? '亮色主题' : '暗色主题') : '亮色主题'}
+                            {isClient ? (theme === 'dark' ? t('theme.light') : t('theme.dark')) : t('theme.light')}
                         </button>
 
 
@@ -702,7 +702,7 @@ export function AppHeader() {
                                 WebkitTapHighlightColor: 'transparent'
                             }}
                         >
-                            登录
+                            {t('buttons.login')}
                         </GradientButton>
 
                         {/* 注册按钮 */}
@@ -723,7 +723,7 @@ export function AppHeader() {
                                 WebkitTapHighlightColor: 'transparent'
                             }}
                         >
-                            注册
+                            {t('buttons.register')}
                         </button>
                     </div>
                 </div>
