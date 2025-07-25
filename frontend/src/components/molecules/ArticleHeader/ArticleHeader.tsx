@@ -1,6 +1,6 @@
 'use client'
 
-import { Avatar, Icon } from '@/components/ui'
+import { Avatar, Icon, CrownIcon } from '@/components/ui'
 
 interface ArticleHeaderProps {
     title: string
@@ -68,9 +68,11 @@ export function ArticleHeader({
                     fontWeight: '500',
                     padding: '6px 12px',
                     borderRadius: 'var(--radius-sm)',
-                    marginBottom: 'var(--title-margin-bottom-md)'
+                    marginBottom: 'var(--title-margin-bottom-md)',
+                    position: 'relative',
+                    zIndex: 999
                 }}>
-                    <Icon name="membership-exclusive" size="xs" />
+                    <CrownIcon size="md" />
                     会员专享内容
                 </div>
             )}

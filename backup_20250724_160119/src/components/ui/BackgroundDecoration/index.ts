@@ -1,1 +1,0 @@
-export { BackgroundDecoration } from './BackgroundDecoration' 

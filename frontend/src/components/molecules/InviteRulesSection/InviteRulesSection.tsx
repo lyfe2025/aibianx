@@ -141,14 +141,16 @@ export const InviteRulesSection: React.FC<InviteRulesSectionProps> = ({
           padding: 8px;
           /* 防换行保护 - 图标不能收缩 */
           flex-shrink: 0;
+          /* 统一使用与奖励发放规则相同的背景色 */
+          background: rgba(234, 179, 8, 0.10);
         }
 
         .reward-icon.membership {
-          background: rgba(59, 130, 246, 0.10);
+          background: rgba(234, 179, 8, 0.10);
         }
 
         .reward-icon.cash {
-          background: rgba(168, 85, 247, 0.10);
+          background: rgba(234, 179, 8, 0.10);
         }
 
         .reward-icon img {
@@ -178,6 +180,8 @@ export const InviteRulesSection: React.FC<InviteRulesSectionProps> = ({
           min-height: 48px;
           /* 防换行保护 */
           overflow: hidden;
+          /* 增加左侧缩进，与奖励发放规则保持一致的视觉层次 */
+          padding-left: 52px;
         }
 
         .reward-content p {

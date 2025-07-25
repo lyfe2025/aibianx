@@ -101,8 +101,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                             fontSize: 'var(--font-size-base)',
                             outline: 'none',
                             transition: 'all 0.2s ease',
-                            backdropFilter: 'blur(4px)',
-                            WebkitBackdropFilter: 'blur(4px)'
+                            backdropFilter: 'blur(12px)',
+                            WebkitBackdropFilter: 'blur(12px)'
                         }}
                         onFocus={(e) => {
                             if (!error) {

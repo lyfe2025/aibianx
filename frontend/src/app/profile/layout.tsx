@@ -8,6 +8,7 @@ import {
     MembershipModal,
     PaymentModal
 } from '@/components/organisms'
+import styles from './layout.module.css'
 
 /**
  * 个人中心专用布局组件 - ProfileLayout
@@ -62,35 +63,28 @@ export default function ProfileLayout({
             {/* 公共顶部导航栏 */}
             <AppHeader />
 
-            {/* 个人中心页面结构 - 左右分栏布局 */}
-            <div style={{
-                minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-                background: 'transparent' // 改为透明，让粒子可见
-            }}>
+            {/* 个人中心页面结构 - 统一容器布局 */}
+            <div className={styles.profileContainer}>
                 {/* 
-                  页面主要内容区域 - 左右分栏布局
-                  左侧：UserSidebar固定导航菜单
-                  右侧：动态页面内容区域
-                  添加marginTop以适应固定顶部菜单高度(98px)
+                  页面主要内容区域 - 统一容器设计
+                  添加最大宽度和居中处理，增强整体感
                 */}
-                <main style={{
-                    flex: 1,
-                    display: 'flex',
-                    marginTop: '98px' // 适应AppHeader的固定高度
-                }}>
+                <main className={styles.profileMain}>
                     {/* 左侧导航栏 - UserSidebar */}
-                    <UserSidebar />
+                    <aside className={styles.profileSidebar}>
+                        <UserSidebar />
+                    </aside>
 
                     {/* 右侧内容区域 */}
-                    <div style={{
-                        flex: 1,
-                        minHeight: 'calc(100vh - 98px)', // 减去AppHeader高度
-                        background: 'transparent'
-                    }}>
-                        {children}
-                    </div>
+                    <section className={styles.profileContent}>
+                        {/* 右侧内容的背景装饰 */}
+                        <div className={styles.contentBackground} />
+
+                        {/* 内容区域 */}
+                        <div className={styles.contentWrapper}>
+                            {children}
+                        </div>
+                    </section>
                 </main>
             </div>
 

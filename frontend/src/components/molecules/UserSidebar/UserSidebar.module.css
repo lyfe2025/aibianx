@@ -1,12 +1,27 @@
 .userSidebar {
     display: flex;
     flex-direction: column;
-    width: 240px;
-    min-height: 100vh;
-    background: var(--color-bg-primary);
-    border-right: 1px solid rgba(42, 42, 42, 0.60);
-    padding: 32px 16px;
+    width: 320px;
+    /* 优化宽度，确保顶级菜单项完整显示 */
+    min-height: calc(100vh - 98px);
+    /* 适应布局变化 */
+    background: rgba(0, 0, 0, 0.15);
+    /* 更淡的背景，增强整体感 */
+    backdrop-filter: blur(8px);
+    /* 添加轻微模糊效果 */
+    border-right: 1px solid rgba(42, 42, 42, 0.30);
+    /* 更淡的边框 */
+    padding: 40px 24px;
+    /* 调整内边距，与整体布局协调 */
     gap: 4px;
+    /* 添加整体感的装饰 */
+    border-radius: 0 12px 12px 0;
+    /* 右侧圆角 */
+    margin: 0;
+    /* 移除外边距 */
+    position: relative;
+    /* 添加优雅的过渡动画 */
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 /* 用户信息区域 */
@@ -22,12 +37,28 @@
 }
 
 .avatarImage {
-    width: 84px;
-    height: 84px;
+    width: 84px !important;
+    /* 确保优先级高于内联样式 */
+    height: 84px !important;
+    /* 确保优先级高于内联样式 */
     border-radius: 50%;
     border: 4px solid rgba(255, 255, 255, 0.10);
-    background: linear-gradient(180deg, #374151 0%, #111827 100%);
-    padding: 18px;
+    background: transparent;
+    /* 移除背景渐变，让头像正确显示 */
+    padding: 0;
+    /* 移除padding，避免挤压头像 */
+    overflow: hidden;
+    /* 确保图片不会溢出圆形边界 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 确保头像内部的图片也正确显示 */
+.avatarImage img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
 }
 
 .userName {
@@ -70,11 +101,11 @@
 }
 
 .mainNavigation {
-    margin-bottom: 14px;
+    margin-bottom: 20px;
 }
 
 .settingsNavigation {
-    margin-top: 14px;
+    margin-top: 20px;
 }
 
 .navItem {
@@ -93,16 +124,22 @@
     line-height: 24px;
     width: 100%;
     text-align: left;
+    /* 添加优雅的过渡动画 */
+    transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 .navItem:hover {
-    background: rgba(59, 130, 246, 0.05);
+    background: rgba(59, 130, 246, 0.08);
     color: var(--color-text-secondary);
+    transform: translateX(2px);
+    /* 轻微的移动效果 */
 }
 
 .navItemActive {
-    background: linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%);
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
     color: var(--color-text-primary);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+    /* 添加阴影 */
 }
 
 .navIcon {
@@ -118,24 +155,52 @@
 
 /* 分割线 */
 .navDivider {
-    width: 100%;
+    width: calc(100% - 32px);
     height: 1px;
-    margin: 0 16px;
+    margin: 12px 16px;
+    background: rgba(42, 42, 42, 0.70);
+    border-radius: 1px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .dividerIcon {
-    width: 100%;
-    height: 1px;
+    display: none;
+    /* 不使用图标，直接用CSS背景 */
 }
 
 /* 响应式设计 */
+@media (max-width: 1024px) {
+    .userSidebar {
+        width: 300px;
+        /* 中等屏幕适当缩小，保持菜单项完整显示 */
+        padding: 32px 20px;
+    }
+
+    .mainNavigation {
+        margin-bottom: 18px;
+    }
+
+    .settingsNavigation {
+        margin-top: 18px;
+    }
+
+    .navDivider {
+        margin: 10px 16px;
+        background: rgba(42, 42, 42, 0.60);
+    }
+}
+
 @media (max-width: 768px) {
     .userSidebar {
-        width: 200px;
-        padding: 24px 12px;
+        width: 280px;
+        /* 小屏幕适度缩小，确保菜单项不换行 */
+        padding: 24px 16px;
+        border-radius: 0 8px 8px 0;
+        /* 较小的圆角 */
+        background: rgba(0, 0, 0, 0.20);
+        /* 稍深的背景，增强可见性 */
     }
 
     .navItem {
@@ -151,5 +216,64 @@
         width: 72px;
         height: 72px;
         padding: 16px;
+    }
+
+    .mainNavigation {
+        margin-bottom: 16px;
+    }
+
+    .settingsNavigation {
+        margin-top: 16px;
+    }
+
+    .navDivider {
+        margin: 8px 16px;
+        background: rgba(42, 42, 42, 0.50);
+    }
+}
+
+@media (max-width: 480px) {
+    .userSidebar {
+        width: 240px;
+        /* 超小屏幕保持基本可读性 */
+        padding: 20px 12px;
+        border-radius: 0 6px 6px 0;
+        /* 更小的圆角 */
+    }
+
+    .navItem {
+        padding: 6px 8px;
+        font-size: var(--font-size-sm);
+        gap: 8px;
+        /* 减少间距 */
+    }
+
+    .userProfile {
+        margin-bottom: 28px;
+        /* 优化间距比例 */
+    }
+
+    .mainNavigation {
+        margin-bottom: 16px;
+    }
+
+    .settingsNavigation {
+        margin-top: 16px;
+    }
+
+    .navDivider {
+        margin: 8px 12px;
+        background: rgba(42, 42, 42, 0.40);
+        width: calc(100% - 24px);
+    }
+
+    .avatarImage {
+        width: 60px;
+        height: 60px;
+        padding: 12px;
+    }
+
+    .userName {
+        font-size: var(--font-size-base);
     }
 }

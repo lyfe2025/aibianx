@@ -69,7 +69,7 @@ const mockArticles: ArticleCardData[] = [
         coverImage: '/images/articles/midjourney-guide.svg',
         author: {
             name: '张先生',
-            avatar: '/images/avatars/user-zhang.jpeg'
+            avatar: '/images/avatars/user-zhang-zhichuang.svg'
         },
         publishedAt: '2024-12-04',
         readingTime: '12分钟',
@@ -117,7 +117,7 @@ const mockArticles: ArticleCardData[] = [
         coverImage: '/images/articles/ai-assistant.svg',
         author: {
             name: '张先生',
-            avatar: '/images/avatars/user-zhang.jpeg'
+            avatar: '/images/avatars/user-zhang-zhichuang.svg'
         },
         publishedAt: '2024-11-25',
         readingTime: '20分钟',
@@ -149,7 +149,7 @@ const mockArticles: ArticleCardData[] = [
         coverImage: '/images/articles/ai-mcn.svg',
         author: {
             name: '张先生',
-            avatar: '/images/avatars/user-zhang.jpeg'
+            avatar: '/images/avatars/user-zhang-zhichuang.svg'
         },
         publishedAt: '2024-11-20',
         readingTime: '17分钟',

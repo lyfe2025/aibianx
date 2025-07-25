@@ -17,6 +17,7 @@ import Image from 'next/image'
  * - 登录/注册入口
  * - 滚动隐藏/显示效果
  * - 移动端响应式布局
+ * - SSR兼容处理，避免水合错误
  * 
  * 设计规范：
  * - 高度: 98px
@@ -36,6 +37,38 @@ export function AppHeader() {
     const [isScrolled, setIsScrolled] = useState(false)
     const [isPageTransitioning, setIsPageTransitioning] = useState(false) // 新增：页面切换状态
 
+    // SSR兼容：确保服务端和客户端初始状态一致
+    const [isClient, setIsClient] = useState(false)
+
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
+
+    /**
+     * SSR兼容的路由匹配函数
+     * 避免服务端和客户端路径检测不一致导致的水合错误
+     */
+    const isActiveRoute = (href: string) => {
+        // SSR期间返回false，避免水合错误
+        if (!isClient) {
+            return false
+        }
+
+        if (href === '/') {
+            return pathname === '/'
+        }
+
+        if (href === '/about') {
+            return pathname === '/about'
+        }
+
+        if (href === '/weekly') {
+            return pathname.startsWith('/weekly')
+        }
+
+        return false
+    }
+
     // 监听路由变化，在页面切换时暂时禁用滚动隐藏
     useEffect(() => {
         setIsPageTransitioning(true)
@@ -50,58 +83,42 @@ export function AppHeader() {
         return () => clearTimeout(timer)
     }, [pathname])
 
-    // 滚动监听效果 - 优化用户体验
+    // 监听滚动事件：滚动时隐藏导航栏，顶部时显示
     useEffect(() => {
-        // 页面切换时禁用滚动监听
-        if (isPageTransitioning) {
-            return
-        }
-
         const handleScroll = () => {
+            // 页面切换期间禁用滚动隐藏
+            if (isPageTransitioning) {
+                return
+            }
+
             const currentScrollY = window.scrollY
 
-            // 检测是否已滚动，用于调整背景透明度
-            setIsScrolled(currentScrollY > 10)
+            // 滚动状态检测：滚动超过98px时启用毛玻璃效果
+            setIsScrolled(currentScrollY > 98)
 
-            // 优化滚动阈值，减少触发频率
-            const scrollThreshold = 80
-
-            // 向下滚动且滚动距离大于阈值时隐藏导航栏
-            if (currentScrollY > lastScrollY && currentScrollY > scrollThreshold) {
-                setIsVisible(false)
-            }
-            // 向上滚动时显示导航栏
-            else if (currentScrollY < lastScrollY) {
+            // 方向判断：向下滚动隐藏，向上滚动显示
+            if (currentScrollY > lastScrollY && currentScrollY > 98) {
+                // 向下滚动，隐藏导航栏（延迟300ms）
+                setTimeout(() => {
+                    if (!isPageTransitioning) {
+                        setIsVisible(false)
+                    }
+                }, 300)
+            } else {
+                // 向上滚动或接近顶部，立即显示导航栏
                 setIsVisible(true)
             }
 
             setLastScrollY(currentScrollY)
         }
 
-        // 使用 requestAnimationFrame 优化性能
-        let ticking = false
-        const optimizedHandleScroll = () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    handleScroll()
-                    ticking = false
-                })
-                ticking = true
-            }
-        }
-
-        window.addEventListener('scroll', optimizedHandleScroll, { passive: true })
-
-        return () => {
-            window.removeEventListener('scroll', optimizedHandleScroll)
-        }
-    }, [lastScrollY, isPageTransitioning]) // 添加isPageTransitioning依赖
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [lastScrollY, isPageTransitioning])
 
     const handleLogin = () => {
         openModal('login')
     }
-
-
 
     const handleUserMenu = () => {
         // TODO: 实现用户菜单功能
@@ -218,7 +235,7 @@ export function AppHeader() {
                                 <Link
                                     href="/"
                                     style={{
-                                        color: pathname === '/' ? '#FFFFFF' : '#9CA3AF',
+                                        color: isActiveRoute('/') ? '#FFFFFF' : '#9CA3AF',
                                         lineHeight: '24px',
                                         height: '24px',
                                         alignItems: 'center',
@@ -237,7 +254,7 @@ export function AppHeader() {
                                     首页
                                 </Link>
                                 {/* 首页指示器 - 精确对齐文字中心 */}
-                                {pathname === '/' && (
+                                {isActiveRoute('/') && (
                                     <div style={{
                                         width: '28px',
                                         height: '2px',
@@ -259,7 +276,7 @@ export function AppHeader() {
                                 <Link
                                     href="/weekly"
                                     style={{
-                                        color: pathname.startsWith('/weekly') ? '#FFFFFF' : '#9CA3AF',
+                                        color: isActiveRoute('/weekly') ? '#FFFFFF' : '#9CA3AF',
                                         lineHeight: '24px',
                                         height: '24px',
                                         alignItems: 'center',
@@ -278,7 +295,7 @@ export function AppHeader() {
                                     周刊
                                 </Link>
                                 {/* 周刊指示器 - 精确对齐文字中心 */}
-                                {pathname.startsWith('/weekly') && (
+                                {isActiveRoute('/weekly') && (
                                     <div style={{
                                         width: '28px',
                                         height: '2px',
@@ -300,7 +317,7 @@ export function AppHeader() {
                                 <Link
                                     href="/about"
                                     style={{
-                                        color: pathname === '/about' ? '#FFFFFF' : '#9CA3AF',
+                                        color: isActiveRoute('/about') ? '#FFFFFF' : '#9CA3AF',
                                         lineHeight: '24px',
                                         height: '24px',
                                         alignItems: 'center',
@@ -319,7 +336,7 @@ export function AppHeader() {
                                     关于
                                 </Link>
                                 {/* 关于指示器 - 精确对齐文字中心 */}
-                                {pathname === '/about' && (
+                                {isActiveRoute('/about') && (
                                     <div style={{
                                         width: '28px',
                                         height: '2px',
@@ -349,9 +366,9 @@ export function AppHeader() {
                             alignItems: 'center',
                             marginLeft: '32px',
                             cursor: 'pointer',
-                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                            flexShrink: 0
                         }}
-                        className="icon-button inner-border"
                         onMouseEnter={(e) => {
                             e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.40)'
                             e.currentTarget.style.background = 'rgba(26, 26, 26, 0.70)'
@@ -361,292 +378,109 @@ export function AppHeader() {
                             e.currentTarget.style.background = 'rgba(26, 26, 26, 0.50)'
                         }}
                     >
-                        <Icon
-                            name="user-icon"
-                            style={{
-                                color: 'rgb(156, 163, 175)',
-                                width: '20px',
-                                height: '20px',
-                                backgroundSize: 'cover'
-                            }}
-                        />
+                        <Icon name="user-simple" size="sm" style={{
+                            color: '#9CA3AF'
+                        }} />
                     </button>
 
-                    {/* 主题切换按钮 - 暗亮模式切换 */}
-                    <button
-                        onClick={() => {
-                            // TODO: 实现主题切换功能
-                            console.log('Theme toggle clicked')
+                    {/* 搜索图标按钮 - 对齐用户按钮 */}
+                    <button style={{
+                        background: 'rgba(26, 26, 26, 0.50)',
+                        borderStyle: 'solid',
+                        borderColor: 'rgba(59, 130, 246, 0.20)',
+                        borderWidth: '1px',
+                        borderRadius: '8px',
+                        padding: '10px',
+                        display: 'flex',
+                        width: '40px',
+                        height: '40px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginLeft: '8px',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                        flexShrink: 0
+                    }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.40)'
+                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.70)'
                         }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.20)'
+                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.50)'
+                        }}
+                    >
+                        <Icon name="search" size="sm" style={{
+                            color: '#9CA3AF'
+                        }} />
+                    </button>
+
+                    {/* 加入会员按钮 - 梯度样式，与图标对齐 */}
+                    <button
+                        onClick={handleLogin}
                         style={{
-                            background: 'rgba(26, 26, 26, 0.50)',
-                            borderStyle: 'solid',
-                            borderColor: 'rgba(59, 130, 246, 0.20)',
-                            borderWidth: '1px',
+                            background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
                             borderRadius: '8px',
-                            padding: '10px',
-                            display: 'flex',
-                            width: '40px',
-                            height: '40px', // 与其他按钮高度一致
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginLeft: '12px',
+                            padding: '10px 20px',
+                            border: 'none',
+                            color: '#FFFFFF',
+                            fontSize: '13.33px',
+                            fontWeight: '500',
+                            lineHeight: '20px',
                             cursor: 'pointer',
-                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                            marginLeft: '16px',
+                            height: '40px', // 与图标按钮对齐
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            whiteSpace: 'nowrap',
+                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                            boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)', // 添加按钮阴影
+                            flexShrink: 0
                         }}
-                        className="icon-button inner-border"
                         onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.40)'
-                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.70)'
+                            e.currentTarget.style.transform = 'translateY(-1px)'
+                            e.currentTarget.style.boxShadow = '0 4px 16px rgba(59, 130, 246, 0.4)'
                         }}
                         onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.20)'
-                            e.currentTarget.style.background = 'rgba(26, 26, 26, 0.50)'
-                        }}
-                        title="切换主题"
-                    >
-                        <Icon
-                            name="theme-toggle-light"
-                            style={{
-                                width: '20px',
-                                height: '20px'
-                            }}
-                        />
-                    </button>
-
-                    {/* 桌面端登录按钮 - 精确还原设计稿样式 */}
-                    <div className="desktop-auth-buttons" style={{
-                        display: 'none', // 默认隐藏，通过CSS媒体查询控制显示
-                        alignItems: 'center'
-                    }}>
-                        <button
-                            onClick={handleLogin}
-                            style={{
-                                background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                                borderRadius: '9999px',
-                                border: 'none',
-                                display: 'flex',
-                                width: '88px',
-                                height: '40px', // 与其他按钮高度一致
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginLeft: '12px',
-                                paddingLeft: '28px',
-                                paddingRight: '28px',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                                boxShadow: '0px 0px 15px 0px rgba(139, 92, 246, 0.30)' // 减弱阴影
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-1px)'
-                                e.currentTarget.style.boxShadow = '0px 0px 20px 0px rgba(139, 92, 246, 0.50)'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0)'
-                                e.currentTarget.style.boxShadow = '0px 0px 15px 0px rgba(139, 92, 246, 0.30)'
-                            }}
-                        >
-                            <span style={{
-                                color: '#FFFFFF',
-                                fontFamily: 'var(--font-family-primary)',
-                                lineHeight: '18px',
-                                textAlign: 'center',
-                                width: '32px',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                display: 'flex',
-                                textOverflow: 'ellipsis',
-                                minHeight: '18px',
-                                fontSize: '14px'
-                            }}>
-                                登录
-                            </span>
-                        </button>
-                    </div>
-
-                    {/* 移动端菜单按钮 - 移动设备导航触发器 */}
-                    <button
-                        className="mobile-menu-button"
-                        style={{
-                            display: 'none', // 默认隐藏，通过CSS媒体查询控制显示
-                            width: '40px',
-                            height: '40px',
-                            border: 'none',
-                            background: 'transparent',
-                            cursor: 'pointer',
-                            position: 'relative'
-                        }}
-                        onClick={() => {
-                            // TODO: 实现移动端菜单切换逻辑
-                            console.log('Toggle mobile menu')
+                            e.currentTarget.style.transform = 'translateY(0)'
+                            e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)'
                         }}
                     >
-                        <div style={{
-                            width: '24px',
-                            height: '2px',
-                            background: '#FFFFFF',
-                            borderRadius: '1px',
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                        }} />
-                        <div style={{
-                            width: '24px',
-                            height: '2px',
-                            background: '#FFFFFF',
-                            borderRadius: '1px',
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%) translateY(-6px)',
-                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                        }} />
-                        <div style={{
-                            width: '24px',
-                            height: '2px',
-                            background: '#FFFFFF',
-                            borderRadius: '1px',
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%) translateY(6px)',
-                            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                        }} />
+                        加入会员
                     </button>
                 </div>
             </div>
 
-            {/* 响应式样式优化 */}
+            {/* CSS内联样式 - 响应式设计 */}
             <style jsx>{`
-                /* 大屏桌面端 - 1440px及以上 */
-                @media (min-width: 1440px) {
+                @media (min-width: 768px) {
                     .desktop-nav {
                         display: flex !important;
-                    }
-                    
-                    .desktop-auth-buttons {
-                        display: flex !important;
-                    }
-                    
-                    .mobile-menu-button {
-                        display: none !important;
                     }
                 }
-
-                /* 中等桌面端 - 1200px-1439px */
-                @media (min-width: 1200px) and (max-width: 1439px) {
-                    .desktop-nav {
-                        display: flex !important;
-                    }
-                    
-                    .desktop-auth-buttons {
-                        display: flex !important;
-                    }
-                    
-                    .mobile-menu-button {
-                        display: none !important;
-                    }
-
-                    /* 调整按钮间距 */
+                
+                @media (max-width: 1200px) {
                     .desktop-nav {
                         gap: 16px !important;
                     }
                 }
-
-                /* 小桌面端 - 1024px-1199px */
-                @media (min-width: 1024px) and (max-width: 1199px) {
-                    .desktop-nav {
-                        display: flex !important;
-                    }
-                    
-                    .desktop-auth-buttons {
-                        display: flex !important;
-                    }
-                    
-                    .mobile-menu-button {
-                        display: none !important;
-                    }
-
-                    /* 调整间距和字体 */
+                
+                @media (max-width: 1024px) {
                     .desktop-nav {
                         gap: 12px !important;
                     }
                 }
-
-                /* 平板端 - 768px-1023px */
-                @media (min-width: 768px) and (max-width: 1023px) {
+                
+                @media (max-width: 768px) {
                     .desktop-nav {
                         display: none !important;
                     }
-                    
-                    .desktop-auth-buttons {
-                        display: none !important;
-                    }
-                    
-                    .mobile-menu-button {
-                        display: block !important;
-                    }
-
-                    /* 调整padding */
-                    header > div {
-                        padding: 20px 24px !important;
-                    }
                 }
-
-                /* 移动端 - 767px及以下 */
-                @media (max-width: 767px) {
-                    .desktop-nav {
-                        display: none !important;
-                    }
-                    
-                    .desktop-auth-buttons {
-                        display: none !important;
-                    }
-                    
-                    .mobile-menu-button {
-                        display: block !important;
-                    }
-
-                    /* 调整移动端布局 */
-                    header {
-                        height: 80px !important;
-                    }
-
-                    header > div {
-                        padding: 20px 16px !important;
-                        min-height: 80px !important;
-                    }
-
-                    /* 调整Logo尺寸 */
-                    header img {
-                        width: 28px !important;
-                        height: 28px !important;
-                    }
-
-                    /* 调整品牌文字 */
-                    header div[style*="fontSize: '24px'"] {
-                        font-size: 20px !important;
-                    }
-                }
-
-                /* 超小屏幕 - 480px及以下 */
-                @media (max-width: 480px) {
-                    header > div {
-                        padding: 16px 12px !important;
-                    }
-
-                    /* 进一步缩小Logo */
-                    header img {
-                        width: 24px !important;
-                        height: 24px !important;
-                    }
-
-                    /* 进一步缩小品牌文字 */
-                    header div[style*="fontSize: '24px'"] {
-                        font-size: 18px !important;
-                    }
+                
+                /* 悬停效果优化 */
+                .nav-link:hover {
+                    color: #D1D5DB !important;
                 }
             `}</style>
         </header>

@@ -19,7 +19,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
       padding: '25px',
       display: 'flex',
       width: '100%',
-      gap: '8px',
+      gap: '0px', // 移除主容器间距，改为单独控制
       flexDirection: 'column',
       alignItems: 'stretch',
       fontFamily: 'var(--font-family-primary)',
@@ -40,7 +40,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         gap: '16px' // 添加间距防止挤压
       }}>
         <div style={{
-          gap: '8px',
+          gap: '8px', // 恢复合理间距，平衡视觉层次
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
@@ -106,20 +106,44 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
               </div>
             </div>
           </div>
+          {/* 订阅信息区域 - 将到期时间和订阅内容紧密排列 */}
           <div style={{
-            color: '#D1D5DB',
-            fontSize: '14px',
-            lineHeight: '20px',
-            alignItems: 'center',
             display: 'flex',
-            // 防换行保护 - 到期时间
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            minWidth: '300px', // 为到期时间文字预留空间
-            minHeight: '20px'
+            flexDirection: 'column',
+            gap: '2px', // 设置小间距，保持整体性
+            // 防换行保护
+            overflow: 'hidden'
           }}>
-            到期时间：2024年12月31日（剩余245天）
+            <div style={{
+              color: '#D1D5DB',
+              fontSize: '14px',
+              lineHeight: '18px', // 恢复正常行高，与第二行保持一致
+              alignItems: 'center',
+              display: 'flex',
+              // 防换行保护 - 到期时间
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minWidth: '300px', // 为到期时间文字预留空间
+              minHeight: '18px' // 匹配行高
+            }}>
+              到期时间：2024年12月31日（剩余245天）
+            </div>
+            <div style={{
+              color: '#D1D5DB',
+              fontSize: '14px',
+              lineHeight: '18px', // 恢复正常行高
+              alignItems: 'center',
+              display: 'flex',
+              // 移除marginTop，使用gap统一控制间距
+              // 防换行保护 - 订阅内容描述
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '18px', // 匹配行高
+              minWidth: '400px' // 为描述文字预留充足空间
+            }}>
+              订阅内容：全站资源、专属社群、一对一咨询（每月1次）
+            </div>
           </div>
         </div>
 
@@ -233,37 +257,12 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         </div>
       </div>
 
-      {/* 订阅内容描述 */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        minHeight: '20px',
-        // 防换行保护
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          color: '#D1D5DB',
-          fontSize: '14px',
-          lineHeight: '20px',
-          alignItems: 'center',
-          display: 'flex',
-          // 防换行保护 - 订阅内容描述
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          minHeight: '20px',
-          flex: 1,
-          minWidth: '400px' // 为描述文字预留充足空间
-        }}>
-          订阅内容：全站资源、专属社群、一对一咨询（每月1次）
-        </div>
-      </div>
-
       {/* 专属会员权益 */}
       <div style={{
         borderTop: '1px solid rgba(255, 255, 255, 0.10)',
         display: 'flex',
         justifyContent: 'space-between',
-        marginTop: '16px',
+        marginTop: '24px', // 增加顶部间距，与权益区域分开
         flexDirection: 'row',
         paddingTop: '25px',
         cursor: 'pointer',

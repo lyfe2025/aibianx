@@ -19,6 +19,7 @@ interface UserSidebarProps {
  * 2. 退出登录 - 点击"退出"注销并跳转到首页
  * 3. 页面导航 - 个人中心各子页面间的跳转
  * 4. 精确路由高亮 - 只有当前页面的菜单项高亮显示，避免多选
+ * 5. SSR兼容 - 解决服务端渲染水合错误
  * 
  * 🎯 导航路径：
  * - 首页: / (直接跳转)
@@ -32,6 +33,7 @@ interface UserSidebarProps {
  * - 精确匹配：首页和个人中心必须完全匹配路径
  * - 前缀匹配：子页面使用startsWith，但排除父级路径
  * - 优先级：子路径优先于父路径匹配
+ * - SSR兼容：服务端期间始终返回非激活状态，客户端水合后正常显示
  * 
  * 🎨 图标资源：
  * - 使用从设计稿下载的本地SVG图标
@@ -76,7 +78,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
     ]
 
     /**
-     * 精确的路由匹配函数 - SSR兼容版本
+     * 精确的路由匹配函数 - 完整SSR兼容版本
      * 解决多个菜单项同时高亮的问题和SSR水合错误
      */
     const isActiveRoute = (href: string) => {
@@ -110,6 +112,71 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
         router.push('/')
     }
 
+    // SSR期间显示占位符状态，避免水合错误
+    if (!isClient) {
+        return (
+            <div className={`${styles.userSidebar} ${className}`}>
+                {/* 用户信息区域 */}
+                <div className={styles.userProfile}>
+                    <div className={styles.userAvatar}>
+                        <Avatar
+                            src="/images/avatars/user-zhang-zhichuang.svg"
+                            alt="张智创"
+                            className={styles.avatarImage}
+                        />
+                    </div>
+                    <h3 className={styles.userName}>张智创</h3>
+                    <div className={styles.memberBadge}>
+                        <span className={styles.memberText}>高级会员</span>
+                    </div>
+                    <p className={styles.memberExpiry}>会员有效期：还剩 245 天</p>
+                </div>
+
+                {/* 主导航菜单 - 无激活状态 */}
+                <nav className={styles.mainNavigation}>
+                    {navigationItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={styles.navItem}
+                        >
+                            <Icon name={item.icon} size="sm" className={styles.navIcon} />
+                            <span className={styles.navLabel}>{item.label}</span>
+                        </Link>
+                    ))}
+                </nav>
+
+                {/* 分割线 */}
+                <div className={styles.navDivider} />
+
+                {/* 设置菜单 - 无激活状态 */}
+                <nav className={styles.settingsNavigation}>
+                    {settingsItems.map((item) => (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={styles.navItem}
+                        >
+                            <Icon name={item.icon} size="sm" className={styles.navIcon} />
+                            <span className={styles.navLabel}>{item.label}</span>
+                        </Link>
+                    ))}
+
+                    {/* 退出按钮 - 执行登出并跳转到首页 */}
+                    <button
+                        onClick={handleLogout}
+                        className={styles.navItem}
+                        title="退出登录并返回首页"
+                    >
+                        <Icon name="profile-sidebar-logout" size="sm" className={styles.navIcon} />
+                        <span className={styles.navLabel}>退出</span>
+                    </button>
+                </nav>
+            </div>
+        )
+    }
+
+    // 客户端渲染：带有路径高亮功能
     return (
         <div className={`${styles.userSidebar} ${className}`}>
             {/* 用户信息区域 */}
@@ -118,7 +185,6 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                     <Avatar
                         src="/images/avatars/user-zhang-zhichuang.svg"
                         alt="张智创"
-                        size="lg"
                         className={styles.avatarImage}
                     />
                 </div>
@@ -144,9 +210,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
             </nav>
 
             {/* 分割线 */}
-            <div className={styles.navDivider}>
-                <Icon name="divider-profile" className={styles.dividerIcon} />
-            </div>
+            <div className={styles.navDivider} />
 
             {/* 设置菜单 */}
             <nav className={styles.settingsNavigation}>

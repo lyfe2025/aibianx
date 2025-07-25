@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Icon, GradientButton, Input } from '@/components/ui'
-import Image from 'next/image'
+import { Icon, GradientButton, Input, SettingsAvatar } from '@/components/ui'
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile')
@@ -162,8 +161,7 @@ export default function SettingsPage() {
               paddingTop: '16px',
               paddingBottom: '16px',
               cursor: 'pointer',
-              flexShrink: 0,
-              marginRight: '32px'
+              flexShrink: 0
             }}
           >
             <div style={{
@@ -234,64 +232,15 @@ export default function SettingsPage() {
               paddingBottom: '32px',
               borderBottom: '1px solid rgba(42, 42, 42, 0.3)'
             }}>
-              <div
-                className="avatar-container settings-avatar"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.10)',
-                  borderRadius: '50%',
-                  width: '120px',
-                  height: '120px',
-                  overflow: 'hidden',
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '3px solid rgba(59, 130, 246, 0.2)',
-                  transition: 'all 0.3s ease'
-                }}>
-                <Image
-                  src="/images/avatars/settings-avatar.svg"
-                  alt="用户头像"
-                  width={120}
-                  height={120}
-                  style={{
-                    width: '120px',
-                    height: '120px',
-                    objectFit: 'cover',
-                    borderRadius: '50%'
-                  }}
-                />
-                {/* 编辑按钮 */}
-                <div
-                  className="avatar-edit-button"
-                  style={{
-                    position: 'absolute',
-                    bottom: '8px',
-                    right: '8px',
-                    background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                    borderRadius: '50%',
-                    width: '36px',
-                    height: '36px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    border: '3px solid #030303',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
-                  }}>
-                  <Icon
-                    name="edit-avatar"
-                    size="sm"
-                    style={{
-                      width: '18px',
-                      height: '18px',
-                      color: '#FFFFFF'
-                    }}
-                  />
-                </div>
-              </div>
-
+              <SettingsAvatar
+                src="/images/avatars/user-zhang-zhichuang.svg"
+                alt="张智创"
+                onEdit={() => {
+                  console.log('Edit avatar clicked')
+                  // 这里可以添加头像编辑逻辑
+                }}
+              />
+              
               {/* 上传提示 */}
               <div style={{
                 display: 'flex',
@@ -811,7 +760,7 @@ export default function SettingsPage() {
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'flex-end',
+            justifyContent: 'center',
             gap: '16px',
             borderTop: '1px solid rgba(42, 42, 42, 0.3)',
             paddingTop: '24px'

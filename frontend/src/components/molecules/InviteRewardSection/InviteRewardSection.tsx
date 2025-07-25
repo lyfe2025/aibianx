@@ -198,166 +198,163 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
         overflow: 'hidden',
         gap: '32px' // 添加间距防止挤压
       }}>
-        {/* 左侧：邀请码区块 + 已邀请人数 */}
+        {/* 左侧：邀请码区块 */}
         <div style={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          flex: 1,
+          alignItems: 'flex-start',
+          borderRight: '1px solid rgba(255, 255, 255, 0.10)',
+          gap: '16px',
+          paddingRight: '32px',
           // 防换行保护
-          flexWrap: 'nowrap',
-          overflow: 'hidden',
-          gap: '32px',
-          minWidth: '400px' // 为左侧区域预留空间
+          flexShrink: 0,
+          minWidth: '280px' // 为邀请码区块预留空间
         }}>
           {/* 邀请码区块 */}
           <div style={{
-            borderRight: '1px solid rgba(255, 255, 255, 0.10)',
-            gap: '16px',
+            background: 'rgba(255, 255, 255, 0.10)',
+            borderRadius: '8px',
+            padding: '12px',
             display: 'flex',
-            flexDirection: 'row',
+            width: '56px',
+            height: '56px',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexShrink: 0
+          }}>
+            <Icon
+              name="subscription/invite-code"
+              size="xl"
+              style={{
+                width: '32px',
+                height: '32px',
+                color: '#FFFFFF'
+              }}
+            />
+          </div>
+          <div style={{
+            gap: '8px',
+            display: 'flex',
+            flexDirection: 'column',
             alignItems: 'stretch',
-            paddingRight: '25px',
-            paddingBottom: '36px',
+            flex: 1,
             // 防换行保护
-            flexShrink: 0,
-            minWidth: '280px' // 为邀请码区块预留空间
+            minWidth: '180px', // 为邀请码文字预留空间
+            overflow: 'hidden'
           }}>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.10)',
-              borderRadius: '8px',
-              padding: '12px',
               display: 'flex',
-              width: '56px',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '8px',
-              marginBottom: '8px',
-              flexShrink: 0
+              alignItems: 'flex-start',
+              minHeight: '20px'
             }}>
-              <Icon
-                name="subscription/invite-code"
-                size="xl"
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  color: '#FFFFFF'
-                }}
-              />
+              <div style={{
+                color: '#D1D5DB',
+                lineHeight: '20px',
+                alignItems: 'center',
+                display: 'flex',
+                // 防换行保护 - 邀请码标签
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                minHeight: '20px',
+                minWidth: '120px' // 为"您的专属邀请码"预留空间
+              }}>
+                您的专属邀请码
+              </div>
             </div>
             <div style={{
-              gap: '8px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: '8px',
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'stretch',
-              flex: 1,
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              paddingLeft: '8px',
+              paddingRight: '8px',
+              paddingTop: '8px',
+              paddingBottom: '8px',
               // 防换行保护
-              minWidth: '180px', // 为邀请码文字预留空间
-              overflow: 'hidden'
+              flexWrap: 'nowrap',
+              overflow: 'hidden',
+              gap: '8px',
+              minWidth: '160px' // 为邀请码输入框预留空间
             }}>
               <div style={{
+                color: '#FFFFFF',
+                fontSize: '20px',
+                lineHeight: '28px',
+                alignItems: 'center',
                 display: 'flex',
-                alignItems: 'flex-start',
-                minHeight: '20px'
+                // 防换行保护 - 邀请码
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                minHeight: '28px',
+                flexShrink: 0
               }}>
-                <div style={{
-                  color: '#D1D5DB',
-                  lineHeight: '20px',
-                  alignItems: 'center',
-                  display: 'flex',
-                  // 防换行保护 - 邀请码标签
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  minHeight: '20px',
-                  minWidth: '120px' // 为"您的专属邀请码"预留空间
-                }}>
-                  您的专属邀请码
-                </div>
+                AI7859
               </div>
               <div style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                borderRadius: '8px',
+                gap: '4px',
                 display: 'flex',
-                justifyContent: 'space-between',
                 flexDirection: 'row',
-                paddingLeft: '8px',
-                paddingRight: '8px',
-                paddingTop: '8px',
-                paddingBottom: '8px',
-                // 防换行保护
-                flexWrap: 'nowrap',
-                overflow: 'hidden',
-                gap: '8px',
-                minWidth: '160px' // 为邀请码输入框预留空间
+                alignItems: 'stretch',
+                paddingTop: '4px',
+                paddingBottom: '4px',
+                cursor: 'pointer',
+                // 防换行保护 - 复制按钮
+                flexShrink: 0,
+                whiteSpace: 'nowrap'
               }}>
+                <Icon
+                  name="subscription/copy-icon"
+                  size="xs"
+                  style={{
+                    width: '14px',
+                    height: '14px',
+                    marginTop: '3px',
+                    color: '#60A5FA',
+                    flexShrink: 0
+                  }}
+                />
                 <div style={{
-                  color: '#FFFFFF',
-                  fontSize: '20px',
-                  lineHeight: '28px',
+                  color: '#60A5FA',
+                  lineHeight: '20px',
+                  textAlign: 'center',
+                  justifyContent: 'center',
                   alignItems: 'center',
                   display: 'flex',
-                  // 防换行保护 - 邀请码
+                  // 防换行保护
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  minHeight: '28px',
-                  flexShrink: 0
+                  minHeight: '20px'
                 }}>
-                  AI7859
-                </div>
-                <div style={{
-                  gap: '4px',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'stretch',
-                  paddingTop: '4px',
-                  paddingBottom: '4px',
-                  cursor: 'pointer',
-                  // 防换行保护 - 复制按钮
-                  flexShrink: 0,
-                  whiteSpace: 'nowrap'
-                }}>
-                  <Icon
-                    name="subscription/copy-icon"
-                    size="xs"
-                    style={{
-                      width: '14px',
-                      height: '14px',
-                      marginTop: '3px',
-                      color: '#60A5FA',
-                      flexShrink: 0
-                    }}
-                  />
-                  <div style={{
-                    color: '#60A5FA',
-                    lineHeight: '20px',
-                    textAlign: 'center',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    display: 'flex',
-                    // 防换行保护
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    minHeight: '20px'
-                  }}>
-                    复制
-                  </div>
+                  复制
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
+        {/* 右侧统计数据 - 修复水平对齐 */}
+        <div style={{
+          display: 'flex',
+          gap: '40px',
+          alignItems: 'flex-start',
+          flex: 1,
+          // 防换行保护
+          flexWrap: 'nowrap',
+          overflow: 'hidden',
+          justifyContent: 'flex-start' // 确保左对齐
+        }}>
           {/* 已邀请人数 */}
           <div style={{
-            gap: '4px',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'stretch',
+            alignItems: 'center',
             // 防换行保护
             flexShrink: 0,
-            minWidth: '80px', // 为统计项预留空间
+            minWidth: '90px', // 为统计项预留空间
             textAlign: 'center'
           }}>
             <div style={{
@@ -366,10 +363,10 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               padding: '12px',
               display: 'flex',
               width: '48px',
+              height: '48px',
               justifyContent: 'center',
               alignItems: 'center',
-              marginLeft: 'auto',
-              marginRight: 'auto',
+              marginBottom: '8px',
               flexShrink: 0
             }}>
               <Icon
@@ -387,7 +384,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               lineHeight: '20px',
               alignItems: 'center',
               display: 'flex',
-              marginTop: '4px',
+              marginBottom: '4px',
               // 防换行保护 - 统计标签
               whiteSpace: 'nowrap',
               overflow: 'hidden',
@@ -413,27 +410,16 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               18
             </div>
           </div>
-        </div>
 
-        {/* 右侧统计数据 */}
-        <div style={{
-          gap: '4px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          // 防换行保护
-          flexShrink: 0,
-          minWidth: '300px' // 为右侧统计预留空间
-        }}>
-          {/* 图标行 */}
+          {/* 待激活人数 */}
           <div style={{
             display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingLeft: '10px',
-            paddingRight: '10px',
+            flexDirection: 'column',
+            alignItems: 'center',
             // 防换行保护
-            flexWrap: 'nowrap'
+            flexShrink: 0,
+            minWidth: '90px', // 为统计项预留空间
+            textAlign: 'center'
           }}>
             <div style={{
               background: 'rgba(255, 255, 255, 0.10)',
@@ -441,8 +427,10 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               padding: '12px',
               display: 'flex',
               width: '48px',
+              height: '48px',
               justifyContent: 'center',
               alignItems: 'center',
+              marginBottom: '8px',
               flexShrink: 0
             }}>
               <Icon
@@ -456,13 +444,57 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               />
             </div>
             <div style={{
+              color: '#D1D5DB',
+              lineHeight: '20px',
+              alignItems: 'center',
+              display: 'flex',
+              marginBottom: '4px',
+              // 防换行保护 - 标签文字
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '20px',
+              justifyContent: 'center'
+            }}>
+              待激活人数
+            </div>
+            <div style={{
+              color: '#FFFFFF',
+              fontSize: '20px',
+              lineHeight: '28px',
+              alignItems: 'center',
+              display: 'flex',
+              // 防换行保护 - 数值
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '28px',
+              justifyContent: 'center'
+            }}>
+              5
+            </div>
+          </div>
+
+          {/* 累计返佣金额 */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            // 防换行保护
+            flexShrink: 0,
+            minWidth: '110px', // 为金额数字预留更多空间
+            textAlign: 'center'
+          }}>
+            <div style={{
               background: 'rgba(255, 255, 255, 0.10)',
               borderRadius: '8px',
               padding: '12px',
               display: 'flex',
               width: '48px',
+              height: '48px',
               justifyContent: 'center',
               alignItems: 'center',
+              marginBottom: '8px',
               flexShrink: 0
             }}>
               <Icon
@@ -475,59 +507,21 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
                 }}
               />
             </div>
-          </div>
-
-          {/* 标签行 */}
-          <div style={{
-            marginTop: '4px',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            // 防换行保护
-            flexWrap: 'nowrap'
-          }}>
             <div style={{
               color: '#D1D5DB',
               lineHeight: '20px',
               alignItems: 'center',
               display: 'flex',
+              marginBottom: '4px',
               // 防换行保护 - 标签文字
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               minHeight: '20px',
-              flex: 1,
-              textAlign: 'center'
-            }}>
-              待激活人数
-            </div>
-            <div style={{
-              color: '#D1D5DB',
-              lineHeight: '20px',
-              alignItems: 'center',
-              display: 'flex',
-              // 防换行保护 - 标签文字
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minHeight: '20px',
-              flex: 1,
-              textAlign: 'center'
+              justifyContent: 'center'
             }}>
               累计返佣金额
             </div>
-          </div>
-
-          {/* 数值行 */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingLeft: '20px',
-            paddingRight: '20px',
-            // 防换行保护
-            flexWrap: 'nowrap'
-          }}>
             <div style={{
               color: '#FFFFFF',
               fontSize: '20px',
@@ -539,24 +533,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               minHeight: '28px',
-              flex: 1,
-              textAlign: 'center'
-            }}>
-              5
-            </div>
-            <div style={{
-              color: '#FFFFFF',
-              fontSize: '20px',
-              lineHeight: '28px',
-              alignItems: 'center',
-              display: 'flex',
-              // 防换行保护 - 数值
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minHeight: '28px',
-              flex: 1,
-              textAlign: 'center'
+              justifyContent: 'center'
             }}>
               ¥1,235
             </div>

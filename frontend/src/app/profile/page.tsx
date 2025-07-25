@@ -5,31 +5,13 @@ import { Icon, GradientText, GradientButton } from '@/components/ui'
 import { BookmarkCard } from '@/components/molecules'
 
 export default function ProfilePage() {
-  // 统计数据
+  // 统计数据 - 只保留收藏资源
   const userStats = [
-    {
-      title: '已购课程',
-      value: '12',
-      icon: 'courses-icon',
-      gradient: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)'
-    },
-    {
-      title: '学习进度',
-      value: '45%',
-      icon: 'progress-icon',
-      gradient: 'linear-gradient(135deg, #22C55E 15%, #34D399 85%)'
-    },
     {
       title: '收藏资源',
       value: '28',
       icon: 'resources-icon',
       gradient: 'linear-gradient(135deg, #A855F7 15%, #EC4899 85%)'
-    },
-    {
-      title: '积分',
-      value: '3,250',
-      icon: 'points-icon',
-      gradient: 'linear-gradient(135deg, #FB923C 15%, #F59E0B 85%)'
     }
   ]
 
@@ -95,9 +77,8 @@ export default function ProfilePage() {
 
       {/* 统计卡片 */}
       <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', // 增加最小宽度为中文预留空间
-        gap: '24px',
+        display: 'flex',
+        justifyContent: 'flex-start', // 左对齐
         marginBottom: '40px',
         // 防换行保护
         overflow: 'hidden'
@@ -112,8 +93,8 @@ export default function ProfilePage() {
             display: 'flex',
             flexDirection: 'column',
             gap: '4px',
-            // 防换行保护
-            minWidth: '280px', // 为中文文字预留充足宽度
+            // 防换行保护，固定宽度让卡片更美观
+            width: '280px', // 固定宽度
             overflow: 'hidden'
           }}>
             <div style={{
@@ -258,25 +239,25 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* 邀请统计 */}
+        {/* 邀请统计 - 修复布局对齐问题 */}
         <div style={{
           display: 'flex',
-          gap: '50px',
-          alignItems: 'center',
+          alignItems: 'flex-start',
+          gap: '32px',
           // 防换行保护
           flexWrap: 'nowrap',
           overflow: 'hidden'
         }}>
-          {/* 邀请码 */}
+          {/* 邀请码区域 */}
           <div style={{
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             gap: '16px',
-            paddingRight: '25px',
+            paddingRight: '32px',
             borderRight: '1px solid rgba(255, 255, 255, 0.10)',
             // 防换行保护
             flexShrink: 0,
-            minWidth: '260px', // 为邀请码区域预留充足宽度
+            minWidth: '280px', // 为邀请码区域预留充足宽度
             overflow: 'hidden'
           }}>
             <div style={{
@@ -294,7 +275,7 @@ export default function ProfilePage() {
             </div>
             <div style={{
               flex: 1,
-              minWidth: '160px', // 为邀请码文字预留空间
+              minWidth: '180px', // 为邀请码文字预留空间
               overflow: 'hidden'
             }}>
               <div style={{
@@ -313,6 +294,7 @@ export default function ProfilePage() {
                 padding: '8px 12px',
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'space-between',
                 gap: '8px',
                 // 防换行保护
                 flexWrap: 'nowrap',
@@ -322,32 +304,45 @@ export default function ProfilePage() {
                   color: '#FFFFFF',
                   fontSize: '20px',
                   lineHeight: '28px',
+                  fontWeight: '600',
                   flexShrink: 0 // 邀请码不能收缩
                 }}>AI7859</span>
-                <Icon name="copy-icon" size="xs" style={{ color: '#60A5FA', flexShrink: 0 }} />
-                <span style={{
-                  color: '#60A5FA',
-                  fontSize: '14px',
-                  // 防换行保护
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }}>复制</span>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}>
+                  <Icon name="copy-icon" size="xs" style={{ color: '#60A5FA' }} />
+                  <span style={{
+                    color: '#60A5FA',
+                    fontSize: '14px',
+                    // 防换行保护
+                    whiteSpace: 'nowrap'
+                  }}>复制</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* 统计数据 */}
+          {/* 统计数据区域 - 修复水平对齐 */}
           <div style={{
             display: 'flex',
-            gap: '50px',
+            gap: '40px',
+            alignItems: 'flex-start',
+            flex: 1,
             // 防换行保护
             flexWrap: 'nowrap',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            justifyContent: 'flex-start' // 确保左对齐
           }}>
+            {/* 已邀请人数 */}
             <div style={{
-              textAlign: 'center',
-              minWidth: '80px', // 为统计项预留空间
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              minWidth: '90px', // 为统计项预留空间
               // 防换行保护
               flexShrink: 0,
               overflow: 'hidden'
@@ -361,7 +356,7 @@ export default function ProfilePage() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 8px',
+                marginBottom: '8px',
                 flexShrink: 0
               }}>
                 <Icon name="invited-count-icon" size="md" style={{ color: '#FFFFFF' }} />
@@ -371,6 +366,7 @@ export default function ProfilePage() {
                 fontSize: '14px',
                 lineHeight: '20px',
                 marginBottom: '4px',
+                textAlign: 'center',
                 // 防换行保护
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
@@ -381,14 +377,18 @@ export default function ProfilePage() {
                 fontSize: '20px',
                 fontWeight: '600',
                 lineHeight: '28px',
+                textAlign: 'center',
                 // 防换行保护
                 whiteSpace: 'nowrap'
               }}>18</div>
             </div>
 
+            {/* 待激活人数 */}
             <div style={{
-              textAlign: 'center',
-              minWidth: '80px', // 为统计项预留空间
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              minWidth: '90px', // 为统计项预留空间
               // 防换行保护
               flexShrink: 0,
               overflow: 'hidden'
@@ -402,7 +402,7 @@ export default function ProfilePage() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 8px',
+                marginBottom: '8px',
                 flexShrink: 0
               }}>
                 <Icon name="pending-activation-icon" size="md" style={{ color: '#FFFFFF' }} />
@@ -412,6 +412,7 @@ export default function ProfilePage() {
                 fontSize: '14px',
                 lineHeight: '20px',
                 marginBottom: '4px',
+                textAlign: 'center',
                 // 防换行保护
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
@@ -422,14 +423,18 @@ export default function ProfilePage() {
                 fontSize: '20px',
                 fontWeight: '600',
                 lineHeight: '28px',
+                textAlign: 'center',
                 // 防换行保护
                 whiteSpace: 'nowrap'
               }}>5</div>
             </div>
 
+            {/* 累计返佣金额 */}
             <div style={{
-              textAlign: 'center',
-              minWidth: '100px', // 为金额数字预留更多空间
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              minWidth: '110px', // 为金额数字预留更多空间
               // 防换行保护
               flexShrink: 0,
               overflow: 'hidden'
@@ -443,7 +448,7 @@ export default function ProfilePage() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 8px',
+                marginBottom: '8px',
                 flexShrink: 0
               }}>
                 <Icon name="commission-icon" size="md" style={{ color: '#FFFFFF' }} />
@@ -453,6 +458,7 @@ export default function ProfilePage() {
                 fontSize: '14px',
                 lineHeight: '20px',
                 marginBottom: '4px',
+                textAlign: 'center',
                 // 防换行保护
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
@@ -463,6 +469,7 @@ export default function ProfilePage() {
                 fontSize: '20px',
                 fontWeight: '600',
                 lineHeight: '28px',
+                textAlign: 'center',
                 // 防换行保护
                 whiteSpace: 'nowrap'
               }}>¥1,235</div>
@@ -594,23 +601,25 @@ export default function ProfilePage() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
-          marginBottom: '20px',
+          gap: '8px', // 标题区域与文字区域的间距
           // 防换行保护
           flexWrap: 'nowrap',
-          overflow: 'hidden',
-          gap: '16px' // 添加间距防止挤压
+          overflow: 'hidden'
         }}>
           <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px', // 标题与文字信息的间距
             flex: 1,
             minWidth: '250px', // 为会员信息文字预留充足宽度
             // 防换行保护
             overflow: 'hidden'
           }}>
+            {/* 会员标题区域 */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              marginBottom: '8px',
               // 防换行保护
               flexWrap: 'nowrap',
               overflow: 'hidden'
@@ -640,18 +649,38 @@ export default function ProfilePage() {
                 }}>当前方案</span>
               </div>
             </div>
-            <p style={{
-              color: '#D1D5DB',
-              fontSize: '14px',
-              lineHeight: '20px',
-              margin: 0,
-              // 防换行保护 - 到期时间
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis'
-            }}>到期时间: 2024年12月31日 (剩余245天)</p>
+            
+            {/* 订阅信息区域 - 与我的订阅页面完全一致 */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2px', // 与订阅页面保持一致的小间距
+              // 防换行保护
+              overflow: 'hidden'
+            }}>
+              <p style={{
+                color: '#D1D5DB',
+                fontSize: '14px',
+                lineHeight: '18px', // 与订阅页面保持一致
+                margin: 0,
+                // 防换行保护 - 到期时间
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}>到期时间: 2024年12月31日 (剩余245天)</p>
+              <p style={{
+                color: '#D1D5DB',
+                fontSize: '14px',
+                lineHeight: '18px', // 与订阅页面保持一致
+                margin: 0,
+                // 防换行保护 - 订阅内容描述
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}>订阅内容: 全站资源、专属社群、一对一咨询 (每月1次)</p>
+            </div>
           </div>
-          <div style={{ flexShrink: 0 }}> {/* 防止按钮被压缩 */}
+          
+          <div style={{ flexShrink: 0, marginTop: '8px' }}> {/* 防止按钮被压缩，顶部对齐调整 */}
             <GradientButton size="md" variant="primary">
               <span style={{
                 // 防换行保护
@@ -662,15 +691,12 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <p style={{
-          color: '#D1D5DB',
-          fontSize: '14px',
-          lineHeight: '20px',
-          margin: '0 0 20px 0',
-          // 防换行保护 - 订阅内容描述
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
-        }}>订阅内容: 全站资源、专属社群、一对一咨询 (每月1次)</p>
+        <div style={{
+          marginTop: '20px',
+          marginBottom: '0px', // 移除底部间距，由下面的元素控制
+          // 防换行保护
+          overflow: 'hidden'
+        }}></div>
 
         <div style={{
           borderTop: '1px solid rgba(255, 255, 255, 0.10)',

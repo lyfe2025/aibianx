@@ -1,1 +1,0 @@
-export { InviteSection, default } from './InviteSection' 

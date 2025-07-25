@@ -1,1 +1,0 @@
-export { DynamicParticleBackground } from './DynamicParticleBackground' 

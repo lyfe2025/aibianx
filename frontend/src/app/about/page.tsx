@@ -1,6 +1,6 @@
 'use client'
 
-import { Container, Icon, GradientText, GlassCard, GradientButton, AnimatedNumber } from '@/components/ui'
+import { Container, Icon, GradientText, GlassCard, GradientButton, AnimatedNumber, CrownIcon } from '@/components/ui'
 import { CountdownTimer, PageHeader } from '@/components/molecules'
 import { useModalStore } from '@/stores'
 
@@ -441,7 +441,7 @@ export default function AboutPage() {
                                         alignItems: 'center',
                                         justifyContent: 'center'
                                     }}>
-                                        <Icon name="membership-premium" size="md" />
+                                        <CrownIcon size="lg" />
                                     </div>
 
                                     <h3 style={{

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Avatar, Icon, TagList } from '@/components/ui'
+import { Avatar, Icon, TagList, CrownIcon } from '@/components/ui'
 
 export interface ArticleCardData {
     id: string
@@ -83,9 +83,10 @@ export function ArticleCard({
                             borderRadius: 'var(--radius-sm)',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '4px'
+                            gap: '4px',
+                            zIndex: 999
                         }}>
-                            <Icon name="membership-exclusive" size="xs" />
+                            <CrownIcon size="sm" />
                             会员专享
                         </div>
                     )}

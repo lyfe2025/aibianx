@@ -1,1 +1,0 @@
-export { CollectionCard, default } from './CollectionCard' 

@@ -138,33 +138,45 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                 <>
                     {/* 头像区域 - 使用新的SettingsAvatar组件 */}
                     <div style={{
-                        marginTop: '16px',
                         display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        marginTop: '24px',
+                        marginBottom: '32px',
+                        gap: '16px',
+                        paddingBottom: '32px',
+                        borderBottom: '1px solid rgba(42, 42, 42, 0.3)'
                     }}>
                         <SettingsAvatar
-                            src="/images/avatars/settings-avatar.svg"
-                            alt="用户头像"
+                            src="/images/avatars/user-zhang-zhichuang.svg"
+                            alt="张智创"
                             onEdit={handleAvatarEdit}
                         />
-                    </div>
-
-                    {/* 更换头像文字 */}
-                    <div style={{
-                        color: '#D1D5DB',
-                        fontSize: '14px',
-                        lineHeight: '20px',
-                        alignItems: 'center',
-                        display: 'flex',
-                        textOverflow: 'ellipsis',
-                        marginLeft: '539px',
-                        marginRight: '539px',
-                        minHeight: '20px',
-                        textAlign: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        更换头像
+                        
+                        {/* 上传提示 */}
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '4px'
+                        }}>
+                            <div style={{
+                                color: '#D1D5DB',
+                                fontSize: '14px',
+                                lineHeight: '20px',
+                                textAlign: 'center'
+                            }}>
+                                更换头像
+                            </div>
+                            <div style={{
+                                color: '#9CA3AF',
+                                fontSize: '12px',
+                                lineHeight: '16px',
+                                textAlign: 'center'
+                            }}>
+                                支持 JPG、PNG 格式，文件大小不超过 2MB
+                            </div>
+                        </div>
                     </div>
 
                     {/* 表单字段 */}

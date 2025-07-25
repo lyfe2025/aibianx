@@ -593,7 +593,7 @@ export function MainContentSection() {
                                         width: '32px',
                                         height: '32px',
                                         borderRadius: '16px',
-                                        background: `url('/images/avatars/user-zhang.jpeg')`,
+                                        background: `url('/images/avatars/user-zhang-zhichuang.svg')`,
                                         backgroundSize: 'cover',
                                         backgroundPosition: 'center',
                                         marginRight: '8px'

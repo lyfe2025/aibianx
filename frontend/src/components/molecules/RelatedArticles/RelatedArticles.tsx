@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Icon } from '@/components/ui'
+import { Icon, CrownIcon } from '@/components/ui'
 
 interface RelatedArticle {
     id: string
@@ -85,11 +85,11 @@ export function RelatedArticles({
                                 lineHeight: '24px',
                                 marginBottom: '8px',
                                 fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
                                 display: 'flex',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                gap: '0',
+                                minHeight: '24px',
+                                position: 'relative'
                             }}>
                                 {article.isPremium && (
                                     <span style={{
@@ -99,15 +99,19 @@ export function RelatedArticles({
                                         color: '#FFD700',
                                         fontSize: '12px',
                                         marginRight: '8px',
-                                        flexShrink: 0
+                                        flexShrink: 0,
+                                        position: 'relative',
+                                        zIndex: 10
                                     }}>
-                                        <Icon name="membership-exclusive" size="xs" />
+                                        <CrownIcon size="sm" />
                                     </span>
                                 )}
                                 <span style={{
                                     whiteSpace: 'nowrap',
                                     overflow: 'hidden',
-                                    textOverflow: 'ellipsis'
+                                    textOverflow: 'ellipsis',
+                                    flex: 1,
+                                    minWidth: 0
                                 }}>
                                     {article.title}
                                 </span>

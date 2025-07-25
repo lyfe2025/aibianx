@@ -1,0 +1,130 @@
+/* 个人中心布局样式 */
+
+/* 主容器 */
+.profileContainer {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    /* 让粒子背景可见 */
+    margin-top: 98px;
+    /* 适应AppHeader的固定高度 */
+}
+
+/* 主要内容区域 */
+.profileMain {
+    flex: 1;
+    display: flex;
+    max-width: 1504px;
+    /* 与AppHeader保持一致，确保不溢出顶部导航范围 */
+    width: 100%;
+    margin: 0 auto;
+    /* 居中显示 */
+    padding: 0 32px;
+    /* 与AppHeader保持一致的左右边距 */
+    gap: 32px;
+    /* 左侧菜单和右侧内容间距 */
+    min-height: calc(100vh - 98px);
+    /* 减去AppHeader高度 */
+    position: relative;
+}
+
+/* 左侧导航栏容器 */
+.profileSidebar {
+    flex-shrink: 0;
+    /* 防止被压缩 */
+}
+
+/* 右侧内容区域 */
+.profileContent {
+    flex: 1;
+    min-height: calc(100vh - 98px);
+    /* 减去AppHeader高度 */
+    background: transparent;
+    position: relative;
+    border-radius: 12px;
+    /* 适中圆角，配合1504px布局 */
+    padding: 0;
+    /* 内容由子页面自己控制padding */
+    overflow: hidden;
+    /* 防止内容溢出 */
+}
+
+/* 右侧内容的背景装饰 */
+.contentBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.05);
+    /* 极淡的背景 */
+    backdrop-filter: blur(2px);
+    /* 轻微模糊 */
+    border-radius: 12px;
+    /* 与内容区域保持一致 */
+    border: 1px solid rgba(42, 42, 42, 0.15);
+    /* 极淡的边框 */
+    pointer-events: none;
+    /* 不影响交互 */
+    z-index: -1;
+    /* 在内容后面 */
+}
+
+/* 内容包装器 */
+.contentWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* 响应式设计 */
+
+/* 中等屏幕 (1024px以下) */
+@media (max-width: 1024px) {
+    .profileMain {
+        padding: 0 32px;
+        gap: 24px;
+    }
+}
+
+/* 小屏幕 (768px以下) */
+@media (max-width: 768px) {
+    .profileMain {
+        padding: 0 24px;
+        gap: 16px;
+    }
+
+    .profileContent {
+        border-radius: 8px;
+    }
+
+    .contentBackground {
+        border-radius: 8px;
+    }
+}
+
+/* 超小屏幕 (480px以下) */
+@media (max-width: 480px) {
+    .profileMain {
+        padding: 0 12px;
+        gap: 12px;
+        flex-direction: column;
+    }
+
+    .profileSidebar {
+        order: 2;
+        width: 100% !important;
+    }
+
+    .profileContent {
+        order: 1;
+        border-radius: 6px;
+        min-height: auto;
+    }
+
+    .contentBackground {
+        border-radius: 6px;
+    }
+}
