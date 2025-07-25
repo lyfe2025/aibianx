@@ -128,8 +128,8 @@ export function MembershipPlanCard({
                         {billingCycle === 'annually' && discount > 0 && (
                             <span style={{
                                 fontSize: 'var(--font-size-xs)',
-                                color: '#10B981',
-                                background: 'rgba(16, 185, 129, 0.1)',
+                                color: 'var(--color-success)',
+                                background: 'var(--color-success-bg)',
                                 padding: '2px 8px',
                                 borderRadius: 'var(--radius-sm)',
                                 fontWeight: 500,
@@ -172,7 +172,7 @@ export function MembershipPlanCard({
                                 name="membership-check"
                                 size="xs"
                                 style={{
-                                    color: '#10B981',
+                                    color: 'var(--color-success)',
                                     marginTop: '2px',
                                     flexShrink: 0,
                                 }}

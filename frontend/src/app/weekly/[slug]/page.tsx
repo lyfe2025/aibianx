@@ -284,7 +284,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
         // 加载中状态
         return (
             <div style={{
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                 minHeight: '100vh',
                 display: 'flex',
@@ -310,7 +310,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
         // 404页面
         return (
             <div style={{
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                 minHeight: '100vh',
                 display: 'flex',
@@ -347,7 +347,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                             style={{
                                 display: 'inline-block',
                                 background: 'var(--gradient-primary)',
-                                color: '#FFFFFF',
+                                color: 'var(--color-text-primary)',
                                 textDecoration: 'none',
                                 padding: '12px 24px',
                                 borderRadius: 'var(--radius-lg)',
@@ -390,7 +390,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
 
     return (
         <div style={{
-            color: '#FFFFFF',
+            color: 'var(--color-text-primary)',
             fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
             minHeight: '100vh',
             paddingTop: '80px',
@@ -422,7 +422,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                         marginBottom: '1.19px'
                     }}>
                         <h1 style={{
-                            color: '#FFFFFF',
+                            color: 'var(--color-text-primary)',
                             fontSize: '28px',
                             fontWeight: '600',
                             lineHeight: '36.4px',
@@ -458,7 +458,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                             }}>
                             <Icon name="date-icon" size="sm" style={{ marginTop: '2px', flexShrink: 0 }} />
                             <div style={{
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 fontSize: '14px',
                                 lineHeight: '20px',
                                 alignItems: 'center',
@@ -471,7 +471,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                             </div>
                             <Icon name="reading-time-icon" size="sm" style={{ marginTop: '2px', marginLeft: '11px', flexShrink: 0 }} />
                             <div style={{
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 fontSize: '14px',
                                 lineHeight: '20px',
                                 alignItems: 'center',
@@ -484,7 +484,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                             </div>
                             <Icon name="comment-icon" size="sm" style={{ marginTop: '2px', marginLeft: '11.01px', flexShrink: 0 }} />
                             <div style={{
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 fontSize: '14px',
                                 lineHeight: '20px',
                                 alignItems: 'center',
@@ -568,7 +568,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                                     minHeight: '22px'
                                 }}>
                                     <div style={{
-                                        color: '#FFFFFF',
+                                        color: 'var(--color-text-primary)',
                                         fontWeight: '500',
                                         lineHeight: '22px',
                                         alignItems: 'center',
@@ -580,7 +580,7 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                                     </div>
                                 </div>
                                 <div style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: '14px',
                                     lineHeight: '20px',
                                     alignItems: 'center',
@@ -702,14 +702,14 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
                                 border: 'none',
                                 cursor: 'pointer',
                                 transition: 'all 0.2s ease',
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 whiteSpace: 'nowrap',
                                 minWidth: 'auto',
                                 flexShrink: 0
                             }}>
                                 <Icon name="adjust-icon-detail" size="sm" style={{ marginTop: '2px', marginBottom: '2px', flexShrink: 0 }} />
                                 <div style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: '14px',
                                     lineHeight: '20px',
                                     alignItems: 'center',

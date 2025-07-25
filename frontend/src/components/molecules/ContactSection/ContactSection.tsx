@@ -132,11 +132,12 @@ export function ContactSection({
                                 <div style={{
                                     width: '48px',
                                     height: '48px',
-                                    background: 'var(--gradient-primary)',
+                                    background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
                                     borderRadius: '50%',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'center'
+                                    justifyContent: 'center',
+                                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.25)'
                                 }}>
                                     <Icon name={method.icon} size="sm" style={{ color: '#FFFFFF' }} />
                                 </div>

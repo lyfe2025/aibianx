@@ -116,7 +116,7 @@ export function BackToTopButton() {
                 justifyContent: 'center',
 
                 // 视觉样式
-                background: 'var(--gradient-primary)',
+                background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
                 boxShadow: isVisible
                     ? '0 8px 25px rgba(59, 130, 246, 0.4), 0 4px 12px rgba(139, 92, 246, 0.3)'
                     : '0 4px 12px rgba(59, 130, 246, 0.2)',
@@ -139,7 +139,7 @@ export function BackToTopButton() {
                     box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)
                 `,
 
-                                // 性能优化
+                // 性能优化
                 willChange: 'opacity, transform, box-shadow'
             }}
             // 鼠标悬停效果

@@ -86,7 +86,7 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'tech-guide': {
         id: 'tech-guide',
         name: '技术指南',
-        color: '#3B82F6',
+        color: 'var(--color-primary-blue)',
         description: '技术教程和实战指南类文章',
         sortOrder: 10,
         isActive: true
@@ -94,7 +94,7 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'ai-tools': {
         id: 'ai-tools',
         name: 'AI工具',
-        color: '#8B5CF6',
+        color: 'var(--color-primary-purple)',
         description: 'AI工具介绍和使用教程',
         sortOrder: 20,
         isActive: true
@@ -102,7 +102,7 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'monetization': {
         id: 'monetization',
         name: '变现心得',
-        color: '#F97316',
+        color: 'var(--color-orange)',
         description: '商业变现策略和经验分享',
         sortOrder: 30,
         isActive: true
@@ -110,7 +110,7 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'case-study': {
         id: 'case-study',
         name: '实战案例',
-        color: '#F59E0B',
+        color: 'var(--color-warning)',
         description: '真实项目案例分析',
         sortOrder: 40,
         isActive: true
@@ -118,7 +118,7 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'trending': {
         id: 'trending',
         name: '前沿技术',
-        color: '#60A5FA',
+        color: 'var(--color-primary-blue)',
         description: '最新技术趋势和前沿资讯',
         sortOrder: 50,
         isActive: true
@@ -126,7 +126,7 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'growth-hack': {
         id: 'growth-hack',
         name: '增长黑客',
-        color: '#10B981',
+        color: 'var(--color-success)',
         description: '用户增长和运营策略',
         sortOrder: 60,
         isActive: true
@@ -268,9 +268,9 @@ export function getTagUsageStats(articles: Array<{ tags: Array<{ name: string }>
 export const DEFAULT_TAG: Tag = {
     id: 'default',
     name: '默认',
-    color: '#6B7280',
-    backgroundColor: hexToRgba('#6B7280', 0.1),
-    borderColor: hexToRgba('#6B7280', 0.4),
+    color: 'var(--color-text-disabled)',
+    backgroundColor: 'var(--color-bg-secondary)',
+    borderColor: 'var(--color-border-primary)',
     sortOrder: 999,
     isActive: true
 }

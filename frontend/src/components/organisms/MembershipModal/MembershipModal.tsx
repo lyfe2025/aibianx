@@ -105,7 +105,7 @@ export function MembershipModal() {
                                     left: '50%',
                                     transform: 'translateX(-50%)',
                                     background: 'var(--gradient-primary)',
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     padding: '4px 12px',
                                     borderRadius: 'var(--radius-full)',
                                     fontSize: 'var(--font-size-xs)',
@@ -164,8 +164,8 @@ export function MembershipModal() {
                                             ¥{plan.originalPrice}
                                         </span>
                                         <span style={{
-                                            background: '#EF4444',
-                                            color: '#FFFFFF',
+                                            background: 'var(--color-error)',
+                                            color: 'var(--color-text-primary)',
                                             fontSize: 'var(--font-size-xs)',
                                             fontWeight: '500',
                                             padding: '2px 8px',

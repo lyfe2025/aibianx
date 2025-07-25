@@ -124,13 +124,15 @@ export function ArticlesSection() {
                     {articles.map((article, index) => (
                         <div
                             key={article.id}
+                            className="glass-card glass-card--hover"
                             style={{
-                                background: 'rgba(18, 18, 18, 0.30)',
                                 borderRadius: '12px',
                                 padding: '16px',
                                 margin: '0 1px',
                                 marginBottom: index < articles.length - 1 ? '16px' : '0',
-                                display: 'flex'
+                                display: 'flex',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease'
                             }}
                         >
                             {/* 文章封面 */}

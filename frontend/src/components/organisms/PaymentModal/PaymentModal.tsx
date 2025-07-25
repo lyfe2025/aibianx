@@ -20,19 +20,19 @@ const PAYMENT_METHODS: PaymentMethod[] = [
         id: 'alipay',
         name: '支付宝',
         icon: 'payments/alipay-icon',
-        color: '#3B82F6'
+        color: 'var(--color-primary-blue)'
     },
     {
         id: 'wechat',
         name: '微信支付',
         icon: 'payments/wechat-pay-icon',
-        color: '#22C55E'
+        color: 'var(--color-success)'
     },
     {
         id: 'unionpay',
         name: '银联支付',
         icon: 'payments/unionpay-icon',
-        color: '#EF4444'
+        color: 'var(--color-error)'
     }
 ]
 

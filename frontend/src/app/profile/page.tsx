@@ -49,13 +49,16 @@ export default function ProfilePage() {
   }
 
   return (
-    <div style={{
-      padding: '32px 40px',
-      maxWidth: '1440px',
-      margin: '0 auto',
-      // 添加防换行保护
-      overflow: 'hidden'
-    }}>
+    <div
+      style={{
+        padding: 'var(--spacing-8) var(--spacing-6)', // 使用间距变量: 32px 24px
+        maxWidth: '1440px',
+        margin: '0 auto',
+        // 添加防换行保护
+        overflow: 'hidden'
+      }}
+      className="profile-page-content"
+    >
       {/* 页面标题 */}
       <div style={{
         marginBottom: 'var(--card-gap-lg)',
@@ -63,8 +66,8 @@ export default function ProfilePage() {
         overflow: 'hidden'
       }}>
         <h1 style={{
-          color: '#FFFFFF',
-          fontSize: '24px',
+          color: 'var(--color-text-primary)',
+          fontSize: 'var(--font-size-3xl)', // 使用字体变量
           fontWeight: '700',
           lineHeight: '32px',
           margin: 0,
@@ -79,7 +82,7 @@ export default function ProfilePage() {
       <div style={{
         display: 'flex',
         justifyContent: 'flex-start', // 左对齐
-        marginBottom: '40px',
+        marginBottom: 'var(--spacing-10)', // 使用间距变量: 40px
         // 防换行保护
         overflow: 'hidden'
       }}>
@@ -88,11 +91,11 @@ export default function ProfilePage() {
             background: 'var(--color-bg-secondary)',
             backdropFilter: 'blur(12px)',
             border: '1px solid var(--color-border-primary)',
-            borderRadius: '12px',
-            padding: '21px',
+            borderRadius: 'var(--radius-lg)', // 使用圆角变量
+            padding: 'var(--spacing-6)', // 使用间距变量: 24px
             display: 'flex',
             flexDirection: 'column',
-            gap: '4px',
+            gap: 'var(--spacing-1)', // 使用间距变量: 4px
             // 防换行保护，固定宽度让卡片更美观
             width: '280px', // 固定宽度
             overflow: 'hidden'
@@ -101,20 +104,20 @@ export default function ProfilePage() {
               width: '48px',
               height: '48px',
               background: stat.gradient,
-              borderRadius: '8px',
+              borderRadius: 'var(--radius-md)', // 使用圆角变量
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: '12px',
+              marginBottom: 'var(--spacing-3)', // 使用间距变量: 12px
               flexShrink: 0 // 防止收缩
             }}>
-              <Icon name={stat.icon} size="md" style={{ color: '#FFFFFF' }} />
+              <Icon name={stat.icon} size="md" style={{ color: 'var(--color-text-primary)' }} />
             </div>
             <div style={{
-              color: '#9CA3AF',
-              fontSize: '16px',
+              color: 'var(--color-text-muted)',
+              fontSize: 'var(--font-size-lg)', // 使用字体变量
               lineHeight: '24px',
-              marginBottom: '4px',
+              marginBottom: 'var(--spacing-1)', // 使用间距变量: 4px
               // 防换行保护 - 统计标题
               whiteSpace: 'nowrap',
               overflow: 'hidden',
@@ -122,8 +125,8 @@ export default function ProfilePage() {
               minWidth: '120px' // 为中文标题预留空间
             }}>{stat.title}</div>
             <div style={{
-              color: '#FFFFFF',
-              fontSize: '24px',
+              color: 'var(--color-text-primary)',
+              fontSize: 'var(--font-size-3xl)', // 使用字体变量
               fontWeight: '600',
               lineHeight: '32px',
               // 防换行保护 - 统计数值
@@ -136,7 +139,7 @@ export default function ProfilePage() {
       </div>
 
       {/* 邀请奖励区域 */}
-      <div style={{ marginBottom: '40px' }}>
+      <div style={{ marginBottom: 'var(--spacing-10)' }}> {/* 使用间距变量: 40px */}
         <InviteRewardSection />
       </div>
 
@@ -145,7 +148,7 @@ export default function ProfilePage() {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '20px',
+        marginBottom: 'var(--spacing-5)', // 使用间距变量: 20px
         // 防换行保护
         flexWrap: 'nowrap',
         overflow: 'hidden',
@@ -166,7 +169,7 @@ export default function ProfilePage() {
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          color: '#60A5FA',
+          color: 'var(--color-primary-blue)',
           fontSize: '14px',
           cursor: 'pointer',
           // 防换行保护
@@ -231,7 +234,7 @@ export default function ProfilePage() {
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          color: '#60A5FA',
+          color: 'var(--color-primary-blue)',
           fontSize: '14px',
           cursor: 'pointer',
           // 防换行保护
@@ -246,7 +249,7 @@ export default function ProfilePage() {
             overflow: 'hidden',
             textOverflow: 'ellipsis'
           }}>订阅历史</span>
-          <Icon name="arrow-right-blue" size="xs" style={{ color: '#60A5FA', flexShrink: 0 }} />
+          <Icon name="arrow-right-blue" size="xs" style={{ color: 'var(--color-primary-blue)', flexShrink: 0 }} />
         </div>
       </div>
 
@@ -287,7 +290,7 @@ export default function ProfilePage() {
               overflow: 'hidden'
             }}>
               <span style={{
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 fontSize: '18px',
                 fontWeight: '600',
                 lineHeight: '28px',
@@ -303,7 +306,7 @@ export default function ProfilePage() {
                 flexShrink: 0 // 防止徽章被压缩
               }}>
                 <span style={{
-                  color: '#FFFFFF',
+                  color: 'var(--color-text-primary)',
                   fontSize: '12px',
                   lineHeight: '16px',
                   // 防换行保护
@@ -311,7 +314,7 @@ export default function ProfilePage() {
                 }}>当前方案</span>
               </div>
             </div>
-            
+
             {/* 订阅信息区域 - 与我的订阅页面完全一致 */}
             <div style={{
               display: 'flex',
@@ -321,7 +324,7 @@ export default function ProfilePage() {
               overflow: 'hidden'
             }}>
               <p style={{
-                color: '#D1D5DB',
+                color: 'var(--color-text-secondary)',
                 fontSize: '14px',
                 lineHeight: '18px', // 与订阅页面保持一致
                 margin: 0,
@@ -331,7 +334,7 @@ export default function ProfilePage() {
                 textOverflow: 'ellipsis'
               }}>到期时间: 2024年12月31日 (剩余245天)</p>
               <p style={{
-                color: '#D1D5DB',
+                color: 'var(--color-text-secondary)',
                 fontSize: '14px',
                 lineHeight: '18px', // 与订阅页面保持一致
                 margin: 0,
@@ -341,7 +344,7 @@ export default function ProfilePage() {
               }}>订阅内容: 全站资源、专属社群、一对一咨询 (每月1次)</p>
             </div>
           </div>
-          
+
           <div style={{ flexShrink: 0, marginTop: '8px' }}> {/* 防止按钮被压缩，顶部对齐调整 */}
             <GradientButton size="md" variant="primary">
               <span style={{
@@ -386,7 +389,7 @@ export default function ProfilePage() {
               padding: '10px',
               flexShrink: 0 // 防止图标被压缩
             }}>
-              <Icon name="privilege-icon" size="sm" style={{ color: '#EAB308' }} />
+              <Icon name="privilege-icon" size="sm" style={{ color: 'var(--color-warning)' }} />
             </div>
             <div style={{
               flex: 1,
@@ -405,7 +408,7 @@ export default function ProfilePage() {
                 textOverflow: 'ellipsis'
               }}>专属会员权益</div>
               <div style={{
-                color: '#9CA3AF',
+                color: 'var(--color-text-muted)',
                 fontSize: '12px',
                 lineHeight: '16px',
                 // 防换行保护 - 权益描述
@@ -414,7 +417,7 @@ export default function ProfilePage() {
               }}>查看您的专属会员权益和使用方式</div>
             </div>
           </div>
-          <Icon name="privilege-arrow" size="sm" style={{ color: '#60A5FA', flexShrink: 0 }} />
+          <Icon name="privilege-arrow" size="sm" style={{ color: 'var(--color-primary-blue)', flexShrink: 0 }} />
         </div>
       </div>
     </div>

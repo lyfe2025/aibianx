@@ -290,9 +290,12 @@ export function SmartSearch({
             <form onSubmit={handleSubmit} role="search">
                 <div
                     style={{
-                        background: 'rgba(26, 26, 26, 0.85)',
+                        background: 'var(--color-bg-glass)', // 使用主题毛玻璃背景
                         backdropFilter: 'blur(12px)',
-                        border: `1px solid ${isFocused ? '#3B82F6' : 'rgba(42, 42, 42, 0.70)'}`,
+                        WebkitBackdropFilter: 'blur(12px)',
+                        border: isFocused
+                            ? '1px solid var(--color-border-active)' // 聚焦时使用主题边框色
+                            : '1px solid var(--color-border-primary)', // 默认使用主题边框色
                         borderRadius: '16px',
                         padding: '16px 20px',
                         display: 'flex',
@@ -357,18 +360,19 @@ export function SmartSearch({
                                 setSuggestions([])
                                 inputRef.current?.focus()
                             }}
-                            style={{
-                                background: 'rgba(107, 114, 128, 0.20)',
-                                border: 'none',
-                                borderRadius: '50%',
-                                width: '24px',
-                                height: '24px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                flexShrink: 0,
-                            }}
+                                                    style={{
+                            background: 'transparent', // 改为透明背景
+                            border: '1px solid var(--color-border-primary)', // 使用主题边框色
+                            borderRadius: '50%',
+                            width: '24px',
+                            height: '24px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            flexShrink: 0,
+                            transition: 'all 0.2s ease', // 添加过渡效果
+                        }}
                             aria-label="清空搜索"
                         >
                             <Icon name="x-mark" size="xs" style={{ color: '#9CA3AF' }} />
@@ -386,9 +390,10 @@ export function SmartSearch({
                         top: '100%',
                         left: 0,
                         right: 0,
-                        background: 'rgba(26, 26, 26, 0.95)',
+                        background: 'var(--color-bg-glass)', // 使用主题毛玻璃背景
                         backdropFilter: 'blur(16px)',
-                        border: '1px solid rgba(42, 42, 42, 0.70)',
+                        WebkitBackdropFilter: 'blur(16px)',
+                        border: '1px solid var(--color-border-primary)', // 使用主题边框色
                         borderRadius: '12px',
                         marginTop: '8px',
                         padding: '8px',

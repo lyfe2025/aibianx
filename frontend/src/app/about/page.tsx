@@ -29,7 +29,7 @@ export default function AboutPage() {
 
     return (
         <div style={{
-            color: '#FFFFFF',
+            color: 'var(--color-text-primary)',
             fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
             minHeight: '100vh',
             paddingTop: '80px' // 为固定头部留出空间
@@ -75,7 +75,7 @@ export default function AboutPage() {
                             gap: '40px',
                             width: '1200px'
                         }}>
-                            {/* 分享知识 */}
+                            {/* 分享知识 - 蓝色背景 */}
                             <GlassCard variant="default" style={{
                                 flex: 1,
                                 padding: '34px',
@@ -84,21 +84,26 @@ export default function AboutPage() {
                                 gap: '14px'
                             }}>
                                 <div style={{
-                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                    borderRadius: '12px',
+                                    background: 'rgba(59, 130, 246, 0.15)',
+                                    borderRadius: '50%',
                                     padding: '14px',
                                     width: '60px',
                                     height: '60px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    marginBottom: '10px'
+                                    marginBottom: '10px',
+                                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)'
                                 }}>
-                                    <Icon name="share-knowledge-feature" size="lg" />
+                                    <Icon
+                                        name="share-knowledge-feature"
+                                        size="lg"
+                                        style={{ color: 'var(--color-primary-blue)' }}
+                                    />
                                 </div>
 
                                 <h3 style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '24px',
                                     fontWeight: '700',
                                     lineHeight: '38.4px',
@@ -108,7 +113,7 @@ export default function AboutPage() {
                                 </h3>
 
                                 <p style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: '16px',
                                     lineHeight: '25.6px',
                                     margin: '0'
@@ -117,7 +122,7 @@ export default function AboutPage() {
                                 </p>
                             </GlassCard>
 
-                            {/* 推动创新 */}
+                            {/* 推动创新 - 绿色背景 */}
                             <GlassCard variant="default" style={{
                                 flex: 1,
                                 padding: '34px',
@@ -126,21 +131,26 @@ export default function AboutPage() {
                                 gap: '14px'
                             }}>
                                 <div style={{
-                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                    borderRadius: '12px',
+                                    background: 'rgba(34, 197, 94, 0.15)',
+                                    borderRadius: '50%',
                                     padding: '14px',
                                     width: '60px',
                                     height: '60px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    marginBottom: '10px'
+                                    marginBottom: '10px',
+                                    boxShadow: '0 4px 12px rgba(34, 197, 94, 0.15)'
                                 }}>
-                                    <Icon name="drive-innovation-new" size="lg" />
+                                    <Icon
+                                        name="drive-innovation-new"
+                                        size="lg"
+                                        style={{ color: '#22C55E' }}
+                                    />
                                 </div>
 
                                 <h3 style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '24px',
                                     fontWeight: '700',
                                     lineHeight: '38.4px',
@@ -150,7 +160,7 @@ export default function AboutPage() {
                                 </h3>
 
                                 <p style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: '16px',
                                     lineHeight: '25.6px',
                                     margin: '0'
@@ -159,7 +169,7 @@ export default function AboutPage() {
                                 </p>
                             </GlassCard>
 
-                            {/* 赋能变现 */}
+                            {/* 赋能变现 - 橙色背景，红色边框 */}
                             <GlassCard variant="default" style={{
                                 flex: 1,
                                 padding: '34px',
@@ -168,21 +178,26 @@ export default function AboutPage() {
                                 gap: '14px'
                             }}>
                                 <div style={{
-                                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                    borderRadius: '12px',
+                                    background: 'rgba(251, 146, 60, 0.15)',
+                                    borderRadius: '50%',
                                     padding: '14px',
                                     width: '60px',
                                     height: '60px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    marginBottom: '10px'
+                                    marginBottom: '10px',
+                                    boxShadow: '0 4px 12px rgba(251, 146, 60, 0.15)'
                                 }}>
-                                    <Icon name="enable-monetization-new" size="lg" />
+                                    <Icon
+                                        name="enable-monetization-new"
+                                        size="lg"
+                                        style={{ color: '#FB923C' }}
+                                    />
                                 </div>
 
                                 <h3 style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '24px',
                                     fontWeight: '700',
                                     lineHeight: '38.4px',
@@ -192,7 +207,7 @@ export default function AboutPage() {
                                 </h3>
 
                                 <p style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: '16px',
                                     lineHeight: '25.6px',
                                     margin: '0'
@@ -220,7 +235,7 @@ export default function AboutPage() {
                         </GradientText>
 
                         <p style={{
-                            color: '#D1D5DB',
+                            color: 'var(--color-text-secondary)',
                             fontSize: '18px',
                             lineHeight: '28.8px',
                             textAlign: 'center',
@@ -252,20 +267,21 @@ export default function AboutPage() {
                                     gap: '30px'
                                 }}>
                                     <div style={{
-                                        background: 'rgba(30, 61, 89, 0.30)',
-                                        borderRadius: '16px',
+                                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 15%, rgba(6, 182, 212, 0.15) 85%)',
+                                        borderRadius: '50%',
                                         padding: '20px',
                                         width: '64px',
                                         height: '64px',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        boxShadow: '0 2px 8px rgba(59, 130, 246, 0.12)'
                                     }}>
-                                        <Icon name="ai-tool-library-new" size="md" />
+                                        <Icon name="ai-tool-library-new" size="md" style={{ color: '#3B82F6' }} />
                                     </div>
 
                                     <h3 style={{
-                                        color: '#FFFFFF',
+                                        color: 'var(--color-text-primary)',
                                         fontSize: '24px',
                                         fontWeight: '700',
                                         lineHeight: '38.4px',
@@ -276,7 +292,7 @@ export default function AboutPage() {
                                     </h3>
 
                                     <p style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
                                         margin: '0',
@@ -294,20 +310,21 @@ export default function AboutPage() {
                                     gap: '30px'
                                 }}>
                                     <div style={{
-                                        background: 'rgba(30, 61, 89, 0.30)',
-                                        borderRadius: '16px',
+                                        background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 15%, rgba(52, 211, 153, 0.15) 85%)',
+                                        borderRadius: '50%',
                                         padding: '20px',
                                         width: '64px',
                                         height: '64px',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        boxShadow: '0 2px 8px rgba(34, 197, 94, 0.12)'
                                     }}>
-                                        <Icon name="success-cases-new" size="md" />
+                                        <Icon name="success-cases-new" size="md" style={{ color: '#22C55E' }} />
                                     </div>
 
                                     <h3 style={{
-                                        color: '#FFFFFF',
+                                        color: 'var(--color-text-primary)',
                                         fontSize: '24px',
                                         fontWeight: '700',
                                         lineHeight: '38.4px',
@@ -318,7 +335,7 @@ export default function AboutPage() {
                                     </h3>
 
                                     <p style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
                                         margin: '0',
@@ -336,20 +353,21 @@ export default function AboutPage() {
                                     gap: '30px'
                                 }}>
                                     <div style={{
-                                        background: 'rgba(30, 61, 89, 0.30)',
-                                        borderRadius: '16px',
+                                        background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 15%, rgba(236, 72, 153, 0.15) 85%)',
+                                        borderRadius: '50%',
                                         padding: '20px',
                                         width: '64px',
                                         height: '64px',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        boxShadow: '0 2px 8px rgba(168, 85, 247, 0.12)'
                                     }}>
-                                        <Icon name="community-support-new" size="md" />
+                                        <Icon name="community-support-new" size="md" style={{ color: '#A855F7' }} />
                                     </div>
 
                                     <h3 style={{
-                                        color: '#FFFFFF',
+                                        color: 'var(--color-text-primary)',
                                         fontSize: '24px',
                                         fontWeight: '700',
                                         lineHeight: '38.4px',
@@ -360,7 +378,7 @@ export default function AboutPage() {
                                     </h3>
 
                                     <p style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
                                         margin: '0',
@@ -378,20 +396,21 @@ export default function AboutPage() {
                                     gap: '30px'
                                 }}>
                                     <div style={{
-                                        background: 'rgba(30, 61, 89, 0.30)',
-                                        borderRadius: '16px',
+                                        background: 'linear-gradient(135deg, rgba(251, 146, 60, 0.15) 15%, rgba(245, 158, 11, 0.15) 85%)',
+                                        borderRadius: '50%',
                                         padding: '20px',
                                         width: '64px',
                                         height: '64px',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        boxShadow: '0 2px 8px rgba(251, 146, 60, 0.12)'
                                     }}>
-                                        <Icon name="one-on-one-consulting-new" size="md" />
+                                        <Icon name="one-on-one-consulting-new" size="md" style={{ color: '#FB923C' }} />
                                     </div>
 
                                     <h3 style={{
-                                        color: '#FFFFFF',
+                                        color: 'var(--color-text-primary)',
                                         fontSize: '24px',
                                         fontWeight: '700',
                                         lineHeight: '38.4px',
@@ -402,7 +421,7 @@ export default function AboutPage() {
                                     </h3>
 
                                     <p style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
                                         margin: '0',
@@ -445,7 +464,7 @@ export default function AboutPage() {
                                     </div>
 
                                     <h3 style={{
-                                        color: '#FFFFFF',
+                                        color: 'var(--color-text-primary)',
                                         fontSize: '24px',
                                         fontWeight: '700',
                                         lineHeight: '38.4px',
@@ -487,7 +506,7 @@ export default function AboutPage() {
                                     }}>
                                         <Icon name="check-icon" size="md" />
                                         <span style={{
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             fontWeight: '600',
                                             fontSize: '16px',
                                             lineHeight: '25.6px'
@@ -497,7 +516,7 @@ export default function AboutPage() {
                                     </div>
 
                                     <p style={{
-                                        color: '#D1D5DB',
+                                        color: 'var(--color-text-secondary)',
                                         fontSize: '14px',
                                         lineHeight: '19.6px',
                                         margin: '0',
@@ -527,7 +546,7 @@ export default function AboutPage() {
                                         }}>
                                             <Icon name="check-icon" size="md" />
                                             <span style={{
-                                                color: '#D1D5DB',
+                                                color: 'var(--color-text-secondary)',
                                                 fontSize: '16px',
                                                 lineHeight: '25.6px'
                                             }}>
@@ -559,7 +578,7 @@ export default function AboutPage() {
                                     marginBottom: '16px'
                                 }}>
                                     <span style={{
-                                        color: '#6B7280',
+                                        color: 'var(--color-text-disabled)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
                                         textDecoration: 'line-through'
@@ -596,7 +615,7 @@ export default function AboutPage() {
                                         ¥299
                                     </GradientText>
                                     <span style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px'
                                     }}>
@@ -642,7 +661,7 @@ export default function AboutPage() {
                         </GradientText>
 
                         <p style={{
-                            color: '#D1D5DB',
+                            color: 'var(--color-text-secondary)',
                             fontSize: '18px',
                             lineHeight: '28.8px',
                             textAlign: 'center',
@@ -675,9 +694,21 @@ export default function AboutPage() {
                                         gap: '12px',
                                         marginTop: '23px'
                                     }}>
-                                        <Icon name="practical-experience-new" size="md" />
+                                        <div style={{
+                                            background: 'rgba(59, 130, 246, 0.12)',
+                                            borderRadius: '50%',
+                                            padding: '8px',
+                                            width: '40px',
+                                            height: '40px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            boxShadow: '0 2px 8px rgba(59, 130, 246, 0.12)'
+                                        }}>
+                                            <Icon name="practical-experience-new" size="sm" style={{ color: 'var(--color-primary-blue)' }} />
+                                        </div>
                                         <h3 style={{
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             fontSize: '24px',
                                             fontWeight: '700',
                                             lineHeight: '38.4px',
@@ -688,7 +719,7 @@ export default function AboutPage() {
                                     </div>
 
                                     <p style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
                                         margin: '0',
@@ -712,9 +743,21 @@ export default function AboutPage() {
                                         gap: '12px',
                                         marginTop: '21px'
                                     }}>
-                                        <Icon name="continuous-update-new" size="md" />
+                                        <div style={{
+                                            background: 'rgba(34, 197, 94, 0.12)',
+                                            borderRadius: '50%',
+                                            padding: '8px',
+                                            width: '40px',
+                                            height: '40px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            boxShadow: '0 2px 8px rgba(34, 197, 94, 0.12)'
+                                        }}>
+                                            <Icon name="continuous-update-new" size="sm" style={{ color: '#22C55E' }} />
+                                        </div>
                                         <h3 style={{
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             fontSize: '24px',
                                             fontWeight: '700',
                                             lineHeight: '38.4px',
@@ -725,7 +768,7 @@ export default function AboutPage() {
                                     </div>
 
                                     <p style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
                                         margin: '0',
@@ -749,9 +792,21 @@ export default function AboutPage() {
                                         gap: '12px',
                                         marginTop: '21px'
                                     }}>
-                                        <Icon name="community-advantage-new" size="md" />
+                                        <div style={{
+                                            background: 'rgba(168, 85, 247, 0.12)',
+                                            borderRadius: '50%',
+                                            padding: '8px',
+                                            width: '40px',
+                                            height: '40px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            boxShadow: '0 2px 8px rgba(168, 85, 247, 0.12)'
+                                        }}>
+                                            <Icon name="community-advantage-new" size="sm" style={{ color: '#A855F7' }} />
+                                        </div>
                                         <h3 style={{
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             fontSize: '24px',
                                             fontWeight: '700',
                                             lineHeight: '38.4px',
@@ -762,7 +817,7 @@ export default function AboutPage() {
                                     </div>
 
                                     <p style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
                                         margin: '0',
@@ -828,7 +883,7 @@ export default function AboutPage() {
                                         />
 
                                         <span style={{
-                                            color: '#9CA3AF',
+                                            color: 'var(--color-text-muted)',
                                             fontSize: '16px',
                                             lineHeight: '25.6px'
                                         }}>
@@ -887,20 +942,21 @@ export default function AboutPage() {
                                             gap: '16px'
                                         }}>
                                             <div style={{
-                                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                                borderRadius: '8px',
-                                                padding: '4px',
+                                                background: 'rgba(59, 130, 246, 0.12)',
+                                                borderRadius: '50%',
+                                                padding: '8px',
                                                 width: '40px',
                                                 height: '40px',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                flexShrink: 0
+                                                flexShrink: 0,
+                                                boxShadow: '0 2px 8px rgba(59, 130, 246, 0.12)'
                                             }}>
-                                                <Icon name="email-contact-new" size="lg" />
+                                                <Icon name="email-contact-new" size="sm" style={{ color: 'var(--color-primary-blue)' }} />
                                             </div>
                                             <span style={{
-                                                color: '#9CA3AF',
+                                                color: 'var(--color-text-muted)',
                                                 fontSize: '16px',
                                                 lineHeight: '25.6px',
                                                 textAlign: 'left'
@@ -916,20 +972,21 @@ export default function AboutPage() {
                                             gap: '16px'
                                         }}>
                                             <div style={{
-                                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                                borderRadius: '8px',
-                                                padding: '4px',
+                                                background: 'rgba(34, 197, 94, 0.12)',
+                                                borderRadius: '50%',
+                                                padding: '8px',
                                                 width: '40px',
                                                 height: '40px',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                flexShrink: 0
+                                                flexShrink: 0,
+                                                boxShadow: '0 2px 8px rgba(34, 197, 94, 0.12)'
                                             }}>
-                                                <Icon name="phone-contact-new" size="lg" />
+                                                <Icon name="phone-contact-new" size="sm" style={{ color: '#22C55E' }} />
                                             </div>
                                             <span style={{
-                                                color: '#9CA3AF',
+                                                color: 'var(--color-text-muted)',
                                                 fontSize: '16px',
                                                 lineHeight: '25.6px',
                                                 textAlign: 'left'
@@ -945,20 +1002,21 @@ export default function AboutPage() {
                                             gap: '16px'
                                         }}>
                                             <div style={{
-                                                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.10) 32%, rgba(139, 92, 246, 0.10) 68%)',
-                                                borderRadius: '8px',
-                                                padding: '4px',
+                                                background: 'rgba(251, 146, 60, 0.12)',
+                                                borderRadius: '50%',
+                                                padding: '8px',
                                                 width: '40px',
                                                 height: '40px',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                flexShrink: 0
+                                                flexShrink: 0,
+                                                boxShadow: '0 2px 8px rgba(251, 146, 60, 0.12)'
                                             }}>
-                                                <Icon name="email-contact-new" size="lg" />
+                                                <Icon name="contact-icon" size="sm" style={{ color: '#FB923C' }} />
                                             </div>
                                             <span style={{
-                                                color: '#9CA3AF',
+                                                color: 'var(--color-text-muted)',
                                                 fontSize: '16px',
                                                 lineHeight: '25.6px',
                                                 textAlign: 'left'
@@ -973,7 +1031,7 @@ export default function AboutPage() {
                                         marginTop: '32px'
                                     }}>
                                         <p style={{
-                                            color: '#9CA3AF',
+                                            color: 'var(--color-text-muted)',
                                             fontSize: '16px',
                                             lineHeight: '25.6px',
                                             textAlign: 'left',
@@ -994,7 +1052,7 @@ export default function AboutPage() {
                                 }}>
                                     {/* 联系邮箱标签 */}
                                     <div style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
                                         textAlign: 'left',
@@ -1007,13 +1065,13 @@ export default function AboutPage() {
                                     <input
                                         placeholder="请输入您的姓名"
                                         style={{
-                                            background: 'rgba(18, 18, 18, 0.50)',
-                                            border: '1px solid #2A2A2A',
+                                            background: 'var(--color-bg-input)',
+                                            border: '1px solid var(--color-border-primary)',
                                             borderRadius: '8px',
                                             padding: '12px 16px',
                                             width: '100%',
                                             height: '46px',
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             fontSize: '14px',
                                             lineHeight: '20px',
                                             fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
@@ -1024,8 +1082,8 @@ export default function AboutPage() {
                                             marginBottom: '9px'
                                         }}
                                         onFocus={(e) => {
-                                            e.target.style.borderColor = '#3B82F6'
-                                            e.target.style.background = 'rgba(18, 18, 18, 0.70)'
+                                            e.target.style.borderColor = 'var(--color-border-active)'
+                                            e.target.style.background = 'var(--color-bg-primary)'
                                         }}
                                         onBlur={(e) => {
                                             e.target.style.borderColor = 'var(--color-border-primary)'
@@ -1037,13 +1095,13 @@ export default function AboutPage() {
                                     <input
                                         placeholder="请输入您的邮箱"
                                         style={{
-                                            background: 'rgba(18, 18, 18, 0.50)',
-                                            border: '1px solid #2A2A2A',
+                                            background: 'var(--color-bg-input)',
+                                            border: '1px solid var(--color-border-primary)',
                                             borderRadius: '8px',
                                             padding: '12px 16px',
                                             width: '100%',
                                             height: '46px',
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             fontSize: '14px',
                                             lineHeight: '20px',
                                             fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
@@ -1053,18 +1111,18 @@ export default function AboutPage() {
                                             transition: 'all 0.2s ease'
                                         }}
                                         onFocus={(e) => {
-                                            e.target.style.borderColor = '#3B82F6'
-                                            e.target.style.background = 'rgba(18, 18, 18, 0.70)'
+                                            e.target.style.borderColor = 'var(--color-border-active)'
+                                            e.target.style.background = 'var(--color-bg-primary)'
                                         }}
                                         onBlur={(e) => {
-                                            e.target.style.borderColor = '#2A2A2A'
-                                            e.target.style.background = 'rgba(18, 18, 18, 0.50)'
+                                            e.target.style.borderColor = 'var(--color-border-primary)'
+                                            e.target.style.background = 'var(--color-bg-input)'
                                         }}
                                     />
 
                                     {/* 留言内容标签 */}
                                     <div style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '16px',
                                         lineHeight: '25.6px',
                                         textAlign: 'left',
@@ -1079,13 +1137,13 @@ export default function AboutPage() {
                                     <textarea
                                         placeholder="请输入您想咨询或合作的内容"
                                         style={{
-                                            background: 'rgba(18, 18, 18, 0.50)',
-                                            border: '1px solid #2A2A2A',
+                                            background: 'var(--color-bg-input)',
+                                            border: '1px solid var(--color-border-primary)',
                                             borderRadius: '8px',
                                             padding: '12px 16px',
                                             width: '100%',
                                             height: '172px',
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             fontSize: '14px',
                                             lineHeight: '20px',
                                             resize: 'none',
@@ -1096,12 +1154,12 @@ export default function AboutPage() {
                                             transition: 'all 0.2s ease'
                                         }}
                                         onFocus={(e) => {
-                                            e.target.style.borderColor = '#3B82F6'
-                                            e.target.style.background = 'rgba(18, 18, 18, 0.70)'
+                                            e.target.style.borderColor = 'var(--color-border-active)'
+                                            e.target.style.background = 'var(--color-bg-primary)'
                                         }}
                                         onBlur={(e) => {
-                                            e.target.style.borderColor = '#2A2A2A'
-                                            e.target.style.background = 'rgba(18, 18, 18, 0.50)'
+                                            e.target.style.borderColor = 'var(--color-border-primary)'
+                                            e.target.style.background = 'var(--color-bg-input)'
                                         }}
                                     />
 

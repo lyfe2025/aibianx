@@ -29,10 +29,9 @@ export const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
 
     return (
         <div
-            className={`payment-method-card ${className}`}
+            className={`payment-method-card glass-card ${isSelected ? 'glass-card--active' : 'glass-card--hover'} ${className}`}
             style={{
-                background: 'rgba(18, 18, 18, 0.50)',
-                border: `1px solid ${isSelected ? 'var(--color-border-active)' : 'var(--color-border-secondary)'}`,
+                border: `1px solid ${isSelected ? 'var(--color-border-active)' : 'var(--color-border-primary)'}`,
                 borderRadius: 'var(--radius-lg)',
                 padding: '13px',
                 display: 'flex',

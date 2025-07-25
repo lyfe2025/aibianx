@@ -88,12 +88,13 @@ export function CTASection() {
                                 <div style={{
                                     width: '40px',
                                     height: '40px',
-                                    background: 'rgba(30, 61, 89, 0.30)',
-                                    borderRadius: '9999px',
+                                    background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
+                                    borderRadius: '50%',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    fontSize: '20px'
+                                    fontSize: '20px',
+                                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.25)'
                                 }}>
                                     {item.icon}
                                 </div>
@@ -181,7 +182,7 @@ export function CTASection() {
                                     const container = e.target.parentElement
                                     if (container) {
                                         container.style.borderColor = '#3B82F6'
-                                        container.style.background = 'rgba(18, 18, 18, 0.70)'
+                                        container.style.background = 'var(--color-bg-primary)'
                                         container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
                                     }
                                 }}
@@ -189,7 +190,7 @@ export function CTASection() {
                                     const container = e.target.parentElement
                                     if (container) {
                                         container.style.borderColor = 'rgba(59, 130, 246, 0.30)'
-                                        container.style.background = 'rgba(18, 18, 18, 0.50)'
+                                        container.style.background = 'var(--color-bg-input)'
                                         container.style.boxShadow = 'none'
                                     }
                                 }}
@@ -206,7 +207,7 @@ export function CTASection() {
                         </div>
 
                         <div style={{
-                            background: 'rgba(18, 18, 18, 0.50)',
+                            background: 'var(--color-bg-input)',
                             border: '1px solid rgba(59, 130, 246, 0.30)',
                             borderRadius: '8px',
                             padding: '17.5px 17px',
@@ -225,7 +226,7 @@ export function CTASection() {
                                     const container = e.target.parentElement
                                     if (container) {
                                         container.style.borderColor = '#3B82F6'
-                                        container.style.background = 'rgba(18, 18, 18, 0.70)'
+                                        container.style.background = 'var(--color-bg-primary)'
                                         container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
                                     }
                                 }}
@@ -233,7 +234,7 @@ export function CTASection() {
                                     const container = e.target.parentElement
                                     if (container) {
                                         container.style.borderColor = 'rgba(59, 130, 246, 0.30)'
-                                        container.style.background = 'rgba(18, 18, 18, 0.50)'
+                                        container.style.background = 'var(--color-bg-input)'
                                         container.style.boxShadow = 'none'
                                     }
                                 }}

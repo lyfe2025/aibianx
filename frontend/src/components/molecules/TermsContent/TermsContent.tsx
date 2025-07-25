@@ -188,13 +188,13 @@ export function TermsContent({ onBack }: TermsContentProps) {
                     </p>
 
                     <div style={{
-                        background: 'rgba(239, 68, 68, 0.1)',
-                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        background: 'var(--color-error-bg)',
+                        border: '1px solid var(--color-error-border)',
                         borderRadius: 'var(--radius-lg)',
                         padding: 'var(--spacing-3)',
                         marginBottom: 'var(--spacing-3)'
                     }}>
-                        <p style={{ color: '#FCA5A5', margin: 0 }}>
+                        <p style={{ color: 'var(--color-error)', margin: 0 }}>
                             <strong>重要提醒：</strong>由于数字内容的特殊性，会员服务一经开通概不退款。请在购买前仔细考虑。
                         </p>
                     </div>

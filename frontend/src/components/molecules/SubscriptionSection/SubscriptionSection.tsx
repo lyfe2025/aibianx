@@ -116,7 +116,7 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
                 </h3>
                 <p
                     style={{
-                        color: '#9CA3AF',
+                        color: 'var(--color-text-muted)',
                         fontSize: '16px',
                         lineHeight: '22px',
                         margin: 0,
@@ -139,7 +139,7 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
                         background: theme === 'dark'
                             ? 'rgba(18, 18, 18, 0.50)'
                             : 'var(--color-bg-input)',
-                        border: `1px solid ${!isValidEmail ? '#EF4444' : (theme === 'dark' ? '#2A2A2A' : 'var(--color-border-primary)')}`,
+                        border: `1px solid ${!isValidEmail ? 'var(--color-error)' : 'var(--color-border-primary)'}`,
                         borderRight: 'none',
                         borderRadius: '8px 0 0 8px',
                         padding: '16px',
@@ -158,16 +158,13 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
                     }}
                     onFocus={(e) => {
                         if (isValidEmail) {
-                            e.target.style.borderColor = '#3B82F6'
+                            e.target.style.borderColor = 'var(--color-border-active)'
                         }
-                        e.target.style.background = theme === 'dark'
-                            ? 'rgba(18, 18, 18, 0.70)'
-                            : 'var(--color-bg-primary)'
+                        e.target.style.background = 'var(--color-bg-primary)'
                     }}
                     onBlur={(e) => {
-                        e.target.style.borderColor = !isValidEmail ? '#EF4444' : 'var(--color-border-primary)'
+                        e.target.style.borderColor = !isValidEmail ? 'var(--color-error)' : 'var(--color-border-primary)'
                         e.target.style.background = 'var(--color-bg-input)'
-                            : 'rgba(250, 252, 255, 0.95)'
                     }}
                     required
                 />

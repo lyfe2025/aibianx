@@ -131,13 +131,13 @@ export function MainContentSection() {
                                     onMouseEnter={(e) => {
                                         if (filter !== activeFilter) {
                                             e.currentTarget.style.background = 'linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)'
-                                            e.currentTarget.style.color = '#D1D5DB'
+                                            e.currentTarget.style.color = 'var(--color-text-secondary)'
                                         }
                                     }}
                                     onMouseLeave={(e) => {
                                         if (filter !== activeFilter) {
                                             e.currentTarget.style.background = 'linear-gradient(90deg, rgba(59, 130, 246, 0) 0%, rgba(139, 92, 246, 0) 100%)'
-                                            e.currentTarget.style.color = '#9CA3AF'
+                                            e.currentTarget.style.color = 'var(--color-text-muted)'
                                         }
                                     }}
                                     onMouseDown={(e) => {
@@ -162,9 +162,8 @@ export function MainContentSection() {
                                 <Link
                                     key={article.id}
                                     href={`/weekly/article-${article.id}`}
-                                    className="main-content-article-card"
+                                    className="main-content-article-card glass-card glass-card--hover"
                                     style={{
-                                        background: 'rgba(18, 18, 18, 0.30)',
                                         borderRadius: '12px',
                                         padding: '16px',
                                         display: 'flex',
@@ -234,7 +233,7 @@ export function MainContentSection() {
                                                                 : 'rgba(139, 92, 246, 0.40)'}`,
                                                             borderRadius: '9999px',
                                                             padding: '8px 13px',
-                                                            color: index === 0 ? '#3B82F6' : '#8B5CF6',
+                                                            color: index === 0 ? 'var(--color-primary-blue)' : 'var(--color-primary-purple)',
                                                             fontSize: '12px',
                                                             lineHeight: '18px',
                                                             width: index === 1 && article.id === 3 ? '61px' : '74px',
@@ -265,13 +264,13 @@ export function MainContentSection() {
                                             marginRight: '8px'
                                         }}>
                                             <Icon name="eye-icon" style={{
-                                                color: '#6B7280',
+                                                color: 'var(--color-text-disabled)',
                                                 width: '16px',
                                                 height: '16px',
                                                 marginRight: '4px'
                                             }} />
                                             <span style={{
-                                                color: '#6B7280',
+                                                color: 'var(--color-text-disabled)',
                                                 fontSize: '12px',
                                                 lineHeight: '18px',
                                                 width: article.id === 1 ? '23px' : '24px'
@@ -285,13 +284,13 @@ export function MainContentSection() {
                                             marginLeft: '8px'
                                         }}>
                                             <Icon name="clock-icon" style={{
-                                                color: '#6B7280',
+                                                color: 'var(--color-text-disabled)',
                                                 width: '12px',
                                                 height: '12px',
                                                 marginRight: '4px'
                                             }} />
                                             <span style={{
-                                                color: '#6B7280',
+                                                color: 'var(--color-text-disabled)',
                                                 fontSize: '12px',
                                                 lineHeight: '18px',
                                                 width: article.id === 1 ? '40px' : '48px',
@@ -315,11 +314,11 @@ export function MainContentSection() {
                             <button
                                 onClick={() => window.location.href = '/weekly'}
                                 style={{
-                                    background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                                    border: '2px solid #000000',
+                                    background: 'var(--gradient-primary)',
+                                    border: '2px solid transparent',
                                     borderRadius: '8px',
                                     padding: '16px 24px',
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '13.33px',
                                     lineHeight: '15px',
                                     cursor: 'pointer',
@@ -357,7 +356,7 @@ export function MainContentSection() {
                             marginBottom: 'var(--card-gap-lg)'
                         }}>
                             <h3 style={{
-                                color: '#FFFFFF',
+                                color: 'var(--color-text-primary)',
                                 fontSize: '20px',
                                 fontWeight: '700',
                                 lineHeight: '30px',
@@ -382,7 +381,7 @@ export function MainContentSection() {
                                     marginBottom: '16px'
                                 }}>
                                     <Icon name="community-advantage-new" style={{
-                                        color: '#3B82F6',
+                                        color: 'var(--color-primary-blue)',
                                         width: '24px',
                                         height: '34px',
                                         marginTop: '8px',
@@ -394,7 +393,7 @@ export function MainContentSection() {
                                         width: '290.21px'
                                     }}>
                                         <div style={{
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             fontSize: '16px',
                                             lineHeight: '24px',
                                             width: '120px',
@@ -404,7 +403,7 @@ export function MainContentSection() {
                                             高质量内容
                                         </div>
                                         <div style={{
-                                            color: '#9CA3AF',
+                                            color: 'var(--color-text-muted)',
                                             fontSize: '14px',
                                             lineHeight: '21px',
                                             minHeight: '42px'
@@ -421,7 +420,7 @@ export function MainContentSection() {
                                     marginBottom: '16px'
                                 }}>
                                     <Icon name="community-support-new" style={{
-                                        color: '#3B82F6',
+                                        color: 'var(--color-primary-blue)',
                                         width: '24px',
                                         height: '32px',
                                         marginTop: '8px',
@@ -433,7 +432,7 @@ export function MainContentSection() {
                                         width: '290px'
                                     }}>
                                         <div style={{
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             fontSize: '16px',
                                             lineHeight: '24px',
                                             width: '100px',
@@ -443,7 +442,7 @@ export function MainContentSection() {
                                             实战经验
                                         </div>
                                         <div style={{
-                                            color: '#9CA3AF',
+                                            color: 'var(--color-text-muted)',
                                             fontSize: '14px',
                                             lineHeight: '21px',
                                             minHeight: '21px'
@@ -460,7 +459,7 @@ export function MainContentSection() {
                                     marginBottom: '24px'
                                 }}>
                                     <Icon name="continuous-update-new" style={{
-                                        color: '#3B82F6',
+                                        color: 'var(--color-primary-blue)',
                                         width: '24px',
                                         height: '29px',
                                         marginTop: '8px',
@@ -472,7 +471,7 @@ export function MainContentSection() {
                                         width: '275px'
                                     }}>
                                         <div style={{
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             fontSize: '16px',
                                             lineHeight: '24px',
                                             width: '100px',
@@ -482,7 +481,7 @@ export function MainContentSection() {
                                             持续更新
                                         </div>
                                         <div style={{
-                                            color: '#9CA3AF',
+                                            color: 'var(--color-text-muted)',
                                             fontSize: '14px',
                                             lineHeight: '21px',
                                             minHeight: '21px'
@@ -506,7 +505,7 @@ export function MainContentSection() {
                             marginBottom: 'var(--card-gap-lg)'
                         }}>
                             <h3 style={{
-                                color: '#FFFFFF',
+                                color: 'var(--color-text-primary)',
                                 fontSize: '20px',
                                 fontWeight: '700',
                                 lineHeight: '30px',
@@ -535,7 +534,7 @@ export function MainContentSection() {
                                     flexDirection: 'column'
                                 }}>
                                     <div style={{
-                                        color: '#FFFFFF',
+                                        color: 'var(--color-text-primary)',
                                         fontSize: '16px',
                                         lineHeight: '22px',
                                         width: '120px',
@@ -544,7 +543,7 @@ export function MainContentSection() {
                                         5000+ 用户
                                     </div>
                                     <div style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '14px',
                                         lineHeight: '21px',
                                         width: '100px',
@@ -556,8 +555,7 @@ export function MainContentSection() {
                             </div>
 
                             {/* 用户见证 */}
-                            <div style={{
-                                background: 'rgba(18, 18, 18, 0.50)',
+                            <div className="glass-card" style={{
                                 borderRadius: '8px',
                                 padding: '16px',
                                 margin: '5px 36px 36px 36px',
@@ -576,7 +574,7 @@ export function MainContentSection() {
                                 }} />
 
                                 <div style={{
-                                    color: '#D1D5DB',
+                                    color: 'var(--color-text-secondary)',
                                     fontSize: '16px',
                                     lineHeight: '20px',
                                     minHeight: '40px',
@@ -599,7 +597,7 @@ export function MainContentSection() {
                                         marginRight: '8px'
                                     }} />
                                     <div style={{
-                                        color: '#FFFFFF',
+                                        color: 'var(--color-text-primary)',
                                         fontSize: '12px',
                                         lineHeight: '18px',
                                         marginTop: '7px',
@@ -631,7 +629,7 @@ export function MainContentSection() {
                                 width: '348px'
                             }}>
                                 <h3 style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '18px',
                                     fontWeight: '700',
                                     lineHeight: '27px',
@@ -705,7 +703,7 @@ export function MainContentSection() {
                                             background: 'transparent',
                                             border: 'none',
                                             outline: 'none',
-                                            color: '#757575',
+                                            color: 'var(--color-text-disabled)',
                                             fontSize: '13.33px',
                                             lineHeight: '15px',
                                             fontFamily: 'Arial'

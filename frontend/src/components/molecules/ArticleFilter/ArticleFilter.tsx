@@ -43,7 +43,7 @@ export function ArticleFilter({
                             background: isActive
                                 ? (option.colors?.background || 'var(--gradient-primary)')
                                 : 'linear-gradient(90deg, rgba(59, 130, 246, 0) 0%, rgba(139, 92, 246, 0) 100%)', // 使用透明的相同渐变
-                            color: option.colors?.text || (isActive ? '#FFFFFF' : 'var(--color-text-muted)'),
+                            color: option.colors?.text || (isActive ? 'var(--color-text-primary)' : 'var(--color-text-muted)'),
                             // 🎯 统一边框处理 - 避免边框的突然出现和消失
                             border: '1px solid transparent', // 统一使用透明边框，避免无边框到有边框的突变
                             borderColor: isActive

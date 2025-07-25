@@ -7,6 +7,7 @@ interface MissionItem {
     title: string
     description: string
     highlight?: string
+    iconColor?: 'blue' | 'green' | 'orange' | 'purple' // 新增颜色配置
 }
 
 interface MissionSectionProps {
@@ -22,6 +23,38 @@ export function MissionSection({
     missions,
     className = ''
 }: MissionSectionProps) {
+    // 获取图标背景色
+    const getIconBackground = (iconColor: MissionItem['iconColor'] = 'blue') => {
+        switch (iconColor) {
+            case 'blue':
+                return {
+                    background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
+                    boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)'
+                }
+            case 'green':
+                return {
+                    background: 'linear-gradient(135deg, #22C55E 15%, #34D399 85%)',
+                    boxShadow: '0 8px 24px rgba(34, 197, 94, 0.3)'
+                }
+            case 'orange':
+                return {
+                    background: 'linear-gradient(135deg, #FB923C 15%, #F59E0B 85%)',
+                    boxShadow: '0 8px 24px rgba(251, 146, 60, 0.3)',
+                    border: '2px solid #EF4444'
+                }
+            case 'purple':
+                return {
+                    background: 'linear-gradient(135deg, #A855F7 15%, #EC4899 85%)',
+                    boxShadow: '0 8px 24px rgba(168, 85, 247, 0.3)'
+                }
+            default:
+                return {
+                    background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
+                    boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)'
+                }
+        }
+    }
+
     return (
         <section className={className} style={{
             padding: 'var(--page-padding-top-md) 0 var(--page-padding-bottom-md)',
@@ -76,12 +109,11 @@ export function MissionSection({
                             width: '80px',
                             height: '80px',
                             margin: '0 auto var(--spacing-6)',
-                            background: 'var(--gradient-primary)',
                             borderRadius: '50%',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)'
+                            ...getIconBackground(mission.iconColor)
                         }}>
                             <Icon name={mission.icon} size="xl" style={{ color: '#FFFFFF' }} />
                         </div>

@@ -81,7 +81,7 @@ export function AIStepsSection() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            color: '#FFFFFF',
+                            color: 'var(--color-text-primary)',
                             fontSize: '16px',
                             lineHeight: '22px'
                         }}
@@ -102,7 +102,7 @@ export function AIStepsSection() {
                     <div
                         key={step.number}
                         style={{
-                            color: '#FFFFFF',
+                            color: 'var(--color-text-primary)',
                             fontSize: '18px',
                             fontWeight: 700,
                             lineHeight: '25px',
@@ -125,7 +125,7 @@ export function AIStepsSection() {
                     <div
                         key={step.number}
                         style={{
-                            color: '#9CA3AF',
+                            color: 'var(--color-text-muted)',
                             fontSize: '14px',
                             lineHeight: '20px',
                             width: '166px',

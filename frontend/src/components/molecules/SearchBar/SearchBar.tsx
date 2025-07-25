@@ -163,9 +163,15 @@ export function SearchBar({
                         : 'none', // 未聚焦时无阴影
                 }}>
                     {/* 内层搜索输入框 - 优化视觉设计 */}
-                    <div style={{
+                    <div className="search-container-no-border" style={{
                         background: 'var(--color-bg-input)', // 使用主题变量
                         border: 'none',
+                        borderTop: 'none',
+                        borderBottom: 'none',
+                        borderLeft: 'none',
+                        borderRight: 'none',
+                        outline: 'none',
+                        boxShadow: 'none',
                         borderRadius: '12px',
                         display: 'flex',
                         alignItems: 'center',
@@ -249,8 +255,8 @@ export function SearchBar({
                                 onClick={handleClear}
                                 aria-label="清空搜索"
                                 style={{
-                                    background: 'rgba(107, 114, 128, 0.15)', // 更淡的背景
-                                    border: 'none',
+                                    background: 'transparent', // 改为透明背景
+                                    border: '1px solid var(--color-border-primary)', // 使用主题边框色
                                     borderRadius: '50%',
                                     width: '24px', // 稍微减小尺寸
                                     height: '24px',
@@ -258,7 +264,7 @@ export function SearchBar({
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     cursor: 'pointer',
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)', // 使用主题文字色
                                     fontSize: '12px',
                                     lineHeight: '1',
                                     flexShrink: 0,
@@ -266,12 +272,16 @@ export function SearchBar({
                                     opacity: 0.6
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.currentTarget.style.background = 'rgba(107, 114, 128, 0.25)'
+                                    e.currentTarget.style.background = 'var(--color-primary-blue)' // 悬停时使用主题蓝色
+                                    e.currentTarget.style.borderColor = 'var(--color-primary-blue)'
+                                    e.currentTarget.style.color = '#FFFFFF'
                                     e.currentTarget.style.opacity = '1'
                                     e.currentTarget.style.transform = 'scale(1.1)'
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.background = 'rgba(107, 114, 128, 0.15)'
+                                    e.currentTarget.style.background = 'transparent'
+                                    e.currentTarget.style.borderColor = 'var(--color-border-primary)'
+                                    e.currentTarget.style.color = 'var(--color-text-muted)'
                                     e.currentTarget.style.opacity = '0.6'
                                     e.currentTarget.style.transform = 'scale(1)'
                                 }}

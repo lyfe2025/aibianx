@@ -333,7 +333,7 @@ export default function WeeklyPage() {
 
     return (
         <div style={{
-            color: '#FFFFFF',
+            color: 'var(--color-text-primary)',
             fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
             minHeight: '100vh',
             paddingTop: '80px' // 为固定头部留出空间
@@ -393,7 +393,7 @@ export default function WeeklyPage() {
                                         alignItems: 'center',
                                         width: '100%',
                                         maxWidth: '800px', // 与搜索框保持一致的最大宽度
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '14px',
                                         fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                                         paddingLeft: '4px', // 微调左边距，与搜索框内容对齐
@@ -404,7 +404,7 @@ export default function WeeklyPage() {
                                             <span>搜索中...</span>
                                         ) : (
                                             <span>
-                                                搜索 &ldquo;{searchQuery}&rdquo; 找到 <strong style={{ color: '#D1D5DB' }}>{filteredArticles.length}</strong> 个相关结果
+                                                搜索 &ldquo;{searchQuery}&rdquo; 找到 <strong style={{ color: 'var(--color-text-secondary)' }}>{filteredArticles.length}</strong> 个相关结果
                                             </span>
                                         )}
                                     </div>
@@ -416,7 +416,7 @@ export default function WeeklyPage() {
                                                 border: '1px solid rgba(42, 42, 42, 0.70)',
                                                 borderRadius: '6px',
                                                 padding: '4px 8px',
-                                                color: '#9CA3AF',
+                                                color: 'var(--color-text-muted)',
                                                 fontSize: '12px',
                                                 cursor: 'pointer',
                                                 transition: 'all 0.2s ease'
@@ -532,7 +532,7 @@ export default function WeeklyPage() {
                                         fontSize: 'var(--font-size-base)',
                                         marginBottom: '32px',
                                         lineHeight: '1.6',
-                                        color: '#9CA3AF'
+                                        color: 'var(--color-text-muted)'
                                     }}>
                                         没有找到包含 &ldquo;<span style={{
                                             color: 'var(--color-primary-blue)',
@@ -546,7 +546,7 @@ export default function WeeklyPage() {
                                     }}>
                                         <p style={{
                                             fontSize: 'var(--font-size-sm)',
-                                            color: '#9CA3AF',
+                                            color: 'var(--color-text-muted)',
                                             marginBottom: '16px'
                                         }}>
                                             试试这些热门搜索：
@@ -568,7 +568,7 @@ export default function WeeklyPage() {
                                                         border: '1px solid rgba(59, 130, 246, 0.3)',
                                                         borderRadius: '20px',
                                                         padding: '6px 16px',
-                                                        color: '#60A5FA',
+                                                        color: 'var(--color-primary-blue)',
                                                         fontSize: 'var(--font-size-sm)',
                                                         cursor: 'pointer',
                                                         transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
@@ -602,7 +602,7 @@ export default function WeeklyPage() {
                                         }}
                                         style={{
                                             background: 'var(--gradient-primary)',
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             border: 'none',
                                             borderRadius: '12px',
                                             padding: '14px 28px',
@@ -656,7 +656,7 @@ export default function WeeklyPage() {
                                         }}
                                         style={{
                                             background: 'var(--gradient-primary)',
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             border: 'none',
                                             borderRadius: 'var(--radius-lg)',
                                             padding: '12px 24px',

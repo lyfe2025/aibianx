@@ -109,7 +109,7 @@ export default function SettingsPage() {
         marginBottom: '32px'
       }}>
         <div style={{
-          color: '#FFFFFF',
+          color: 'var(--color-text-primary)',
           fontSize: '24px',
           fontWeight: '700',
           lineHeight: '32px',
@@ -425,7 +425,7 @@ export default function SettingsPage() {
                       borderRadius: '8px',
                       backdropFilter: 'blur(4px)',
                       WebkitBackdropFilter: 'blur(4px)',
-                      color: '#FFFFFF',
+                      color: 'var(--color-text-primary)',
                       fontSize: '14px',
                       lineHeight: '20px',
                       resize: 'vertical',
@@ -457,7 +457,7 @@ export default function SettingsPage() {
               padding: '24px'
             }}>
               <div style={{
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 fontSize: '18px',
                 fontWeight: '600',
                 lineHeight: '28px',
@@ -516,7 +516,7 @@ export default function SettingsPage() {
               }}>
                 <div>
                   <div style={{
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     fontSize: '18px',
                     fontWeight: '600',
                     lineHeight: '28px',
@@ -525,7 +525,7 @@ export default function SettingsPage() {
                     两步验证
                   </div>
                   <div style={{
-                    color: '#9CA3AF',
+                    color: 'var(--color-text-muted)',
                     fontSize: '14px',
                     lineHeight: '20px',
                     marginBottom: '8px'
@@ -533,7 +533,7 @@ export default function SettingsPage() {
                     增强账户安全性，推荐开启
                   </div>
                   <div style={{
-                    color: '#9CA3AF',
+                    color: 'var(--color-text-muted)',
                     fontSize: '12px',
                     lineHeight: '16px'
                   }}>
@@ -561,7 +561,7 @@ export default function SettingsPage() {
                       border: securityData.twoFactorEnabled ? '1px solid rgba(255, 255, 255, 0.20)' : 'none',
                       borderRadius: '8px',
                       padding: '8px 16px',
-                      color: '#FFFFFF',
+                      color: 'var(--color-text-primary)',
                       fontSize: '14px',
                       fontWeight: '500',
                       cursor: 'pointer'
@@ -580,7 +580,7 @@ export default function SettingsPage() {
               padding: '24px'
             }}>
               <div style={{
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 fontSize: '18px',
                 fontWeight: '600',
                 lineHeight: '28px',
@@ -629,7 +629,7 @@ export default function SettingsPage() {
                       </div>
                       <div>
                         <div style={{
-                          color: '#FFFFFF',
+                          color: 'var(--color-text-primary)',
                           fontSize: '16px',
                           fontWeight: '500',
                           lineHeight: '24px'
@@ -637,7 +637,7 @@ export default function SettingsPage() {
                           {device.name}
                         </div>
                         <div style={{
-                          color: '#9CA3AF',
+                          color: 'var(--color-text-muted)',
                           fontSize: '12px',
                           lineHeight: '16px'
                         }}>
@@ -652,7 +652,7 @@ export default function SettingsPage() {
                     }}>
                       {device.isActive ? (
                         <span style={{
-                          color: '#22C55E',
+                          color: 'var(--color-success)',
                           fontSize: '12px',
                           fontWeight: '500',
                           background: 'rgba(34, 197, 94, 0.10)',
@@ -665,7 +665,7 @@ export default function SettingsPage() {
                         <button
                           onClick={() => handleRemoveDevice(device.id)}
                           style={{
-                            color: '#EF4444',
+                            color: 'var(--color-error)',
                             fontSize: '12px',
                             background: 'none',
                             border: 'none',
@@ -696,11 +696,11 @@ export default function SettingsPage() {
               <Icon
                 name="shield-check"
                 size="sm"
-                style={{ color: '#22C55E', marginTop: '2px' }}
+                style={{ color: 'var(--color-success)', marginTop: '2px' }}
               />
               <div>
                 <div style={{
-                  color: '#22C55E',
+                  color: 'var(--color-success)',
                   fontSize: '14px',
                   fontWeight: '600',
                   lineHeight: '20px',
@@ -709,7 +709,7 @@ export default function SettingsPage() {
                   安全提示
                 </div>
                 <div style={{
-                  color: '#D1D5DB',
+                  color: 'var(--color-text-secondary)',
                   fontSize: '13px',
                   lineHeight: '18px'
                 }}>

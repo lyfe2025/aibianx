@@ -160,6 +160,10 @@ a {
   --color-warning-bg: rgba(245, 158, 11, 0.05);
   --color-warning-border: rgba(245, 158, 11, 0.20);
 
+  --color-orange: #F97316;
+  --color-orange-bg: rgba(249, 115, 22, 0.05);
+  --color-orange-border: rgba(249, 115, 22, 0.20);
+
   --color-error: #EF4444;
   --color-error-bg: rgba(239, 68, 68, 0.05);
   --color-error-border: rgba(239, 68, 68, 0.20);
@@ -210,6 +214,10 @@ a {
   --color-warning: #F59E0B;
   --color-warning-bg: rgba(245, 158, 11, 0.10);
   --color-warning-border: rgba(245, 158, 11, 0.30);
+
+  --color-orange: #F97316;
+  --color-orange-bg: rgba(249, 115, 22, 0.10);
+  --color-orange-border: rgba(249, 115, 22, 0.30);
 
   --color-error: #EF4444;
   --color-error-bg: rgba(239, 68, 68, 0.10);
@@ -998,10 +1006,10 @@ button:focus-visible,
 
   /* 返回顶部按钮调整 - 移动端响应式 */
   .back-to-top-button {
-    bottom: 20px !important;
-    right: 20px !important;
-    width: 40px !important;
-    height: 40px !important;
+    bottom: var(--spacing-4) !important;
+    right: var(--spacing-4) !important;
+    width: 48px !important;
+    height: 48px !important;
   }
 
   /* 分页组件调整 */
@@ -2507,20 +2515,18 @@ html {
 /* 亮色主题下特殊处理的按钮内文字（保持白色） */
 [data-theme="light"] .btn--gradient [style*="color: #FFFFFF"],
 [data-theme="light"] .btn--gradient [style*="color:#FFFFFF"],
+[data-theme="light"] .btn--gradient [style*="color: var(--color-text-primary)"],
 [data-theme="light"] button[style*="background: linear-gradient"] [style*="color: #FFFFFF"],
-[data-theme="light"] button[style*="background:linear-gradient"] [style*="color: #FFFFFF"] {
+[data-theme="light"] button[style*="background:linear-gradient"] [style*="color: #FFFFFF"],
+[data-theme="light"] button[style*="background: linear-gradient"] [style*="color: var(--color-text-primary)"],
+[data-theme="light"] button[style*="background:linear-gradient"] [style*="color: var(--color-text-primary)"],
+[data-theme="light"] button[style*="background: var(--gradient-primary)"] [style*="color: var(--color-text-primary)"] {
   color: #FFFFFF !important;
   /* 按钮内的白色文字保持不变 */
 }
 
-/* 亮色主题下特殊处理的按钮内文字（保持白色） */
-[data-theme="light"] .btn--gradient [style*="color: #FFFFFF"],
-[data-theme="light"] .btn--gradient [style*="color:#FFFFFF"],
-[data-theme="light"] button[style*="background: linear-gradient"] [style*="color: #FFFFFF"],
-[data-theme="light"] button[style*="background:linear-gradient"] [style*="color: #FFFFFF"] {
-  color: #FFFFFF !important;
-  /* 按钮内的白色文字保持不变 */
-}
+/* 重复规则已移除 */
+/* 已合并到上面的规则中 */
 
 /* 亮色主题下的搜索框优化 */
 [data-theme="light"] .search-bar-input {
@@ -2529,4 +2535,77 @@ html {
 
 [data-theme="light"] .search-bar-input::placeholder {
   color: var(--color-text-muted) !important;
+}
+
+/* 搜索框输入框特殊处理 - 移除焦点边框 */
+.search-bar-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+[data-theme="light"] .search-bar-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* 搜索框容器特殊处理 - 完全移除所有边框 */
+.search-container-no-border,
+.search-container-no-border:hover,
+.search-container-no-border:focus,
+.search-container-no-border:active {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.search-container-no-border::before,
+.search-container-no-border::after {
+  display: none !important;
+}
+
+/* 用户中心页面内容区域 - 移动端间距优化 */
+.profile-page-content {
+  padding: var(--spacing-6) var(--spacing-4) !important;
+  /* 24px 16px，避免贴边 */
+}
+
+/* 统计卡片移动端适配 */
+.profile-page-content>div:nth-child(2)>div {
+  width: 100% !important;
+  /* 移动端全宽显示 */
+  max-width: 280px !important;
+  /* 限制最大宽度 */
+}
+
+/* 超小屏幕 (480px以下) */
+@media (max-width: 480px) {
+
+  /* 用户中心页面内容区域 - 超小屏间距优化 */
+  .profile-page-content {
+    padding: var(--spacing-5) var(--spacing-3) !important;
+    /* 20px 12px，确保足够间距 */
+  }
+
+  /* 统计卡片超小屏适配 */
+  .profile-page-content>div:nth-child(2)>div {
+    padding: var(--spacing-4) !important;
+    /* 减少内边距到16px */
+    width: 100% !important;
+    max-width: none !important;
+    /* 移除最大宽度限制 */
+  }
+}
+
+/* 极小屏幕 (360px以下) - 防贴边额外保护 */
+@media (max-width: 360px) {
+  .profile-page-content {
+    padding: var(--spacing-4) var(--spacing-2) !important;
+    /* 16px 8px，最小安全间距 */
+  }
 }

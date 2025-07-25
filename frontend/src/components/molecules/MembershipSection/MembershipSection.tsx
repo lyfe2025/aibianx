@@ -51,7 +51,7 @@ export function MembershipSection({
                 'AI工具专属优惠'
             ]
         }
-        
+
         openModal('payment', {
             payment: { plan: defaultPlan }
         })
@@ -309,12 +309,13 @@ export function MembershipSection({
                             <div style={{
                                 width: '56px',
                                 height: '56px',
-                                background: 'var(--gradient-primary)',
-                                borderRadius: 'var(--radius-lg)',
+                                background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
+                                borderRadius: '50%',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                flexShrink: 0
+                                flexShrink: 0,
+                                boxShadow: '0 6px 18px rgba(59, 130, 246, 0.3)'
                             }}>
                                 <Icon name={feature.icon} size="lg" style={{ color: '#FFFFFF' }} />
                             </div>

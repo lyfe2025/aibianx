@@ -31,10 +31,10 @@ export function RelatedArticles({
         <div
             className={`glass-card ${className}`}
             style={{
-                background: 'rgba(26, 26, 26, 0.85)',
+                background: 'var(--color-bg-glass)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid rgba(42, 42, 42, 0.70)',
+                border: '1px solid var(--color-border-primary)',
                 borderRadius: '12px',
                 padding: '32px 36px 36px 36px',
                 marginTop: '48px'
@@ -44,10 +44,10 @@ export function RelatedArticles({
             <h3 style={{
                 fontSize: '20px',
                 fontWeight: '700',
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 marginBottom: '28px',
                 paddingBottom: '16px',
-                borderBottom: '1px solid rgba(42, 42, 42, 0.70)',
+                borderBottom: '1px solid var(--color-border-primary)',
                 fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                 lineHeight: '28px',
                 whiteSpace: 'nowrap',
@@ -69,8 +69,8 @@ export function RelatedArticles({
                             className="related-article-card"
                             style={{
                                 padding: '20px',
-                                background: 'rgba(255, 255, 255, 0.02)',
-                                border: '1px solid rgba(42, 42, 42, 0.70)',
+                                background: 'var(--color-bg-secondary)',
+                                border: '1px solid var(--color-border-primary)',
                                 borderRadius: '12px',
                                 transition: 'all 0.2s ease',
                                 cursor: 'pointer',
@@ -81,7 +81,7 @@ export function RelatedArticles({
                             <h4 style={{
                                 fontSize: '16px',
                                 fontWeight: '600',
-                                color: '#FFFFFF',
+                                color: 'var(--color-text-primary)',
                                 lineHeight: '24px',
                                 marginBottom: '8px',
                                 fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
@@ -121,7 +121,7 @@ export function RelatedArticles({
                             {article.excerpt && (
                                 <p style={{
                                     fontSize: '14px',
-                                    color: '#D1D5DB',
+                                    color: 'var(--color-text-secondary)',
                                     lineHeight: '20px',
                                     marginBottom: '12px',
                                     fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
@@ -141,7 +141,7 @@ export function RelatedArticles({
                                 alignItems: 'center',
                                 gap: '12px',
                                 fontSize: '12px',
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                                 flexWrap: 'nowrap',
                                 overflow: 'hidden'
@@ -158,7 +158,7 @@ export function RelatedArticles({
 
                                 <span style={{
                                     flexShrink: 0,
-                                    color: '#6B7280'
+                                    color: 'var(--color-text-disabled)'
                                 }}>•</span>
 
                                 <span style={{
@@ -181,7 +181,7 @@ export function RelatedArticles({
 
                                 <span style={{
                                     flexShrink: 0,
-                                    color: '#6B7280'
+                                    color: 'var(--color-text-disabled)'
                                 }}>•</span>
 
                                 <span style={{

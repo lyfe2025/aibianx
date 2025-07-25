@@ -1,6 +1,7 @@
 'use client'
 
 import { GradientButton, GradientText } from '@/components/ui'
+import { Icon } from '@/components/ui/Icon'
 
 interface Feature {
     icon: string
@@ -118,7 +119,7 @@ export function FeaturesSection({
                                 width: '80px',
                                 height: '80px',
                                 margin: '0 auto var(--spacing-6)',
-                                background: 'var(--gradient-primary)',
+                                background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
                                 borderRadius: '50%',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -127,12 +128,7 @@ export function FeaturesSection({
                                 position: 'relative',
                                 zIndex: 1
                             }}>
-                                <div style={{
-                                    width: '32px',
-                                    height: '32px',
-                                    background: '#FFFFFF',
-                                    borderRadius: '50%'
-                                }} />
+                                <Icon name={feature.icon} size="xl" style={{ color: '#FFFFFF' }} />
                             </div>
 
                             {/* 标题 */}

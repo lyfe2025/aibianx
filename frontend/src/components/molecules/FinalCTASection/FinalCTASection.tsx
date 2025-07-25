@@ -110,9 +110,9 @@ export function FinalCTASection() {
                             成为AI时代的赢家
                         </GradientText>
 
-                        {/* 副标题 - 使用CSS变量统一样式 */}
+                        {/* 副标题 - 深色背景专用白色文字 */}
                         <div style={{
-                            color: 'var(--color-text-secondary)',
+                            color: '#FFFFFF', // 固定白色，确保在深色背景上清晰可见
                             fontSize: 'var(--font-size-2xl)',
                             fontFamily: 'var(--font-family-primary)',
                             lineHeight: '28px',
@@ -120,7 +120,8 @@ export function FinalCTASection() {
                             alignItems: 'center',
                             display: 'flex',
                             textOverflow: 'ellipsis',
-                            minHeight: '28px'
+                            minHeight: '28px',
+                            opacity: 0.9 // 稍微降低透明度，更柔和
                         }}>
                             加入10000+已实现AI变现的先行者
                         </div>
@@ -145,35 +146,43 @@ export function FinalCTASection() {
                                         paddingRight: index === 0 ? '19px' : '0'
                                     }}
                                 >
-                                    {/* 图标圆形背景 - 精确按设计稿样式 */}
+                                    {/* 图标圆形背景 - 主题适配优化 */}
                                     <div style={{
-                                        background: 'rgba(30, 61, 89, 0.30)',
-                                        borderRadius: '9999px',
+                                        background: theme === 'light'
+                                            ? 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)' // 亮色模式：蓝色渐变
+                                            : 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)', // 暗色模式：蓝色渐变
+                                        borderRadius: '50%',
                                         padding: '10px',
                                         display: 'flex',
                                         width: '40px',
+                                        height: '40px',
                                         justifyContent: 'center',
-                                        alignItems: 'center'
+                                        alignItems: 'center',
+                                        boxShadow: '0 4px 12px rgba(59, 130, 246, 0.2)'
                                     }}>
                                         <Icon
                                             name={benefit.icon}
                                             size="sm"
                                             style={{
                                                 width: '20px',
-                                                height: '20px'
+                                                height: '20px',
+                                                color: '#FFFFFF'
                                             }}
                                         />
                                     </div>
-                                    {/* 功能描述文字 - 精确按设计稿样式 */}
+                                    {/* 功能描述文字 - 深色背景专用白色文字 */}
                                     <div style={{
-                                        color: '#D1D5DB',
+                                        color: '#FFFFFF', // 固定白色，确保在深色背景上清晰可见
+                                        fontSize: 'var(--font-size-lg)',
+                                        fontFamily: 'var(--font-family-primary)',
                                         lineHeight: '28px',
                                         width: '300px',
                                         alignItems: 'center',
                                         display: 'flex',
                                         textOverflow: 'ellipsis',
                                         marginTop: '6px',
-                                        minHeight: '28px'
+                                        minHeight: '28px',
+                                        opacity: 0.9 // 稍微降低透明度，更柔和
                                     }}>
                                         {benefit.title}
                                     </div>
@@ -218,9 +227,9 @@ export function FinalCTASection() {
                             获取独家AI变现指南
                         </GradientText>
 
-                        {/* 表单描述 - 使用CSS变量统一样式 */}
+                        {/* 表单描述 - 优化对比度 */}
                         <div style={{
-                            color: 'var(--color-text-muted)',
+                            color: '#9CA3AF', // 使用固定的中性灰色，确保在白色背景上有良好对比度
                             fontSize: 'var(--font-size-lg)',
                             fontFamily: 'var(--font-family-primary)',
                             lineHeight: '24px',
@@ -244,13 +253,16 @@ export function FinalCTASection() {
                                 background: 'var(--color-bg-input)',
                                 border: '1px solid var(--color-border-primary)',
                                 borderRadius: '8px',
-                                height: '56px',
-                                width: '398px',
+                                padding: '17px',
                                 display: 'flex',
-                                alignItems: 'center',
-                                position: 'relative',
-                                transition: 'all 0.2s ease',
-                                boxShadow: 'none'
+                                width: '434px',
+                                gap: '12px',
+                                alignItems: 'stretch',
+                                marginTop: '24px',
+                                marginLeft: '33px',
+                                marginRight: '33px',
+                                flexDirection: 'row',
+                                transition: 'all 0.2s ease'
                             }}
                         >
                             <Icon name="input-email-icon" size="sm" style={{
@@ -274,7 +286,7 @@ export function FinalCTASection() {
                                         const container = e.target.parentElement?.parentElement
                                         if (container) {
                                             container.style.borderColor = '#3B82F6'
-                                            container.style.background = 'rgba(18, 18, 18, 0.70)'
+                                            container.style.background = 'var(--color-bg-primary)'
                                             container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
                                         }
                                     }}
@@ -282,15 +294,16 @@ export function FinalCTASection() {
                                         const container = e.target.parentElement?.parentElement
                                         if (container) {
                                             container.style.borderColor = 'rgba(59, 130, 246, 0.30)'
-                                            container.style.background = 'rgba(18, 18, 18, 0.50)'
+                                            container.style.background = 'var(--color-bg-input)'
                                             container.style.boxShadow = 'none'
                                         }
                                     }}
                                     style={{
                                         width: '368px',
                                         height: '20px',
-                                        color: '#9CA3AF',
-                                        fontSize: '14px',
+                                        color: 'var(--color-text-muted)', // 使用主题变量
+                                        fontSize: 'var(--font-size-base)', // 使用主题字体大小
+                                        fontFamily: 'var(--font-family-primary)', // 统一字体
                                         lineHeight: '20px',
                                         alignItems: 'center',
                                         display: 'flex',
@@ -357,8 +370,9 @@ export function FinalCTASection() {
                                     style={{
                                         width: '368px',
                                         height: '20px',
-                                        color: '#9CA3AF',
-                                        fontSize: '14px',
+                                        color: 'var(--color-text-muted)', // 使用主题变量
+                                        fontSize: 'var(--font-size-base)', // 使用主题字体大小
+                                        fontFamily: 'var(--font-family-primary)', // 统一字体
                                         lineHeight: '20px',
                                         alignItems: 'center',
                                         display: 'flex',
@@ -402,10 +416,11 @@ export function FinalCTASection() {
                             </div>
                         </div>
 
-                        {/* 统计信息 - 精确按设计稿样式 */}
+                        {/* 统计信息 - 主题适配优化 */}
                         <div style={{
-                            color: '#6B7280',
-                            fontSize: '14px',
+                            color: 'var(--color-text-disabled)', // 使用主题变量
+                            fontSize: 'var(--font-size-base)', // 使用主题字体大小
+                            fontFamily: 'var(--font-family-primary)', // 统一字体
                             lineHeight: '20px',
                             textAlign: 'center',
                             justifyContent: 'center',
@@ -422,11 +437,13 @@ export function FinalCTASection() {
                         </div>
                     </div>
 
-                    {/* 装饰性背景效果 - 精确按设计稿位置 */}
+                    {/* 装饰性背景效果 - 主题适配优化 */}
                     <div style={{
                         position: 'absolute',
-                        opacity: '0.80',
-                        background: 'linear-gradient(90deg, rgba(79, 172, 254, 0.20) 0%, rgba(0, 242, 254, 0.15) 100%)',
+                        opacity: theme === 'light' ? '0.30' : '0.80', // 亮色模式降低透明度
+                        background: theme === 'light'
+                            ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.06) 100%)' // 亮色模式：淡蓝色渐变
+                            : 'linear-gradient(90deg, rgba(79, 172, 254, 0.20) 0%, rgba(0, 242, 254, 0.15) 100%)', // 暗色模式：保持原样
                         filter: 'blur(30px)',
                         borderRadius: '9999px',
                         width: '80px',
@@ -437,8 +454,10 @@ export function FinalCTASection() {
 
                     <div style={{
                         position: 'absolute',
-                        opacity: '0.80',
-                        background: 'linear-gradient(90deg, rgba(255, 154, 158, 0.20) 0%, rgba(254, 207, 239, 0.15) 100%)',
+                        opacity: theme === 'light' ? '0.25' : '0.80', // 亮色模式降低透明度
+                        background: theme === 'light'
+                            ? 'linear-gradient(90deg, rgba(139, 92, 246, 0.06) 0%, rgba(59, 130, 246, 0.04) 100%)' // 亮色模式：淡紫蓝渐变
+                            : 'linear-gradient(90deg, rgba(255, 154, 158, 0.20) 0%, rgba(254, 207, 239, 0.15) 100%)', // 暗色模式：保持原样
                         filter: 'blur(30px)',
                         borderRadius: '9999px',
                         width: '80px',

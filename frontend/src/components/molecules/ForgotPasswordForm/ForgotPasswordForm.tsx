@@ -86,14 +86,14 @@ export function ForgotPasswordForm({ onSubmit, isLoading: externalLoading }: For
                     width: '80px',
                     height: '80px',
                     margin: '0 auto var(--spacing-6)',
-                    background: 'var(--gradient-primary)',
+                    background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
                     borderRadius: '50%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)'
                 }}>
-                    <Icon name="modals/email-icon-forgot" size="lg" style={{ color: '#FFFFFF' }} />
+                    <Icon name="modals/email-icon-forgot" size="lg" style={{ color: 'var(--color-text-primary)' }} />
                 </div>
 
                 <h3 style={{

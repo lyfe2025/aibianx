@@ -60,7 +60,7 @@ export function HeroSection() {
                     onChange={(e) => setHeroEmail(e.target.value)}
                     onFocus={(e) => {
                         e.target.style.borderColor = '#3B82F6'
-                        e.target.style.background = 'rgba(18, 18, 18, 0.70)'
+                        e.target.style.background = 'var(--color-bg-primary)'
                         e.target.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
                     }}
                     onBlur={(e) => {
@@ -70,8 +70,8 @@ export function HeroSection() {
                     }}
                     style={{
                         flex: 1,
-                        background: 'rgba(18, 18, 18, 0.50)',
-                        border: '1px solid #2A2A2A',
+                                            background: 'var(--color-bg-input)',
+                    border: '1px solid var(--color-border-primary)',
                         borderRadius: '8px 0 0 8px',
                         padding: '20px 23px 18px 23px',
                         color: '#757575',

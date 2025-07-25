@@ -134,7 +134,7 @@ export default function BookmarksPage() {
         minHeight: '32px'
       }}>
         <h1 style={{
-          color: '#FFFFFF',
+          color: 'var(--color-text-primary)',
           fontSize: 'var(--font-size-3xl)',
           lineHeight: '32px',
           fontWeight: 'normal',
@@ -181,13 +181,13 @@ export default function BookmarksPage() {
               {filter.isFilterIcon ? (
                 <>
                   <Icon name={filter.icon} size="xs" style={{
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     width: '16px',
                     height: '16px',
                     flexShrink: 0
                   }} />
                   <span style={{
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     fontSize: 'var(--font-size-base)',
                     lineHeight: '20px'
                   }}>{filter.label}</span>
@@ -195,12 +195,12 @@ export default function BookmarksPage() {
               ) : (
                 <>
                   <span style={{
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     fontSize: 'var(--font-size-base)',
                     lineHeight: '20px'
                   }}>{filter.label}</span>
                   <Icon name={filter.icon} size="xs" style={{
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     width: '16px',
                     height: '16px',
                     flexShrink: 0
@@ -219,89 +219,89 @@ export default function BookmarksPage() {
           alignItems: 'center',
           flexShrink: 0
         }}>
-                            {/* 搜索框 */}
-                  <div style={{ width: '256px', minWidth: '256px' }}>
-                    <div style={{
-                      background: isSearchFocused ? 'rgba(18, 18, 18, 0.70)' : 'rgba(18, 18, 18, 0.50)',
-                      backdropFilter: 'blur(4px)',
-                      WebkitBackdropFilter: 'blur(4px)',
-                      border: `1px solid ${isSearchFocused ? 'var(--color-border-active)' : 'var(--color-border-primary)'}`,
-                      borderRadius: '8px',
-                      padding: '12px 16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      width: '256px',
-                      height: '48px',
-                      transition: 'all 0.2s ease',
-                      boxShadow: isSearchFocused ? '0 0 0 2px rgba(59, 130, 246, 0.1)' : 'none'
-                    }}>
-                      <Icon name="search-bookmark-icon" size="sm" style={{
-                        color: isSearchFocused ? 'var(--color-border-active)' : 'var(--color-text-muted)',
-                        width: '18px',
-                        height: '18px',
-                        flexShrink: 0,
-                        transition: 'color 0.2s ease'
-                      }} />
-                      <input
-                        type="text"
-                        placeholder="搜索收藏内容"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={handleSearchKeyDown}
-                        onFocus={() => setIsSearchFocused(true)}
-                        onBlur={() => setIsSearchFocused(false)}
-                        style={{
-                          flex: 1,
-                          background: 'transparent',
-                          border: 'none',
-                          outline: 'none',
-                          color: 'var(--color-text-primary)',
-                          fontSize: 'var(--font-size-base)',
-                          lineHeight: '20px',
-                          fontFamily: 'var(--font-family-primary)'
-                        }}
-                      />
-                      
-                      {/* 清空按钮 */}
-                      {searchQuery && (
-                        <button
-                          type="button"
-                          onClick={handleSearchClear}
-                          aria-label="清空搜索"
-                          style={{
-                            background: 'rgba(107, 114, 128, 0.15)',
-                            border: 'none',
-                            borderRadius: '50%',
-                            width: '20px',
-                            height: '20px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            color: 'var(--color-text-muted)',
-                            fontSize: '12px',
-                            lineHeight: '1',
-                            flexShrink: 0,
-                            transition: 'all 0.2s ease',
-                            opacity: 0.7
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(107, 114, 128, 0.25)'
-                            e.currentTarget.style.opacity = '1'
-                            e.currentTarget.style.transform = 'scale(1.1)'
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(107, 114, 128, 0.15)'
-                            e.currentTarget.style.opacity = '0.7'
-                            e.currentTarget.style.transform = 'scale(1)'
-                          }}
-                        >
-                          ✕
-                        </button>
-                      )}
-                    </div>
-                  </div>
+          {/* 搜索框 */}
+          <div style={{ width: '256px', minWidth: '256px' }}>
+            <div style={{
+              background: isSearchFocused ? 'rgba(18, 18, 18, 0.70)' : 'rgba(18, 18, 18, 0.50)',
+              backdropFilter: 'blur(4px)',
+              WebkitBackdropFilter: 'blur(4px)',
+              border: `1px solid ${isSearchFocused ? 'var(--color-border-active)' : 'var(--color-border-primary)'}`,
+              borderRadius: '8px',
+              padding: '12px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              width: '256px',
+              height: '48px',
+              transition: 'all 0.2s ease',
+              boxShadow: isSearchFocused ? '0 0 0 2px rgba(59, 130, 246, 0.1)' : 'none'
+            }}>
+              <Icon name="search-bookmark-icon" size="sm" style={{
+                color: isSearchFocused ? 'var(--color-border-active)' : 'var(--color-text-muted)',
+                width: '18px',
+                height: '18px',
+                flexShrink: 0,
+                transition: 'color 0.2s ease'
+              }} />
+              <input
+                type="text"
+                placeholder="搜索收藏内容"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
+                style={{
+                  flex: 1,
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  color: 'var(--color-text-primary)',
+                  fontSize: 'var(--font-size-base)',
+                  lineHeight: '20px',
+                  fontFamily: 'var(--font-family-primary)'
+                }}
+              />
+
+              {/* 清空按钮 */}
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={handleSearchClear}
+                  aria-label="清空搜索"
+                  style={{
+                    background: 'rgba(107, 114, 128, 0.15)',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '20px',
+                    height: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    color: 'var(--color-text-muted)',
+                    fontSize: '12px',
+                    lineHeight: '1',
+                    flexShrink: 0,
+                    transition: 'all 0.2s ease',
+                    opacity: 0.7
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(107, 114, 128, 0.25)'
+                    e.currentTarget.style.opacity = '1'
+                    e.currentTarget.style.transform = 'scale(1.1)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(107, 114, 128, 0.15)'
+                    e.currentTarget.style.opacity = '0.7'
+                    e.currentTarget.style.transform = 'scale(1)'
+                  }}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
 
           {/* 视图切换 */}
           <div style={{
@@ -380,14 +380,14 @@ export default function BookmarksPage() {
             flex: '1'
           }}>
             <h3 style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               fontSize: 'var(--font-size-2xl)',
               lineHeight: '28px',
               margin: 0,
               whiteSpace: 'nowrap'
             }}>收藏统计</h3>
             <p style={{
-              color: '#9CA3AF',
+              color: 'var(--color-text-muted)',
               fontSize: 'var(--font-size-base)',
               lineHeight: '20px',
               margin: 0,
@@ -410,13 +410,13 @@ export default function BookmarksPage() {
             flexShrink: 0
           }}>
             <Icon name="batch-manage-icon" size="xs" style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               width: '16px',
               height: '16px',
               flexShrink: 0
             }} />
             <span style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               fontSize: 'var(--font-size-base)',
               lineHeight: '20px'
             }}>批量管理</span>
@@ -456,7 +456,7 @@ export default function BookmarksPage() {
                 flexShrink: 0
               }}>
                 <Icon name={stat.icon} size="sm" style={{
-                  color: '#FFFFFF',
+                  color: 'var(--color-text-primary)',
                   width: '20px',
                   height: '20px'
                 }} />
@@ -469,7 +469,7 @@ export default function BookmarksPage() {
                 flex: 1
               }}>
                 <div style={{
-                  color: '#9CA3AF',
+                  color: 'var(--color-text-muted)',
                   fontSize: 'var(--font-size-xs)',
                   lineHeight: '16px',
                   whiteSpace: 'nowrap',
@@ -477,7 +477,7 @@ export default function BookmarksPage() {
                   textOverflow: 'ellipsis'
                 }}>{stat.title}</div>
                 <div style={{
-                  color: '#FFFFFF',
+                  color: 'var(--color-text-primary)',
                   fontSize: 'var(--font-size-xl)',
                   lineHeight: '28px',
                   fontWeight: '600',
@@ -524,7 +524,7 @@ export default function BookmarksPage() {
                 whiteSpace: 'nowrap'
               }}>
                 <span style={{
-                  color: '#FFFFFF',
+                  color: 'var(--color-text-primary)',
                   fontSize: 'var(--font-size-xs)',
                   lineHeight: '16px'
                 }}>{item.category}</span>
@@ -532,7 +532,7 @@ export default function BookmarksPage() {
             </div>
             <div style={{ padding: '12px' }}>
               <h4 style={{
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 fontSize: 'var(--font-size-lg)',
                 lineHeight: '24px',
                 margin: '0 0 8px 0',
@@ -558,13 +558,13 @@ export default function BookmarksPage() {
                   minWidth: 0
                 }}>
                   <Icon name="bookmark-star-icon" size="xs" style={{
-                    color: '#FACC15',
+                    color: 'var(--color-warning)',
                     width: '16px',
                     height: '16px',
                     flexShrink: 0
                   }} />
                   <span style={{
-                    color: '#FACC15',
+                    color: 'var(--color-warning)',
                     fontSize: 'var(--font-size-xs)',
                     lineHeight: '16px',
                     whiteSpace: 'nowrap',
@@ -573,7 +573,7 @@ export default function BookmarksPage() {
                   }}>{item.collectedAt}</span>
                 </div>
                 <Icon name="bookmark-more-icon" size="xs" style={{
-                  color: '#9CA3AF',
+                  color: 'var(--color-text-muted)',
                   width: '16px',
                   height: '16px',
                   cursor: 'pointer',
@@ -607,7 +607,7 @@ export default function BookmarksPage() {
           cursor: 'pointer'
         }}>
           <span style={{
-            color: '#FFFFFF',
+            color: 'var(--color-text-primary)',
             fontSize: 'var(--font-size-lg)',
             lineHeight: '24px'
           }}>&lt;</span>
@@ -623,7 +623,7 @@ export default function BookmarksPage() {
           alignItems: 'center'
         }}>
           <span style={{
-            color: '#FFFFFF',
+            color: 'var(--color-text-primary)',
             fontSize: 'var(--font-size-lg)',
             lineHeight: '24px',
             fontWeight: '600'
@@ -643,7 +643,7 @@ export default function BookmarksPage() {
             cursor: 'pointer'
           }}>
             <span style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               fontSize: 'var(--font-size-lg)',
               lineHeight: '24px'
             }}>{page}</span>
@@ -662,15 +662,15 @@ export default function BookmarksPage() {
           cursor: 'pointer'
         }}>
           <span style={{
-            color: '#FFFFFF',
+            color: 'var(--color-text-primary)',
             fontSize: 'var(--font-size-lg)',
             lineHeight: '24px'
           }}>&gt;</span>
         </div>
-                    </div>
+      </div>
 
-              {/* 样式定义 */}
-              <style jsx>{`
+      {/* 样式定义 */}
+      <style jsx>{`
                 input::placeholder {
                   color: var(--color-text-muted);
                   opacity: 1;
