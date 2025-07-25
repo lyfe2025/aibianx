@@ -812,7 +812,8 @@ div.hero-subtitle *,
 
 /* 皇冠图标主题优化 - 与组件内逻辑保持一致 */
 [data-theme="light"] .crown-icon {
-  color: #F59E0B !important; /* 亮色模式使用黄色 */
+  color: #F59E0B !important;
+  /* 亮色模式使用黄色 */
   filter: drop-shadow(0 1px 3px rgba(245, 158, 11, 0.35)) !important;
 }
 
@@ -2238,17 +2239,20 @@ html {
 /* 亮色主题下的按钮增强 */
 [data-theme="light"] .btn--gradient {
   box-shadow: 0px 2px 12px 0px rgba(59, 130, 246, 0.25);
-  color: #FFFFFF !important; /* 确保渐变按钮在亮色模式下文字始终为白色 */
+  color: #FFFFFF !important;
+  /* 确保渐变按钮在亮色模式下文字始终为白色 */
 }
 
 [data-theme="light"] .btn--gradient:hover:not(:disabled) {
   box-shadow: 0px 4px 16px 0px rgba(59, 130, 246, 0.35);
   transform: translateY(-2px);
-  color: #FFFFFF !important; /* 确保悬停状态下文字也是白色 */
+  color: #FFFFFF !important;
+  /* 确保悬停状态下文字也是白色 */
 }
 
 [data-theme="light"] .btn--gradient:active:not(:disabled) {
-  color: #FFFFFF !important; /* 确保点击状态下文字也是白色 */
+  color: #FFFFFF !important;
+  /* 确保点击状态下文字也是白色 */
 }
 
 /* 确保渐变按钮内的所有文字元素在亮色模式下都是白色 */
@@ -2401,12 +2405,18 @@ html {
 }
 
 /* 3. 其他分类选中状态：深色背景 + 白色文字 */
-[data-theme="light"] button[style*="background: rgba(12, 30, 71, 0.80)"],    /* 技术指南 */
-[data-theme="light"] button[style*="background: rgba(58, 23, 8, 0.80)"],     /* 变现心得 */
-[data-theme="light"] button[style*="background: rgba(12, 40, 23, 0.80)"],    /* 实战案例 */
-[data-theme="light"] button[style*="background: rgba(30, 12, 71, 0.80)"],    /* AI工具 */
-[data-theme="light"] button[style*="background: rgba(30, 58, 138, 0.80)"],   /* 前沿技术 */
-[data-theme="light"] button[style*="background: rgba(127, 29, 29, 0.80)"] {  /* 热门趋势 */
+[data-theme="light"] button[style*="background: rgba(12, 30, 71, 0.80)"],
+/* 技术指南 */
+[data-theme="light"] button[style*="background: rgba(58, 23, 8, 0.80)"],
+/* 变现心得 */
+[data-theme="light"] button[style*="background: rgba(12, 40, 23, 0.80)"],
+/* 实战案例 */
+[data-theme="light"] button[style*="background: rgba(30, 12, 71, 0.80)"],
+/* AI工具 */
+[data-theme="light"] button[style*="background: rgba(30, 58, 138, 0.80)"],
+/* 前沿技术 */
+[data-theme="light"] button[style*="background: rgba(127, 29, 29, 0.80)"] {
+  /* 热门趋势 */
   color: #FFFFFF !important;
 }
 

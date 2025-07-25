@@ -295,7 +295,7 @@ export function MainContentSection() {
                                 onClick={() => window.location.href = '/weekly'}
                                 style={{
                                     background: 'var(--gradient-primary)',
-                                    border: '2px solid transparent',
+                                    border: 'none',
                                     borderRadius: '8px',
                                     padding: '16px 24px',
                                     color: 'var(--color-text-primary)',
