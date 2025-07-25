@@ -244,7 +244,7 @@ export function HeroSectionNew() {
                     ref={subtitle1Ref}
                     className="hero-subtitle-animation"
                     style={{
-                        color: '#9CA3AF', // 与周刊PageHeader完全相同的颜色
+                        color: 'var(--color-text-muted)', // 主题适配的次要文字颜色
                         fontSize: '20px',
                         fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                         fontWeight: '400',
@@ -270,7 +270,7 @@ export function HeroSectionNew() {
                     ref={subtitle2Ref}
                     className="hero-subtitle-animation"
                     style={{
-                        color: '#9CA3AF', // 与周刊PageHeader完全相同的颜色
+                        color: 'var(--color-text-muted)', // 主题适配的次要文字颜色
                         fontSize: '20px',
                         fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
                         fontWeight: '400',
@@ -390,7 +390,7 @@ export function HeroSectionNew() {
                         }}
                     >
                         <div style={{
-                            color: '#FFFFFF',
+                            color: 'var(--color-text-primary)',
                             fontFamily: 'Arial',
                             fontSize: '14px',
                             lineHeight: '18px',

@@ -2609,3 +2609,23 @@ html {
     /* 16px 8px，最小安全间距 */
   }
 }
+
+/* 关于页面专用样式 - 确保间距稳定应用 */
+.about-mission-section {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+  margin-bottom: 74px !important;
+}
+
+.about-mission-cards-container {
+  display: flex !important;
+  gap: 40px !important;
+  width: 1200px !important;
+}
+
+.about-mission-title-section {
+  text-align: center !important;
+  padding-top: 32px !important;
+  margin-bottom: 64px !important;
+}

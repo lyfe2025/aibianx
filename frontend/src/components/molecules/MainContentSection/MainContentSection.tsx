@@ -362,6 +362,7 @@ export function MainContentSection() {
                                 lineHeight: '30px',
                                 margin: 0,
                                 marginTop: '36px',
+                                marginBottom: '24px', // 增加底部间距，与下方内容形成呼吸感
                                 paddingLeft: '36px',
                                 width: '200px',
                                 whiteSpace: 'nowrap'
@@ -372,13 +373,14 @@ export function MainContentSection() {
                             {/* 优势列表 */}
                             <div style={{
                                 display: 'flex',
-                                flexDirection: 'column'
+                                flexDirection: 'column',
+                                gap: '24px', // 统一使用24px间距，提供更好的呼吸感
+                                paddingBottom: '36px' // 与卡片底部保持距离
                             }}>
                                 {/* 高质量内容 */}
                                 <div style={{
                                     display: 'flex',
-                                    paddingLeft: '36px',
-                                    marginBottom: '16px'
+                                    paddingLeft: '36px'
                                 }}>
                                     <Icon name="community-advantage-new" style={{
                                         color: 'var(--color-primary-blue)',
@@ -416,8 +418,7 @@ export function MainContentSection() {
                                 {/* 实战经验 */}
                                 <div style={{
                                     display: 'flex',
-                                    paddingLeft: '36px',
-                                    marginBottom: '16px'
+                                    paddingLeft: '36px'
                                 }}>
                                     <Icon name="community-support-new" style={{
                                         color: 'var(--color-primary-blue)',
@@ -455,8 +456,7 @@ export function MainContentSection() {
                                 {/* 持续更新 */}
                                 <div style={{
                                     display: 'flex',
-                                    paddingLeft: '36px',
-                                    marginBottom: '24px'
+                                    paddingLeft: '36px'
                                 }}>
                                     <Icon name="continuous-update-new" style={{
                                         color: 'var(--color-primary-blue)',
@@ -640,7 +640,7 @@ export function MainContentSection() {
                                     不要错过任何机会
                                 </h3>
                                 <Icon name="notification-bell" style={{
-                                    color: '#3B82F6',
+                                    color: 'var(--color-primary-blue)',
                                     width: '20px',
                                     height: '20px',
                                     marginTop: '3.5px'
@@ -648,7 +648,7 @@ export function MainContentSection() {
                             </div>
 
                             <div style={{
-                                color: '#D1D5DB',
+                                color: 'var(--color-text-secondary)',
                                 fontSize: '16px',
                                 lineHeight: '20px',
                                 width: '400px',
@@ -717,7 +717,7 @@ export function MainContentSection() {
                                         border: 'none',
                                         borderRadius: '0 8px 8px 0',
                                         padding: '14px 16px',
-                                        color: '#FFFFFF',
+                                        color: 'var(--color-text-primary)',
                                         fontSize: '14px',
                                         lineHeight: '16px',
                                         cursor: 'pointer',

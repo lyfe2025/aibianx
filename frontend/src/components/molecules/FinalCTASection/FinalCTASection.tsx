@@ -23,15 +23,15 @@ export function FinalCTASection() {
     // 核心价值点 - 使用设计稿中的图标
     const benefits = [
         {
-            icon: 'drive-innovation-feature',
+            icon: 'drive-innovation-new',
             title: '掌握前沿AI工具和变现策略'
         },
         {
-            icon: 'weekly-update-feature',
+            icon: 'continuous-update-new',
             title: '每周更新实战案例和变现干货'
         },
         {
-            icon: 'ai-guidance-feature',
+            icon: 'one-on-one-consulting-new',
             title: '专业指导快速实现AI创业'
         }
     ]
@@ -112,7 +112,7 @@ export function FinalCTASection() {
 
                         {/* 副标题 - 深色背景专用白色文字 */}
                         <div style={{
-                            color: '#FFFFFF', // 固定白色，确保在深色背景上清晰可见
+                            color: 'var(--color-text-primary)', // 主题适配的主要文字颜色
                             fontSize: 'var(--font-size-2xl)',
                             fontFamily: 'var(--font-family-primary)',
                             lineHeight: '28px',
@@ -146,33 +146,31 @@ export function FinalCTASection() {
                                         paddingRight: index === 0 ? '19px' : '0'
                                     }}
                                 >
-                                    {/* 图标圆形背景 - 主题适配优化 */}
+                                    {/* 图标圆形背景 - 使用透明度风格与关于界面保持一致 */}
                                     <div style={{
-                                        background: theme === 'light'
-                                            ? 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)' // 亮色模式：蓝色渐变
-                                            : 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)', // 暗色模式：蓝色渐变
+                                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 15%, rgba(6, 182, 212, 0.15) 85%)',
                                         borderRadius: '50%',
-                                        padding: '10px',
+                                        padding: '14px',
                                         display: 'flex',
-                                        width: '40px',
-                                        height: '40px',
+                                        width: '60px',
+                                        height: '60px',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        boxShadow: '0 4px 12px rgba(59, 130, 246, 0.2)'
+                                        boxShadow: '0 2px 8px rgba(59, 130, 246, 0.12)'
                                     }}>
                                         <Icon
                                             name={benefit.icon}
-                                            size="sm"
+                                            size="lg"
                                             style={{
-                                                width: '20px',
-                                                height: '20px',
-                                                color: '#FFFFFF'
+                                                width: '24px',
+                                                height: '24px',
+                                                color: 'var(--color-primary-blue)'
                                             }}
                                         />
                                     </div>
                                     {/* 功能描述文字 - 深色背景专用白色文字 */}
                                     <div style={{
-                                        color: '#FFFFFF', // 固定白色，确保在深色背景上清晰可见
+                                        color: 'var(--color-text-primary)', // 主题适配的主要文字颜色
                                         fontSize: 'var(--font-size-lg)',
                                         fontFamily: 'var(--font-family-primary)',
                                         lineHeight: '28px',
@@ -229,7 +227,7 @@ export function FinalCTASection() {
 
                         {/* 表单描述 - 优化对比度 */}
                         <div style={{
-                            color: '#9CA3AF', // 使用固定的中性灰色，确保在白色背景上有良好对比度
+                            color: 'var(--color-text-muted)', // 主题适配的次要文字颜色
                             fontSize: 'var(--font-size-lg)',
                             fontFamily: 'var(--font-family-primary)',
                             lineHeight: '24px',
@@ -268,7 +266,7 @@ export function FinalCTASection() {
                             <Icon name="input-email-icon" size="sm" style={{
                                 width: '20px',
                                 height: '20px',
-                                color: '#3B82F6'
+                                color: 'var(--color-primary-blue)'
                             }} />
                             <div style={{
                                 width: '368px',
@@ -337,7 +335,7 @@ export function FinalCTASection() {
                             <Icon name="input-email-icon" size="sm" style={{
                                 width: '20px',
                                 height: '20px',
-                                color: '#3B82F6'
+                                color: 'var(--color-primary-blue)'
                             }} />
                             <div style={{
                                 width: '368px',
@@ -403,7 +401,7 @@ export function FinalCTASection() {
                             cursor: 'pointer'
                         }} onClick={handleSubmit}>
                             <div style={{
-                                color: '#FFFFFF',
+                                color: 'var(--color-text-primary)',
                                 lineHeight: '28px',
                                 textAlign: 'center',
                                 justifyContent: 'center',

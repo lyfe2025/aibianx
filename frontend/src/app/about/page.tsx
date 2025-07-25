@@ -46,12 +46,7 @@ export default function AboutPage() {
                     />
 
                     {/* 我们的使命标题 */}
-                    <div style={{
-                        textAlign: 'center',
-                        paddingTop: '32px',
-                        marginBottom: '64px !important'
-                        // 增加间距从46px到64px，使布局更加舒展
-                    }}>
+                    <div className="about-mission-title-section">
                         <GradientText
                             size="6xl"
                             weight="bold"
@@ -64,17 +59,8 @@ export default function AboutPage() {
                     </div>
 
                     {/* 三个使命卡片 */}
-                    <section style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        width: '100%',
-                        marginBottom: '74px'
-                    }}>
-                        <div style={{
-                            display: 'flex',
-                            gap: '40px',
-                            width: '1200px'
-                        }}>
+                    <section className="about-mission-section">
+                        <div className="about-mission-cards-container">
                             {/* 分享知识 - 蓝色背景 */}
                             <GlassCard variant="default" style={{
                                 flex: 1,
@@ -145,7 +131,7 @@ export default function AboutPage() {
                                     <Icon
                                         name="drive-innovation-new"
                                         size="lg"
-                                        style={{ color: '#22C55E' }}
+                                        style={{ color: 'var(--color-success)' }}
                                     />
                                 </div>
 
@@ -192,7 +178,7 @@ export default function AboutPage() {
                                     <Icon
                                         name="enable-monetization-new"
                                         size="lg"
-                                        style={{ color: '#FB923C' }}
+                                        style={{ color: 'var(--color-orange)' }}
                                     />
                                 </div>
 
@@ -239,7 +225,7 @@ export default function AboutPage() {
                             fontSize: '18px',
                             lineHeight: '28.8px',
                             textAlign: 'center',
-                            marginBottom: 'var(--card-gap-lg)'
+                            marginBottom: '64px'
                         }}>
                             开通会员，获取完整的AI变现资源和专业指导，快速启动你的AI赚钱之旅。
                         </p>
@@ -277,7 +263,7 @@ export default function AboutPage() {
                                         justifyContent: 'center',
                                         boxShadow: '0 2px 8px rgba(59, 130, 246, 0.12)'
                                     }}>
-                                        <Icon name="ai-tool-library-new" size="md" style={{ color: '#3B82F6' }} />
+                                        <Icon name="ai-tool-library-new" size="md" style={{ color: 'var(--color-primary-blue)' }} />
                                     </div>
 
                                     <h3 style={{
@@ -320,7 +306,7 @@ export default function AboutPage() {
                                         justifyContent: 'center',
                                         boxShadow: '0 2px 8px rgba(34, 197, 94, 0.12)'
                                     }}>
-                                        <Icon name="success-cases-new" size="md" style={{ color: '#22C55E' }} />
+                                        <Icon name="success-cases-new" size="md" style={{ color: 'var(--color-success)' }} />
                                     </div>
 
                                     <h3 style={{
@@ -363,7 +349,7 @@ export default function AboutPage() {
                                         justifyContent: 'center',
                                         boxShadow: '0 2px 8px rgba(168, 85, 247, 0.12)'
                                     }}>
-                                        <Icon name="community-support-new" size="md" style={{ color: '#A855F7' }} />
+                                        <Icon name="community-support-new" size="md" style={{ color: 'var(--color-primary-purple)' }} />
                                     </div>
 
                                     <h3 style={{
@@ -406,7 +392,7 @@ export default function AboutPage() {
                                         justifyContent: 'center',
                                         boxShadow: '0 2px 8px rgba(251, 146, 60, 0.12)'
                                     }}>
-                                        <Icon name="one-on-one-consulting-new" size="md" style={{ color: '#FB923C' }} />
+                                        <Icon name="one-on-one-consulting-new" size="md" style={{ color: 'var(--color-orange)' }} />
                                     </div>
 
                                     <h3 style={{
@@ -665,7 +651,7 @@ export default function AboutPage() {
                             fontSize: '18px',
                             lineHeight: '28.8px',
                             textAlign: 'center',
-                            marginBottom: '47px'
+                            marginBottom: '64px'
                         }}>
                             在AI快速发展的时代，我们提供的不仅是知识，更是实用的变现路径和专业的指导支持
                         </p>
@@ -754,7 +740,7 @@ export default function AboutPage() {
                                             justifyContent: 'center',
                                             boxShadow: '0 2px 8px rgba(34, 197, 94, 0.12)'
                                         }}>
-                                            <Icon name="continuous-update-new" size="sm" style={{ color: '#22C55E' }} />
+                                            <Icon name="continuous-update-new" size="sm" style={{ color: 'var(--color-success)' }} />
                                         </div>
                                         <h3 style={{
                                             color: 'var(--color-text-primary)',
@@ -803,7 +789,7 @@ export default function AboutPage() {
                                             justifyContent: 'center',
                                             boxShadow: '0 2px 8px rgba(168, 85, 247, 0.12)'
                                         }}>
-                                            <Icon name="community-advantage-new" size="sm" style={{ color: '#A855F7' }} />
+                                            <Icon name="community-advantage-new" size="sm" style={{ color: 'var(--color-primary-purple)' }} />
                                         </div>
                                         <h3 style={{
                                             color: 'var(--color-text-primary)',
@@ -953,7 +939,7 @@ export default function AboutPage() {
                                                 flexShrink: 0,
                                                 boxShadow: '0 2px 8px rgba(59, 130, 246, 0.12)'
                                             }}>
-                                                <Icon name="email-contact-new" size="sm" style={{ color: 'var(--color-primary-blue)' }} />
+                                                <Icon name="email-icon" size="sm" style={{ color: 'var(--color-primary-blue)' }} />
                                             </div>
                                             <span style={{
                                                 color: 'var(--color-text-muted)',
@@ -983,7 +969,7 @@ export default function AboutPage() {
                                                 flexShrink: 0,
                                                 boxShadow: '0 2px 8px rgba(34, 197, 94, 0.12)'
                                             }}>
-                                                <Icon name="phone-contact-new" size="sm" style={{ color: '#22C55E' }} />
+                                                <Icon name="clock-icon" size="sm" style={{ color: 'var(--color-success)' }} />
                                             </div>
                                             <span style={{
                                                 color: 'var(--color-text-muted)',
@@ -1013,7 +999,7 @@ export default function AboutPage() {
                                                 flexShrink: 0,
                                                 boxShadow: '0 2px 8px rgba(251, 146, 60, 0.12)'
                                             }}>
-                                                <Icon name="contact-icon" size="sm" style={{ color: '#FB923C' }} />
+                                                <Icon name="user-icon" size="sm" style={{ color: 'var(--color-orange)' }} />
                                             </div>
                                             <span style={{
                                                 color: 'var(--color-text-muted)',
