@@ -166,7 +166,7 @@ export function AppHeader() {
                 willChange: 'transform, background-color, border-color, backdrop-filter'
             }}>
                 <div style={{
-                    maxWidth: '1504px',
+                    maxWidth: '1440px', // 🔧 从1504px调整为1440px，与Container系统一致
                     margin: '0 auto',
                     padding: '27.5px 32px',
                     height: '100%',

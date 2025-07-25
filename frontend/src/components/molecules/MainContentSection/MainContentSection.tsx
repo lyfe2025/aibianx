@@ -17,6 +17,11 @@ import Link from 'next/link'
  * - 筛选标签间距：48px
  * - 文章卡片间距：22px（上下文章间）
  * - 右侧卡片间距：32px
+ * 
+ * 移动端响应式优化：
+ * - 767px及以下：单列布局，侧边栏在主内容下方
+ * - 768px-1023px：平板适配，调整间距和字体
+ * - 1024px及以上：完整桌面布局
  */
 export function MainContentSection() {
     const [activeFilter, setActiveFilter] = useState('最新')
@@ -71,14 +76,14 @@ export function MainContentSection() {
             background: 'transparent' // 改为透明，让粒子可见
         }}>
             <Container size="xl">
-                <div style={{
+                <div className="main-content-layout" style={{
                     display: 'flex',
                     alignItems: 'stretch',
                     justifyContent: 'center',
                     overflow: 'hidden'
                 }}>
                     {/* 左侧文章列表区域 - 精确宽度822px */}
-                    <div style={{
+                    <div className="main-content-articles" style={{
                         background: 'var(--color-bg-secondary)',
                         backdropFilter: 'blur(12px)',
                         WebkitBackdropFilter: 'blur(12px)',
@@ -90,7 +95,7 @@ export function MainContentSection() {
                         marginRight: '48px'
                     }}>
                         {/* 筛选标签 - 顶部间距36px，左边距36px */}
-                        <div style={{
+                        <div className="filter-tags" style={{
                             display: 'flex',
                             marginTop: '36px',
                             marginLeft: '36px'
@@ -156,7 +161,7 @@ export function MainContentSection() {
                         </div>
 
                         {/* 文章列表 - 左右边距36px，顶部间距20px */}
-                        <div style={{
+                        <div className="articles-list" style={{
                             display: 'flex',
                             flexDirection: 'column',
                             margin: '20px 36px 0 36px'
@@ -178,11 +183,11 @@ export function MainContentSection() {
                                     }}
                                 >
                                     {/* 文章内容区域 */}
-                                    <div style={{
+                                    <div className="article-content" style={{
                                         display: 'flex'
                                     }}>
                                         {/* 文章图片 */}
-                                        <div style={{
+                                        <div className="article-image" style={{
                                             width: '240px',
                                             height: '128px',
                                             borderRadius: '8px',
@@ -194,14 +199,14 @@ export function MainContentSection() {
                                         }} />
 
                                         {/* 文章信息 */}
-                                        <div style={{
+                                        <div className="article-info" style={{
                                             flex: 1,
                                             display: 'flex',
                                             flexDirection: 'column',
                                             paddingTop: '18px'
                                         }}>
                                             {/* 标题 */}
-                                            <h3 style={{
+                                            <h3 className="article-title" style={{
                                                 color: 'var(--color-text-primary)',
                                                 fontSize: '18px',
                                                 fontWeight: '700',
@@ -229,7 +234,7 @@ export function MainContentSection() {
                                     </div>
 
                                     {/* 统计信息 */}
-                                    <div style={{
+                                    <div className="article-stats" style={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         marginLeft: '256px'
@@ -285,7 +290,7 @@ export function MainContentSection() {
                         </div>
 
                         {/* 查看更多按钮 - 底部间距78px，顶部间距10px */}
-                        <div style={{
+                        <div className="view-more-container" style={{
                             display: 'flex',
                             justifyContent: 'center',
                             marginTop: '10px',
@@ -317,7 +322,7 @@ export function MainContentSection() {
                     </div>
 
                     {/* 右侧侧边栏 - 精确宽度410px */}
-                    <div style={{
+                    <div className="main-content-sidebar" style={{
                         display: 'flex',
                         flexDirection: 'column',
                         width: '410px',
@@ -325,7 +330,7 @@ export function MainContentSection() {
                         alignSelf: 'stretch'
                     }}>
                         {/* 为什么选择我们 */}
-                        <div style={{
+                        <div className="why-choose-us" style={{
                             background: 'var(--color-bg-secondary)',
                             backdropFilter: 'blur(12px)',
                             WebkitBackdropFilter: 'blur(12px)',
@@ -474,7 +479,7 @@ export function MainContentSection() {
                         </div>
 
                         {/* 他们都在用 */}
-                        <div style={{
+                        <div className="users-testimonial" style={{
                             background: 'var(--color-bg-secondary)',
                             backdropFilter: 'blur(12px)',
                             WebkitBackdropFilter: 'blur(12px)',
@@ -593,7 +598,7 @@ export function MainContentSection() {
                         </div>
 
                         {/* 不要错过任何机会 */}
-                        <div style={{
+                        <div className="email-subscription" style={{
                             background: theme === 'light'
                                 ? 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)' // 亮色模式：浅灰渐变背景
                                 : 'linear-gradient(135deg, #0C1E47 37%, #1E0C47 63%)', // 暗色模式：深蓝紫渐变
@@ -713,6 +718,273 @@ export function MainContentSection() {
                     </div>
                 </div>
             </Container>
+
+            {/* 移动端响应式样式 */}
+            <style jsx>{`
+                /* 平板端适配 (768px - 1023px) */
+                @media (max-width: 1023px) {
+                    .main-content-layout {
+                        flex-direction: column !important;
+                        align-items: center !important;
+                        gap: 32px !important;
+                    }
+                    
+                    .main-content-articles {
+                        width: 100% !important;
+                        max-width: 600px !important;
+                        margin-right: 0 !important;
+                    }
+                    
+                    .main-content-sidebar {
+                        width: 100% !important;
+                        max-width: 500px !important;
+                    }
+                    
+                    .filter-tags {
+                        flex-wrap: wrap !important;
+                        gap: 16px !important;
+                        margin-left: 24px !important;
+                        margin-top: 24px !important;
+                    }
+                    
+                    .filter-tags button {
+                        margin-right: 0 !important;
+                    }
+                    
+                    .articles-list {
+                        margin: 20px 24px 0 24px !important;
+                    }
+                    
+                    .main-content-article-card {
+                        width: 100% !important;
+                    }
+                    
+                    .article-content {
+                        flex-direction: column !important;
+                    }
+                    
+                    .article-image {
+                        width: 100% !important;
+                        height: 200px !important;
+                        margin-right: 0 !important;
+                        margin-bottom: 16px !important;
+                    }
+                    
+                    .article-info {
+                        padding-top: 0 !important;
+                    }
+                    
+                    .article-title {
+                        width: 100% !important;
+                        font-size: 16px !important;
+                        margin-bottom: 16px !important;
+                    }
+                    
+                    .article-stats {
+                        margin-left: 0 !important;
+                        justify-content: flex-start !important;
+                    }
+                    
+                    .view-more-container {
+                        margin-bottom: 48px !important;
+                    }
+                    
+                    .why-choose-us h3,
+                    .users-testimonial h3 {
+                        padding-left: 24px !important;
+                        width: auto !important;
+                    }
+                    
+                    .why-choose-us > div > div,
+                    .users-testimonial > div {
+                        padding-left: 24px !important;
+                    }
+                    
+                    .users-testimonial .glass-card {
+                        margin: 16px 24px 24px 24px !important;
+                        width: calc(100% - 48px) !important;
+                    }
+                    
+                    .email-subscription {
+                        padding: 24px !important;
+                    }
+                    
+                    .email-subscription > div:first-child {
+                        width: 100% !important;
+                    }
+                    
+                    .email-subscription > div:nth-child(2) {
+                        width: 100% !important;
+                    }
+                    
+                    .email-subscription > div:last-child {
+                        flex-direction: column !important;
+                        gap: 12px !important;
+                    }
+                    
+                    .email-subscription > div:last-child > div {
+                        width: 100% !important;
+                        border-radius: 8px !important;
+                    }
+                    
+                    .email-subscription > div:last-child > button {
+                        width: 100% !important;
+                        border-radius: 8px !important;
+                    }
+                }
+                
+                /* 移动端适配 (767px及以下) */
+                @media (max-width: 767px) {
+                    .main-content-articles {
+                        max-width: 100% !important;
+                        margin: 0 16px !important;
+                    }
+                    
+                    .main-content-sidebar {
+                        max-width: 100% !important;
+                        margin: 0 16px !important;
+                    }
+                    
+                    .filter-tags {
+                        margin-left: 16px !important;
+                        margin-top: 20px !important;
+                        gap: 12px !important;
+                    }
+                    
+                    .filter-tags button {
+                        padding: 6px 16px !important;
+                        font-size: 13px !important;
+                        min-width: 60px !important;
+                    }
+                    
+                    .articles-list {
+                        margin: 16px 16px 0 16px !important;
+                    }
+                    
+                    .article-image {
+                        height: 160px !important;
+                    }
+                    
+                    .article-title {
+                        font-size: 14px !important;
+                        line-height: 20px !important;
+                        margin-bottom: 12px !important;
+                    }
+                    
+                    .view-more-container {
+                        margin-bottom: 32px !important;
+                    }
+                    
+                    .view-more-container button {
+                        width: 100px !important;
+                        padding: 12px 16px !important;
+                        font-size: 12px !important;
+                    }
+                    
+                    .why-choose-us,
+                    .users-testimonial,
+                    .email-subscription {
+                        margin-bottom: 24px !important;
+                    }
+                    
+                    .why-choose-us h3,
+                    .users-testimonial h3 {
+                        padding-left: 16px !important;
+                        margin-top: 24px !important;
+                        font-size: 18px !important;
+                    }
+                    
+                    .why-choose-us > div:last-child {
+                        padding-bottom: 24px !important;
+                        gap: 20px !important;
+                    }
+                    
+                    .why-choose-us > div:last-child > div {
+                        padding-left: 16px !important;
+                    }
+                    
+                    .why-choose-us > div:last-child > div > div:last-child {
+                        width: calc(100% - 56px) !important;
+                    }
+                    
+                    .users-testimonial > div {
+                        padding-left: 16px !important;
+                    }
+                    
+                    .users-testimonial .glass-card {
+                        margin: 16px 16px 24px 16px !important;
+                        width: calc(100% - 32px) !important;
+                        padding: 12px !important;
+                    }
+                    
+                    .users-testimonial .glass-card > div:first-child {
+                        width: 100% !important;
+                        font-size: 14px !important;
+                        line-height: 18px !important;
+                    }
+                    
+                    .email-subscription {
+                        padding: 20px !important;
+                    }
+                    
+                    .email-subscription h3 {
+                        font-size: 16px !important;
+                        width: auto !important;
+                    }
+                    
+                    .email-subscription > div:nth-child(2) {
+                        font-size: 14px !important;
+                        line-height: 18px !important;
+                        white-space: normal !important;
+                        margin-bottom: 20px !important;
+                    }
+                    
+                    .email-subscription input {
+                        font-size: 14px !important;
+                    }
+                    
+                    .email-subscription button {
+                        font-size: 12px !important;
+                        padding: 12px 12px !important;
+                    }
+                }
+                
+                /* 超小屏幕适配 (480px及以下) */
+                @media (max-width: 480px) {
+                    .main-content-articles,
+                    .main-content-sidebar {
+                        margin: 0 8px !important;
+                    }
+                    
+                    .filter-tags {
+                        margin-left: 12px !important;
+                        margin-right: 12px !important;
+                    }
+                    
+                    .articles-list {
+                        margin: 12px !important;
+                    }
+                    
+                    .why-choose-us h3,
+                    .users-testimonial h3 {
+                        padding-left: 12px !important;
+                    }
+                    
+                    .why-choose-us > div:last-child > div,
+                    .users-testimonial > div {
+                        padding-left: 12px !important;
+                    }
+                    
+                    .users-testimonial .glass-card {
+                        margin: 12px !important;
+                        width: calc(100% - 24px) !important;
+                    }
+                    
+                    .email-subscription {
+                        padding: 16px !important;
+                    }
+                }
+            `}</style>
         </section>
     )
 } 

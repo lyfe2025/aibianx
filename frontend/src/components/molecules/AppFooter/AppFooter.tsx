@@ -95,7 +95,7 @@ export function AppFooter() {
         >
             {/* 使用与顶部菜单一致的容器样式 */}
             <div style={{
-                maxWidth: '1504px',
+                maxWidth: '1440px', // 🔧 从1504px调整为1440px，与Container系统一致
                 margin: '0 auto',
                 padding: '0 32px',
                 width: '100%'

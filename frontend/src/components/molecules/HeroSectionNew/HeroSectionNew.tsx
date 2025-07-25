@@ -200,7 +200,7 @@ export function HeroSectionNew() {
 
 
             {/* 主要内容容器 - 彻底避免SSR水合问题 */}
-            <div style={{
+            <div className="hero-content-container" style={{
                 width: '100%', // 🔧 使用100%避免固定像素值造成的问题
                 maxWidth: '800px', // 🔧 使用固定最大宽度，避免vw单位造成的SSR差异
                 margin: '0 auto', // 居中显示
@@ -221,7 +221,7 @@ export function HeroSectionNew() {
                     as="h1"
                     size="8xl"
                     weight="bold"
-                    className="hero-title-animation"
+                    className="hero-title-animation hero-main-title"
                     style={{
                         textAlign: 'center',
                         display: 'flex',
@@ -242,7 +242,7 @@ export function HeroSectionNew() {
                 {/* 第一行副标题 - 使用与周刊相同的颜色和动画 */}
                 <h2
                     ref={subtitle1Ref}
-                    className="hero-subtitle-animation"
+                    className="hero-subtitle-animation hero-subtitle-1"
                     style={{
                         color: 'var(--color-text-muted)', // 主题适配的次要文字颜色
                         fontSize: '20px',
@@ -268,7 +268,7 @@ export function HeroSectionNew() {
                 {/* 第二行副标题 - 使用与周刊相同的颜色和动画 */}
                 <h2
                     ref={subtitle2Ref}
-                    className="hero-subtitle-animation"
+                    className="hero-subtitle-animation hero-subtitle-2"
                     style={{
                         color: 'var(--color-text-muted)', // 主题适配的次要文字颜色
                         fontSize: '20px',
@@ -713,6 +713,121 @@ export function HeroSectionNew() {
                     
                     .hero-subscribe-button {
                         border: 2px solid #FFFFFF !important;
+                    }
+                }
+                
+                /* 移动端响应式优化 */
+                @media (max-width: 1023px) {
+                    .hero-content-container {
+                        max-width: 600px !important;
+                        padding: 0 24px !important;
+                        padding-top: 32px !important;
+                    }
+                    
+                    .hero-main-title {
+                        font-size: 48px !important;
+                        line-height: 56px !important;
+                        min-height: 56px !important;
+                        margin-bottom: 16px !important;
+                    }
+                    
+                    .hero-subtitle-1,
+                    .hero-subtitle-2 {
+                        font-size: 18px !important;
+                        line-height: 28px !important;
+                        min-height: 28px !important;
+                        margin-left: 0 !important;
+                        margin-right: 0 !important;
+                    }
+                    
+                    .hero-email-form {
+                        flex-direction: column !important;
+                        gap: 16px !important;
+                        max-width: 400px !important;
+                    }
+                    
+                    .hero-email-input {
+                        width: 100% !important;
+                        border-radius: 8px !important;
+                    }
+                    
+                    .hero-subscribe-button {
+                        width: 100% !important;
+                        border-radius: 8px !important;
+                    }
+                }
+                
+                @media (max-width: 767px) {
+                    .hero-content-container {
+                        max-width: 100% !important;
+                        padding: 0 16px !important;
+                        padding-top: 24px !important;
+                    }
+                    
+                    .hero-main-title {
+                        font-size: 36px !important;
+                        line-height: 44px !important;
+                        min-height: 44px !important;
+                        white-space: normal !important;
+                        text-align: center !important;
+                        margin-bottom: 20px !important;
+                    }
+                    
+                    .hero-subtitle-1,
+                    .hero-subtitle-2 {
+                        font-size: 16px !important;
+                        line-height: 24px !important;
+                        min-height: 24px !important;
+                        white-space: normal !important;
+                        text-align: center !important;
+                        word-wrap: break-word !important;
+                        overflow-wrap: break-word !important;
+                    }
+                    
+                    .hero-email-form {
+                        max-width: 100% !important;
+                        gap: 12px !important;
+                    }
+                    
+                    .hero-email-input {
+                        padding: 14px 16px !important;
+                        font-size: 16px !important;
+                    }
+                    
+                    .hero-subscribe-button {
+                        padding: 14px 20px !important;
+                        font-size: 16px !important;
+                    }
+                }
+                
+                @media (max-width: 480px) {
+                    .hero-content-container {
+                        padding: 0 12px !important;
+                        padding-top: 20px !important;
+                    }
+                    
+                    .hero-main-title {
+                        font-size: 28px !important;
+                        line-height: 36px !important;
+                        min-height: 36px !important;
+                        margin-bottom: 16px !important;
+                    }
+                    
+                    .hero-subtitle-1,
+                    .hero-subtitle-2 {
+                        font-size: 14px !important;
+                        line-height: 20px !important;
+                        min-height: 20px !important;
+                    }
+                    
+                    .hero-email-input {
+                        padding: 12px 14px !important;
+                        font-size: 14px !important;
+                    }
+                    
+                    .hero-subscribe-button {
+                        padding: 12px 16px !important;
+                        font-size: 14px !important;
                     }
                 }
             `}</style>
