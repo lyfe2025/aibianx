@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Container, GradientButton, GradientText, Input, BackgroundDecoration, HeroBackground3D, AIBrainModel } from '@/components/ui'
+import { Container, GradientButton, GradientText, Input, BackgroundDecoration, HeroBackground3D, AIBrainModel, useToast, ToastContainer } from '@/components/ui'
 
 /**
  * 新版英雄区块组件 - HeroSectionNew
@@ -18,6 +18,7 @@ export function HeroSectionNew() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
     const subtitle1Ref = useRef<HTMLDivElement>(null)
+    const { toasts, showSuccess, showError, removeToast } = useToast()
     const subtitle2Ref = useRef<HTMLDivElement>(null)
 
     // 🔧 使用ref直接控制副标题颜色，实时监控并修复
@@ -32,15 +33,15 @@ export function HeroSectionNew() {
             element.style.removeProperty('-webkit-background-clip')
             element.style.removeProperty('-webkit-text-fill-color')
 
-                        // 强制设置颜色 - 多种方式确保生效（使用与周刊相同的颜色）
+            // 强制设置颜色 - 多种方式确保生效（使用与周刊相同的颜色）
             element.style.setProperty('color', '#9CA3AF', 'important')
             element.style.setProperty('background', 'none', 'important')
             element.style.setProperty('-webkit-text-fill-color', 'unset', 'important')
             element.style.setProperty('text-fill-color', 'unset', 'important')
-            
+
             // 直接设置属性
-            element.setAttribute('style', 
-                element.getAttribute('style')?.replace(/color:\s*[^;]+;?/g, '') + 
+            element.setAttribute('style',
+                element.getAttribute('style')?.replace(/color:\s*[^;]+;?/g, '') +
                 ';color: #9CA3AF !important;'
             )
 
@@ -118,7 +119,14 @@ export function HeroSectionNew() {
 
     const handleSubscribe = async () => {
         if (!email.trim()) {
-            alert('请输入您的邮箱')
+            showError('请输入邮箱', '邮箱地址不能为空')
+            return
+        }
+
+        // 简单的邮箱验证
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(email)) {
+            showError('邮箱格式不正确', '请输入有效的邮箱地址')
             return
         }
 
@@ -127,10 +135,14 @@ export function HeroSectionNew() {
         // 模拟订阅请求
         try {
             await new Promise(resolve => setTimeout(resolve, 1000))
-            alert(`感谢订阅！我们将向 ${email} 发送最新的AI变现干货`)
+            showSuccess(
+                '订阅成功！',
+                `感谢订阅！我们将向 ${email} 发送最新的AI变现干货`,
+                { duration: 5000 }
+            )
             setEmail('')
         } catch (error) {
-            alert('订阅失败，请稍后重试')
+            showError('订阅失败', '网络错误，请稍后重试')
         } finally {
             setIsSubmitting(false)
         }
@@ -222,8 +234,8 @@ export function HeroSectionNew() {
                     AI变现从这里开始
                 </GradientText>
 
-                                {/* 第一行副标题 - 使用与周刊相同的颜色和动画 */}
-                <h2 
+                {/* 第一行副标题 - 使用与周刊相同的颜色和动画 */}
+                <h2
                     ref={subtitle1Ref}
                     className="hero-subtitle-animation"
                     style={{
@@ -248,8 +260,8 @@ export function HeroSectionNew() {
                     每周获取独家AI变现策略和工具，助你快速实现财务自由
                 </h2>
 
-                                {/* 第二行副标题 - 使用与周刊相同的颜色和动画 */}
-                <h2 
+                {/* 第二行副标题 - 使用与周刊相同的颜色和动画 */}
+                <h2
                     ref={subtitle2Ref}
                     className="hero-subtitle-animation"
                     style={{
@@ -272,15 +284,16 @@ export function HeroSectionNew() {
                     订阅每周精选的AI变现干货，抢占AI红利时代的第一波机会
                 </h2>
 
-                {/* 邮箱订阅表单 - 修复换行问题 */}
-                <div style={{
+                {/* 邮箱订阅表单 - 响应式布局优化 */}
+                <div className="hero-email-form" style={{
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'stretch',
-                    justifyContent: 'center' // 居中表单
+                    justifyContent: 'center',
+                    gap: '0px' // 桌面端无间距，移动端通过CSS控制
                 }}>
-                    {/* 邮箱输入框 - 修复换行问题 */}
-                    <div style={{
+                    {/* 邮箱输入框 - 响应式优化 */}
+                    <div className="hero-email-input" style={{
                         background: isFocused ? 'rgba(18, 18, 18, 0.70)' : 'rgba(18, 18, 18, 0.50)',
                         border: `1px solid ${isFocused ? '#3B82F6' : '#2A2A2A'}`,
                         borderRadius: '8px 0 0 8px',
@@ -293,7 +306,7 @@ export function HeroSectionNew() {
                         paddingRight: '20px',
                         paddingTop: '16px',
                         paddingBottom: '15.99px',
-                        flexShrink: 0, // 防止压缩
+                        flexShrink: 0,
                         transition: 'all 0.2s ease',
                         boxShadow: isFocused ? '0 0 0 2px rgba(59, 130, 246, 0.1)' : 'none'
                     }}>
@@ -321,7 +334,7 @@ export function HeroSectionNew() {
                                     background: 'transparent',
                                     border: 'none',
                                     outline: 'none',
-                                    whiteSpace: 'nowrap', // 防止换行
+                                    whiteSpace: 'nowrap',
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                     minHeight: '24px'
@@ -335,11 +348,11 @@ export function HeroSectionNew() {
                         </div>
                     </div>
 
-                    {/* 订阅按钮 - 修复换行问题 */}
-                    <div style={{
+                    {/* 订阅按钮 - 响应式优化 */}
+                    <div className="hero-subscribe-button" style={{
                         background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
                         borderRadius: '0 8px 8px 0',
-                        width: '120px', // 增加宽度确保中文不换行
+                        width: '120px',
                         height: '56px',
                         display: 'flex',
                         alignItems: 'center',
@@ -350,7 +363,9 @@ export function HeroSectionNew() {
                         paddingBottom: '18.99px',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
-                        flexShrink: 0 // 防止压缩
+                        flexShrink: 0,
+                        touchAction: 'manipulation', // 触摸优化
+                        WebkitTapHighlightColor: 'transparent'
                     }}
                         onClick={handleSubscribe}
                         onMouseOver={(e) => {
@@ -373,7 +388,7 @@ export function HeroSectionNew() {
                             justifyContent: 'center',
                             alignItems: 'center',
                             display: 'flex',
-                            whiteSpace: 'nowrap', // 防止换行
+                            whiteSpace: 'nowrap',
                             overflow: 'hidden',
                             minHeight: '18px'
                         }}>
@@ -382,23 +397,23 @@ export function HeroSectionNew() {
                     </div>
                 </div>
 
-                {/* AI神经网络大脑3D模型 - 限制在邮箱输入框下方的小区域 */}
-                <div style={{
+                {/* AI神经网络大脑3D模型 - 响应式显示控制 */}
+                <div className="hero-3d-model" style={{
                     position: 'absolute',
-                    top: '420px', // 位于邮箱输入框下方
+                    top: '420px',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    width: '600px', // 缩小宽度
-                    height: '200px', // 限制高度
-                    zIndex: 5, // 在背景之上，但在主要内容之下
-                    pointerEvents: 'none', // 不干扰用户交互
-                    overflow: 'hidden' // 确保3D内容不溢出
+                    width: '600px',
+                    height: '200px',
+                    zIndex: 5,
+                    pointerEvents: 'none',
+                    overflow: 'hidden'
                 }}>
                     <AIBrainModel />
                 </div>
             </div>
 
-            {/* 响应式样式 - 修复换行问题 */}
+            {/* 响应式样式 - 完整移动端优化 */}
             <style jsx>{`
                 /* 标题动画 - 与周刊页面保持一致 */
                 @keyframes fadeInUp {
@@ -421,112 +436,262 @@ export function HeroSectionNew() {
                     animation: fadeInUp 1s ease-out 0.2s both;
                     transform: translateZ(0);
                 }
-                /* 中等屏幕适配 (768px - 1199px) */
-                @media (max-width: 1199px) {
+
+                /* 平板端适配 (768px - 1023px) */
+                @media (min-width: 768px) and (max-width: 1023px) {
+                    section {
+                        padding-top: 120px !important;
+                        padding-bottom: 60px !important;
+                    }
+                    
                     section > div {
-                        width: 100% !important;
-                        max-width: 90vw !important;
-                        padding: 0 var(--spacing-6) !important;
+                        max-width: 90% !important;
+                        padding: 0 24px !important;
                     }
                     
-                    /* 主标题在中等屏幕确保不换行 */
+                    /* 主标题适配 */
                     section > div > div:first-child {
-                        font-size: 48px !important;
-                        line-height: 56px !important;
-                        white-space: nowrap !important;
+                        font-size: 52px !important;
+                        line-height: 60px !important;
+                        margin-bottom: 16px !important;
                     }
                     
-                    /* 副标题在中等屏幕允许换行 */
+                    /* 副标题适配 */
                     section > div > div:nth-child(2),
                     section > div > div:nth-child(3) {
-                        white-space: normal !important;
-                        text-align: center !important;
+                        font-size: 18px !important;
+                        line-height: 26px !important;
                         max-width: 600px !important;
                         margin-left: auto !important;
                         margin-right: auto !important;
                     }
                     
-                    /* 表单布局调整 */
-                    section > div > div:nth-child(4) {
-                        flex-direction: column !important;
-                        align-items: center !important;
-                        gap: 16px !important;
+                    /* 表单布局保持水平 */
+                    .hero-email-form {
+                        max-width: 500px !important;
+                        margin: 0 auto !important;
                     }
                     
-                    /* 输入框调整 */
-                    section > div > div:nth-child(4) > div:first-child {
-                        width: 100% !important;
-                        max-width: 400px !important;
-                        border-radius: 8px !important;
+                    .hero-email-input {
+                        width: 300px !important;
                     }
                     
-                    /* 按钮调整 */
-                    section > div > div:nth-child(4) > div:last-child {
-                        width: 200px !important;
-                        border-radius: 8px !important;
+                    .hero-subscribe-button {
+                        width: 140px !important;
                     }
                 }
                 
                 /* 移动端适配 (767px及以下) */
                 @media (max-width: 767px) {
                     section {
-                        padding-top: 100px !important;
+                        padding-top: 80px !important;
                         padding-bottom: 40px !important;
+                        min-height: auto !important;
                     }
                     
                     section > div {
-                        width: 95vw !important;
-                        padding: 0 var(--spacing-4) !important;
+                        width: 100% !important;
+                        max-width: 100% !important;
+                        padding: 0 16px !important;
                     }
                     
-                    /* 主标题字体调整，确保不换行 */
+                    /* 主标题移动端优化 */
                     section > div > div:first-child {
-                        font-size: 36px !important;
-                        line-height: 44px !important;
-                        white-space: nowrap !important;
-                        overflow: hidden !important;
+                        font-size: 32px !important;
+                        line-height: 38px !important;
+                        margin-bottom: 16px !important;
+                        white-space: normal !important;
+                        text-align: center !important;
                     }
                     
-                    /* 副标题字体调整，允许换行 */
+                    /* 副标题移动端优化 */
                     section > div > div:nth-child(2),
                     section > div > div:nth-child(3) {
                         font-size: 16px !important;
-                        line-height: 24px !important;
+                        line-height: 22px !important;
                         white-space: normal !important;
                         margin-left: 0 !important;
                         margin-right: 0 !important;
-                        text-align: center !important;
+                        margin-bottom: 12px !important;
+                        padding: 0 8px !important;
+                    }
+                    
+                    section > div > div:nth-child(3) {
+                        margin-bottom: 32px !important;
+                    }
+                    
+                    /* 表单移动端垂直布局 */
+                    .hero-email-form {
+                        flex-direction: column !important;
+                        gap: 12px !important;
+                        align-items: center !important;
+                        width: 100% !important;
+                        max-width: 360px !important;
+                        margin: 0 auto !important;
+                    }
+                    
+                    /* 输入框移动端优化 */
+                    .hero-email-input {
+                        width: 100% !important;
+                        max-width: 320px !important;
+                        border-radius: 12px !important;
+                        height: 52px !important;
+                        min-height: 52px !important;
+                        padding: 16px 20px !important;
+                    }
+                    
+                    .hero-email-input input {
+                        font-size: 16px !important; /* 防止iOS缩放 */
+                        height: 20px !important;
+                        min-height: 20px !important;
+                    }
+                    
+                    /* 按钮移动端优化 */
+                    .hero-subscribe-button {
+                        width: 100% !important;
+                        max-width: 320px !important;
+                        border-radius: 12px !important;
+                        height: 52px !important;
+                        min-height: 52px !important;
+                        padding: 16px 24px !important;
+                        font-weight: 600 !important;
+                        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+                    }
+                    
+                    .hero-subscribe-button:active {
+                        transform: scale(0.98) !important;
+                        transition: transform 0.1s ease !important;
+                    }
+                    
+                    .hero-subscribe-button div {
+                        font-size: 16px !important;
+                        font-weight: 600 !important;
+                    }
+                    
+                    /* 3D模型移动端隐藏 */
+                    .hero-3d-model {
+                        display: none !important;
                     }
                 }
                 
-                /* 超小屏幕 (480px及以下) */
+                /* 小屏幕移动端优化 (480px及以下) */
                 @media (max-width: 480px) {
-                    /* 主标题进一步缩小，确保不换行 */
-                    section > div > div:first-child {
-                        font-size: 28px !important;
-                        line-height: 36px !important;
-                        white-space: nowrap !important;
+                    section {
+                        padding-top: 60px !important;
+                        padding-bottom: 30px !important;
                     }
                     
-                    /* 副标题进一步缩小 */
+                    section > div {
+                        padding: 0 12px !important;
+                    }
+                    
+                    /* 主标题小屏优化 */
+                    section > div > div:first-child {
+                        font-size: 28px !important;
+                        line-height: 34px !important;
+                        margin-bottom: 12px !important;
+                    }
+                    
+                    /* 副标题小屏优化 */
                     section > div > div:nth-child(2),
                     section > div > div:nth-child(3) {
                         font-size: 14px !important;
                         line-height: 20px !important;
-                        white-space: normal !important;
+                        margin-bottom: 10px !important;
+                        padding: 0 4px !important;
                     }
                     
-                    /* 表单在超小屏幕的调整 */
-                    section > div > div:nth-child(4) > div:first-child {
-                        width: 100% !important;
+                    section > div > div:nth-child(3) {
+                        margin-bottom: 28px !important;
+                    }
+                    
+                    /* 表单小屏优化 */
+                    .hero-email-form {
+                        max-width: 300px !important;
+                        gap: 10px !important;
+                    }
+                    
+                    .hero-email-input {
                         max-width: 280px !important;
+                        height: 48px !important;
+                        min-height: 48px !important;
+                        padding: 14px 16px !important;
                     }
                     
-                    section > div > div:nth-child(4) > div:last-child {
-                        width: 150px !important;
+                    .hero-subscribe-button {
+                        max-width: 280px !important;
+                        height: 48px !important;
+                        min-height: 48px !important;
+                        padding: 14px 20px !important;
+                    }
+                    
+                    .hero-subscribe-button div {
+                        font-size: 14px !important;
+                    }
+                }
+                
+                /* 触摸设备优化 */
+                @media (hover: none) and (pointer: coarse) {
+                    .hero-subscribe-button {
+                        touch-action: manipulation !important;
+                        -webkit-tap-highlight-color: transparent !important;
+                    }
+                    
+                    .hero-subscribe-button:active {
+                        transform: scale(0.95) !important;
+                        transition: transform 0.1s ease !important;
+                    }
+                    
+                    .hero-email-input input {
+                        font-size: 16px !important; /* 防止iOS Safari缩放 */
+                        touch-action: manipulation !important;
+                    }
+                    
+                    .hero-email-input input:focus {
+                        outline: 2px solid #3B82F6 !important;
+                        outline-offset: 2px !important;
+                    }
+                }
+                
+                /* 高分辨率屏幕优化 */
+                @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+                    section > div > div:first-child {
+                        text-rendering: optimizeLegibility !important;
+                        -webkit-font-smoothing: antialiased !important;
+                        -moz-osx-font-smoothing: grayscale !important;
+                    }
+                }
+                
+                /* 减少动画的用户偏好 */
+                @media (prefers-reduced-motion: reduce) {
+                    .hero-title-animation,
+                    .hero-subtitle-animation {
+                        animation: none !important;
+                    }
+                    
+                    .hero-subscribe-button {
+                        transition: none !important;
+                    }
+                }
+                
+                /* 高对比度模式优化 */
+                @media (prefers-contrast: high) {
+                    .hero-email-input {
+                        border: 2px solid #FFFFFF !important;
+                    }
+                    
+                    .hero-subscribe-button {
+                        border: 2px solid #FFFFFF !important;
                     }
                 }
             `}</style>
+
+            {/* Toast 通知容器 */}
+            <ToastContainer 
+                toasts={toasts} 
+                onRemoveToast={removeToast}
+                position="top-center"
+            />
         </section>
     )
 } 

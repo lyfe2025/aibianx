@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { BackToTopButton, GlobalCountdownInit, DynamicParticleBackground } from '@/components/ui'
+import { BackToTopButton, GlobalCountdownInit, DynamicParticleBackground, ThemeInit } from '@/components/ui'
 import { LayoutController } from '@/components/molecules/LayoutController'
 import {
   LoginModal,
@@ -134,6 +134,9 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {/* 主题初始化 - 确保主题正确应用 */}
+        <ThemeInit />
+
         {/* 
           全站粒子背景效果 - DynamicParticleBackground
           使用动态导入，完全避免SSR水合问题，绝对稳定可靠

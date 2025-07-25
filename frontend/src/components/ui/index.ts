@@ -18,4 +18,25 @@ export { AIBrainModel } from './AIBrainModel/AIBrainModel'
 export { BackToTopButton } from './BackToTopButton/BackToTopButton'
 export { PageTransition } from './PageTransition/PageTransition'
 export { AnimatedNumber } from './AnimatedNumber/AnimatedNumber'
-export { GlobalCountdownInit } from './GlobalCountdownInit/GlobalCountdownInit' 
+export { GlobalCountdownInit } from './GlobalCountdownInit/GlobalCountdownInit'
+export { ThemeInit } from './ThemeInit/ThemeInit'
+
+// 用户体验反馈组件
+export { Toast, ToastContainer, useToast } from './Toast'
+export { Loading } from './Loading'
+export type { ToastType, ToastItem } from './Toast'
+export type { LoadingSize, LoadingVariant, LoadingColor } from './Loading'
+
+// 阅读体验优化组件
+export { ReadingProgress } from './ReadingProgress'
+export { FontSizeController } from './FontSizeController'
+
+// 搜索体验增强组件
+export { SmartSearch } from './SmartSearch'
+export type { SearchSuggestion } from './SmartSearch'
+
+// 无障碍功能组件
+export { AccessibilityProvider } from './Accessibility'
+
+// 离线功能组件
+export { NetworkStatus, NetworkUtils } from './NetworkStatus' 
