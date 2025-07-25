@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useModalStore, useThemeStore, useLanguageStore } from '@/stores'
 import { Icon, GradientText, GradientButton } from '@/components/ui'
+import { useTranslation } from '@/lib'
 import Image from 'next/image'
 
 /**
@@ -35,6 +36,7 @@ export function AppHeader() {
     const { openModal } = useModalStore()
     const { theme, toggleTheme } = useThemeStore()
     const { language, toggleLanguage } = useLanguageStore()
+    const { t } = useTranslation()
     const [isVisible, setIsVisible] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
     const [isScrolled, setIsScrolled] = useState(false)

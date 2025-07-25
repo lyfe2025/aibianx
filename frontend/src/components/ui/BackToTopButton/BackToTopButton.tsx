@@ -116,7 +116,7 @@ export function BackToTopButton() {
                 justifyContent: 'center',
 
                 // 视觉样式
-                background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
+                background: 'var(--gradient-primary)', // 使用项目主题渐变色
                 boxShadow: isVisible
                     ? '0 8px 25px rgba(59, 130, 246, 0.4), 0 4px 12px rgba(139, 92, 246, 0.3)'
                     : '0 4px 12px rgba(59, 130, 246, 0.2)',
