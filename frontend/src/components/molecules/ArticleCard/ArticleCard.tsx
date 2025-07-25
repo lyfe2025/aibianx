@@ -72,20 +72,31 @@ export function ArticleCard({
 
                     {/* 会员专属标识 */}
                     {article.isPremium && (
-                        <div style={{
-                            position: 'absolute',
-                            top: 'var(--spacing-2)',
-                            right: 'var(--spacing-2)',
-                            background: 'rgba(0, 0, 0, 0.7)',
-                            color: 'var(--color-warning)',
-                            fontSize: 'var(--font-size-xs)',
-                            padding: '4px 8px',
-                            borderRadius: 'var(--radius-sm)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                            zIndex: 999
-                        }}>
+                        <div
+                            className="premium-badge"
+                            style={{
+                                position: 'absolute',
+                                top: 'var(--spacing-2)',
+                                right: 'var(--spacing-2)',
+                                fontSize: 'var(--font-size-xs)',
+                                padding: '8px 12px',
+                                borderRadius: 'var(--radius-sm)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                zIndex: 999,
+                                minWidth: 'auto',
+                                whiteSpace: 'nowrap',
+                                backdropFilter: 'blur(8px)',
+                                WebkitBackdropFilter: 'blur(8px)',
+                                WebkitFontSmoothing: 'antialiased',
+                                MozOsxFontSmoothing: 'grayscale',
+                                border: '1px solid var(--color-warning-border)', // 添加缺失的边框
+                                background: 'var(--color-warning-bg)', // 确保背景色
+                                color: 'var(--color-warning)', // 确保文字颜色
+                                fontWeight: '700', // 确保字重一致
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' // 添加阴影
+                            }}>
                             <CrownIcon size="sm" />
                             会员专享
                         </div>

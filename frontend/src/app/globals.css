@@ -156,9 +156,9 @@ a {
   --color-success-bg: rgba(16, 185, 129, 0.05);
   --color-success-border: rgba(16, 185, 129, 0.20);
 
-  --color-warning: #F59E0B;
-  --color-warning-bg: rgba(245, 158, 11, 0.05);
-  --color-warning-border: rgba(245, 158, 11, 0.20);
+  --color-warning: #D97706;
+  --color-warning-bg: rgba(245, 158, 11, 0.12);
+  --color-warning-border: rgba(245, 158, 11, 0.30);
 
   --color-orange: #F97316;
   --color-orange-bg: rgba(249, 115, 22, 0.05);
@@ -211,9 +211,9 @@ a {
   --color-success-bg: rgba(16, 185, 129, 0.10);
   --color-success-border: rgba(16, 185, 129, 0.30);
 
-  --color-warning: #F59E0B;
-  --color-warning-bg: rgba(245, 158, 11, 0.10);
-  --color-warning-border: rgba(245, 158, 11, 0.30);
+  --color-warning: #FBBF24;
+  --color-warning-bg: rgba(245, 158, 11, 0.15);
+  --color-warning-border: rgba(245, 158, 11, 0.40);
 
   --color-orange: #F97316;
   --color-orange-bg: rgba(249, 115, 22, 0.10);
@@ -760,6 +760,85 @@ div.hero-subtitle *,
 /* 亮色主题下的图标按钮中的图标hover效果 - 避免白色 */
 [data-theme="light"] .icon-button:hover svg {
   color: var(--color-text-primary) !important;
+}
+
+/* ===== 会员专享标识完美显示优化 ===== */
+
+/* 基础会员专享标识样式 */
+.premium-badge {
+  transition: all 0.2s ease !important;
+}
+
+/* 亮色主题下的会员专享标识 - 保持当前好看的样式 */
+[data-theme="light"] .premium-badge {
+  background: rgba(245, 158, 11, 0.15) !important;
+  color: #F59E0B !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+  text-shadow: none !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15) !important;
+}
+
+/* 暗色主题下的会员专享标识 */
+[data-theme="dark"] .premium-badge {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #FCD34D !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.20) !important;
+}
+
+/* 会员专享标识悬停效果 */
+.premium-badge:hover {
+  transform: translateY(-1px);
+}
+
+/* 亮色主题下的悬停效果 */
+[data-theme="light"] .premium-badge:hover {
+  background: rgba(245, 158, 11, 0.22) !important;
+  color: #92400E !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25) !important;
+}
+
+/* 暗色主题下的悬停效果 */
+[data-theme="dark"] .premium-badge:hover {
+  background: rgba(245, 158, 11, 0.25) !important;
+  color: #FEF3C7 !important;
+  border-color: rgba(245, 158, 11, 0.55) !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.30) !important;
+}
+
+/* 皇冠图标主题优化 - 与组件内逻辑保持一致 */
+[data-theme="light"] .crown-icon {
+  color: #F59E0B !important; /* 亮色模式使用黄色 */
+  filter: drop-shadow(0 1px 3px rgba(245, 158, 11, 0.35)) !important;
+}
+
+[data-theme="dark"] .crown-icon {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) !important;
+}
+
+
+
+/* 大尺寸会员专享标识（用于文章标题页） */
+.premium-badge-large {
+  font-size: var(--font-size-base) !important;
+  padding: 10px 18px !important;
+}
+
+/* 内联皇冠图标优化 */
+.premium-icon-inline {
+  transition: all 0.2s ease;
+}
+
+[data-theme="light"] .premium-icon-inline {
+  filter: drop-shadow(0 1px 3px rgba(245, 158, 11, 0.35)) !important;
+}
+
+[data-theme="dark"] .premium-icon-inline {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) !important;
 }
 
 /* 🌟 通用可点击元素点击状态优化 */
@@ -2159,11 +2238,176 @@ html {
 /* 亮色主题下的按钮增强 */
 [data-theme="light"] .btn--gradient {
   box-shadow: 0px 2px 12px 0px rgba(59, 130, 246, 0.25);
+  color: #FFFFFF !important; /* 确保渐变按钮在亮色模式下文字始终为白色 */
 }
 
 [data-theme="light"] .btn--gradient:hover:not(:disabled) {
   box-shadow: 0px 4px 16px 0px rgba(59, 130, 246, 0.35);
   transform: translateY(-2px);
+  color: #FFFFFF !important; /* 确保悬停状态下文字也是白色 */
+}
+
+[data-theme="light"] .btn--gradient:active:not(:disabled) {
+  color: #FFFFFF !important; /* 确保点击状态下文字也是白色 */
+}
+
+/* 确保渐变按钮内的所有文字元素在亮色模式下都是白色 */
+[data-theme="light"] .btn--gradient,
+[data-theme="light"] .btn--gradient *,
+[data-theme="light"] .btn--gradient span,
+[data-theme="light"] .btn--gradient div {
+  color: #FFFFFF !important;
+}
+
+/* ===== 亮色主题下深色背景元素文字颜色修复 ===== */
+
+/* 修复所有蓝紫色渐变背景的按钮和元素文字颜色 */
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)"],
+[data-theme="light"] [style*="background:linear-gradient(90deg,#3B82F6 0%,#8B5CF6 100%)"],
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)"] *,
+[data-theme="light"] [style*="background:linear-gradient(90deg,#3B82F6 0%,#8B5CF6 100%)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 强制覆盖所有渐变背景元素中使用CSS变量的文字颜色 */
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)"] [style*="color: var(--color-text-primary)"],
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)"] [style*="color:var(--color-text-primary)"],
+[data-theme="light"] [style*="background:linear-gradient(90deg,#3B82F6 0%,#8B5CF6 100%)"] [style*="color: var(--color-text-primary)"],
+[data-theme="light"] [style*="background:linear-gradient(90deg,#3B82F6 0%,#8B5CF6 100%)"] [style*="color:var(--color-text-primary)"] {
+  color: #FFFFFF !important;
+}
+
+/* 修复按钮和div元素中的文字颜色 */
+[data-theme="light"] button[style*="background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)"],
+[data-theme="light"] button[style*="background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)"] *,
+[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)"],
+[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复其他蓝色渐变背景的按钮文字 */
+[data-theme="light"] [style*="background: linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)"],
+[data-theme="light"] [style*="background: linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复网络状态组件 - 深色背景下的文字 */
+[data-theme="light"] [style*="background: rgba(26, 26, 26, 0.90)"],
+[data-theme="light"] [style*="background: rgba(26, 26, 26, 0.90)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复加载组件 - 深色背景下的文字 */
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.50)"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.50)"] *,
+[data-theme="light"] [style*="background: rgba(26, 26, 26, 0.90)"],
+[data-theme="light"] [style*="background: rgba(26, 26, 26, 0.90)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复字体控制器 - 深色背景下的文字 */
+[data-theme="light"] [style*="background: rgba(26, 26, 26, 0.85)"],
+[data-theme="light"] [style*="background: rgba(26, 26, 26, 0.85)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复深色模态框背景下的文字 */
+[data-theme="light"] [style*="background: rgba(18, 18, 18, 0.70)"],
+[data-theme="light"] [style*="background: rgba(18, 18, 18, 0.70)"] *,
+[data-theme="light"] [style*="background: rgba(18, 18, 18, 0.50)"],
+[data-theme="light"] [style*="background: rgba(18, 18, 18, 0.50)"] *,
+[data-theme="light"] [style*="background: rgba(18, 18, 18, 0.5)"],
+[data-theme="light"] [style*="background: rgba(18, 18, 18, 0.5)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复黑色背景下的文字 */
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.6)"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.6)"] *,
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.30)"],
+[data-theme="light"] [style*="background: rgba(0, 0, 0, 0.30)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复橙黄色渐变背景的文字（网络状态错误） */
+[data-theme="light"] [style*="background: linear-gradient(90deg, #F59E0B 0%, #EF4444 100%)"],
+[data-theme="light"] [style*="background: linear-gradient(90deg, #F59E0B 0%, #EF4444 100%)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复特定的深色背景标签文字颜色 */
+[data-theme="light"] [style*="background: rgba(12, 30, 71, 0.80)"],
+[data-theme="light"] [style*="background: rgba(12, 30, 71, 0.80)"] *,
+[data-theme="light"] [style*="background: rgba(58, 23, 8, 0.80)"],
+[data-theme="light"] [style*="background: rgba(58, 23, 8, 0.80)"] *,
+[data-theme="light"] [style*="background: rgba(12, 40, 23, 0.80)"],
+[data-theme="light"] [style*="background: rgba(12, 40, 23, 0.80)"] *,
+[data-theme="light"] [style*="background: rgba(30, 12, 71, 0.80)"],
+[data-theme="light"] [style*="background: rgba(30, 12, 71, 0.80)"] *,
+[data-theme="light"] [style*="background: rgba(30, 58, 138, 0.80)"],
+[data-theme="light"] [style*="background: rgba(30, 58, 138, 0.80)"] *,
+[data-theme="light"] [style*="background: rgba(127, 29, 29, 0.80)"],
+[data-theme="light"] [style*="background: rgba(127, 29, 29, 0.80)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复其他蓝紫色渐变背景的文字 */
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"],
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复特定渐变的颜色组合 */
+[data-theme="light"] [style*="background: linear-gradient(90deg, rgba(59, 130, 246, 0.20) 0%, rgba(168, 85, 247, 0.20) 100%)"] {
+  /* 这种淡色渐变背景使用正常的主题文字颜色 */
+  color: var(--color-text-primary) !important;
+}
+
+/* 确保深色背景的元素在亮色模式下文字可读性 */
+[data-theme="light"] [style*="background: #2A2A2A"],
+[data-theme="light"] [style*="background: #2A2A2A"] *,
+[data-theme="light"] [style*="background:#2A2A2A"],
+[data-theme="light"] [style*="background:#2A2A2A"] * {
+  color: #FFFFFF !important;
+}
+
+/* 修复特定的橙色背景文字 */
+[data-theme="light"] [style*="background: #FF6B35"],
+[data-theme="light"] [style*="background: #FF6B35"] * {
+  color: #FFFFFF !important;
+}
+
+/* ===== 亮色主题下普通标签保持默认样式 ===== */
+/* 注意：普通标签在亮色模式下使用浅色背景和深色文字，保持良好的可读性 */
+
+/* 修复按钮形式的深色标签 */
+[data-theme="light"] button[style*="background"][style*="047857"],
+[data-theme="light"] button[style*="background"][style*="1E40AF"],
+[data-theme="light"] button[style*="background"][style*="6D28D9"],
+[data-theme="light"] button[style*="background"][style*="C2410C"] {
+  color: #FFFFFF !important;
+}
+
+/* ===== 亮色模式下标签筛选按钮文字颜色规则 ===== */
+
+/* 1. 非选中状态：使用muted文字颜色 */
+[data-theme="light"] button[style*="background: linear-gradient(90deg, rgba(59, 130, 246, 0) 0%, rgba(139, 92, 246, 0) 100%)"] {
+  color: var(--color-text-muted) !important;
+}
+
+/* 2. "最新发布"选中状态：渐变背景 + 白色文字 */
+[data-theme="light"] button[style*="background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)"] {
+  color: #FFFFFF !important;
+}
+
+/* 3. 其他分类选中状态：深色背景 + 白色文字 */
+[data-theme="light"] button[style*="background: rgba(12, 30, 71, 0.80)"],    /* 技术指南 */
+[data-theme="light"] button[style*="background: rgba(58, 23, 8, 0.80)"],     /* 变现心得 */
+[data-theme="light"] button[style*="background: rgba(12, 40, 23, 0.80)"],    /* 实战案例 */
+[data-theme="light"] button[style*="background: rgba(30, 12, 71, 0.80)"],    /* AI工具 */
+[data-theme="light"] button[style*="background: rgba(30, 58, 138, 0.80)"],   /* 前沿技术 */
+[data-theme="light"] button[style*="background: rgba(127, 29, 29, 0.80)"] {  /* 热门趋势 */
+  color: #FFFFFF !important;
 }
 
 [data-theme="light"] .btn--outline {

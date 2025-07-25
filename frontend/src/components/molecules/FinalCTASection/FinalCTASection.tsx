@@ -74,7 +74,7 @@ export function FinalCTASection() {
                     zIndex: 1,
                     overflow: 'hidden',
                     width: '1200px',
-                    height: '520px',
+                    height: '512px',
                     margin: '0 auto',
                     display: 'flex',
                     alignItems: 'stretch',
@@ -197,7 +197,7 @@ export function FinalCTASection() {
                         width: '500px',
                         position: 'relative',
                         marginTop: '32px',
-                        marginBottom: 'var(--card-gap-lg)',
+                        marginBottom: '32px',
                         marginRight: '32px',
                         gap: '8px',
                         display: 'flex',
@@ -263,7 +263,7 @@ export function FinalCTASection() {
                                 transition: 'all 0.2s ease'
                             }}
                         >
-                            <Icon name="input-email-icon" size="sm" style={{
+                            <Icon name="input-name-icon" size="sm" style={{
                                 width: '20px',
                                 height: '20px',
                                 color: 'var(--color-primary-blue)'
@@ -426,7 +426,7 @@ export function FinalCTASection() {
                             display: 'flex',
                             textOverflow: 'ellipsis',
                             marginTop: '16px',
-                            marginBottom: 'var(--card-gap-lg)',
+                            marginBottom: '8px',
                             marginLeft: '33px',
                             marginRight: '33px',
                             minHeight: '20px'

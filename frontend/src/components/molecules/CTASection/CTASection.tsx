@@ -30,21 +30,25 @@ export function CTASection() {
         <section style={{
             position: 'relative',
             zIndex: 1,
-            background: 'var(--color-bg-secondary)',
+            background: theme === 'light'
+                ? 'rgba(248, 250, 252, 0.95)' // 亮色模式：浅灰蓝色背景
+                : 'var(--color-bg-secondary)', // 暗色模式：保持原有设置
             backdropFilter: 'blur(16px)',
             borderRadius: '20px',
             margin: '0 64px 62px 64px',
-            padding: '40px'
+            padding: '40px',
+            border: theme === 'light'
+                ? '1px solid rgba(59, 130, 246, 0.08)' // 亮色模式：淡蓝色边框
+                : 'none' // 暗色模式：无边框
         }}>
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                gap: '35px'
+                gap: '35px',
+                alignItems: 'center'
             }}>
                 {/* 左侧：成为AI时代的赢家 */}
-                <div style={{
-                    paddingTop: '30px'
-                }}>
+                <div>
                     <div style={{
                         fontSize: '72px',
                         marginBottom: '20px'
@@ -113,11 +117,18 @@ export function CTASection() {
                 {/* 右侧：获取独家AI变现指南表单 */}
                 <div style={{
                     width: '468px',
-                    background: 'var(--color-bg-secondary)',
+                    background: theme === 'light'
+                        ? 'rgba(255, 255, 255, 0.90)' // 亮色模式：纯白背景
+                        : 'var(--color-bg-secondary)', // 暗色模式：保持原有设置
                     backdropFilter: 'blur(16px)',
-                    border: '1px solid var(--color-border-primary)',
+                    border: theme === 'light'
+                        ? '1px solid rgba(59, 130, 246, 0.12)' // 亮色模式：淡蓝色边框
+                        : '1px solid var(--color-border-primary)', // 暗色模式：原有边框
                     borderRadius: '16px',
-                    padding: '32px 21px 17px 21px'
+                    padding: '32px 21px 0 21px',
+                    boxShadow: theme === 'light'
+                        ? '0 4px 24px rgba(59, 130, 246, 0.08)' // 亮色模式：淡蓝色阴影
+                        : 'none' // 暗色模式：无阴影
                 }}>
                     <div style={{
                         display: 'flex',
@@ -163,8 +174,10 @@ export function CTASection() {
                         marginBottom: '42px'
                     }}>
                         <div style={{
-                            background: 'rgba(18, 18, 18, 0.50)',
-                            border: '1px solid rgba(59, 130, 246, 0.30)',
+                            background: 'var(--color-bg-input)', // 使用主题适配的背景色
+                            border: theme === 'light'
+                                ? '1px solid rgba(59, 130, 246, 0.20)' // 亮色模式：更明显的蓝色边框
+                                : '1px solid rgba(59, 130, 246, 0.30)', // 暗色模式：原有设置
                             borderRadius: '8px',
                             padding: '17.5px 17px',
                             display: 'flex',
@@ -189,7 +202,9 @@ export function CTASection() {
                                 onBlur={(e) => {
                                     const container = e.target.parentElement
                                     if (container) {
-                                        container.style.borderColor = 'rgba(59, 130, 246, 0.30)'
+                                        container.style.borderColor = theme === 'light'
+                                            ? 'rgba(59, 130, 246, 0.20)'
+                                            : 'rgba(59, 130, 246, 0.30)'
                                         container.style.background = 'var(--color-bg-input)'
                                         container.style.boxShadow = 'none'
                                     }
@@ -198,7 +213,7 @@ export function CTASection() {
                                     flex: 1,
                                     background: 'transparent',
                                     border: 'none',
-                                    color: 'var(--color-text-muted)',
+                                    color: 'var(--color-text-primary)', // 使用主题适配的文字颜色
                                     fontSize: '13.33px',
                                     lineHeight: '19px',
                                     outline: 'none'
@@ -207,8 +222,10 @@ export function CTASection() {
                         </div>
 
                         <div style={{
-                            background: 'var(--color-bg-input)',
-                            border: '1px solid rgba(59, 130, 246, 0.30)',
+                            background: 'var(--color-bg-input)', // 使用主题适配的背景色
+                            border: theme === 'light'
+                                ? '1px solid rgba(59, 130, 246, 0.20)' // 亮色模式：更明显的蓝色边框
+                                : '1px solid rgba(59, 130, 246, 0.30)', // 暗色模式：原有设置
                             borderRadius: '8px',
                             padding: '17.5px 17px',
                             display: 'flex',
@@ -233,7 +250,9 @@ export function CTASection() {
                                 onBlur={(e) => {
                                     const container = e.target.parentElement
                                     if (container) {
-                                        container.style.borderColor = 'rgba(59, 130, 246, 0.30)'
+                                        container.style.borderColor = theme === 'light'
+                                            ? 'rgba(59, 130, 246, 0.20)'
+                                            : 'rgba(59, 130, 246, 0.30)'
                                         container.style.background = 'var(--color-bg-input)'
                                         container.style.boxShadow = 'none'
                                     }
@@ -242,7 +261,7 @@ export function CTASection() {
                                     flex: 1,
                                     background: 'transparent',
                                     border: 'none',
-                                    color: 'var(--color-text-muted)',
+                                    color: 'var(--color-text-primary)', // 使用主题适配的文字颜色
                                     fontSize: '13.33px',
                                     lineHeight: '19px',
                                     outline: 'none'
@@ -251,7 +270,7 @@ export function CTASection() {
                         </div>
                     </div>
 
-                    <div style={{ marginBottom: 'var(--section-spacing-md)' }}>
+                    <div style={{ marginBottom: '0' }}>
                         <GradientButton
                             size="md"
                             fullWidth
@@ -278,13 +297,39 @@ export function CTASection() {
                             color: 'var(--color-text-disabled)',
                             fontSize: '14px',
                             lineHeight: '20px',
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            margin: 0
                         }}>
                             已有5000+读者订阅
                         </p>
                     </div>
                 </div>
             </div>
+
+            {/* 主题适配样式 */}
+            <style jsx>{`
+                input::placeholder {
+                    color: ${theme === 'light' ? '#6B7280' : 'var(--color-text-muted)'};
+                    opacity: 1;
+                }
+                
+                input::-webkit-input-placeholder {
+                    color: ${theme === 'light' ? '#6B7280' : 'var(--color-text-muted)'};
+                }
+                
+                input::-moz-placeholder {
+                    color: ${theme === 'light' ? '#6B7280' : 'var(--color-text-muted)'};
+                    opacity: 1;
+                }
+                
+                input:-ms-input-placeholder {
+                    color: ${theme === 'light' ? '#6B7280' : 'var(--color-text-muted)'};
+                }
+                
+                input:-moz-placeholder {
+                    color: ${theme === 'light' ? '#6B7280' : 'var(--color-text-muted)'};
+                }
+            `}</style>
         </section>
     )
 } 

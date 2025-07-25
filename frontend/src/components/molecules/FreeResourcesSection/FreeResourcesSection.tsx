@@ -1,4 +1,4 @@
-import { Container, GradientText, GradientButton } from '@/components/ui'
+import { Container, GradientText, GradientButton, Tag } from '@/components/ui'
 import Link from 'next/link'
 import styles from './FreeResourcesSection.module.css'
 
@@ -18,45 +18,33 @@ export function FreeResourcesSection() {
             title: 'AI技术入门指南',
             description: '零基础快速上手AI工具，掌握核心技能',
             image: '/images/illustrations/tech-guide.svg',
-            tag: '技术指南',
-            tagColor: 'var(--color-primary-blue)',
-            tagBg: 'rgba(12, 30, 71, 0.80)',
-            tagBorder: 'rgba(59, 130, 246, 0.40)'
+            tag: 'tech-guide'
         },
         {
             id: 2,
             title: 'AI变现秘籍手册',
             description: '10种经过验证的AI赚钱模式详解',
             image: '/images/illustrations/monetization-guide.svg',
-            tag: '变现心得',
-            tagColor: 'var(--color-orange)',
-            tagBg: 'rgba(58, 23, 8, 0.80)',
-            tagBorder: 'rgba(249, 115, 22, 0.40)'
+            tag: 'monetization'
         },
         {
             id: 3,
             title: 'AI创业案例集',
             description: '5个月入过万的AI创业成功故事',
             image: '/images/illustrations/case-studies.svg',
-            tag: '实战案例',
-            tagColor: 'var(--color-success)',
-            tagBg: 'rgba(12, 40, 23, 0.80)',
-            tagBorder: 'rgba(16, 185, 129, 0.40)'
+            tag: 'case-study'
         },
         {
             id: 4,
             title: 'AI工具速查手册',
             description: '50+必备AI工具清单及使用指南',
             image: '/images/illustrations/tools-handbook.svg',
-            tag: 'AI工具',
-            tagColor: 'var(--color-primary-purple)',
-            tagBg: 'rgba(30, 12, 71, 0.80)',
-            tagBorder: 'rgba(139, 92, 246, 0.40)'
+            tag: 'ai-tools'
         }
     ]
 
     return (
-                <section 
+        <section
             className={styles.freeResourcesSection}
         >
             <Container>
@@ -91,25 +79,10 @@ export function FreeResourcesSection() {
 
                             {/* 标签区域 - 1:1还原设计稿间距 */}
                             <div className={styles.tagContainer}>
-                                <div
-                                    className={styles.tag}
-                                    style={{
-                                        background: resource.tagBg,
-                                        border: `1px solid ${resource.tagBorder}`,
-                                        width: resource.tag === 'AI工具' ? '70px' : '80px',
-                                        paddingRight: resource.tag === 'AI工具' ? '12px' : '12px'
-                                    }}
-                                >
-                                    <div
-                                        className={styles.tagText}
-                                        style={{
-                                            color: resource.tagColor,
-                                            width: resource.tag === 'AI工具' ? '46px' : '56px'
-                                        }}
-                                    >
-                                        {resource.tag}
-                                    </div>
-                                </div>
+                                <Tag
+                                    tag={resource.tag}
+                                    size="md"
+                                />
                             </div>
 
                             {/* 标题区域 - 1:1还原设计稿间距 */}

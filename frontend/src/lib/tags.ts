@@ -19,8 +19,10 @@ export interface TagBase {
     id: string
     /** 标签显示名称 */
     name: string
-    /** 标签主色调（用于文字和边框） */
-    color: string
+    /** 标签主色调（用于文字和边框） - 亮色模式 */
+    lightColor: string
+    /** 标签主色调（用于文字和边框） - 暗色模式 */
+    darkColor: string
     /** 标签描述（后台管理使用） */
     description?: string
     /** 排序权重（数字越小越靠前） */
@@ -38,6 +40,8 @@ export interface TagBase {
  * 继承基础标签信息，添加渲染所需的样式属性
  */
 export interface Tag extends TagBase {
+    /** 标签当前主题色 */
+    color: string
     /** 标签背景色（自动计算得出） */
     backgroundColor: string
     /** 标签边框色（自动计算得出） */
@@ -70,23 +74,13 @@ export enum TagCategory {
  * 
  * 这是所有标签的主数据源，后台管理系统应该从数据库读取类似结构的数据
  * 在实际项目中，这些数据应该存储在数据库中，通过API接口获取
- * 
- * 数据库表结构建议：
- * - id: varchar(50) PRIMARY KEY
- * - name: varchar(100) NOT NULL
- * - color: varchar(7) NOT NULL (hex color)
- * - description: text
- * - category: varchar(50)
- * - sort_order: int DEFAULT 0
- * - is_active: boolean DEFAULT true
- * - created_at: timestamp
- * - updated_at: timestamp
  */
 const TAG_CONFIG: Record<string, TagBase> = {
     'tech-guide': {
         id: 'tech-guide',
         name: '技术指南',
-        color: 'var(--color-primary-blue)',
+        lightColor: '#1E40AF',
+        darkColor: '#3B82F6',
         description: '技术教程和实战指南类文章',
         sortOrder: 10,
         isActive: true
@@ -94,7 +88,8 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'ai-tools': {
         id: 'ai-tools',
         name: 'AI工具',
-        color: 'var(--color-primary-purple)',
+        lightColor: '#6D28D9',
+        darkColor: '#8B5CF6',
         description: 'AI工具介绍和使用教程',
         sortOrder: 20,
         isActive: true
@@ -102,7 +97,8 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'monetization': {
         id: 'monetization',
         name: '变现心得',
-        color: 'var(--color-orange)',
+        lightColor: '#C2410C',
+        darkColor: '#F97316',
         description: '商业变现策略和经验分享',
         sortOrder: 30,
         isActive: true
@@ -110,7 +106,8 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'case-study': {
         id: 'case-study',
         name: '实战案例',
-        color: 'var(--color-warning)',
+        lightColor: '#047857',
+        darkColor: '#10B981',
         description: '真实项目案例分析',
         sortOrder: 40,
         isActive: true
@@ -118,7 +115,8 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'trending': {
         id: 'trending',
         name: '前沿技术',
-        color: 'var(--color-primary-blue)',
+        lightColor: '#1D4ED8',
+        darkColor: '#60A5FA',
         description: '最新技术趋势和前沿资讯',
         sortOrder: 50,
         isActive: true
@@ -126,7 +124,8 @@ const TAG_CONFIG: Record<string, TagBase> = {
     'growth-hack': {
         id: 'growth-hack',
         name: '增长黑客',
-        color: 'var(--color-success)',
+        lightColor: '#047857',
+        darkColor: '#10B981',
         description: '用户增长和运营策略',
         sortOrder: 60,
         isActive: true
@@ -148,18 +147,22 @@ function hexToRgba(hex: string, alpha: number): string {
  * 根据标签ID获取完整的标签信息
  * 
  * @param tagId 标签ID
+ * @param theme 主题模式 ('light' | 'dark')
  * @returns 完整的标签对象，包含渲染所需的所有样式属性
  */
-export function getTagById(tagId: string): Tag | null {
+export function getTagById(tagId: string, theme: 'light' | 'dark' = 'dark'): Tag | null {
     const baseTag = TAG_CONFIG[tagId]
     if (!baseTag || !baseTag.isActive) {
         return null
     }
 
+    const color = theme === 'light' ? baseTag.lightColor : baseTag.darkColor
+
     return {
         ...baseTag,
-        backgroundColor: hexToRgba(baseTag.color, 0.1),
-        borderColor: hexToRgba(baseTag.color, 0.4),
+        color,
+        backgroundColor: hexToRgba(color, theme === 'light' ? 0.08 : 0.1),
+        borderColor: hexToRgba(color, theme === 'light' ? 0.3 : 0.4),
         iconName: getTagIcon(tagId)
     }
 }
@@ -168,25 +171,27 @@ export function getTagById(tagId: string): Tag | null {
  * 根据标签名称获取标签信息（兼容旧数据）
  * 
  * @param tagName 标签名称
+ * @param theme 主题模式 ('light' | 'dark')
  * @returns 标签对象或null
  */
-export function getTagByName(tagName: string): Tag | null {
+export function getTagByName(tagName: string, theme: 'light' | 'dark' = 'dark'): Tag | null {
     const entry = Object.entries(TAG_CONFIG).find(([_, tag]) => tag.name === tagName)
     if (!entry) return null
 
-    return getTagById(entry[0])
+    return getTagById(entry[0], theme)
 }
 
 /**
  * 获取所有激活的标签
  * 后台管理可以调用此函数获取标签列表
  * 
+ * @param theme 主题模式 ('light' | 'dark')
  * @param category 可选的分类过滤
  * @returns 激活标签列表，按sortOrder排序
  */
-export function getAllActiveTags(category?: TagCategory): Tag[] {
+export function getAllActiveTags(theme: 'light' | 'dark' = 'dark', category?: TagCategory): Tag[] {
     return Object.keys(TAG_CONFIG)
-        .map(id => getTagById(id))
+        .map(id => getTagById(id, theme))
         .filter((tag): tag is Tag => tag !== null)
         .sort((a, b) => a.sortOrder - b.sortOrder)
 }
@@ -199,17 +204,15 @@ export function getAllActiveTags(category?: TagCategory): Tag[] {
  * @returns 图标名称
  */
 function getTagIcon(tagId: string): string | undefined {
-    // 移除所有标签图标，只保留文字和背景样式
-    // const iconMap: Record<string, string> = {
-    //     'ai-tools': 'ai-tool-tag-icon',
-    //     'monetization': 'monetization-tag-icon',
-    //     'tech-guide': 'tag-tech',
-    //     'case-study': 'tag-case',
-    //     'trending': 'tag-tools'
-    // }
+    const iconMap: Record<string, string> = {
+        'ai-tools': 'ai-tool-tag-icon',
+        'monetization': 'monetization-tag-icon',
+        'tech-guide': 'tag-tech',
+        'case-study': 'tag-case',
+        'trending': 'tag-tools'
+    }
 
-    // return iconMap[tagId]
-    return undefined
+    return iconMap[tagId]
 }
 
 /**
@@ -230,8 +233,12 @@ export function validateTag(tag: Partial<TagBase>): { isValid: boolean; errors: 
         errors.push('标签名称不能为空')
     }
 
-    if (!tag.color || !/^#[0-9A-Fa-f]{6}$/.test(tag.color)) {
-        errors.push('标签颜色必须是有效的十六进制颜色码')
+    if (!tag.lightColor || !/^#[0-9A-Fa-f]{6}$/.test(tag.lightColor)) {
+        errors.push('亮色主题颜色必须是有效的十六进制颜色码')
+    }
+
+    if (!tag.darkColor || !/^#[0-9A-Fa-f]{6}$/.test(tag.darkColor)) {
+        errors.push('暗色主题颜色必须是有效的十六进制颜色码')
     }
 
     if (typeof tag.sortOrder !== 'number' || tag.sortOrder < 0) {
@@ -270,9 +277,11 @@ export function getTagUsageStats(articles: Array<{ tags: Array<{ name: string }>
 export const DEFAULT_TAG: Tag = {
     id: 'default',
     name: '默认',
-    color: 'var(--color-text-disabled)',
-    backgroundColor: 'var(--color-bg-secondary)',
-    borderColor: 'var(--color-border-primary)',
+    lightColor: '#6B7280',
+    darkColor: '#9CA3AF',
+    color: '#9CA3AF',
+    backgroundColor: 'rgba(156, 163, 175, 0.1)',
+    borderColor: 'rgba(156, 163, 175, 0.4)',
     sortOrder: 999,
     isActive: true
 }

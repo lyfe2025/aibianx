@@ -119,21 +119,21 @@
     background-size: cover;
     background-position: center;
     flex-shrink: 0;
-    margin-bottom: 8px;
-    /* 添加底部间隔，从图片到标签区域 */
+    margin-bottom: 16px;
+    /* 增加底部间隔，从8px增加到16px，图片到标签的距离更充足 */
 }
 
 .tagContainer {
     width: 280px;
     margin-top: 0;
     /* 移除margin-top，由resourceImage的margin-bottom控制 */
-    margin-bottom: 16px;
-    /* 从标签到标题的间隔，从12px增加到16px */
+    margin-bottom: 20px;
+    /* 从标签到标题的间隔，从16px增加到20px，让间距更合理 */
     display: flex;
     align-items: flex-start;
     min-height: 26px;
-    padding-left: 30px;
-    /* 从20px增加到30px，为标签图标提供更多显示空间 */
+    padding-left: 20px;
+    /* 从30px调整为20px，与标签到标题的间距(20px)保持一致 */
 }
 
 .tag {
@@ -168,8 +168,8 @@
     display: flex;
     align-items: flex-start;
     min-height: 24px;
-    padding-left: 30px;
-    /* 与tagContainer保持一致的左边距 */
+    padding-left: 20px;
+    /* 从30px调整为20px，与tagContainer保持一致 */
 }
 
 .titleText {
@@ -187,8 +187,8 @@
     display: flex;
     align-items: flex-start;
     min-height: 20px;
-    padding-left: 30px;
-    /* 与tagContainer保持一致的左边距 */
+    padding-left: 20px;
+    /* 从30px调整为20px，与tagContainer保持一致 */
 }
 
 .descriptionText {
@@ -233,21 +233,29 @@
 
     .resourceImage {
         width: 260px;
-        margin-bottom: 6px;
+        margin-bottom: 12px;
+        /* 中屏幕：从6px增加到12px，保持合理间距 */
     }
 
     .tagContainer {
         width: 260px;
-        margin-bottom: 14px;
+        margin-bottom: 18px;
+        /* 中屏幕：从14px增加到18px，保持合理间距 */
+        padding-left: 18px;
+        /* 与标签到标题的间距(18px)保持一致 */
     }
 
     .titleContainer {
         width: 260px;
         margin-bottom: 6px;
+        padding-left: 18px;
+        /* 与tagContainer保持一致 */
     }
 
     .descriptionContainer {
         width: 260px;
+        padding-left: 18px;
+        /* 与tagContainer保持一致 */
     }
 }
 
@@ -274,21 +282,29 @@
 
     .resourceImage {
         width: 240px;
-        margin-bottom: 6px;
+        margin-bottom: 10px;
+        /* 中等屏幕：从6px增加到10px，保持合理间距 */
     }
 
     .tagContainer {
         width: 240px;
-        margin-bottom: 12px;
+        margin-bottom: 16px;
+        /* 中等屏幕：从12px增加到16px，保持合理间距 */
+        padding-left: 16px;
+        /* 与标签到标题的间距(16px)保持一致 */
     }
 
     .titleContainer {
         width: 240px;
         margin-bottom: 6px;
+        padding-left: 16px;
+        /* 与tagContainer保持一致 */
     }
 
     .descriptionContainer {
         width: 240px;
+        padding-left: 16px;
+        /* 与tagContainer保持一致 */
     }
 }
 
@@ -340,25 +356,31 @@
     .resourceImage {
         width: 100%;
         height: 180px;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
+        /* 小屏幕：从8px增加到12px，保持合理间距 */
     }
 
     .tagContainer {
         width: 100%;
-        padding-left: 16px;
-        margin-bottom: 14px;
+        padding-left: 18px;
+        /* 从16px调整为18px，与标签到标题的间距(18px)保持一致 */
+        margin-bottom: 18px;
+        /* 小屏幕：从14px增加到18px，保持合理间距 */
     }
 
     .titleContainer {
         width: 100%;
-        padding-left: 16px;
+        padding-left: 18px;
+        /* 从16px调整为18px，与tagContainer保持一致 */
         margin-bottom: 8px;
     }
 
     .descriptionContainer {
         width: 100%;
-        padding-left: 16px;
-        padding-right: 16px;
+        padding-left: 18px;
+        /* 从16px调整为18px，与tagContainer保持一致 */
+        padding-right: 18px;
+        /* 同时调整右边距保持对称 */
     }
 
     .titleText,
@@ -409,21 +431,27 @@
     }
 
     .resourceImage {
-        margin-bottom: 6px;
+        margin-bottom: 10px;
+        /* 超小屏幕：从6px增加到10px，保持合理间距 */
     }
 
     .tagContainer {
-        padding-left: 12px;
-        margin-bottom: 12px;
+        padding-left: 16px;
+        /* 从12px调整为16px，与标签到标题的间距(16px)保持一致 */
+        margin-bottom: 16px;
+        /* 超小屏幕：从12px增加到16px，保持合理间距 */
     }
 
     .titleContainer {
-        padding-left: 12px;
+        padding-left: 16px;
+        /* 从12px调整为16px，与tagContainer保持一致 */
         margin-bottom: 6px;
     }
 
     .descriptionContainer {
-        padding-left: 12px;
-        padding-right: 12px;
+        padding-left: 16px;
+        /* 从12px调整为16px，与tagContainer保持一致 */
+        padding-right: 16px;
+        /* 同时调整右边距保持对称 */
     }
 }

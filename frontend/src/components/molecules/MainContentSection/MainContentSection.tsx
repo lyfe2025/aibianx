@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Container, Icon } from '@/components/ui'
+import { Container, GlassCard, Icon, GradientButton, TagList } from '@/components/ui'
+import { useThemeStore } from '@/stores'
 import Link from 'next/link'
 
 /**
@@ -20,6 +21,8 @@ import Link from 'next/link'
 export function MainContentSection() {
     const [activeFilter, setActiveFilter] = useState('最新')
     const [subscribeEmail, setSubscribeEmail] = useState('')
+    const [isEmailFocused, setIsEmailFocused] = useState(false) // 添加邮箱输入框焦点状态
+    const { theme } = useThemeStore()
 
     // 筛选标签
     const filterOptions = ['最新', '热门', '免费']
@@ -214,41 +217,14 @@ export function MainContentSection() {
                                             </h3>
 
                                             {/* 标签 */}
-                                            <div style={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                alignItems: 'stretch',
-                                                flexWrap: 'nowrap',
-                                                whiteSpace: 'nowrap'
-                                            }}>
-                                                {article.tags.map((tag, index) => (
-                                                    <span
-                                                        key={tag}
-                                                        style={{
-                                                            background: index === 0
-                                                                ? 'rgba(12, 30, 71, 0.80)'
-                                                                : 'rgba(30, 12, 71, 0.80)',
-                                                            border: `1px solid ${index === 0
-                                                                ? 'rgba(59, 130, 246, 0.40)'
-                                                                : 'rgba(139, 92, 246, 0.40)'}`,
-                                                            borderRadius: '9999px',
-                                                            padding: '8px 13px',
-                                                            color: index === 0 ? 'var(--color-primary-blue)' : 'var(--color-primary-purple)',
-                                                            fontSize: '12px',
-                                                            lineHeight: '18px',
-                                                            width: index === 1 && article.id === 3 ? '61px' : '74px',
-                                                            textAlign: 'center',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            marginRight: index < article.tags.length - 1 ? '8px' : '0',
-                                                            flexShrink: 0
-                                                        }}
-                                                    >
-                                                        {tag}
-                                                    </span>
-                                                ))}
-                                            </div>
+                                            <TagList
+                                                tags={article.tags}
+                                                size="md"
+                                                maxCount={2}
+                                                style={{
+                                                    marginBottom: '16px'
+                                                }}
+                                            />
                                         </div>
                                     </div>
 
@@ -261,13 +237,15 @@ export function MainContentSection() {
                                         <div style={{
                                             display: 'flex',
                                             alignItems: 'center',
-                                            marginRight: '8px'
+                                            marginRight: '12px'
                                         }}>
                                             <Icon name="eye-icon" style={{
                                                 color: 'var(--color-text-disabled)',
                                                 width: '16px',
                                                 height: '16px',
-                                                marginRight: '4px'
+                                                marginRight: '6px',
+                                                flexShrink: 0,
+                                                minWidth: '16px'
                                             }} />
                                             <span style={{
                                                 color: 'var(--color-text-disabled)',
@@ -281,13 +259,15 @@ export function MainContentSection() {
                                         <div style={{
                                             display: 'flex',
                                             alignItems: 'center',
-                                            marginLeft: '8px'
+                                            marginLeft: '12px'
                                         }}>
                                             <Icon name="clock-icon" style={{
                                                 color: 'var(--color-text-disabled)',
                                                 width: '12px',
                                                 height: '12px',
-                                                marginRight: '4px'
+                                                marginRight: '6px',
+                                                flexShrink: 0,
+                                                minWidth: '12px'
                                             }} />
                                             <span style={{
                                                 color: 'var(--color-text-disabled)',
@@ -353,7 +333,7 @@ export function MainContentSection() {
                             borderRadius: '16px',
                             display: 'flex',
                             flexDirection: 'column',
-                            marginBottom: 'var(--card-gap-lg)'
+                            marginBottom: '32px'  // 从var(--card-gap-lg)改为固定32px，增加间距
                         }}>
                             <h3 style={{
                                 color: 'var(--color-text-primary)',
@@ -502,7 +482,7 @@ export function MainContentSection() {
                             borderRadius: '16px',
                             display: 'flex',
                             flexDirection: 'column',
-                            marginBottom: 'var(--card-gap-lg)'
+                            marginBottom: '32px'  // 从var(--card-gap-lg)改为固定32px，增加间距
                         }}>
                             <h3 style={{
                                 color: 'var(--color-text-primary)',
@@ -614,13 +594,17 @@ export function MainContentSection() {
 
                         {/* 不要错过任何机会 */}
                         <div style={{
-                            background: 'linear-gradient(135deg, #0C1E47 37%, #1E0C47 63%)',
-                            border: '1px solid rgba(59, 130, 246, 0.20)',
+                            background: theme === 'light'
+                                ? 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)' // 亮色模式：浅灰渐变背景
+                                : 'linear-gradient(135deg, #0C1E47 37%, #1E0C47 63%)', // 暗色模式：深蓝紫渐变
+                            border: theme === 'light'
+                                ? '1px solid rgba(59, 130, 246, 0.15)' // 亮色模式：淡蓝色边框
+                                : '1px solid rgba(59, 130, 246, 0.20)', // 暗色模式：原有边框
                             borderRadius: '16px',
                             padding: '31px',
                             display: 'flex',
-                            flexDirection: 'column',
-                            marginTop: 'auto'
+                            flexDirection: 'column'
+                            // 移除marginTop: 'auto'，让区块有正常的间距而不是自动对齐到底部
                         }}>
                             <div style={{
                                 display: 'flex',
@@ -629,7 +613,9 @@ export function MainContentSection() {
                                 width: '348px'
                             }}>
                                 <h3 style={{
-                                    color: 'var(--color-text-primary)',
+                                    color: theme === 'light'
+                                        ? '#1E293B' // 亮色模式：深灰色文字，确保对比度
+                                        : 'var(--color-text-primary)', // 暗色模式：白色文字
                                     fontSize: '18px',
                                     fontWeight: '700',
                                     lineHeight: '27px',
@@ -648,7 +634,9 @@ export function MainContentSection() {
                             </div>
 
                             <div style={{
-                                color: 'var(--color-text-secondary)',
+                                color: theme === 'light'
+                                    ? '#64748B' // 亮色模式：中灰色文字，确保可读性
+                                    : 'var(--color-text-secondary)', // 暗色模式：原有颜色
                                 fontSize: '16px',
                                 lineHeight: '20px',
                                 width: '400px',
@@ -667,43 +655,34 @@ export function MainContentSection() {
                                 display: 'flex'
                             }}>
                                 <div style={{
-                                    background: 'var(--color-bg-input)',
-                                    border: '1px solid var(--color-border-primary)',
+                                    background: theme === 'dark'
+                                        ? (isEmailFocused ? 'rgba(18, 18, 18, 0.70)' : 'rgba(18, 18, 18, 0.50)')
+                                        : (isEmailFocused ? 'var(--color-bg-input)' : 'rgba(250, 252, 255, 0.95)'), // 精确参考Hero区域
+                                    border: `1px solid ${isEmailFocused ? '#3B82F6' : (theme === 'dark' ? '#2A2A2A' : 'var(--color-border-primary)')}`, // 参考Hero区域边框逻辑
                                     borderRadius: '8px 0 0 8px',
                                     padding: '12px 16px',
                                     width: '288px',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    transition: 'all 0.2s ease'
+                                    transition: 'all 0.2s ease',
+                                    backdropFilter: theme === 'dark' ? 'blur(4px)' : 'blur(8px)', // 参考Hero区域的毛玻璃效果
+                                    WebkitBackdropFilter: theme === 'dark' ? 'blur(4px)' : 'blur(8px)',
+                                    boxShadow: isEmailFocused ? '0 0 0 2px rgba(59, 130, 246, 0.1)' : 'none' // 参考Hero区域阴影效果
                                 }}>
                                     <input
                                         type="email"
                                         placeholder="请输入您的邮箱"
                                         value={subscribeEmail}
                                         onChange={(e) => setSubscribeEmail(e.target.value)}
-                                        onFocus={(e) => {
-                                            const container = e.target.parentElement
-                                            if (container) {
-                                                container.style.borderColor = '#3B82F6'
-                                                container.style.background = 'var(--color-bg-primary)'
-                                                container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
-                                            }
-                                        }}
-                                        onBlur={(e) => {
-                                            const container = e.target.parentElement
-                                            if (container) {
-                                                container.style.borderColor = 'var(--color-border-primary)'
-                                                container.style.background = 'var(--color-bg-input)'
-                                                container.style.boxShadow = 'none'
-                                            }
-                                        }}
+                                        onFocus={() => setIsEmailFocused(true)}
+                                        onBlur={() => setIsEmailFocused(false)}
                                         style={{
                                             width: '256px',
                                             height: '20px',
                                             background: 'transparent',
                                             border: 'none',
                                             outline: 'none',
-                                            color: 'var(--color-text-disabled)',
+                                            color: 'var(--color-text-primary)', // 参考Hero区域的文字颜色
                                             fontSize: '13.33px',
                                             lineHeight: '15px',
                                             fontFamily: 'Arial'

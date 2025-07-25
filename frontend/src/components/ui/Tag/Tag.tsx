@@ -3,6 +3,7 @@
 import { type HTMLAttributes } from 'react'
 import { Icon } from '@/components/ui/Icon/Icon'
 import { getTagByName, getTagById, DEFAULT_TAG, type Tag as TagData } from '@/lib/tags'
+import { useThemeStore } from '@/stores'
 
 /**
  * 标签组件属性接口
@@ -25,8 +26,8 @@ export interface TagProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'color'>
 /**
  * 通用标签组件
  * 
- * 使用周刊页面的简洁样式，支持多种尺寸和配置
- * 自动从标签管理系统获取颜色和样式配置
+ * 支持主题自动切换，从标签管理系统获取样式配置
+ * 确保在亮色和暗色模式下都有良好的显示效果
  * 
  * @param props 标签组件属性
  * @returns 标签组件
@@ -40,9 +41,11 @@ export const Tag = ({
     onClick,
     ...props
 }: TagProps) => {
-    // 获取标签数据
+    const { theme } = useThemeStore()
+
+    // 获取标签数据，传入当前主题
     const tagData = typeof tag === 'string'
-        ? getTagByName(tag) || getTagById(tag) || DEFAULT_TAG
+        ? getTagByName(tag, theme) || getTagById(tag, theme) || DEFAULT_TAG
         : tag
 
     // 尺寸配置
@@ -75,12 +78,16 @@ export const Tag = ({
             style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: showIcon ? '4px' : '0',
+                gap: showIcon ? '6px' : '0',
                 background: tagData.backgroundColor,
                 color: tagData.color,
                 border: `1px solid ${tagData.borderColor}`,
                 borderRadius: '6px',
-                padding: config.padding,
+                padding: showIcon ? (
+                    size === 'sm' ? '2px 8px' :
+                        size === 'md' ? '4px 10px' :
+                            '6px 14px'
+                ) : config.padding,
                 fontSize: config.fontSize,
                 fontWeight: '500',
                 lineHeight: config.lineHeight,
@@ -89,9 +96,27 @@ export const Tag = ({
                 flexShrink: 0,
                 cursor: clickable ? 'pointer' : 'default',
                 transition: 'all 0.2s ease',
+                opacity: clickable ? 1 : 1,
                 ...props.style
             }}
             onClick={onClick}
+            onMouseEnter={(e) => {
+                if (clickable) {
+                    e.currentTarget.style.opacity = '0.8'
+                    e.currentTarget.style.transform = 'translateY(-1px)'
+                }
+            }}
+            onMouseLeave={(e) => {
+                if (clickable) {
+                    e.currentTarget.style.opacity = '1'
+                    e.currentTarget.style.transform = 'translateY(0)'
+                }
+            }}
+            onMouseDown={(e) => {
+                if (clickable) {
+                    e.currentTarget.style.transform = 'translateY(0)'
+                }
+            }}
             {...props}
         >
             {/* 可选图标 */}
@@ -99,7 +124,11 @@ export const Tag = ({
                 <Icon
                     name={tagData.iconName}
                     size={config.iconSize}
-                    style={{ flexShrink: 0 }}
+                    style={{
+                        flexShrink: 0,
+                        minWidth: size === 'sm' ? '12px' : size === 'md' ? '14px' : '16px',
+                        display: 'inline-block'
+                    }}
                 />
             )}
 
@@ -111,68 +140,6 @@ export const Tag = ({
             }}>
                 {tagData.name}
             </span>
-
-            {/* CSS样式 */}
-            <style jsx>{`
-                .tag {
-                    transition: all 0.2s ease;
-                }
-                
-                .tag--clickable:hover {
-                    opacity: 0.8;
-                    transform: translateY(-1px);
-                    cursor: pointer;
-                }
-                
-                .tag--clickable:active {
-                    transform: translateY(0);
-                }
-                
-                /* 亮色主题下的标签样式优化 */
-                [data-theme="light"] .tag {
-                    border-width: 1px !important;
-                    border-style: solid !important;
-                    background: var(--color-bg-primary) !important;
-                    color: var(--color-text-primary) !important;
-                }
-                
-                /* 亮色主题下的特定标签颜色 */
-                [data-theme="light"] .tag[style*="#3B82F6"] {
-                    background: rgba(59, 130, 246, 0.08) !important;
-                    border-color: rgba(59, 130, 246, 0.3) !important;
-                    color: #1E40AF !important;
-                }
-                
-                [data-theme="light"] .tag[style*="#F97316"] {
-                    background: rgba(249, 115, 22, 0.08) !important;
-                    border-color: rgba(249, 115, 22, 0.3) !important;
-                    color: #C2410C !important;
-                }
-                
-                [data-theme="light"] .tag[style*="#10B981"] {
-                    background: rgba(16, 185, 129, 0.08) !important;
-                    border-color: rgba(16, 185, 129, 0.3) !important;
-                    color: #047857 !important;
-                }
-                
-                [data-theme="light"] .tag[style*="#8B5CF6"] {
-                    background: rgba(139, 92, 246, 0.08) !important;
-                    border-color: rgba(139, 92, 246, 0.3) !important;
-                    color: #6D28D9 !important;
-                }
-                
-                [data-theme="light"] .tag[style*="#F59E0B"] {
-                    background: rgba(245, 158, 11, 0.08) !important;
-                    border-color: rgba(245, 158, 11, 0.3) !important;
-                    color: #D97706 !important;
-                }
-                
-                [data-theme="light"] .tag[style*="#60A5FA"] {
-                    background: rgba(96, 165, 250, 0.08) !important;
-                    border-color: rgba(96, 165, 250, 0.3) !important;
-                    color: #1D4ED8 !important;
-                }
-            `}</style>
         </span>
     )
 }
@@ -180,6 +147,7 @@ export const Tag = ({
 /**
  * 标签列表组件
  * 用于渲染多个标签，自动处理间距和换行
+ * 支持主题自动切换
  * 
  * @param props 标签列表属性
  */
@@ -212,6 +180,8 @@ export const TagList = ({
     className = '',
     style
 }: TagListProps) => {
+    const { theme } = useThemeStore()
+
     // 限制显示数量
     const displayTags = tags.slice(0, maxCount)
     const hasMore = tags.length > maxCount
@@ -229,7 +199,7 @@ export const TagList = ({
         >
             {displayTags.map((tag, index) => {
                 const tagData = typeof tag === 'string'
-                    ? getTagByName(tag) || getTagById(tag) || DEFAULT_TAG
+                    ? getTagByName(tag, theme) || getTagById(tag, theme) || DEFAULT_TAG
                     : tag
 
                 return (

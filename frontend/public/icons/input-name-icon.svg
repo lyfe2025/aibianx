@@ -1,0 +1,13 @@
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+	<defs>
+		<clipPath id="clipPath0:0:0">
+			<path d="M0 0L20 0L20 20L0 20L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clipPath0:0:0)">
+		<!-- 人物头部圆形 -->
+		<circle cx="10" cy="7" r="3" stroke-width="1.25" stroke="rgb(59, 130, 246)" fill="transparent"/>
+		<!-- 人物身体轮廓 -->
+		<path d="M4.5 16.5C4.5 13.5 6.5 11.5 10 11.5C13.5 11.5 15.5 13.5 15.5 16.5" stroke-width="1.25" stroke="rgb(59, 130, 246)" fill="transparent" stroke-linecap="round"/>
+	</g>
+</svg> 

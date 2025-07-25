@@ -58,22 +58,34 @@ export function ArticleHeader({
         }}>
             {/* 会员专属标识 */}
             {isPremium && (
-                <div style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    background: 'rgba(255, 215, 0, 0.1)',
-                    color: 'var(--color-warning)',
-                    fontSize: 'var(--font-size-sm)',
-                    fontWeight: '500',
-                    padding: '6px 12px',
-                    borderRadius: 'var(--radius-sm)',
-                    marginBottom: 'var(--title-margin-bottom-md)',
-                    position: 'relative',
-                    zIndex: 999
-                }}>
+                <div
+                    className="premium-badge premium-badge-large"
+                    style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        background: 'var(--color-warning-bg)',
+                        color: 'var(--color-warning)',
+                        fontSize: 'var(--font-size-sm)',
+                        fontWeight: '600',
+                        padding: '8px 16px',
+                        borderRadius: 'var(--radius-sm)',
+                        border: '1px solid var(--color-warning-border)',
+                        marginBottom: 'var(--title-margin-bottom-md)',
+                        position: 'relative',
+                        zIndex: 999,
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                    }}>
                     <CrownIcon size="md" />
-                    会员专享内容
+                    <span style={{
+                        fontWeight: '700',
+                        WebkitFontSmoothing: 'antialiased',
+                        MozOsxFontSmoothing: 'grayscale'
+                    }}>
+                        会员专享内容
+                    </span>
                 </div>
             )}
 
@@ -100,9 +112,9 @@ export function ArticleHeader({
                         key={index}
                         style={{
                             background: `rgba(${tag.color === '#3B82F6' ? '59, 130, 246' :
-                                    tag.color === '#8B5CF6' ? '139, 92, 246' :
-                                        tag.color === '#10B981' ? '16, 185, 129' :
-                                            tag.color === '#F97316' ? '249, 115, 22' : '107, 114, 128'
+                                tag.color === '#8B5CF6' ? '139, 92, 246' :
+                                    tag.color === '#10B981' ? '16, 185, 129' :
+                                        tag.color === '#F97316' ? '249, 115, 22' : '107, 114, 128'
                                 }, 0.1)`,
                             color: tag.color,
                             border: `1px solid ${tag.color}40`,

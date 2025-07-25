@@ -92,17 +92,20 @@ export function RelatedArticles({
                                 position: 'relative'
                             }}>
                                 {article.isPremium && (
-                                    <span style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '4px',
-                                        color: 'var(--color-warning)',
-                                        fontSize: '12px',
-                                        marginRight: '8px',
-                                        flexShrink: 0,
-                                        position: 'relative',
-                                        zIndex: 10
-                                    }}>
+                                    <span 
+                                        className="premium-icon-inline"
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '4px',
+                                            color: 'var(--color-warning)',
+                                            fontSize: '12px',
+                                            marginRight: '8px',
+                                            flexShrink: 0,
+                                            position: 'relative',
+                                            zIndex: 10,
+                                            filter: 'drop-shadow(0 1px 2px rgba(245, 158, 11, 0.3))'
+                                        }}>
                                         <CrownIcon size="sm" />
                                     </span>
                                 )}
