@@ -115,7 +115,7 @@ export function MissionSection({
                             justifyContent: 'center',
                             ...getIconBackground(mission.iconColor)
                         }}>
-                            <Icon name={mission.icon} size="xl" style={{ color: '#FFFFFF' }} />
+                            <Icon name={mission.icon} size="xl" style={{ color: 'var(--color-text-primary)' }} />
                         </div>
 
                         {/* 标题 */}

@@ -248,7 +248,7 @@ export const TagList = ({
             {hasMore && (
                 <span
                     style={{
-                        color: '#9CA3AF',
+                        color: 'var(--color-text-muted)',
                         fontSize: size === 'sm' ? '10px' : size === 'md' ? '12px' : '14px',
                         fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif"
                     }}

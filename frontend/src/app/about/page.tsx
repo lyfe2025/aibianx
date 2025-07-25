@@ -263,6 +263,11 @@ export default function AboutPage() {
                                         justifyContent: 'center',
                                         boxShadow: '0 2px 8px rgba(59, 130, 246, 0.12)'
                                     }}>
+                                        {/* 
+                                            注意：此图标颜色故意保持固定的暗色模式样式，不随主题变化
+                                            设计决策：会员功能图标需要保持一致的品牌色彩识别度
+                                            请勿修改为CSS变量 - 这不是硬编码错误！
+                                        */}
                                         <Icon name="ai-tool-library-new" size="md" style={{ color: 'var(--color-primary-blue)' }} />
                                     </div>
 
@@ -306,6 +311,7 @@ export default function AboutPage() {
                                         justifyContent: 'center',
                                         boxShadow: '0 2px 8px rgba(34, 197, 94, 0.12)'
                                     }}>
+                                        {/* 保持暗色模式固定颜色 - 不随主题变化 */}
                                         <Icon name="success-cases-new" size="md" style={{ color: 'var(--color-success)' }} />
                                     </div>
 
@@ -349,6 +355,7 @@ export default function AboutPage() {
                                         justifyContent: 'center',
                                         boxShadow: '0 2px 8px rgba(168, 85, 247, 0.12)'
                                     }}>
+                                        {/* 保持暗色模式固定颜色 - 不随主题变化 */}
                                         <Icon name="community-support-new" size="md" style={{ color: 'var(--color-primary-purple)' }} />
                                     </div>
 
@@ -392,6 +399,7 @@ export default function AboutPage() {
                                         justifyContent: 'center',
                                         boxShadow: '0 2px 8px rgba(251, 146, 60, 0.12)'
                                     }}>
+                                        {/* 保持暗色模式固定颜色 - 不随主题变化 */}
                                         <Icon name="one-on-one-consulting-new" size="md" style={{ color: 'var(--color-orange)' }} />
                                     </div>
 
@@ -463,7 +471,7 @@ export default function AboutPage() {
                                         background: 'rgba(255, 107, 107, 0.10)',
                                         borderRadius: '12px',
                                         padding: '4px 8px',
-                                        color: '#FF6B6B',
+                                        color: 'var(--color-error)',
                                         fontSize: '14px',
                                         fontWeight: '600',
                                         lineHeight: '22.4px'
@@ -521,9 +529,9 @@ export default function AboutPage() {
                                 }}>
                                     {[
                                         { text: '200+ AI变现教程和指南', badge: 'New!', badgeColor: '#FF6B6B' },
-                                        { text: '每周更新实战案例', badge: '独家', badgeColor: '#3B82F6' },
+                                        { text: '每周更新实战案例', badge: '独家', badgeColor: 'var(--color-primary-blue)' },
                                         { text: '专属社区和导师指导' },
-                                        { text: 'AI工具专属优惠', badge: '高达7折', badgeColor: '#10B981' }
+                                        { text: 'AI工具专属优惠', badge: '高达7折', badgeColor: 'var(--color-success)' }
                                     ].map((item, index) => (
                                         <div key={index} style={{
                                             display: 'flex',
@@ -575,7 +583,7 @@ export default function AboutPage() {
                                         background: '#FF6B6B',
                                         borderRadius: '12px',
                                         padding: '2px 8px',
-                                        color: '#FFFFFF',
+                                        color: 'var(--color-text-primary)',
                                         fontSize: '12px',
                                         fontWeight: '600',
                                         lineHeight: '19.2px'
@@ -631,10 +639,7 @@ export default function AboutPage() {
                     </section>
 
                     {/* 为什么选择我们 */}
-                    <section style={{
-                        textAlign: 'center',
-                        marginBottom: '73px'
-                    }}>
+                    <section className="about-why-choose-section">
                         <GradientText
                             size="6xl"
                             weight="bold"
@@ -656,16 +661,8 @@ export default function AboutPage() {
                             在AI快速发展的时代，我们提供的不仅是知识，更是实用的变现路径和专业的指导支持
                         </p>
 
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            width: '100%'
-                        }}>
-                            <div style={{
-                                display: 'flex',
-                                gap: '24px',
-                                width: '1200px'
-                            }}>
+                        <div className="about-why-choose-cards">
+                            <div className="about-why-choose-container">
                                 {/* 实战经验 */}
                                 <GlassCard variant="default" style={{
                                     flex: 1,
@@ -691,7 +688,8 @@ export default function AboutPage() {
                                             justifyContent: 'center',
                                             boxShadow: '0 2px 8px rgba(59, 130, 246, 0.12)'
                                         }}>
-                                            <Icon name="practical-experience-new" size="sm" style={{ color: 'var(--color-primary-blue)' }} />
+                                                                                         {/* 保持暗色模式固定颜色 - 不随主题变化 */}
+                                             <Icon name="practical-experience-new" size="sm" style={{ color: 'var(--color-primary-blue)' }} />
                                         </div>
                                         <h3 style={{
                                             color: 'var(--color-text-primary)',
@@ -817,10 +815,7 @@ export default function AboutPage() {
                     </section>
 
                     {/* 平台数据 */}
-                    <section style={{
-                        textAlign: 'center',
-                        marginBottom: '73px'
-                    }}>
+                    <section className="about-stats-section">
                         <GradientText
                             size="6xl"
                             weight="bold"
@@ -832,17 +827,8 @@ export default function AboutPage() {
                             平台数据
                         </GradientText>
 
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            width: '100%',
-                            paddingTop: '64px !important'
-                        }}>
-                            <div style={{
-                                display: 'flex',
-                                gap: '24px',
-                                width: '1200px'
-                            }}>
+                        <div className="about-stats-cards">
+                            <div className="about-stats-container">
                                 {[
                                     { value: '30万+', label: '月活跃用户' },
                                     { value: '500+', label: '精选案例' },
@@ -882,10 +868,7 @@ export default function AboutPage() {
                     </section>
 
                     {/* 联系我们 */}
-                    <section style={{
-                        textAlign: 'center',
-                        marginBottom: '73px'
-                    }}>
+                    <section className="about-contact-section">
                         <GradientText
                             size="6xl"
                             weight="bold"
@@ -897,18 +880,8 @@ export default function AboutPage() {
                             联系我们
                         </GradientText>
 
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            width: '100%',
-                            paddingTop: '64px !important'
-                        }}>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'flex-start',
-                                width: '1200px',
-                                gap: '157px'
-                            }}>
+                        <div className="about-contact-content">
+                            <div className="about-contact-layout">
                                 {/* 左侧联系信息容器 */}
                                 <div style={{
                                     display: 'flex',

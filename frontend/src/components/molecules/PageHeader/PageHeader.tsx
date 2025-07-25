@@ -67,7 +67,7 @@ export function PageHeader({
 
                 {subtitle && (
                     <h2 className={styles.subtitleAnimation} style={{
-                        color: '#9CA3AF',
+                        color: 'var(--color-text-muted)',
                         fontSize: '20px',
                         fontWeight: '400',
                         lineHeight: '28px',

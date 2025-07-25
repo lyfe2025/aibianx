@@ -36,7 +36,7 @@ export function HeroSection() {
 
             {/* 副标题 */}
             <div style={{
-                color: '#D1D5DB',
+                color: 'var(--color-text-secondary)',
                 fontSize: '20px',
                 lineHeight: '30px',
                 maxWidth: '511px',
@@ -74,7 +74,7 @@ export function HeroSection() {
                     border: '1px solid var(--color-border-primary)',
                         borderRadius: '8px 0 0 8px',
                         padding: '20px 23px 18px 23px',
-                        color: '#757575',
+                        color: 'var(--color-text-disabled)',
                         fontSize: '13.33px',
                         lineHeight: '19px',
                         outline: 'none',

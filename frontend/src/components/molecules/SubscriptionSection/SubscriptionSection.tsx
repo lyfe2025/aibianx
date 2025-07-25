@@ -184,7 +184,7 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
                         borderRadius: '0 8px 8px 0',
                         width: '111px',
                         height: '55px',
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontSize: '16px',
                         lineHeight: '22px',
                         position: 'absolute',

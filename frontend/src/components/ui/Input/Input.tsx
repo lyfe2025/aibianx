@@ -133,7 +133,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                         className="input-error"
                         style={{
                             display: 'block',
-                            color: '#EF4444',
+                            color: 'var(--color-error)',
                             fontSize: 'var(--font-size-xs)',
                             marginTop: 'var(--spacing-1)'
                         }}

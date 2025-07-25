@@ -63,7 +63,7 @@ export function ArticleCard({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     fontSize: 'var(--font-size-sm)',
                     fontWeight: '600',
                     position: 'relative'
@@ -77,7 +77,7 @@ export function ArticleCard({
                             top: 'var(--spacing-2)',
                             right: 'var(--spacing-2)',
                             background: 'rgba(0, 0, 0, 0.7)',
-                            color: '#FFD700',
+                            color: 'var(--color-warning)',
                             fontSize: 'var(--font-size-xs)',
                             padding: '4px 8px',
                             borderRadius: 'var(--radius-sm)',

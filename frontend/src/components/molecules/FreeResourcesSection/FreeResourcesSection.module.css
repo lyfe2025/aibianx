@@ -132,7 +132,8 @@
     display: flex;
     align-items: flex-start;
     min-height: 26px;
-    padding-left: 20px;
+    padding-left: 30px;
+    /* 从20px增加到30px，为标签图标提供更多显示空间 */
 }
 
 .tag {
@@ -167,7 +168,8 @@
     display: flex;
     align-items: flex-start;
     min-height: 24px;
-    padding-left: 20px;
+    padding-left: 30px;
+    /* 与tagContainer保持一致的左边距 */
 }
 
 .titleText {
@@ -185,7 +187,8 @@
     display: flex;
     align-items: flex-start;
     min-height: 20px;
-    padding-left: 20px;
+    padding-left: 30px;
+    /* 与tagContainer保持一致的左边距 */
 }
 
 .descriptionText {

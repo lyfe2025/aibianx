@@ -227,7 +227,7 @@ export function NetworkStatus({
                         alignItems: 'center',
                         gap: '8px',
                         fontSize: '12px',
-                        color: '#9CA3AF',
+                        color: 'var(--color-text-muted)',
                         zIndex: 1000,
                         transition: 'all 0.3s ease',
                         opacity: isOnline ? 0.7 : 1,
@@ -257,11 +257,11 @@ export function NetworkStatus({
                                 style={{
                                     width: '12px',
                                     height: '12px',
-                                    color: '#F59E0B',
+                                    color: 'var(--color-warning)',
                                     animation: 'spin 1s linear infinite',
                                 }}
                             />
-                            <span style={{ color: '#F59E0B' }}>
+                            <span style={{ color: 'var(--color-warning)' }}>
                                 {pendingSyncs}项待同步
                             </span>
                         </>
@@ -278,7 +278,7 @@ export function NetworkStatus({
                         left: 0,
                         right: 0,
                         background: 'linear-gradient(90deg, #F59E0B 0%, #EF4444 100%)',
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         padding: '8px 16px',
                         textAlign: 'center',
                         fontSize: '14px',

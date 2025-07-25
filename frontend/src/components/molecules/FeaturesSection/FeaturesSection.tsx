@@ -128,7 +128,7 @@ export function FeaturesSection({
                                 position: 'relative',
                                 zIndex: 1
                             }}>
-                                <Icon name={feature.icon} size="xl" style={{ color: '#FFFFFF' }} />
+                                <Icon name={feature.icon} size="xl" style={{ color: 'var(--color-text-primary)' }} />
                             </div>
 
                             {/* 标题 */}

@@ -334,7 +334,7 @@ export function SmartSearch({
                             background: 'transparent',
                             border: 'none',
                             outline: 'none',
-                            color: '#FFFFFF',
+                            color: 'var(--color-text-primary)',
                             fontSize: '16px', // 防止iOS缩放
                             lineHeight: '24px',
                             fontFamily: 'var(--font-family-primary)',
@@ -360,22 +360,22 @@ export function SmartSearch({
                                 setSuggestions([])
                                 inputRef.current?.focus()
                             }}
-                                                    style={{
-                            background: 'transparent', // 改为透明背景
-                            border: '1px solid var(--color-border-primary)', // 使用主题边框色
-                            borderRadius: '50%',
-                            width: '24px',
-                            height: '24px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            flexShrink: 0,
-                            transition: 'all 0.2s ease', // 添加过渡效果
-                        }}
+                            style={{
+                                background: 'transparent', // 改为透明背景
+                                border: '1px solid var(--color-border-primary)', // 使用主题边框色
+                                borderRadius: '50%',
+                                width: '24px',
+                                height: '24px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                flexShrink: 0,
+                                transition: 'all 0.2s ease', // 添加过渡效果
+                            }}
                             aria-label="清空搜索"
                         >
-                            <Icon name="x-mark" size="xs" style={{ color: '#9CA3AF' }} />
+                            <Icon name="x-mark" size="xs" style={{ color: 'var(--color-text-muted)' }} />
                         </button>
                     )}
                 </div>
@@ -414,7 +414,7 @@ export function SmartSearch({
                             marginBottom: '4px'
                         }}>
                             <span style={{
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 fontSize: '13px',
                                 fontWeight: 500
                             }}>
@@ -425,7 +425,7 @@ export function SmartSearch({
                                 style={{
                                     background: 'none',
                                     border: 'none',
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: '12px',
                                     cursor: 'pointer',
                                     padding: '4px',
@@ -478,7 +478,7 @@ export function SmartSearch({
                             {/* 建议内容 */}
                             <div style={{ flex: 1, minWidth: 0 }}>
                                 <div style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '14px',
                                     lineHeight: '20px',
                                     overflow: 'hidden',
@@ -489,7 +489,7 @@ export function SmartSearch({
                                 </div>
                                 {suggestion.category && (
                                     <div style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: '12px',
                                         lineHeight: '16px',
                                     }}>
@@ -501,7 +501,7 @@ export function SmartSearch({
                             {/* 热门度计数 */}
                             {suggestion.count && (
                                 <div style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: '12px',
                                     lineHeight: '16px',
                                     flexShrink: 0,
@@ -520,11 +520,11 @@ export function SmartSearch({
                             marginBottom: '4px',
                             borderTop: '1px solid rgba(42, 42, 42, 0.50)',
                         }}>
-                            <span style={{
-                                color: '#9CA3AF',
-                                fontSize: '13px',
-                                fontWeight: 500
-                            }}>
+                                                            <span style={{
+                                    color: 'var(--color-text-muted)',
+                                    fontSize: '13px',
+                                    fontWeight: 500
+                                }}>
                                 热门搜索
                             </span>
                         </div>

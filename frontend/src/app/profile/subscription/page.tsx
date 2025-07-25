@@ -29,7 +29,7 @@ export default function MySubscriptionPage() {
         overflow: 'hidden'
       }}>
         <h1 style={{
-          color: '#FFFFFF',
+          color: 'var(--color-text-primary)',
           fontSize: 'var(--font-size-3xl)',
           lineHeight: '32px',
           fontWeight: 'normal',
@@ -66,7 +66,7 @@ export default function MySubscriptionPage() {
           gap: '16px' // 添加间距防止挤压
         }}>
           <h2 style={{
-            color: '#FFFFFF',
+            color: 'var(--color-text-primary)',
             fontSize: 'var(--font-size-2xl)',
             lineHeight: '28px',
             fontWeight: 'normal',
@@ -89,7 +89,7 @@ export default function MySubscriptionPage() {
             overflow: 'hidden'
           }}>
             <span style={{
-              color: '#60A5FA',
+              color: 'var(--color-primary-blue)',
               fontSize: 'var(--font-size-base)',
               lineHeight: '20px',
               // 防换行保护

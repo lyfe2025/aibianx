@@ -165,7 +165,7 @@ export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormPro
                         }}
                     >
                         {formData.rememberMe && (
-                            <Icon name="modals/checkbox-icon" size="xs" style={{ color: '#FFFFFF' }} />
+                            <Icon name="modals/checkbox-icon" size="xs" style={{ color: 'var(--color-text-primary)' }} />
                         )}
                     </button>
                     记住我
@@ -198,7 +198,7 @@ export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormPro
                     border: '1px solid rgba(239, 68, 68, 0.3)',
                     borderRadius: 'var(--radius-md)',
                     fontSize: 'var(--font-size-sm)',
-                    color: '#EF4444'
+                    color: 'var(--color-error)'
                 }}>
                     {errors.submit}
                 </div>
@@ -228,7 +228,7 @@ export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormPro
                 }} />
                 <div style={{
                     fontSize: 'var(--font-size-base)',
-                    color: '#6B7280',
+                    color: 'var(--color-text-disabled)',
                     lineHeight: '24px',
                     textAlign: 'center',
                     whiteSpace: 'nowrap'

@@ -42,7 +42,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
         marginBottom: '24px'
       }}>
         <div style={{
-          color: '#FFFFFF',
+          color: 'var(--color-text-primary)',
           fontSize: '20px',
           lineHeight: '28px',
           alignItems: 'center',
@@ -92,12 +92,12 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
                 height: '16px',
                 marginTop: '2px',
                 marginBottom: '2px',
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 flexShrink: 0
               }}
             />
             <div style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               lineHeight: '20px',
               textAlign: 'center',
               justifyContent: 'center',
@@ -138,12 +138,12 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
                 height: '16px',
                 marginTop: '2px',
                 marginBottom: '2px',
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 flexShrink: 0
               }}
             />
             <div style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               lineHeight: '20px',
               textAlign: 'center',
               justifyContent: 'center',
@@ -171,7 +171,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
         overflow: 'hidden'
       }}>
         <div style={{
-          color: '#D1D5DB',
+          color: 'var(--color-text-secondary)',
           fontSize: '16px',
           lineHeight: '24px',
           alignItems: 'center',
@@ -229,7 +229,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               style={{
                 width: '24px', // 减小图标尺寸
                 height: '24px',
-                color: '#FFFFFF'
+                color: 'var(--color-text-primary)'
               }}
             />
           </div>
@@ -249,7 +249,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               minHeight: '20px'
             }}>
               <div style={{
-                color: '#D1D5DB',
+                color: 'var(--color-text-secondary)',
                 fontSize: '14px', // 添加字体大小设置
                 lineHeight: '18px', // 减小行高
                 alignItems: 'center',
@@ -281,7 +281,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               minWidth: '140px' // 减小最小宽度
             }}>
               <div style={{
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 fontSize: '18px', // 减小字体大小
                 lineHeight: '24px', // 减小行高
                 alignItems: 'center',
@@ -311,12 +311,12 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
                   style={{
                     width: '14px',
                     height: '14px',
-                    color: '#60A5FA',
+                    color: 'var(--color-primary-blue)',
                     flexShrink: 0
                   }}
                 />
                 <div style={{
-                  color: '#60A5FA',
+                  color: 'var(--color-primary-blue)',
                   lineHeight: '20px',
                   textAlign: 'center',
                   justifyContent: 'center',
@@ -388,12 +388,12 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
                 style={{
                   width: '24px',
                   height: '24px',
-                  color: '#FFFFFF'
+                  color: 'var(--color-text-primary)'
                 }}
               />
             </div>
             <div style={{
-              color: '#D1D5DB',
+              color: 'var(--color-text-secondary)',
               lineHeight: '20px',
               alignItems: 'center',
               display: 'flex',
@@ -408,7 +408,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               已邀请人数
             </div>
             <div style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               fontSize: '20px',
               lineHeight: '28px',
               alignItems: 'center',
@@ -453,12 +453,12 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
                 style={{
                   width: '24px',
                   height: '24px',
-                  color: '#FFFFFF'
+                  color: 'var(--color-text-primary)'
                 }}
               />
             </div>
             <div style={{
-              color: '#D1D5DB',
+              color: 'var(--color-text-secondary)',
               lineHeight: '20px',
               alignItems: 'center',
               display: 'flex',
@@ -473,7 +473,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               待激活人数
             </div>
             <div style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               fontSize: '20px',
               lineHeight: '28px',
               alignItems: 'center',
@@ -518,12 +518,12 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
                 style={{
                   width: '24px',
                   height: '24px',
-                  color: '#FFFFFF'
+                  color: 'var(--color-text-primary)'
                 }}
               />
             </div>
             <div style={{
-              color: '#D1D5DB',
+              color: 'var(--color-text-secondary)',
               lineHeight: '20px',
               alignItems: 'center',
               display: 'flex',
@@ -538,7 +538,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               累计返佣金额
             </div>
             <div style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               fontSize: '20px',
               lineHeight: '28px',
               alignItems: 'center',
@@ -593,12 +593,12 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               height: '20px',
               marginTop: '2px',
               marginBottom: '2px',
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               flexShrink: 0
             }}
           />
           <div style={{
-            color: '#FFFFFF',
+            color: 'var(--color-text-primary)',
             fontSize: '16px',
             lineHeight: '24px',
             textAlign: 'center',
@@ -640,12 +640,12 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               height: '20px',
               marginTop: '2px',
               marginBottom: '2px',
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               flexShrink: 0
             }}
           />
           <div style={{
-            color: '#FFFFFF',
+            color: 'var(--color-text-primary)',
             fontSize: '16px',
             lineHeight: '24px',
             textAlign: 'center',

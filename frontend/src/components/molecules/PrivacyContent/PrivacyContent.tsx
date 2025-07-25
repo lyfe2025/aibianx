@@ -81,7 +81,7 @@ export function PrivacyContent({ onBack }: PrivacyContentProps) {
                         padding: 'var(--spacing-3)',
                         marginBottom: 'var(--spacing-3)'
                     }}>
-                        <p style={{ color: '#93C5FD', margin: 0 }}>
+                        <p style={{ color: 'var(--color-primary-blue)', margin: 0 }}>
                             <strong>核心原则：</strong>权责一致原则、目的明确原则、选择同意原则、最少够用原则、确保安全原则、主体参与原则、公开透明原则
                         </p>
                     </div>
@@ -324,7 +324,7 @@ export function PrivacyContent({ onBack }: PrivacyContentProps) {
                         borderRadius: 'var(--radius-lg)',
                         padding: 'var(--spacing-3)'
                     }}>
-                        <p style={{ color: '#93C5FD', margin: 0 }}>
+                        <p style={{ color: 'var(--color-primary-blue)', margin: 0 }}>
                             <strong>响应时限：</strong>我们将在收到您的请求后15个工作日内予以回复。
                         </p>
                     </div>

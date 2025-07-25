@@ -167,7 +167,7 @@ export function AccessibilityProvider({
                     top: '-40px',
                     left: '8px',
                     background: '#000000',
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     padding: '8px 12px',
                     borderRadius: '4px',
                     textDecoration: 'none',

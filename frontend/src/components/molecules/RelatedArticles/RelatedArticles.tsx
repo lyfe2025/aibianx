@@ -96,7 +96,7 @@ export function RelatedArticles({
                                         display: 'inline-flex',
                                         alignItems: 'center',
                                         gap: '4px',
-                                        color: '#FFD700',
+                                        color: 'var(--color-warning)',
                                         fontSize: '12px',
                                         marginRight: '8px',
                                         flexShrink: 0,

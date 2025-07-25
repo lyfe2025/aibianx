@@ -63,7 +63,7 @@ export function ArticleHeader({
                     alignItems: 'center',
                     gap: '6px',
                     background: 'rgba(255, 215, 0, 0.1)',
-                    color: '#FFD700',
+                    color: 'var(--color-warning)',
                     fontSize: 'var(--font-size-sm)',
                     fontWeight: '500',
                     padding: '6px 12px',

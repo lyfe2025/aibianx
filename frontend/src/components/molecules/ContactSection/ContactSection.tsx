@@ -139,7 +139,7 @@ export function ContactSection({
                                     justifyContent: 'center',
                                     boxShadow: '0 4px 12px rgba(59, 130, 246, 0.25)'
                                 }}>
-                                    <Icon name={method.icon} size="sm" style={{ color: '#FFFFFF' }} />
+                                    <Icon name={method.icon} size="sm" style={{ color: 'var(--color-text-primary)' }} />
                                 </div>
 
                                 {/* 内容 */}

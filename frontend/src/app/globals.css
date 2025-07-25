@@ -2629,3 +2629,81 @@ html {
   padding-top: 32px !important;
   margin-bottom: 64px !important;
 }
+
+/* 成为会员区域样式 */
+.about-membership-section {
+  text-align: center !important;
+  margin-bottom: 74px !important;
+}
+
+.about-membership-cards-layout {
+  display: flex !important;
+  gap: 32px !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  width: 100% !important;
+}
+
+.about-membership-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 32px !important;
+  width: 744px !important;
+}
+
+/* 为什么选择我们区域样式 */
+.about-why-choose-section {
+  text-align: center !important;
+  margin-bottom: 73px !important;
+}
+
+.about-why-choose-cards {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+}
+
+.about-why-choose-container {
+  display: flex !important;
+  gap: 24px !important;
+  width: 1200px !important;
+}
+
+/* 平台数据区域样式 */
+.about-stats-section {
+  text-align: center !important;
+  margin-bottom: 73px !important;
+}
+
+.about-stats-cards {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+  padding-top: 64px !important;
+}
+
+.about-stats-container {
+  display: flex !important;
+  gap: 24px !important;
+  width: 1200px !important;
+}
+
+/* 联系我们区域样式 */
+.about-contact-section {
+  text-align: center !important;
+  margin-bottom: 73px !important;
+}
+
+.about-contact-content {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+  padding-top: 64px !important;
+}
+
+.about-contact-layout {
+  display: flex !important;
+  align-items: flex-start !important;
+  width: 1200px !important;
+  gap: 157px !important;
+}

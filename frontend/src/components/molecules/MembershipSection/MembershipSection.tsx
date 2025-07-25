@@ -122,7 +122,7 @@ export function MembershipSection({
                         top: 'var(--spacing-6)',
                         right: 'var(--spacing-6)',
                         background: '#FF6B35',
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         padding: '6px 12px',
                         borderRadius: 'var(--radius-full)',
                         fontSize: 'var(--font-size-sm)',
@@ -223,7 +223,7 @@ export function MembershipSection({
                             </span>
                             <span style={{
                                 fontSize: 'var(--font-size-sm)',
-                                color: '#10B981',
+                                color: 'var(--color-success)',
                                 background: 'rgba(16, 185, 129, 0.1)',
                                 padding: '2px 8px',
                                 borderRadius: 'var(--radius-sm)',
@@ -263,7 +263,7 @@ export function MembershipSection({
                                         name="membership-check"
                                         size="sm"
                                         style={{
-                                            color: '#10B981',
+                                            color: 'var(--color-success)',
                                             flexShrink: 0
                                         }}
                                     />
@@ -317,7 +317,7 @@ export function MembershipSection({
                                 flexShrink: 0,
                                 boxShadow: '0 6px 18px rgba(59, 130, 246, 0.3)'
                             }}>
-                                <Icon name={feature.icon} size="lg" style={{ color: '#FFFFFF' }} />
+                                <Icon name={feature.icon} size="lg" style={{ color: 'var(--color-text-primary)' }} />
                             </div>
 
                             {/* 内容 */}

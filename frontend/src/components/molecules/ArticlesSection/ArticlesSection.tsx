@@ -144,7 +144,7 @@ export function ArticlesSection() {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                color: '#FFFFFF',
+                                color: 'var(--color-text-primary)',
                                 fontSize: '14px',
                                 fontWeight: 600,
                                 marginRight: '16px',
@@ -195,7 +195,7 @@ export function ArticlesSection() {
                                 <div style={{
                                     display: 'flex',
                                     gap: '11px',
-                                    color: '#6B7280',
+                                    color: 'var(--color-text-disabled)',
                                     fontSize: '12px',
                                     lineHeight: '17px'
                                 }}>
@@ -214,7 +214,7 @@ export function ArticlesSection() {
                         border: 'none',
                         borderRadius: '8px',
                         padding: '18px 24px',
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontSize: '13.33px',
                         lineHeight: '15px',
                         cursor: 'pointer',

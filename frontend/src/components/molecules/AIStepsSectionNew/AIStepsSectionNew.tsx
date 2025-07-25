@@ -139,7 +139,7 @@ export function AIStepsSectionNew() {
                                 marginBottom: '13px'
                             }}>
                                 <div style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '20px',
                                     lineHeight: '28px',
                                     fontWeight: '600'
@@ -150,7 +150,7 @@ export function AIStepsSectionNew() {
 
                             {/* 步骤标题 */}
                             <div style={{
-                                color: '#FFFFFF',
+                                color: 'var(--color-text-primary)',
                                 fontWeight: '700',
                                 fontSize: '18px',
                                 lineHeight: '25px',
@@ -162,7 +162,7 @@ export function AIStepsSectionNew() {
 
                             {/* 步骤描述 */}
                             <div style={{
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 fontSize: '16px',
                                 lineHeight: '20px',
                                 textAlign: 'center',

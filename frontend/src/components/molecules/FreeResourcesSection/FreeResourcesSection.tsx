@@ -19,7 +19,7 @@ export function FreeResourcesSection() {
             description: '零基础快速上手AI工具，掌握核心技能',
             image: '/images/illustrations/tech-guide.svg',
             tag: '技术指南',
-            tagColor: '#3B82F6',
+            tagColor: 'var(--color-primary-blue)',
             tagBg: 'rgba(12, 30, 71, 0.80)',
             tagBorder: 'rgba(59, 130, 246, 0.40)'
         },
@@ -29,7 +29,7 @@ export function FreeResourcesSection() {
             description: '10种经过验证的AI赚钱模式详解',
             image: '/images/illustrations/monetization-guide.svg',
             tag: '变现心得',
-            tagColor: '#F97316',
+            tagColor: 'var(--color-orange)',
             tagBg: 'rgba(58, 23, 8, 0.80)',
             tagBorder: 'rgba(249, 115, 22, 0.40)'
         },
@@ -39,7 +39,7 @@ export function FreeResourcesSection() {
             description: '5个月入过万的AI创业成功故事',
             image: '/images/illustrations/case-studies.svg',
             tag: '实战案例',
-            tagColor: '#10B981',
+            tagColor: 'var(--color-success)',
             tagBg: 'rgba(12, 40, 23, 0.80)',
             tagBorder: 'rgba(16, 185, 129, 0.40)'
         },
@@ -49,7 +49,7 @@ export function FreeResourcesSection() {
             description: '50+必备AI工具清单及使用指南',
             image: '/images/illustrations/tools-handbook.svg',
             tag: 'AI工具',
-            tagColor: '#8B5CF6',
+            tagColor: 'var(--color-primary-purple)',
             tagBg: 'rgba(30, 12, 71, 0.80)',
             tagBorder: 'rgba(139, 92, 246, 0.40)'
         }

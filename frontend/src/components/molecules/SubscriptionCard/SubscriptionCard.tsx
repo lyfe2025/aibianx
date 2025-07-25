@@ -48,7 +48,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
             overflow: 'hidden'
           }}>
             <span style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               fontSize: '18px',
               fontWeight: '600',
               lineHeight: '28px',
@@ -64,7 +64,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
               flexShrink: 0 // 防止徽章被压缩
             }}>
               <span style={{
-                color: '#FFFFFF',
+                color: 'var(--color-text-primary)',
                 fontSize: '12px',
                 lineHeight: '16px',
                 // 防换行保护
@@ -82,7 +82,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
             overflow: 'hidden'
           }}>
             <p style={{
-              color: '#D1D5DB',
+              color: 'var(--color-text-secondary)',
               fontSize: '14px',
               lineHeight: '18px', // 与个人中心保持一致
               margin: 0,
@@ -92,7 +92,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
               textOverflow: 'ellipsis'
             }}>到期时间: 2024年12月31日 (剩余245天)</p>
             <p style={{
-              color: '#D1D5DB',
+              color: 'var(--color-text-secondary)',
               fontSize: '14px',
               lineHeight: '18px', // 与个人中心保持一致
               margin: 0,
@@ -147,7 +147,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
             padding: '10px',
             flexShrink: 0 // 防止图标被压缩
           }}>
-            <Icon name="privilege-icon" size="sm" style={{ color: '#EAB308' }} />
+            <Icon name="privilege-icon" size="sm" style={{ color: 'var(--color-warning)' }} />
           </div>
           <div style={{
             flex: 1,
@@ -155,7 +155,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
             overflow: 'hidden'
           }}>
             <div style={{
-              color: '#FFFFFF',
+              color: 'var(--color-text-primary)',
               fontSize: '16px',
               fontWeight: '500',
               lineHeight: '24px',
@@ -166,7 +166,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
               textOverflow: 'ellipsis'
             }}>专属会员权益</div>
             <div style={{
-              color: '#9CA3AF',
+              color: 'var(--color-text-muted)',
               fontSize: '12px',
               lineHeight: '16px',
               // 防换行保护 - 权益描述
@@ -175,7 +175,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
             }}>查看您的专属会员权益和使用方式</div>
           </div>
         </div>
-        <Icon name="privilege-arrow" size="sm" style={{ color: '#60A5FA', flexShrink: 0 }} />
+        <Icon name="privilege-arrow" size="sm" style={{ color: 'var(--color-primary-blue)', flexShrink: 0 }} />
       </div>
     </div>
   )

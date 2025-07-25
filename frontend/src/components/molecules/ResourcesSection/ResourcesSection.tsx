@@ -10,7 +10,7 @@ export function ResourcesSection() {
             title: 'AI技术入门指南',
             description: '零基础快速上手AI工具，掌握核心技能',
             tag: '技术指南',
-            tagColor: '#3B82F6',
+            tagColor: 'var(--color-primary-blue)',
             image: '/images/resources/ai-guide.svg'
         },
         {
@@ -18,7 +18,7 @@ export function ResourcesSection() {
             title: 'AI变现秘籍手册',
             description: '10种经过验证的AI赚钱模式详解',
             tag: '变现心得',
-            tagColor: '#F97316',
+            tagColor: 'var(--color-orange)',
             image: '/images/resources/monetization-guide.svg'
         },
         {
@@ -26,7 +26,7 @@ export function ResourcesSection() {
             title: 'AI创业案例集',
             description: '5个月入过万的AI创业成功故事',
             tag: '实战案例',
-            tagColor: '#10B981',
+            tagColor: 'var(--color-success)',
             image: '/images/resources/startup-cases.svg'
         },
         {
@@ -34,7 +34,7 @@ export function ResourcesSection() {
             title: 'AI工具速查手册',
             description: '50+必备AI工具清单及使用指南',
             tag: 'AI工具',
-            tagColor: '#8B5CF6',
+            tagColor: 'var(--color-primary-purple)',
             image: '/images/resources/tools-handbook.svg'
         }
     ]
@@ -90,7 +90,7 @@ export function ResourcesSection() {
                             width: '280px',
                             background: 'var(--color-bg-secondary)',
                             backdropFilter: 'blur(12px)',
-                                                          border: '1px solid var(--color-border-primary)',
+                            border: '1px solid var(--color-border-primary)',
                             borderRadius: '16px',
                             padding: '25px',
                             display: 'flex',
@@ -107,7 +107,7 @@ export function ResourcesSection() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            color: '#FFFFFF',
+                            color: 'var(--color-text-primary)',
                             fontSize: '14px',
                             fontWeight: 600
                         }}>
@@ -117,7 +117,7 @@ export function ResourcesSection() {
                         {/* 资源标签 */}
                         <div style={{
                             marginTop: '6px',
-                            paddingLeft: '20px'
+                            paddingLeft: '30px'
                         }}>
                             <div style={{
                                 display: 'inline-block',
@@ -138,7 +138,7 @@ export function ResourcesSection() {
                         {/* 资源标题 */}
                         <div style={{
                             marginTop: '2px',
-                            paddingLeft: '20px'
+                            paddingLeft: '30px'
                         }}>
                             <h3 style={{
                                 color: 'var(--color-text-primary)',
@@ -153,10 +153,10 @@ export function ResourcesSection() {
 
                         {/* 资源描述 */}
                         <div style={{
-                            paddingLeft: '20px'
+                            paddingLeft: '30px'
                         }}>
                             <p style={{
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 fontSize: '14px',
                                 lineHeight: '20px',
                                 margin: 0

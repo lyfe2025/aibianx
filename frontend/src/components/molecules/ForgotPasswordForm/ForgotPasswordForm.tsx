@@ -198,7 +198,7 @@ export function ForgotPasswordForm({ onSubmit, isLoading: externalLoading }: For
                     border: '1px solid rgba(239, 68, 68, 0.3)',
                     borderRadius: 'var(--radius-md)',
                     fontSize: 'var(--font-size-sm)',
-                    color: '#EF4444'
+                    color: 'var(--color-error)'
                 }}>
                     {errors.submit}
                 </div>

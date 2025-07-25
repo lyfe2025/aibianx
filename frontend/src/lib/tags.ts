@@ -199,15 +199,17 @@ export function getAllActiveTags(category?: TagCategory): Tag[] {
  * @returns 图标名称
  */
 function getTagIcon(tagId: string): string | undefined {
-    const iconMap: Record<string, string> = {
-        'ai-tools': 'ai-tool-tag-icon',
-        'monetization': 'monetization-tag-icon',
-        'tech-guide': 'tag-tech',
-        'case-study': 'tag-case',
-        'trending': 'tag-tools'
-    }
+    // 移除所有标签图标，只保留文字和背景样式
+    // const iconMap: Record<string, string> = {
+    //     'ai-tools': 'ai-tool-tag-icon',
+    //     'monetization': 'monetization-tag-icon',
+    //     'tech-guide': 'tag-tech',
+    //     'case-study': 'tag-case',
+    //     'trending': 'tag-tools'
+    // }
 
-    return iconMap[tagId]
+    // return iconMap[tagId]
+    return undefined
 }
 
 /**

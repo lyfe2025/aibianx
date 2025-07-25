@@ -161,7 +161,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                             gap: '4px'
                         }}>
                             <div style={{
-                                color: '#D1D5DB',
+                                color: 'var(--color-text-secondary)',
                                 fontSize: '14px',
                                 lineHeight: '20px',
                                 textAlign: 'center'
@@ -169,7 +169,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                 更换头像
                             </div>
                             <div style={{
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 fontSize: '12px',
                                 lineHeight: '16px',
                                 textAlign: 'center'
@@ -202,7 +202,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                 paddingLeft: '15px'
                             }}>
                                 <div style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     lineHeight: '24px',
                                     textAlign: 'right',
                                     width: '48px',
@@ -234,7 +234,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                             background: 'transparent',
                                             border: 'none',
                                             outline: 'none',
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             lineHeight: '24px',
                                             fontSize: '16px',
                                             fontFamily: 'var(--font-family-primary)'
@@ -253,7 +253,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                 alignItems: 'stretch'
                             }}>
                                 <div style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     lineHeight: '24px',
                                     textAlign: 'right',
                                     width: '63px',
@@ -285,7 +285,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                             background: 'transparent',
                                             border: 'none',
                                             outline: 'none',
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             lineHeight: '24px',
                                             fontSize: '16px',
                                             fontFamily: 'var(--font-family-primary)'
@@ -304,7 +304,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                 alignItems: 'stretch'
                             }}>
                                 <div style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     lineHeight: '24px',
                                     textAlign: 'right',
                                     width: '63px',
@@ -336,7 +336,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                             background: 'transparent',
                                             border: 'none',
                                             outline: 'none',
-                                            color: '#FFFFFF',
+                                            color: 'var(--color-text-primary)',
                                             lineHeight: '24px',
                                             fontSize: '16px',
                                             fontFamily: 'var(--font-family-primary)'
@@ -355,7 +355,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                 alignItems: 'stretch'
                             }}>
                                 <div style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     lineHeight: '24px',
                                     textAlign: 'right',
                                     width: '63px',
@@ -387,7 +387,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                             background: 'transparent',
                                             border: 'none',
                                             outline: 'none',
-                                            color: '#9CA3AF',
+                                            color: 'var(--color-text-muted)',
                                             lineHeight: '24px',
                                             fontSize: '16px',
                                             fontFamily: 'var(--font-family-primary)',
@@ -428,7 +428,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                             onClick={handleReset}
                         >
                             <div style={{
-                                color: '#FFFFFF',
+                                color: 'var(--color-text-primary)',
                                 lineHeight: '24px',
                                 textAlign: 'center',
                                 width: '32px',
@@ -458,7 +458,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                             onClick={handleSubmit}
                         >
                             <div style={{
-                                color: '#FFFFFF',
+                                color: 'var(--color-text-primary)',
                                 lineHeight: '24px',
                                 textAlign: 'center',
                                 width: '32px',
@@ -480,10 +480,10 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                 <div style={{
                     padding: '40px',
                     textAlign: 'center',
-                    color: '#9CA3AF'
+                    color: 'var(--color-text-muted)'
                 }}>
                     <h3 style={{
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontSize: '20px',
                         marginBottom: '16px'
                     }}>

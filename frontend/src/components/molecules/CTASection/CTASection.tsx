@@ -99,7 +99,7 @@ export function CTASection() {
                                     {item.icon}
                                 </div>
                                 <div style={{
-                                    color: '#D1D5DB',
+                                    color: 'var(--color-text-secondary)',
                                     fontSize: '18px',
                                     lineHeight: '25px'
                                 }}>
@@ -126,7 +126,7 @@ export function CTASection() {
                         marginBottom: '15px'
                     }}>
                         <h3 style={{
-                            color: '#FFFFFF',
+                            color: 'var(--color-text-primary)',
                             fontSize: '24px',
                             fontWeight: 700,
                             lineHeight: '34px',
@@ -146,7 +146,7 @@ export function CTASection() {
                     </div>
 
                     <p style={{
-                        color: '#9CA3AF',
+                        color: 'var(--color-text-muted)',
                         fontSize: '16px',
                         lineHeight: '22px',
                         textAlign: 'center',
@@ -172,7 +172,7 @@ export function CTASection() {
                             alignItems: 'center',
                             transition: 'all 0.2s ease'
                         }}>
-                            <div style={{ color: '#3B82F6', fontSize: '20px' }}>👤</div>
+                            <div style={{ color: 'var(--color-primary-blue)', fontSize: '20px' }}>👤</div>
                             <input
                                 type="text"
                                 placeholder="您的称呼"
@@ -198,7 +198,7 @@ export function CTASection() {
                                     flex: 1,
                                     background: 'transparent',
                                     border: 'none',
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: '13.33px',
                                     lineHeight: '19px',
                                     outline: 'none'
@@ -216,7 +216,7 @@ export function CTASection() {
                             alignItems: 'center',
                             transition: 'all 0.2s ease'
                         }}>
-                            <div style={{ color: '#3B82F6', fontSize: '20px' }}>📧</div>
+                            <div style={{ color: 'var(--color-primary-blue)', fontSize: '20px' }}>📧</div>
                             <input
                                 type="email"
                                 placeholder="请输入您的邮箱"
@@ -242,7 +242,7 @@ export function CTASection() {
                                     flex: 1,
                                     background: 'transparent',
                                     border: 'none',
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: '13.33px',
                                     lineHeight: '19px',
                                     outline: 'none'
@@ -275,7 +275,7 @@ export function CTASection() {
                             opacity: 0.78
                         }} />
                         <p style={{
-                            color: '#6B7280',
+                            color: 'var(--color-text-disabled)',
                             fontSize: '14px',
                             lineHeight: '20px',
                             textAlign: 'center'

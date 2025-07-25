@@ -99,7 +99,7 @@ export function Pagination({
                         <span
                             key={`ellipsis-${index}`}
                             style={{
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 fontSize: '16px',
                                 fontWeight: '400',
                                 lineHeight: '40px', // 与按钮高度对齐

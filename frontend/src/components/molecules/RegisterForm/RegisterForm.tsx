@@ -304,7 +304,7 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
                     }}
                 >
                     {formData.agreeToTerms && (
-                        <Icon name="modals/checkbox-icon" size="xs" style={{ color: '#FFFFFF' }} />
+                        <Icon name="modals/checkbox-icon" size="xs" style={{ color: 'var(--color-text-primary)' }} />
                     )}
                 </button>
                 <div style={{ flex: 1 }}>
@@ -354,7 +354,7 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
                     {errors.agreeToTerms && (
                         <div style={{
                             fontSize: 'var(--font-size-xs)',
-                            color: '#EF4444',
+                            color: 'var(--color-error)',
                             marginTop: 'var(--spacing-1)'
                         }}>
                             {errors.agreeToTerms}
@@ -371,7 +371,7 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
                     border: '1px solid rgba(239, 68, 68, 0.3)',
                     borderRadius: 'var(--radius-md)',
                     fontSize: 'var(--font-size-sm)',
-                    color: '#EF4444'
+                    color: 'var(--color-error)'
                 }}>
                     {errors.submit}
                 </div>
