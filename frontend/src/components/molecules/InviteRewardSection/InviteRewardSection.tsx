@@ -187,47 +187,48 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
         </div>
       </div>
 
-      {/* 统计数据区域 */}
+      {/* 统计数据区域 - 居中分割线，统计项在右侧 */}
       <div style={{
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        alignItems: 'center',
         marginBottom: '32px',
+        position: 'relative',
         // 防换行保护
         flexWrap: 'nowrap',
         overflow: 'hidden',
-        gap: '32px' // 添加间距防止挤压
+        minHeight: '80px',
+        width: '100%'
       }}>
-        {/* 左侧：邀请码区块 */}
+        {/* 左侧：邀请码区块 - 占据左半部分 */}
         <div style={{
           display: 'flex',
           flexDirection: 'row',
-          alignItems: 'flex-start',
-          borderRight: '1px solid rgba(255, 255, 255, 0.10)',
+          alignItems: 'center',
           gap: '16px',
-          paddingRight: '32px',
+          width: '50%', // 精确占据左半部分
+          paddingRight: '20px', // 与分割线的距离
           // 防换行保护
-          flexShrink: 0,
-          minWidth: '280px' // 为邀请码区块预留空间
+          overflow: 'hidden',
+          justifyContent: 'flex-end' // 内容靠右对齐，更接近分割线
         }}>
           {/* 邀请码区块 */}
           <div style={{
             background: 'rgba(255, 255, 255, 0.10)',
             borderRadius: '8px',
-            padding: '12px',
+            padding: '10px', // 减小内边距
             display: 'flex',
-            width: '56px',
-            height: '56px',
+            width: '48px', // 减小图标容器尺寸
+            height: '48px',
             justifyContent: 'center',
             alignItems: 'center',
             flexShrink: 0
           }}>
             <Icon
               name="subscription/invite-code"
-              size="xl"
+              size="lg"
               style={{
-                width: '32px',
-                height: '32px',
+                width: '24px', // 减小图标尺寸
+                height: '24px',
                 color: '#FFFFFF'
               }}
             />
@@ -239,7 +240,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
             alignItems: 'stretch',
             flex: 1,
             // 防换行保护
-            minWidth: '180px', // 为邀请码文字预留空间
+            minWidth: '160px', // 减小最小宽度
             overflow: 'hidden'
           }}>
             <div style={{
@@ -249,46 +250,47 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
             }}>
               <div style={{
                 color: '#D1D5DB',
-                lineHeight: '20px',
+                fontSize: '14px', // 添加字体大小设置
+                lineHeight: '18px', // 减小行高
                 alignItems: 'center',
                 display: 'flex',
                 // 防换行保护 - 邀请码标签
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                minHeight: '20px',
-                minWidth: '120px' // 为"您的专属邀请码"预留空间
+                minHeight: '18px', // 减小最小高度
+                minWidth: '100px' // 减小最小宽度
               }}>
                 您的专属邀请码
               </div>
             </div>
             <div style={{
               background: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: '8px',
+              borderRadius: '6px', // 减小圆角
               display: 'flex',
               justifyContent: 'space-between',
               flexDirection: 'row',
-              paddingLeft: '8px',
-              paddingRight: '8px',
-              paddingTop: '8px',
-              paddingBottom: '8px',
+              paddingLeft: '10px', // 减小内边距
+              paddingRight: '10px',
+              paddingTop: '6px',
+              paddingBottom: '6px',
               // 防换行保护
               flexWrap: 'nowrap',
               overflow: 'hidden',
-              gap: '8px',
-              minWidth: '160px' // 为邀请码输入框预留空间
+              gap: '6px', // 减小间距
+              minWidth: '140px' // 减小最小宽度
             }}>
               <div style={{
                 color: '#FFFFFF',
-                fontSize: '20px',
-                lineHeight: '28px',
+                fontSize: '18px', // 减小字体大小
+                lineHeight: '24px', // 减小行高
                 alignItems: 'center',
                 display: 'flex',
                 // 防换行保护 - 邀请码
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                minHeight: '28px',
+                minHeight: '24px', // 减小最小高度
                 flexShrink: 0
               }}>
                 AI7859
@@ -297,9 +299,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
                 gap: '4px',
                 display: 'flex',
                 flexDirection: 'row',
-                alignItems: 'stretch',
-                paddingTop: '4px',
-                paddingBottom: '4px',
+                alignItems: 'center', // 改为居中对齐
                 cursor: 'pointer',
                 // 防换行保护 - 复制按钮
                 flexShrink: 0,
@@ -311,7 +311,6 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
                   style={{
                     width: '14px',
                     height: '14px',
-                    marginTop: '3px',
                     color: '#60A5FA',
                     flexShrink: 0
                   }}
@@ -336,16 +335,29 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
           </div>
         </div>
 
-        {/* 右侧统计数据 - 修复水平对齐 */}
+        {/* 居中分割线 - 绝对定位在容器中心 */}
+        <div style={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '1px',
+          height: '60px',
+          background: 'rgba(255, 255, 255, 0.10)',
+          zIndex: 1
+        }}></div>
+
+        {/* 右侧：统计数据区域 - 占据右半部分 */}
         <div style={{
           display: 'flex',
-          gap: '40px',
-          alignItems: 'flex-start',
-          flex: 1,
+          gap: '16px', // 优化间距，更紧凑
+          alignItems: 'center',
+          width: '50%', // 精确占据右半部分
+          paddingLeft: '20px', // 与分割线的距离
           // 防换行保护
           flexWrap: 'nowrap',
           overflow: 'hidden',
-          justifyContent: 'flex-start' // 确保左对齐
+          justifyContent: 'space-around' // 平均分布，但保持内容间距
         }}>
           {/* 已邀请人数 */}
           <div style={{
@@ -354,7 +366,8 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
             alignItems: 'center',
             // 防换行保护
             flexShrink: 0,
-            minWidth: '90px', // 为统计项预留空间
+            minWidth: '70px', // 进一步优化最小宽度
+            flex: 1, // 平均分配空间
             textAlign: 'center'
           }}>
             <div style={{
@@ -418,7 +431,8 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
             alignItems: 'center',
             // 防换行保护
             flexShrink: 0,
-            minWidth: '90px', // 为统计项预留空间
+            minWidth: '70px', // 进一步优化最小宽度
+            flex: 1, // 平均分配空间
             textAlign: 'center'
           }}>
             <div style={{
@@ -482,7 +496,8 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
             alignItems: 'center',
             // 防换行保护
             flexShrink: 0,
-            minWidth: '110px', // 为金额数字预留更多空间
+            minWidth: '85px', // 为金额数字预留稍大空间
+            flex: 1, // 平均分配空间
             textAlign: 'center'
           }}>
             <div style={{
@@ -537,7 +552,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
             }}>
               ¥1,235
             </div>
-          </div>
+                      </div>
         </div>
       </div>
 

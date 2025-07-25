@@ -94,7 +94,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div 
+    <div
       className="settings-page"
       style={{
         padding: '32px 40px',
@@ -229,8 +229,7 @@ export default function SettingsPage() {
               marginTop: '24px',
               marginBottom: '32px',
               gap: '16px',
-              paddingBottom: '32px',
-              borderBottom: '1px solid rgba(42, 42, 42, 0.3)'
+              paddingBottom: '32px'
             }}>
               <SettingsAvatar
                 src="/images/avatars/user-zhang-zhichuang.svg"
@@ -240,7 +239,7 @@ export default function SettingsPage() {
                   // 这里可以添加头像编辑逻辑
                 }}
               />
-              
+
               {/* 上传提示 */}
               <div style={{
                 display: 'flex',
@@ -271,29 +270,7 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            {/* 基本信息标题 */}
-            <div style={{
-              paddingLeft: '48px',
-              paddingRight: '48px',
-              marginBottom: '24px'
-            }}>
-              <h3 style={{
-                color: 'var(--color-text-primary)',
-                fontSize: 'var(--font-size-lg)',
-                fontWeight: '600',
-                margin: '0',
-                lineHeight: '24px'
-              }}>
-                基本信息
-              </h3>
-              <div style={{
-                width: '32px',
-                height: '2px',
-                background: 'var(--gradient-primary)',
-                marginTop: '8px',
-                borderRadius: '1px'
-              }}></div>
-            </div>
+
 
             {/* 表单区域 */}
             <div

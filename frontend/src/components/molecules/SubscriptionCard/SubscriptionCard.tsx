@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Icon } from '@/components/ui'
+import { Icon, GradientButton } from '@/components/ui'
 
 export interface SubscriptionCardProps {
   className?: string
@@ -12,354 +12,170 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
 }) => {
   return (
     <div style={{
-      background: 'rgba(0, 0, 0, 0.30)',
+      background: 'rgba(26, 26, 26, 0.30)',
       backdropFilter: 'blur(12px)',
       border: '1px solid rgba(42, 42, 42, 0.70)',
       borderRadius: '12px',
-      padding: '25px',
-      display: 'flex',
-      width: '100%',
-      gap: '0px', // 移除主容器间距，改为单独控制
-      flexDirection: 'column',
-      alignItems: 'stretch',
-      fontFamily: 'var(--font-family-primary)',
-      fontSize: '16px',
-      fontWeight: '400',
+      padding: '21px',
       // 防换行保护
       overflow: 'hidden'
     }}>
-      {/* 顶部信息区域 */}
       <div style={{
         display: 'flex',
-        flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingRight: '0.01px',
+        alignItems: 'flex-start',
+        gap: '8px', // 标题区域与文字区域的间距
         // 防换行保护
         flexWrap: 'nowrap',
-        overflow: 'hidden',
-        gap: '16px' // 添加间距防止挤压
+        overflow: 'hidden'
       }}>
         <div style={{
-          gap: '8px', // 恢复合理间距，平衡视觉层次
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'stretch',
+          gap: '8px', // 标题与文字信息的间距
           flex: 1,
+          minWidth: '250px', // 为会员信息文字预留充足宽度
           // 防换行保护
-          minWidth: '300px', // 为左侧信息预留充足宽度
           overflow: 'hidden'
         }}>
+          {/* 会员标题区域 */}
           <div style={{
-            gap: '12px',
             display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'stretch',
+            alignItems: 'center',
+            gap: '8px',
             // 防换行保护
             flexWrap: 'nowrap',
             overflow: 'hidden'
           }}>
-            <div style={{
+            <span style={{
               color: '#FFFFFF',
-              fontSize: '20px',
+              fontSize: '18px',
+              fontWeight: '600',
               lineHeight: '28px',
-              alignItems: 'center',
-              display: 'flex',
-              // 防换行保护 - 会员等级标题
+              // 防换行保护
               whiteSpace: 'nowrap',
               overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minWidth: '100px', // 为"高级会员"预留空间
-              minHeight: '28px',
-              flexShrink: 0
-            }}>
-              高级会员
-            </div>
+              textOverflow: 'ellipsis'
+            }}>高级会员</span>
             <div style={{
-              background: 'linear-gradient(90deg, #EAB308 0%, #CA8A04 100%)',
+              background: 'linear-gradient(90deg, #FACC15 0%, #CA8A04 100%)',
               borderRadius: '9999px',
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: '4px',
-              marginBottom: '4px',
-              justifyContent: 'center',
-              paddingLeft: '8px',
-              paddingRight: '8px',
-              paddingTop: '2px',
-              paddingBottom: '2px',
-              // 防换行保护 - 徽章不能收缩
-              flexShrink: 0,
-              minWidth: '80px' // 为"当前方案"预留空间
+              padding: '2px 8px',
+              flexShrink: 0 // 防止徽章被压缩
             }}>
-              <div style={{
+              <span style={{
                 color: '#FFFFFF',
                 fontSize: '12px',
                 lineHeight: '16px',
-                alignItems: 'center',
-                display: 'flex',
                 // 防换行保护
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                minHeight: '16px'
-              }}>
-                当前方案
-              </div>
+                whiteSpace: 'nowrap'
+              }}>当前方案</span>
             </div>
           </div>
-          {/* 订阅信息区域 - 将到期时间和订阅内容紧密排列 */}
+
+          {/* 订阅信息区域 - 与个人中心完全一致 */}
           <div style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '2px', // 设置小间距，保持整体性
+            gap: '2px', // 与个人中心保持一致的小间距
             // 防换行保护
             overflow: 'hidden'
           }}>
-            <div style={{
+            <p style={{
               color: '#D1D5DB',
               fontSize: '14px',
-              lineHeight: '18px', // 恢复正常行高，与第二行保持一致
-              alignItems: 'center',
-              display: 'flex',
+              lineHeight: '18px', // 与个人中心保持一致
+              margin: 0,
               // 防换行保护 - 到期时间
               whiteSpace: 'nowrap',
               overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minWidth: '300px', // 为到期时间文字预留空间
-              minHeight: '18px' // 匹配行高
-            }}>
-              到期时间：2024年12月31日（剩余245天）
-            </div>
-            <div style={{
+              textOverflow: 'ellipsis'
+            }}>到期时间: 2024年12月31日 (剩余245天)</p>
+            <p style={{
               color: '#D1D5DB',
               fontSize: '14px',
-              lineHeight: '18px', // 恢复正常行高
-              alignItems: 'center',
-              display: 'flex',
-              // 移除marginTop，使用gap统一控制间距
+              lineHeight: '18px', // 与个人中心保持一致
+              margin: 0,
               // 防换行保护 - 订阅内容描述
               overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minHeight: '18px', // 匹配行高
-              minWidth: '400px' // 为描述文字预留充足空间
-            }}>
-              订阅内容：全站资源、专属社群、一对一咨询（每月1次）
-            </div>
+              textOverflow: 'ellipsis'
+            }}>订阅内容: 全站资源、专属社群、一对一咨询 (每月1次)</p>
           </div>
         </div>
 
-        {/* 操作按钮区域 */}
-        <div style={{
-          gap: '12px',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'stretch',
-          paddingBottom: '10px',
-          // 防换行保护 - 按钮区域不能收缩
-          flexShrink: 0,
-          flexWrap: 'nowrap'
-        }}>
-          {/* 立即续费按钮 */}
-          <div style={{
-            background: 'linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)',
-            borderRadius: '8px',
-            display: 'flex',
-            gap: '8px',
-            alignItems: 'stretch',
-            flexDirection: 'row',
-            paddingLeft: '20px',
-            paddingRight: '20px',
-            paddingTop: '11px',
-            paddingBottom: '11px',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            // 防换行保护 - 续费按钮
-            flexShrink: 0,
-            minWidth: '130px', // 为"立即续费"预留空间
-            whiteSpace: 'nowrap'
-          }}>
-            <div style={{
-              color: '#FFFFFF',
-              lineHeight: '24px',
-              textAlign: 'center',
-              justifyContent: 'center',
-              alignItems: 'center',
-              display: 'flex',
+        <div style={{ flexShrink: 0, marginTop: '8px' }}> {/* 防止按钮被压缩，顶部对齐调整 */}
+          <GradientButton size="md" variant="primary">
+            <span style={{
               // 防换行保护
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minHeight: '24px',
-              flexShrink: 0
-            }}>
-              立即续费
-            </div>
-            <Icon
-              name="subscription/renew-arrow"
-              size="xs"
-              style={{
-                width: '16px',
-                height: '16px',
-                marginTop: '4px',
-                marginBottom: '4px',
-                color: '#FFFFFF',
-                flexShrink: 0
-              }}
-            />
-          </div>
-
-          {/* 管理支付方式按钮 */}
-          <div style={{
-            border: '1px solid rgba(255, 255, 255, 0.20)',
-            borderRadius: '8px',
-            display: 'flex',
-            gap: '8px',
-            alignItems: 'stretch',
-            flexDirection: 'row',
-            paddingLeft: '21px',
-            paddingRight: '21px',
-            paddingTop: '11px',
-            paddingBottom: '11px',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            // 防换行保护 - 支付管理按钮
-            flexShrink: 0,
-            minWidth: '140px', // 为"管理支付方式"预留空间
-            whiteSpace: 'nowrap'
-          }}>
-            <Icon
-              name="subscription/payment-manage"
-              size="xs"
-              style={{
-                width: '16px',
-                height: '16px',
-                marginTop: '4px',
-                marginBottom: '4px',
-                color: '#FFFFFF',
-                flexShrink: 0
-              }}
-            />
-            <div style={{
-              color: '#FFFFFF',
-              lineHeight: '24px',
-              textAlign: 'center',
-              justifyContent: 'center',
-              alignItems: 'center',
-              display: 'flex',
-              // 防换行保护
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minHeight: '24px'
-            }}>
-              管理支付方式
-            </div>
-          </div>
+              whiteSpace: 'nowrap'
+            }}>立即续费</span>
+            <Icon name="renew-icon" size="xs" style={{ marginLeft: '8px', flexShrink: 0 }} />
+          </GradientButton>
         </div>
       </div>
 
-      {/* 专属会员权益 */}
+      <div style={{
+        marginTop: '20px',
+        marginBottom: '0px', // 移除底部间距，由下面的元素控制
+        // 防换行保护
+        overflow: 'hidden'
+      }}></div>
+
       <div style={{
         borderTop: '1px solid rgba(255, 255, 255, 0.10)',
+        paddingTop: '25px',
         display: 'flex',
         justifyContent: 'space-between',
-        marginTop: '24px', // 增加顶部间距，与权益区域分开
-        flexDirection: 'row',
-        paddingTop: '25px',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
+        alignItems: 'center',
         // 防换行保护
         flexWrap: 'nowrap',
         overflow: 'hidden',
         gap: '16px' // 添加间距防止挤压
       }}>
         <div style={{
-          gap: '16px',
           display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'stretch',
+          alignItems: 'center',
+          gap: '12px',
           flex: 1,
+          minWidth: '200px', // 为权益文字预留充足宽度
           // 防换行保护
-          minWidth: '250px', // 为权益信息预留空间
           overflow: 'hidden'
         }}>
           <div style={{
-            background: 'rgba(234, 179, 8, 0.10)',
-            borderRadius: '9999px',
-            display: 'flex',
-            width: '40px',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingLeft: '12px',
-            paddingRight: '12px',
-            paddingTop: '13.6px',
-            paddingBottom: '13.6px',
-            flexShrink: 0 // 图标不能收缩
+            background: 'rgba(255, 255, 255, 0.10)',
+            borderRadius: '50%',
+            padding: '10px',
+            flexShrink: 0 // 防止图标被压缩
           }}>
-            <Icon
-              name="subscription/member-privilege"
-              size="xs"
-              style={{
-                width: '16px',
-                height: '12.8px',
-                color: '#EAB308'
-              }}
-            />
+            <Icon name="privilege-icon" size="sm" style={{ color: '#EAB308' }} />
           </div>
           <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
             flex: 1,
             // 防换行保护
-            minWidth: '180px', // 为权益文字预留空间
             overflow: 'hidden'
           }}>
             <div style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              minHeight: '24px'
-            }}>
-              <div style={{
-                color: '#FFFFFF',
-                lineHeight: '24px',
-                alignItems: 'center',
-                display: 'flex',
-                // 防换行保护 - 权益标题
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                minHeight: '24px',
-                minWidth: '120px' // 为"专属会员权益"预留空间
-              }}>
-                专属会员权益
-              </div>
-            </div>
+              color: '#FFFFFF',
+              fontSize: '16px',
+              fontWeight: '500',
+              lineHeight: '24px',
+              marginBottom: '2px',
+              // 防换行保护 - 权益标题
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}>专属会员权益</div>
             <div style={{
               color: '#9CA3AF',
               fontSize: '12px',
               lineHeight: '16px',
-              alignItems: 'center',
-              display: 'flex',
               // 防换行保护 - 权益描述
               overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minHeight: '16px'
-            }}>
-              查看您的专属会员权益和使用方式
-            </div>
+              textOverflow: 'ellipsis'
+            }}>查看您的专属会员权益和使用方式</div>
           </div>
         </div>
-        <Icon
-          name="subscription/arrow-right"
-          size="xs"
-          style={{
-            width: '16px',
-            height: '16px',
-            marginTop: '12px',
-            color: '#60A5FA',
-            flexShrink: 0 // 箭头图标不能收缩
-          }}
-        />
+        <Icon name="privilege-arrow" size="sm" style={{ color: '#60A5FA', flexShrink: 0 }} />
       </div>
     </div>
   )

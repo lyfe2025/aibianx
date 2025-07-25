@@ -378,7 +378,7 @@ export function AppHeader() {
                             e.currentTarget.style.background = 'rgba(26, 26, 26, 0.50)'
                         }}
                     >
-                        <Icon name="user-simple" size="sm" style={{
+                        <Icon name="user-icon" size="sm" style={{
                             color: '#9CA3AF'
                         }} />
                     </button>
@@ -410,7 +410,7 @@ export function AppHeader() {
                             e.currentTarget.style.background = 'rgba(26, 26, 26, 0.50)'
                         }}
                     >
-                        <Icon name="search" size="sm" style={{
+                        <Icon name="search-icon" size="sm" style={{
                             color: '#9CA3AF'
                         }} />
                     </button>

@@ -41,6 +41,41 @@ const iconPathMap: Record<string, string> = {
     'wechat-pay-icon': 'payments/wechat-pay-icon',
     'alipay-icon': 'payments/alipay-icon',
     'unionpay-icon': 'payments/unionpay-icon',
+
+    // 订阅相关图标 (subscription目录)
+    'subscription/renew-arrow': 'subscription/renew-arrow',
+    'subscription/payment-manage': 'subscription/payment-manage',
+    'subscription/member-privilege': 'subscription/member-privilege',
+    'subscription/arrow-right': 'subscription/arrow-right',
+    'subscription/view-all-arrow': 'subscription/view-all-arrow',
+    'subscription/invite-guide': 'subscription/invite-guide',
+    'subscription/withdraw-record': 'subscription/withdraw-record',
+    'subscription/invite-code': 'subscription/invite-code',
+    'subscription/copy-icon': 'subscription/copy-icon',
+    'subscription/invited-users': 'subscription/invited-users',
+    'subscription/pending-users': 'subscription/pending-users',
+    'subscription/commission-amount': 'subscription/commission-amount',
+    'subscription/copy-invite-link': 'subscription/copy-invite-link',
+    'subscription/generate-poster': 'subscription/generate-poster',
+    'subscription/cash-reward': 'subscription/cash-reward',
+    'subscription/membership-reward': 'subscription/membership-reward',
+    'subscription/reward-rules': 'subscription/reward-rules',
+
+    // 根目录常用图标直接映射
+    'invited-count-icon': 'invited-count-icon',
+    'pending-activation-icon': 'pending-activation-icon', 
+    'commission-icon': 'commission-icon',
+    'invite-code-icon': 'invite-code-icon',
+    'copy-icon': 'copy-icon',
+    'strategy-icon': 'strategy-icon',
+    'record-icon': 'record-icon',
+    'resources-icon': 'resources-icon',
+    'user-icon': 'user-icon',
+    'search-icon': 'search-icon',
+    'renew-icon': 'renew-icon',
+    'privilege-icon': 'privilege-icon',
+    'privilege-arrow': 'privilege-arrow',
+    'arrow-right-blue': 'arrow-right-blue',
 }
 
 export const Icon = ({

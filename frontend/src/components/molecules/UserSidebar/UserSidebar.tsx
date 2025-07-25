@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Icon, Avatar } from '@/components/ui'
+import { Icon, Avatar, CrownIcon } from '@/components/ui'
 import { useUserStore } from '@/stores'
 import styles from './UserSidebar.module.css'
 
@@ -124,6 +124,10 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                             alt="张智创"
                             className={styles.avatarImage}
                         />
+                        {/* 会员皇冠图标 */}
+                        <div className={styles.crownBadge}>
+                            <CrownIcon size="sm" />
+                        </div>
                     </div>
                     <h3 className={styles.userName}>张智创</h3>
                     <div className={styles.memberBadge}>
@@ -187,6 +191,10 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                         alt="张智创"
                         className={styles.avatarImage}
                     />
+                    {/* 会员皇冠图标 */}
+                    <div className={styles.crownBadge}>
+                        <CrownIcon size="sm" />
+                    </div>
                 </div>
                 <h3 className={styles.userName}>张智创</h3>
                 <div className={styles.memberBadge}>
