@@ -63,7 +63,7 @@ const iconPathMap: Record<string, string> = {
 
     // 根目录常用图标直接映射
     'invited-count-icon': 'invited-count-icon',
-    'pending-activation-icon': 'pending-activation-icon', 
+    'pending-activation-icon': 'pending-activation-icon',
     'commission-icon': 'commission-icon',
     'invite-code-icon': 'invite-code-icon',
     'copy-icon': 'copy-icon',
@@ -76,6 +76,9 @@ const iconPathMap: Record<string, string> = {
     'privilege-icon': 'privilege-icon',
     'privilege-arrow': 'privilege-arrow',
     'arrow-right-blue': 'arrow-right-blue',
+
+    // 多语言相关图标
+    'globe': 'globe', // 地球图标，用于多语言切换
 }
 
 export const Icon = ({

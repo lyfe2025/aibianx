@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useModalStore, useThemeStore } from '@/stores'
+import { useModalStore, useThemeStore, useLanguageStore } from '@/stores'
 import { Icon, GradientText, GradientButton } from '@/components/ui'
 import Image from 'next/image'
 
@@ -34,6 +34,7 @@ export function AppHeader() {
     const pathname = usePathname()
     const { openModal } = useModalStore()
     const { theme, toggleTheme } = useThemeStore()
+    const { language, toggleLanguage } = useLanguageStore()
     const [isVisible, setIsVisible] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
     const [isScrolled, setIsScrolled] = useState(false)
@@ -368,7 +369,7 @@ export function AppHeader() {
                             gap: '4px'
                         }}>
                             <button
-                                onClick={handleUserMenu}
+                                onClick={toggleLanguage}
                                 style={{
                                     background: 'var(--color-bg-glass)',
                                     borderStyle: 'solid',
@@ -387,10 +388,12 @@ export function AppHeader() {
                                     flexShrink: 0
                                 }}
                                 className="icon-button"
+                                title={isClient ? (language === 'zh' ? '切换到英文' : '切换到中文') : '语言切换'}
                             >
-                                <Icon name="user-icon" size="sm" style={{
-                                    color: 'var(--color-text-muted)'
-                                }} />
+                                <Icon
+                                    name="globe"
+                                    size="sm"
+                                />
                             </button>
 
                             <button
@@ -448,7 +451,7 @@ export function AppHeader() {
                                 }}
                                 className="btn btn--gradient"
                             >
-                                加入会员
+                                登录
                             </button>
                         </div>
 
@@ -630,6 +633,32 @@ export function AppHeader() {
                         gap: '16px',
                         marginTop: 'auto'
                     }}>
+                        {/* 语言切换按钮 */}
+                        <button
+                            onClick={toggleLanguage}
+                            style={{
+                                background: 'var(--color-bg-glass)',
+                                border: '1px solid var(--color-border-primary)',
+                                borderRadius: '12px',
+                                padding: '16px',
+                                color: 'var(--color-text-secondary)',
+                                fontSize: '16px',
+                                fontWeight: '500',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px',
+                                touchAction: 'manipulation',
+                                WebkitTapHighlightColor: 'transparent',
+                                minHeight: '56px'
+                            }}
+                        >
+                            <Icon name="globe" size="sm" />
+                            {isClient ? (language === 'zh' ? 'English' : '中文') : '中文'}
+                        </button>
+
                         {/* 主题切换按钮 */}
                         <button
                             onClick={toggleTheme}
@@ -656,31 +685,7 @@ export function AppHeader() {
                             {isClient ? (theme === 'dark' ? '亮色主题' : '暗色主题') : '亮色主题'}
                         </button>
 
-                        {/* 个人中心按钮 */}
-                        <button
-                            onClick={handleUserMenu}
-                            style={{
-                                background: 'var(--color-bg-glass)',
-                                border: '1px solid var(--color-border-primary)',
-                                borderRadius: '12px',
-                                padding: '16px',
-                                color: 'var(--color-text-secondary)',
-                                fontSize: '16px',
-                                fontWeight: '500',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '8px',
-                                touchAction: 'manipulation',
-                                WebkitTapHighlightColor: 'transparent',
-                                minHeight: '56px'
-                            }}
-                        >
-                            <Icon name="user-icon" size="sm" />
-                            个人中心
-                        </button>
+
 
                         {/* 登录按钮 */}
                         <GradientButton
