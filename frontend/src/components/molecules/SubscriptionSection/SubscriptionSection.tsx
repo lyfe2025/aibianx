@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useThemeStore } from '@/stores'
 
 interface SubscriptionSectionProps {
     className?: string
@@ -11,6 +12,7 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
     const [isValidEmail, setIsValidEmail] = useState(true)
+    const { theme } = useThemeStore()
 
     // 邮箱验证函数
     const validateEmail = (email: string) => {
@@ -22,7 +24,7 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newEmail = e.target.value
         setEmail(newEmail)
-        
+
         // 实时验证邮箱格式（只在有输入时验证）
         if (newEmail.trim()) {
             setIsValidEmail(validateEmail(newEmail))
@@ -33,23 +35,23 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        
+
         // 验证邮箱格式
         if (!email.trim()) {
             setIsValidEmail(false)
             return
         }
-        
+
         if (!validateEmail(email)) {
             setIsValidEmail(false)
             return
         }
-        
+
         if (isSubmitting) return
 
         setIsValidEmail(true)
         setIsSubmitting(true)
-        
+
         try {
             // TODO: 处理邮箱订阅逻辑
             console.log('订阅邮箱:', email)
@@ -67,7 +69,7 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
     }
 
     return (
-                <div 
+        <div
             className={`subscription-section ${className || ''}`}
             style={{
                 width: '1374px',
@@ -134,8 +136,10 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
                     onChange={handleEmailChange}
                     placeholder="请输入您的邮箱"
                     style={{
-                        background: 'rgba(18, 18, 18, 0.50)',
-                        border: `1px solid ${!isValidEmail ? '#EF4444' : '#2A2A2A'}`,
+                        background: theme === 'dark'
+                            ? 'rgba(18, 18, 18, 0.50)'
+                            : 'var(--color-bg-input)',
+                        border: `1px solid ${!isValidEmail ? '#EF4444' : (theme === 'dark' ? '#2A2A2A' : 'var(--color-border-primary)')}`,
                         borderRight: 'none',
                         borderRadius: '8px 0 0 8px',
                         padding: '16px',
@@ -156,62 +160,65 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
                         if (isValidEmail) {
                             e.target.style.borderColor = '#3B82F6'
                         }
-                        e.target.style.background = 'rgba(18, 18, 18, 0.70)'
+                        e.target.style.background = theme === 'dark'
+                            ? 'rgba(18, 18, 18, 0.70)'
+                            : 'var(--color-bg-primary)'
                     }}
                     onBlur={(e) => {
-                        e.target.style.borderColor = !isValidEmail ? '#EF4444' : '#2A2A2A'
-                        e.target.style.background = 'rgba(18, 18, 18, 0.50)'
+                        e.target.style.borderColor = !isValidEmail ? '#EF4444' : 'var(--color-border-primary)'
+                        e.target.style.background = 'var(--color-bg-input)'
+                            : 'rgba(250, 252, 255, 0.95)'
                     }}
                     required
                 />
 
                 {/* 订阅按钮 - 精确定位 */}
                 <button
-                type="submit"
-                disabled={isSubmitting || submitted || !isValidEmail}
-                style={{
-                    background: submitted 
-                        ? 'linear-gradient(90deg, #10B981 0%, #059669 100%)'
-                        : !isValidEmail 
-                        ? 'linear-gradient(90deg, #6B7280 0%, #4B5563 100%)'
-                        : 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                    border: !isValidEmail ? '1px solid #EF4444' : 'none',
-                    borderLeft: 'none',
-                    borderRadius: '0 8px 8px 0',
-                    width: '111px',
-                    height: '55px',
-                    color: '#FFFFFF',
-                    fontSize: '16px',
-                    lineHeight: '22px',
-                    position: 'absolute',
-                    top: '47px', // 与输入框对齐
-                    left: '758px', // 424 + 334 = 758
-                    paddingLeft: '24px',
-                    paddingRight: '24px',
-                    paddingTop: '16px',
-                    paddingBottom: '16px',
-                    cursor: (isSubmitting || submitted || !isValidEmail) ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.2s ease',
-                    fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-                    opacity: (isSubmitting || submitted || !isValidEmail) ? 0.8 : 1,
-                    whiteSpace: 'nowrap' // 确保按钮文字不换行
-                }}
-                onMouseOver={(e) => {
-                    if (!isSubmitting && !submitted && isValidEmail) {
-                        e.currentTarget.style.opacity = '0.9'
-                    }
-                }}
-                onMouseOut={(e) => {
-                    if (!isSubmitting && !submitted && isValidEmail) {
-                        e.currentTarget.style.opacity = '1'
-                    }
-                }}
-            >
-                {submitted ? '已订阅' : isSubmitting ? '订阅中...' : '立即订阅'}
-            </button>
+                    type="submit"
+                    disabled={isSubmitting || submitted || !isValidEmail}
+                    style={{
+                        background: submitted
+                            ? 'linear-gradient(90deg, #10B981 0%, #059669 100%)'
+                            : !isValidEmail
+                                ? 'linear-gradient(90deg, #6B7280 0%, #4B5563 100%)'
+                                : 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                        border: !isValidEmail ? '1px solid #EF4444' : 'none',
+                        borderLeft: 'none',
+                        borderRadius: '0 8px 8px 0',
+                        width: '111px',
+                        height: '55px',
+                        color: '#FFFFFF',
+                        fontSize: '16px',
+                        lineHeight: '22px',
+                        position: 'absolute',
+                        top: '47px', // 与输入框对齐
+                        left: '758px', // 424 + 334 = 758
+                        paddingLeft: '24px',
+                        paddingRight: '24px',
+                        paddingTop: '16px',
+                        paddingBottom: '16px',
+                        cursor: (isSubmitting || submitted || !isValidEmail) ? 'not-allowed' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.2s ease',
+                        fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                        opacity: (isSubmitting || submitted || !isValidEmail) ? 0.8 : 1,
+                        whiteSpace: 'nowrap' // 确保按钮文字不换行
+                    }}
+                    onMouseOver={(e) => {
+                        if (!isSubmitting && !submitted && isValidEmail) {
+                            e.currentTarget.style.opacity = '0.9'
+                        }
+                    }}
+                    onMouseOut={(e) => {
+                        if (!isSubmitting && !submitted && isValidEmail) {
+                            e.currentTarget.style.opacity = '1'
+                        }
+                    }}
+                >
+                    {submitted ? '已订阅' : isSubmitting ? '订阅中...' : '立即订阅'}
+                </button>
             </form>
 
             {/* 全局样式和响应式样式 */}
@@ -271,7 +278,7 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
                         width: 100% !important;
                         margin: 16px 0 0 0 !important;
                         border-radius: 8px !important;
-                        border: 1px solid #2A2A2A !important;
+                        border: 1px solid var(--color-border-primary) !important;
                     }
                     
                     .subscription-section button {

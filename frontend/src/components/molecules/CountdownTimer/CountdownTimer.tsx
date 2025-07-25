@@ -38,7 +38,7 @@ export function CountdownTimer({ className, targetDate }: CountdownTimerProps) {
                 marginBottom: '9px'
             }}>
                 <div style={{
-                    background: 'rgba(59, 130, 246, 0.15)',
+                    background: 'var(--color-info-bg)',
                     borderRadius: '6px',
                     padding: '5.8px 8px',
                     minWidth: '35px',
@@ -47,7 +47,7 @@ export function CountdownTimer({ className, targetDate }: CountdownTimerProps) {
                     justifyContent: 'center'
                 }}>
                     <span style={{
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontWeight: '700',
                         fontSize: '16px',
                         lineHeight: '25.6px',
@@ -57,14 +57,14 @@ export function CountdownTimer({ className, targetDate }: CountdownTimerProps) {
                     </span>
                 </div>
                 <span style={{
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     fontWeight: '700',
                     fontSize: '16px',
                     lineHeight: '25.6px',
                     margin: '0 0px'
                 }}>:</span>
                 <div style={{
-                    background: 'rgba(59, 130, 246, 0.15)',
+                    background: 'var(--color-info-bg)',
                     borderRadius: '6px',
                     padding: '5.8px 8px',
                     minWidth: '35px',
@@ -73,7 +73,7 @@ export function CountdownTimer({ className, targetDate }: CountdownTimerProps) {
                     justifyContent: 'center'
                 }}>
                     <span style={{
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontWeight: '700',
                         fontSize: '16px',
                         lineHeight: '25.6px',
@@ -83,14 +83,14 @@ export function CountdownTimer({ className, targetDate }: CountdownTimerProps) {
                     </span>
                 </div>
                 <span style={{
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     fontWeight: '700',
                     fontSize: '16px',
                     lineHeight: '25.6px',
                     margin: '0 0px'
                 }}>:</span>
                 <div style={{
-                    background: 'rgba(59, 130, 246, 0.15)',
+                    background: 'var(--color-info-bg)',
                     borderRadius: '6px',
                     padding: '5.8px 8px',
                     minWidth: '35px',
@@ -99,7 +99,7 @@ export function CountdownTimer({ className, targetDate }: CountdownTimerProps) {
                     justifyContent: 'center'
                 }}>
                     <span style={{
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontWeight: '700',
                         fontSize: '16px',
                         lineHeight: '25.6px',
@@ -109,14 +109,14 @@ export function CountdownTimer({ className, targetDate }: CountdownTimerProps) {
                     </span>
                 </div>
                 <span style={{
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     fontWeight: '700',
                     fontSize: '16px',
                     lineHeight: '25.6px',
                     margin: '0 0px'
                 }}>:</span>
                 <div style={{
-                    background: 'rgba(59, 130, 246, 0.15)',
+                    background: 'var(--color-info-bg)',
                     borderRadius: '6px',
                     padding: '5.8px 8px',
                     minWidth: '35px',
@@ -125,7 +125,7 @@ export function CountdownTimer({ className, targetDate }: CountdownTimerProps) {
                     justifyContent: 'center'
                 }}>
                     <span style={{
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontWeight: '700',
                         fontSize: '16px',
                         lineHeight: '25.6px',
@@ -136,45 +136,45 @@ export function CountdownTimer({ className, targetDate }: CountdownTimerProps) {
                 </div>
             </div>
 
-            {/* 标签 */}
+            {/* 时间单位标签 */}
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '36px'
+                gap: '15px'
             }}>
                 <span style={{
-                    color: '#9CA3AF',
-                    fontSize: '12px',
-                    lineHeight: '19.2px',
+                    color: 'var(--color-text-secondary)',
+                    fontSize: '10px',
+                    fontWeight: '400',
+                    lineHeight: '16px',
+                    minWidth: '35px',
                     textAlign: 'center'
-                }}>
-                    天
-                </span>
+                }}>天</span>
                 <span style={{
-                    color: '#9CA3AF',
-                    fontSize: '12px',
-                    lineHeight: '19.2px',
+                    color: 'var(--color-text-secondary)',
+                    fontSize: '10px',
+                    fontWeight: '400',
+                    lineHeight: '16px',
+                    minWidth: '35px',
                     textAlign: 'center'
-                }}>
-                    时
-                </span>
+                }}>时</span>
                 <span style={{
-                    color: '#9CA3AF',
-                    fontSize: '12px',
-                    lineHeight: '19.2px',
+                    color: 'var(--color-text-secondary)',
+                    fontSize: '10px',
+                    fontWeight: '400',
+                    lineHeight: '16px',
+                    minWidth: '35px',
                     textAlign: 'center'
-                }}>
-                    分
-                </span>
+                }}>分</span>
                 <span style={{
-                    color: '#9CA3AF',
-                    fontSize: '12px',
-                    lineHeight: '19.2px',
+                    color: 'var(--color-text-secondary)',
+                    fontSize: '10px',
+                    fontWeight: '400',
+                    lineHeight: '16px',
+                    minWidth: '35px',
                     textAlign: 'center'
-                }}>
-                    秒
-                </span>
+                }}>秒</span>
             </div>
         </div>
     )

@@ -303,7 +303,7 @@ export default function AboutPage() {
                                         alignItems: 'center',
                                         justifyContent: 'center'
                                     }}>
-                                        <Icon name="success-case-library-new" size="md" />
+                                        <Icon name="success-cases-new" size="md" />
                                     </div>
 
                                     <h3 style={{
@@ -1028,8 +1028,8 @@ export default function AboutPage() {
                                             e.target.style.background = 'rgba(18, 18, 18, 0.70)'
                                         }}
                                         onBlur={(e) => {
-                                            e.target.style.borderColor = '#2A2A2A'
-                                            e.target.style.background = 'rgba(18, 18, 18, 0.50)'
+                                            e.target.style.borderColor = 'var(--color-border-primary)'
+                                            e.target.style.background = 'var(--color-bg-input)'
                                         }}
                                     />
 

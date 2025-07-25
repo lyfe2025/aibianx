@@ -107,7 +107,7 @@ export const PaymentModal: React.FC = () => {
             }}>
                 {/* 价格和优惠信息区域 - 紧凑布局 */}
                 <div style={{
-                    background: 'rgba(59, 130, 246, 0.05)',
+                    background: 'var(--color-info-bg)',
                     border: '1px dashed var(--color-primary-blue)',
                     borderRadius: '12px',
                     padding: '16px',
@@ -151,12 +151,12 @@ export const PaymentModal: React.FC = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
                         {plan.originalPrice && (
                             <div style={{
-                                background: '#EF4444',
+                                background: 'var(--color-error)',
                                 borderRadius: '12px',
                                 padding: '2px 8px'
                             }}>
                                 <span style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '12px',
                                     fontWeight: '600'
                                 }}>
@@ -231,7 +231,7 @@ export const PaymentModal: React.FC = () => {
                                     padding: '12px',
                                     border: `2px solid ${selectedPaymentMethod === method.id ? 'var(--color-primary-blue)' : 'var(--color-border-primary)'}`,
                                     borderRadius: '8px',
-                                    background: selectedPaymentMethod === method.id ? 'rgba(59, 130, 246, 0.05)' : 'transparent',
+                                    background: selectedPaymentMethod === method.id ? 'var(--color-info-bg)' : 'transparent',
                                     cursor: 'pointer',
                                     transition: 'all 0.2s ease',
                                     display: 'flex',

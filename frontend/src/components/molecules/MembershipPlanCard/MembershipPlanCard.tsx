@@ -50,7 +50,7 @@ export function MembershipPlanCard({
                     left: '50%',
                     transform: 'translateX(-50%)',
                     background: 'var(--gradient-primary)',
-                    color: 'white',
+                                            color: 'var(--color-text-primary)',
                     fontSize: 'var(--font-size-xs)',
                     fontWeight: 600,
                     padding: '4px 16px',

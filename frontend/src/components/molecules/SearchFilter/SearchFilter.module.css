@@ -1,134 +1,113 @@
-.search-filter {
-    width: 100%;
-    margin-bottom: 24px;
-}
-
-.search-filter__content {
+/* SearchFilter 组件样式 */
+.searchFilter {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 24px;
-}
-
-/* 筛选按钮组 */
-.filter-buttons {
-    display: flex;
+    flex-direction: column;
     gap: 16px;
+    padding: 20px;
+    background: var(--color-bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border-primary);
+    border-radius: 16px;
 }
 
-.filter-button {
-    background: rgba(26, 26, 26, 0.60);
-    border: 1px solid rgba(42, 42, 42, 0.70);
+.searchInput {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border-primary);
     border-radius: 8px;
-    padding: 9px 17px;
+    color: var(--color-text-primary);
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: var(--color-border-active);
+    background: var(--color-bg-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.searchInput::placeholder {
+    color: var(--color-text-muted);
+}
+
+.filterSection {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 8px;
+}
+
+.filterTitle {
+    color: var(--color-text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.filterGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filterButton {
+    padding: 6px 12px;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: 6px;
+    color: var(--color-text-secondary);
+    font-size: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: var(--color-text-primary);
-    font-size: var(--font-size-base);
-    line-height: 20px;
-}
-
-.filter-button:hover {
-    background: rgba(26, 26, 26, 0.80);
-    border-color: rgba(59, 130, 246, 0.30);
-}
-
-.filter-button--active {
-    background: rgba(26, 26, 26, 0.60);
-    border-color: rgba(59, 130, 246, 0.50);
-}
-
-.filter-button__label {
     white-space: nowrap;
 }
 
-.filter-icon,
-.chevron-icon {
+.filterButton:hover {
+    background: var(--color-hover);
+    border-color: var(--color-border-active);
     color: var(--color-text-primary);
-    flex-shrink: 0;
 }
 
-/* 搜索控制区域 */
-.search-controls {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+.filterButton.active {
+    background: var(--color-info-bg);
+    border-color: var(--color-border-active);
+    color: var(--color-text-primary);
 }
 
-.search-input-wrapper {
-    width: 256px;
-}
-
-.search-input {
-    background: rgba(26, 26, 26, 0.60);
-    border: 1px solid rgba(42, 42, 42, 0.70);
+.clearButton {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--color-border-primary);
     border-radius: 8px;
-    width: 100%;
-}
-
-.search-input::placeholder {
     color: var(--color-text-muted);
-    font-size: var(--font-size-base);
-}
-
-/* 视图控制按钮 */
-.view-controls {
-    display: flex;
-    border: 1px solid rgba(42, 42, 42, 0.70);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.view-button {
-    background: rgba(26, 26, 26, 0.60);
-    border: none;
-    padding: 8px;
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: var(--color-text-muted);
 }
 
-.view-button:first-child {
-    border-right: 1px solid rgba(42, 42, 42, 0.70);
-}
-
-.view-button:hover {
-    background: rgba(59, 130, 246, 0.10);
-    color: var(--color-text-secondary);
-}
-
-.view-button--active {
-    background: rgba(59, 130, 246, 0.20);
+.clearButton:hover {
+    background: var(--color-hover);
+    border-color: var(--color-border-active);
     color: var(--color-text-primary);
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-    .search-filter__content {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .filter-buttons {
-        flex-wrap: wrap;
+    .searchFilter {
+        padding: 16px;
         gap: 12px;
     }
 
-    .search-controls {
-        width: 100%;
-        justify-content: space-between;
+    .searchInput {
+        padding: 10px 12px;
+        font-size: 16px;
+        /* 防止iOS缩放 */
     }
 
-    .search-input-wrapper {
-        flex: 1;
-        max-width: none;
+    .filterButton {
+        padding: 8px 12px;
+        font-size: 13px;
     }
 }

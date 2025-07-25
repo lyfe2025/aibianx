@@ -79,8 +79,8 @@ export function Loading({
                 }
             case 'white':
                 return {
-                    color: '#FFFFFF',
-                    borderColor: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
+                    borderColor: 'var(--color-text-primary)',
                 }
             default:
                 return {

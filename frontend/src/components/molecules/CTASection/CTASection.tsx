@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import { GradientButton, GradientText } from '@/components/ui'
+import { useThemeStore } from '@/stores'
 
 export function CTASection() {
     const [finalFormData, setFinalFormData] = useState({
         name: '',
         email: ''
     })
+    const { theme } = useThemeStore()
 
     const handleFinalSubscribe = () => {
         if (finalFormData.name && finalFormData.email) {

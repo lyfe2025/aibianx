@@ -164,7 +164,7 @@ export function SearchBar({
                 }}>
                     {/* 内层搜索输入框 - 优化视觉设计 */}
                     <div style={{
-                        background: 'rgba(18, 18, 18, 0.40)', // 稍微降低背景透明度
+                        background: 'var(--color-bg-input)', // 使用主题变量
                         border: 'none',
                         borderRadius: '12px',
                         display: 'flex',
@@ -223,27 +223,23 @@ export function SearchBar({
                             value={query}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            onFocus={handleFocus}
-                            onBlur={handleBlur}
-                            placeholder={getPlaceholderText()}
+                            onFocus={() => setIsFocused(true)}
+                            onBlur={() => setIsFocused(false)}
+                            placeholder={placeholder}
                             disabled={disabled}
-                            aria-label="搜索AI变现内容"
                             style={{
                                 flex: 1,
+                                height: '100%',
                                 background: 'transparent',
                                 border: 'none',
                                 outline: 'none',
-                                color: query ? '#FFFFFF' : '#9CA3AF',
-                                fontSize: '15px', // 稍微增大字体，提升可读性
-                                lineHeight: '22px',
-                                fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-                                height: '40px', // 优化高度
-                                display: 'flex',
-                                alignItems: 'center',
-                                padding: 0,
-                                width: '100%',
-                                transition: 'color 0.3s ease'
+                                fontSize: 'var(--font-size-lg)',
+                                fontFamily: 'var(--font-family-primary)',
+                                color: query ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                                padding: '0 var(--spacing-3)',
+                                transition: 'color 0.2s ease'
                             }}
+                            className="search-bar-input"
                         />
 
                         {/* 清空按钮 - 优化视觉设计 */}

@@ -1,76 +1,83 @@
-.stat-card {
-    background: rgba(26, 26, 26, 0.30);
+/* StatCard 组件样式 */
+.statCard {
+    background: var(--color-bg-glass);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(42, 42, 42, 0.70);
-    border-radius: 12px;
-    padding: 21px;
-    width: 262px;
-    transition: all 0.2s ease;
-}
-
-.stat-card:hover {
-    border-color: rgba(59, 130, 246, 0.30);
-    transform: translateY(-2px);
-}
-
-.stat-card__content {
+    border: 1px solid var(--color-border-primary);
+    border-radius: 16px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.stat-card__icon {
+.statCard:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-border-active);
+    box-shadow: var(--shadow-card);
+}
+
+.iconContainer {
     width: 48px;
     height: 48px;
-    border-radius: 8px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 4px;
+    position: relative;
+    z-index: 2;
 }
 
-.stat-card__icon .icon {
+.value {
     color: var(--color-text-primary);
-}
-
-.stat-card__info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.stat-card__title {
-    color: var(--color-text-muted);
-    font-size: var(--font-size-lg);
-    line-height: 24px;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
     margin: 0;
 }
 
-.stat-card__value {
-    color: var(--color-text-primary);
-    font-size: var(--font-size-3xl);
-    font-weight: 600;
-    line-height: 32px;
+.label {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
+    margin: 0;
+}
+
+.decoration {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    opacity: 0.1;
+    z-index: 1;
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-    .stat-card {
-        width: 100%;
-        padding: 16px;
+    .statCard {
+        padding: 20px;
+        gap: 12px;
     }
 
-    .stat-card__icon {
+    .iconContainer {
         width: 40px;
         height: 40px;
     }
 
-    .stat-card__title {
-        font-size: var(--font-size-base);
+    .value {
+        font-size: 28px;
     }
 
-    .stat-card__value {
-        font-size: var(--font-size-2xl);
+    .label {
+        font-size: 13px;
     }
 }

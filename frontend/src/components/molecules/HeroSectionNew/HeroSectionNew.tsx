@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Container, GradientButton, GradientText, Input, BackgroundDecoration, HeroBackground3D, AIBrainModel, useToast, ToastContainer } from '@/components/ui'
+import { useThemeStore } from '@/stores'
 
 /**
  * 新版英雄区块组件 - HeroSectionNew
@@ -20,6 +21,7 @@ export function HeroSectionNew() {
     const subtitle1Ref = useRef<HTMLDivElement>(null)
     const { toasts, showSuccess, showError, removeToast } = useToast()
     const subtitle2Ref = useRef<HTMLDivElement>(null)
+    const { theme } = useThemeStore()
 
     // 🔧 使用ref直接控制副标题颜色，实时监控并修复
     useEffect(() => {
@@ -295,10 +297,12 @@ export function HeroSectionNew() {
                     justifyContent: 'center',
                     gap: '0px' // 桌面端无间距，移动端通过CSS控制
                 }}>
-                    {/* 邮箱输入框 - 响应式优化 */}
+                    {/* 邮箱输入框 - 主题自适应优化 */}
                     <div className="hero-email-input" style={{
-                        background: isFocused ? 'rgba(18, 18, 18, 0.70)' : 'rgba(18, 18, 18, 0.50)',
-                        border: `1px solid ${isFocused ? '#3B82F6' : '#2A2A2A'}`,
+                        background: theme === 'dark'
+                            ? (isFocused ? 'rgba(18, 18, 18, 0.70)' : 'rgba(18, 18, 18, 0.50)')
+                            : (isFocused ? 'var(--color-bg-input)' : 'rgba(250, 252, 255, 0.95)'),
+                        border: `1px solid ${isFocused ? '#3B82F6' : (theme === 'dark' ? '#2A2A2A' : 'var(--color-border-primary)')}`,
                         borderRadius: '8px 0 0 8px',
                         width: '327px',
                         height: '56px',
@@ -311,7 +315,9 @@ export function HeroSectionNew() {
                         paddingBottom: '15.99px',
                         flexShrink: 0,
                         transition: 'all 0.2s ease',
-                        boxShadow: isFocused ? '0 0 0 2px rgba(59, 130, 246, 0.1)' : 'none'
+                        boxShadow: isFocused ? '0 0 0 2px rgba(59, 130, 246, 0.1)' : 'none',
+                        backdropFilter: theme === 'dark' ? 'blur(4px)' : 'blur(8px)',
+                        WebkitBackdropFilter: theme === 'dark' ? 'blur(4px)' : 'blur(8px)'
                     }}>
                         <div style={{
                             width: '287px',
@@ -330,7 +336,7 @@ export function HeroSectionNew() {
                                 style={{
                                     width: '100%',
                                     height: '24px',
-                                    color: email ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                                    color: 'var(--color-text-primary)',
                                     fontFamily: 'Arial',
                                     fontSize: '14px',
                                     lineHeight: '18px',
@@ -342,6 +348,7 @@ export function HeroSectionNew() {
                                     textOverflow: 'ellipsis',
                                     minHeight: '24px'
                                 }}
+                                className="hero-email-input-field"
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
                                         handleSubscribe()
@@ -418,6 +425,27 @@ export function HeroSectionNew() {
 
             {/* 响应式样式 - 完整移动端优化 */}
             <style jsx>{`
+                /* 输入框占位符样式 - 主题自适应 */
+                .hero-email-input-field::placeholder {
+                    color: var(--color-text-muted) !important;
+                    opacity: 1 !important;
+                }
+
+                .hero-email-input-field::-webkit-input-placeholder {
+                    color: var(--color-text-muted) !important;
+                    opacity: 1 !important;
+                }
+
+                .hero-email-input-field::-moz-placeholder {
+                    color: var(--color-text-muted) !important;
+                    opacity: 1 !important;
+                }
+
+                .hero-email-input-field:-ms-input-placeholder {
+                    color: var(--color-text-muted) !important;
+                    opacity: 1 !important;
+                }
+
                 /* 标题动画 - 与周刊页面保持一致 */
                 @keyframes fadeInUp {
                     from {

@@ -58,7 +58,7 @@
 }
 
 .subTitle {
-    color: #9CA3AF;
+    color: var(--color-text-muted);
     line-height: 28px;
     text-align: center;
     justify-content: center;
@@ -91,11 +91,11 @@
 }
 
 .resourceCard {
-    background: rgba(26, 26, 26, 0.30);
-    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.30);
+    background: var(--color-bg-glass);
+    box-shadow: var(--shadow-card);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(42, 42, 42, 0.70);
+    border: 1px solid var(--color-border-primary);
     border-radius: 16px;
     width: 280px;
     overflow: hidden;
@@ -171,7 +171,7 @@
 }
 
 .titleText {
-    color: #FFFFFF;
+    color: var(--color-text-primary);
     font-weight: 700;
     line-height: 24px;
     align-items: center;
@@ -189,7 +189,7 @@
 }
 
 .descriptionText {
-    color: #9CA3AF;
+    color: var(--color-text-muted);
     font-size: 14px;
     line-height: 20px;
     align-items: center;

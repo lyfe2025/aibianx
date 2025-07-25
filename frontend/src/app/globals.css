@@ -120,26 +120,63 @@ a {
 
 /* 亮色主题 */
 [data-theme="light"] {
-  /* 背景色 - 清新白色系 */
+  /* 背景色 - 纯净白色系，避免灰色 */
   --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: rgba(247, 250, 255, 0.50);  /* 极浅蓝白色 */
-  --color-bg-glass: rgba(255, 255, 255, 0.95);      /* 更透明的玻璃效果 */
-  --color-bg-input: rgba(250, 252, 255, 0.80);      /* 清新的输入框背景 */
+  --color-bg-secondary: rgba(59, 130, 246, 0.03);
+  /* 极淡的蓝色背景，避免灰色 */
+  --color-bg-glass: rgba(255, 255, 255, 0.95);
+  /* 纯白玻璃效果 */
+  --color-bg-input: rgba(255, 255, 255, 0.90);
+  /* 纯白输入框背景 */
 
-  /* 文字色 - 深色文字确保可读性 */
-  --color-text-primary: #1a202c;    /* 深蓝灰色，替代纯黑 */
-  --color-text-secondary: #2d3748;  /* 中等深度 */
-  --color-text-muted: #4a5568;      /* 较浅但仍清晰 */
-  --color-text-disabled: #a0aec0;   /* 禁用状态 */
+  /* 文字色 - 深色文字，避免白色 */
+  --color-text-primary: #1a202c;
+  /* 深蓝灰色主要文字 */
+  --color-text-secondary: #2d3748;
+  /* 深灰色次要文字 */
+  --color-text-muted: #4a5568;
+  /* 中等深度文字 */
+  --color-text-disabled: #718096;
+  /* 禁用状态文字 */
 
-  /* 边框色 - 柔和蓝色系 */
-  --color-border-primary: rgba(59, 130, 246, 0.15);   /* 淡蓝色边框 */
-  --color-border-secondary: rgba(99, 179, 237, 0.20); /* 稍深蓝色边框 */
-  --color-border-active: #3B82F6;                     /* 活跃状态保持蓝色 */
+  /* 边框色 - 清淡蓝色系，避免灰色 */
+  --color-border-primary: rgba(59, 130, 246, 0.12);
+  /* 淡蓝色边框 */
+  --color-border-secondary: rgba(59, 130, 246, 0.20);
+  /* 稍深蓝色边框 */
+  --color-border-active: #3B82F6;
+  /* 活跃状态保持蓝色 */
 
   /* 亮色主题特定阴影 - 更柔和 */
-  --shadow-button: 0px 2px 8px 0px rgba(59, 130, 246, 0.15);
-  --shadow-card: 0 2px 8px rgba(59, 130, 246, 0.08);
+  --shadow-button: 0px 2px 12px 0px rgba(59, 130, 246, 0.20);
+  --shadow-card: 0 2px 12px rgba(59, 130, 246, 0.12);
+
+  /* 亮色主题特定状态色 */
+  --color-success: #10B981;
+  --color-success-bg: rgba(16, 185, 129, 0.05);
+  --color-success-border: rgba(16, 185, 129, 0.20);
+
+  --color-warning: #F59E0B;
+  --color-warning-bg: rgba(245, 158, 11, 0.05);
+  --color-warning-border: rgba(245, 158, 11, 0.20);
+
+  --color-error: #EF4444;
+  --color-error-bg: rgba(239, 68, 68, 0.05);
+  --color-error-border: rgba(239, 68, 68, 0.20);
+
+  --color-info: #3B82F6;
+  --color-info-bg: rgba(59, 130, 246, 0.05);
+  --color-info-border: rgba(59, 130, 246, 0.20);
+
+  /* 亮色主题特定装饰色 - 极淡蓝色，避免灰色 */
+  --color-decoration-light: rgba(59, 130, 246, 0.02);
+  --color-decoration-medium: rgba(59, 130, 246, 0.04);
+  --color-decoration-strong: rgba(59, 130, 246, 0.08);
+
+  /* 亮色主题特定交互色 - 蓝色系，避免灰色 */
+  --color-hover: rgba(59, 130, 246, 0.04);
+  --color-active: rgba(59, 130, 246, 0.08);
+  --color-focus: rgba(59, 130, 246, 0.12);
 }
 
 /* 暗色主题 (显式声明) */
@@ -160,21 +197,52 @@ a {
   --color-border-primary: rgba(42, 42, 42, 0.70);
   --color-border-secondary: #2A2A2A;
   --color-border-active: #3B82F6;
+
+  /* 暗色主题特定阴影 */
+  --shadow-button: 0px 0px 15px 0px rgba(139, 92, 246, 0.50);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  /* 暗色主题特定状态色 */
+  --color-success: #10B981;
+  --color-success-bg: rgba(16, 185, 129, 0.10);
+  --color-success-border: rgba(16, 185, 129, 0.30);
+
+  --color-warning: #F59E0B;
+  --color-warning-bg: rgba(245, 158, 11, 0.10);
+  --color-warning-border: rgba(245, 158, 11, 0.30);
+
+  --color-error: #EF4444;
+  --color-error-bg: rgba(239, 68, 68, 0.10);
+  --color-error-border: rgba(239, 68, 68, 0.30);
+
+  --color-info: #3B82F6;
+  --color-info-bg: rgba(59, 130, 246, 0.10);
+  --color-info-border: rgba(59, 130, 246, 0.30);
+
+  /* 暗色主题特定装饰色 */
+  --color-decoration-light: rgba(59, 130, 246, 0.05);
+  --color-decoration-medium: rgba(59, 130, 246, 0.10);
+  --color-decoration-strong: rgba(59, 130, 246, 0.20);
+
+  /* 暗色主题特定交互色 */
+  --color-hover: rgba(59, 130, 246, 0.10);
+  --color-active: rgba(59, 130, 246, 0.20);
+  --color-focus: rgba(59, 130, 246, 0.30);
 }
 
 /* ===== 个人中心设置页面专用样式 ===== */
-/* 只在设置页面应用特殊输入框样式 */
+/* 设置页面输入框样式 - 支持主题切换 */
 .settings-page .input,
 .settings-page input[type="text"],
 .settings-page input[type="email"],
 .settings-page input[type="password"],
 .settings-page input[type="tel"],
 .settings-page textarea {
-  background: rgba(18, 18, 18, 0.50) !important;
+  background: var(--color-bg-input) !important;
   backdrop-filter: blur(4px) !important;
   -webkit-backdrop-filter: blur(4px) !important;
-  border: 1px solid rgba(42, 42, 42, 0.70) !important;
-  color: #FFFFFF !important;
+  border: 1px solid var(--color-border-primary) !important;
+  color: var(--color-text-primary) !important;
   font-family: var(--font-family-primary) !important;
 }
 
@@ -184,14 +252,14 @@ a {
 .settings-page input[type="password"]:focus,
 .settings-page input[type="tel"]:focus,
 .settings-page textarea:focus {
-  border-color: #3B82F6 !important;
+  border-color: var(--color-border-active) !important;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
   outline: none !important;
 }
 
 /* 特殊处理：确保个人简介文本域只有一层边框 */
 .settings-page .bio-textarea:focus {
-  border: 1px solid #3B82F6 !important;
+  border: 1px solid var(--color-border-active) !important;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
   outline: none !important;
 }
@@ -199,7 +267,7 @@ a {
 /* 设置页面头像区域优化 */
 .avatar-edit-button:hover {
   transform: scale(1.1) !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+  box-shadow: var(--shadow-button) !important;
 }
 
 .avatar-edit-text:hover {
@@ -208,7 +276,7 @@ a {
 
 /* 设置页面头像容器悬浮效果 */
 .avatar-container:hover {
-  border-color: rgba(59, 130, 246, 0.4) !important;
+  border-color: var(--color-border-active) !important;
   box-shadow: 0 0 24px rgba(59, 130, 246, 0.15) !important;
 }
 
@@ -218,8 +286,8 @@ a {
 }
 
 .settings-form-card:hover {
-  background: rgba(26, 26, 26, 0.4) !important;
-  border-color: rgba(42, 42, 42, 0.6) !important;
+  background: var(--color-bg-secondary) !important;
+  border-color: var(--color-border-secondary) !important;
 }
 
 /* 响应式优化 */
@@ -290,7 +358,7 @@ textarea:-ms-input-placeholder {
 .settings-page .input::placeholder,
 .settings-page input::placeholder,
 .settings-page textarea::placeholder {
-  color: #9CA3AF !important;
+  color: var(--color-text-muted) !important;
   opacity: 1 !important;
 }
 
@@ -521,19 +589,29 @@ div.hero-subtitle *,
 
 /* ===== 导航链接样式 ===== */
 
-/* Header导航链接 */
+/* Header导航链接 - 默认（暗色主题）*/
 .nav-link:not(.nav-link--active):hover {
   color: #FFFFFF !important;
 }
 
-/* Footer社交链接 */
+/* 亮色主题下的Header导航链接 - 避免白色文字 */
+[data-theme="light"] .nav-link:not(.nav-link--active):hover {
+  color: var(--color-text-primary) !important;
+}
+
+/* Footer社交链接 - 默认（暗色主题）*/
 .social-link:hover {
   background: rgba(59, 130, 246, 0.2) !important;
 }
 
-/* Footer导航链接 */
+/* Footer导航链接 - 默认（暗色主题）*/
 .footer-nav-link:hover {
   color: #FFFFFF !important;
+}
+
+/* 亮色主题下的Footer导航链接 - 避免白色文字 */
+[data-theme="light"] .footer-nav-link:hover {
+  color: var(--color-text-primary) !important;
 }
 
 /* Footer法律条款链接 */
@@ -547,7 +625,7 @@ div.hero-subtitle *,
   box-shadow: var(--shadow-button) !important;
 }
 
-/* 主要内容区域文章卡片 */
+/* 主要内容区域文章卡片 - 默认（暗色主题）*/
 .main-content-article-card:hover {
   background: rgba(18, 18, 18, 0.50) !important;
 }
@@ -557,7 +635,7 @@ div.hero-subtitle *,
   transform: translateY(0) !important;
 }
 
-/* 免费资源卡片 */
+/* 免费资源卡片 - 默认（暗色主题）*/
 .free-resource-card:hover {
   transform: translateY(-4px) !important;
   box-shadow: 0px 8px 25px -4px rgba(0, 0, 0, 0.20), 0px 20px 35px -3px rgba(0, 0, 0, 0.15) !important;
@@ -626,13 +704,18 @@ div.hero-subtitle *,
   background: rgba(59, 130, 246, 0.15) !important;
 }
 
-/* Footer联系链接 */
+/* Footer联系链接 - 默认（暗色主题）*/
 .footer-contact-link:hover {
   color: #FFFFFF !important;
 }
 
 .footer-contact-link:active {
   color: var(--color-primary-blue) !important;
+}
+
+/* 亮色主题下的Footer联系链接 - 避免白色文字 */
+[data-theme="light"] .footer-contact-link:hover {
+  color: var(--color-text-primary) !important;
 }
 
 /* ===== 头部图标按钮样式 ===== */
@@ -646,7 +729,7 @@ div.hero-subtitle *,
   outline: none !important;
 }
 
-/* 图标按钮hover效果 */
+/* 图标按钮hover效果 - 默认（暗色主题）*/
 .icon-button:hover {
   background: rgba(59, 130, 246, 0.10) !important;
   border-color: rgba(59, 130, 246, 0.40) !important;
@@ -661,9 +744,14 @@ div.hero-subtitle *,
   transition: all 0.1s ease !important;
 }
 
-/* 图标按钮中的图标hover效果 */
+/* 图标按钮中的图标hover效果 - 默认（暗色主题）*/
 .icon-button:hover svg {
   color: #FFFFFF !important;
+}
+
+/* 亮色主题下的图标按钮中的图标hover效果 - 避免白色 */
+[data-theme="light"] .icon-button:hover svg {
+  color: var(--color-text-primary) !important;
 }
 
 /* 🌟 通用可点击元素点击状态优化 */
@@ -2057,3 +2145,388 @@ html {
 }
 
 /* ===== 模态弹窗样式 ===== */
+
+/* ===== 亮色主题特殊样式优化 ===== */
+
+/* 亮色主题下的按钮增强 */
+[data-theme="light"] .btn--gradient {
+  box-shadow: 0px 2px 12px 0px rgba(59, 130, 246, 0.25);
+}
+
+[data-theme="light"] .btn--gradient:hover:not(:disabled) {
+  box-shadow: 0px 4px 16px 0px rgba(59, 130, 246, 0.35);
+  transform: translateY(-2px);
+}
+
+[data-theme="light"] .btn--outline {
+  border-color: var(--color-border-primary);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+[data-theme="light"] .btn--outline:hover:not(:disabled) {
+  background: var(--color-hover);
+  border-color: var(--color-border-active);
+  box-shadow: 0px 2px 8px 0px rgba(59, 130, 246, 0.15);
+  color: var(--color-text-primary);
+}
+
+/* 亮色主题下的玻璃卡片增强 */
+[data-theme="light"] .glass-card {
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: var(--shadow-card);
+}
+
+[data-theme="light"] .glass-card--hover:hover {
+  background: var(--color-bg-primary);
+  border-color: var(--color-border-active);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+  transform: translateY(-1px);
+}
+
+/* 亮色主题下的输入框增强 */
+[data-theme="light"] .input,
+[data-theme="light"] input[type="text"],
+[data-theme="light"] input[type="email"],
+[data-theme="light"] input[type="password"],
+[data-theme="light"] textarea {
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  color: var(--color-text-primary);
+}
+
+[data-theme="light"] .input:focus,
+[data-theme="light"] input:focus,
+[data-theme="light"] textarea:focus {
+  border-color: var(--color-border-active);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+/* 亮色主题下的图标按钮增强 */
+[data-theme="light"] .icon-button {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+}
+
+[data-theme="light"] .icon-button:hover {
+  background: var(--color-hover);
+  border-color: var(--color-border-active);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+}
+
+/* 亮色主题下的导航链接增强 - 避免白色文字 */
+[data-theme="light"] .nav-link:hover {
+  color: var(--color-text-primary) !important;
+  background: var(--color-hover);
+  border-radius: 8px;
+}
+
+/* 亮色主题下的模态弹窗增强 */
+[data-theme="light"] .modal-overlay {
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(12px);
+}
+
+[data-theme="light"] .modal-container {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* 亮色主题下的文章卡片增强 - 避免灰色背景 */
+[data-theme="light"] .main-content-article-card:hover {
+  background: var(--color-hover) !important;
+  border-color: var(--color-border-active) !important;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* 亮色主题下的标签增强 - 避免灰色背景 */
+[data-theme="light"] .tag {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+}
+
+[data-theme="light"] .tag:hover {
+  background: var(--color-hover);
+  border-color: var(--color-border-active);
+  color: var(--color-text-primary);
+}
+
+/* 亮色主题下的Hero区域优化 - 确保深色文字 */
+[data-theme="light"] .hero-subtitle {
+  color: var(--color-text-secondary) !important;
+  -webkit-text-fill-color: var(--color-text-secondary) !important;
+}
+
+/* 亮色主题下的代码块增强 - 避免灰色背景 */
+[data-theme="light"] code {
+  background: var(--color-bg-secondary) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border-primary) !important;
+}
+
+/* 亮色主题下的引用块增强 */
+[data-theme="light"] blockquote {
+  background: var(--color-info-bg) !important;
+  border-left-color: var(--color-border-active) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+/* 亮色主题下的链接和交互元素 - 避免白色文字 */
+[data-theme="light"] .footer-nav-link:hover {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .footer-contact-link:hover {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .contact-method-link:hover {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .related-article-card:hover {
+  border-color: var(--color-border-active) !important;
+  background: var(--color-hover) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 亮色主题下的免费资源卡片 - 避免灰色背景 */
+[data-theme="light"] .free-resource-card {
+  background: var(--color-bg-primary) !important;
+  border: 1px solid var(--color-border-primary) !important;
+}
+
+[data-theme="light"] .free-resource-card:hover {
+  background: var(--color-hover) !important;
+  border-color: var(--color-border-active) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0px 8px 25px -4px rgba(59, 130, 246, 0.20) !important;
+}
+
+/* 亮色主题下的设置页面优化 */
+[data-theme="light"] .settings-form-card:hover {
+  background: var(--color-hover) !important;
+  border-color: var(--color-border-secondary) !important;
+}
+
+/* ===== 亮色主题页面级别样式覆盖 ===== */
+
+/* 亮色主题下的页面通用样式 */
+[data-theme="light"] {
+  /* 覆盖所有硬编码的白色文字 */
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的标题元素 */
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的段落文字 */
+[data-theme="light"] p,
+[data-theme="light"] span,
+[data-theme="light"] div {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的列表项 */
+[data-theme="light"] li {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的页面容器 */
+[data-theme="light"] .page-container {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的关于页面 */
+[data-theme="light"] .about-page {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的周刊页面 */
+[data-theme="light"] .weekly-page {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的个人中心页面 */
+[data-theme="light"] .profile-page {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的文章详情页 */
+[data-theme="light"] .article-detail {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的统计卡片 */
+[data-theme="light"] .stat-card {
+  background: var(--color-bg-glass) !important;
+  border-color: var(--color-border-primary) !important;
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .stat-card h3,
+[data-theme="light"] .stat-card p,
+[data-theme="light"] .stat-card span {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的使命卡片 */
+[data-theme="light"] .mission-card {
+  background: var(--color-bg-glass) !important;
+  border-color: var(--color-border-primary) !important;
+}
+
+[data-theme="light"] .mission-card h3,
+[data-theme="light"] .mission-card p,
+[data-theme="light"] .mission-card span {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的会员计划卡片 */
+[data-theme="light"] .membership-plan-card {
+  background: var(--color-bg-glass) !important;
+  border-color: var(--color-border-primary) !important;
+}
+
+[data-theme="light"] .membership-plan-card h3,
+[data-theme="light"] .membership-plan-card p,
+[data-theme="light"] .membership-plan-card span {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的文章元素 */
+[data-theme="light"] .article-title {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .article-content {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .article-meta {
+  color: var(--color-text-secondary) !important;
+}
+
+/* 亮色主题下的倒计时组件 */
+[data-theme="light"] .countdown-timer {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .countdown-timer .countdown-number {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .countdown-timer .countdown-label {
+  color: var(--color-text-secondary) !important;
+}
+
+/* 亮色主题下的搜索组件 */
+[data-theme="light"] .search-bar {
+  background: var(--color-bg-input) !important;
+  border-color: var(--color-border-primary) !important;
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .search-bar::placeholder {
+  color: var(--color-text-muted) !important;
+}
+
+/* 亮色主题下的加载组件 */
+[data-theme="light"] .loading-text {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的网络状态组件 */
+[data-theme="light"] .network-status {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的分页组件 */
+[data-theme="light"] .pagination {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .pagination button {
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-primary) !important;
+}
+
+/* 亮色主题下的表单组件 */
+[data-theme="light"] .form-label {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .form-help {
+  color: var(--color-text-secondary) !important;
+}
+
+/* 亮色主题下的页面标题 */
+[data-theme="light"] .page-title {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .page-subtitle {
+  color: var(--color-text-secondary) !important;
+}
+
+/* 亮色主题下的智能搜索 */
+[data-theme="light"] .smart-search {
+  background: var(--color-bg-glass) !important;
+  border-color: var(--color-border-primary) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下的可访问性组件 */
+[data-theme="light"] .accessibility-skip-link {
+  background: var(--color-bg-primary) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border-active) !important;
+}
+
+/* 亮色主题下的通用内联样式覆盖 */
+[data-theme="light"] [style*="color: #FFFFFF"],
+[data-theme="light"] [style*="color:#FFFFFF"],
+[data-theme="light"] [style*="color: white"],
+[data-theme="light"] [style*="color:white"] {
+  color: var(--color-text-primary) !important;
+}
+
+/* 亮色主题下特殊处理的按钮内文字（保持白色） */
+[data-theme="light"] .btn--gradient [style*="color: #FFFFFF"],
+[data-theme="light"] .btn--gradient [style*="color:#FFFFFF"],
+[data-theme="light"] button[style*="background: linear-gradient"] [style*="color: #FFFFFF"],
+[data-theme="light"] button[style*="background:linear-gradient"] [style*="color: #FFFFFF"] {
+  color: #FFFFFF !important;
+  /* 按钮内的白色文字保持不变 */
+}
+
+/* 亮色主题下特殊处理的按钮内文字（保持白色） */
+[data-theme="light"] .btn--gradient [style*="color: #FFFFFF"],
+[data-theme="light"] .btn--gradient [style*="color:#FFFFFF"],
+[data-theme="light"] button[style*="background: linear-gradient"] [style*="color: #FFFFFF"],
+[data-theme="light"] button[style*="background:linear-gradient"] [style*="color: #FFFFFF"] {
+  color: #FFFFFF !important;
+  /* 按钮内的白色文字保持不变 */
+}
+
+/* 亮色主题下的搜索框优化 */
+[data-theme="light"] .search-bar-input {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] .search-bar-input::placeholder {
+  color: var(--color-text-muted) !important;
+}

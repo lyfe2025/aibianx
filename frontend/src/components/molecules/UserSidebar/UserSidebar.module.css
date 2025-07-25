@@ -1,170 +1,102 @@
+/* UserSidebar 组件样式 */
 .userSidebar {
+    background: var(--color-bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border-primary);
+    border-radius: 16px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    width: 320px;
-    /* 优化宽度，确保顶级菜单项完整显示 */
-    min-height: calc(100vh - 98px);
-    /* 适应布局变化 */
-    background: rgba(0, 0, 0, 0.15);
-    /* 更淡的背景，增强整体感 */
-    backdrop-filter: blur(8px);
-    /* 添加轻微模糊效果 */
-    border-right: 1px solid rgba(42, 42, 42, 0.30);
-    /* 更淡的边框 */
-    padding: 40px 24px;
-    /* 调整内边距，与整体布局协调 */
-    gap: 4px;
-    /* 添加整体感的装饰 */
-    border-radius: 0 12px 12px 0;
-    /* 右侧圆角 */
-    margin: 0;
-    /* 移除外边距 */
-    position: relative;
-    /* 添加优雅的过渡动画 */
-    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    gap: 24px;
+    width: 280px;
+    height: fit-content;
 }
 
-/* 用户信息区域 */
 .userProfile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 36px;
+    gap: 16px;
+    text-align: center;
 }
 
-/* 头像容器 - 根据设计稿调整 */
-.userAvatar {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 12px;
-    width: 84px;
-    height: 84px;
-}
-
-/* 头像图片 - 大的灰色框只显示头像，无边框 */
-.avatarImage {
-    width: 84px !important;
-    height: 84px !important;
+.avatar {
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    border: none;
-    /* 移除边框，确保大框只显示头像 */
-    background: transparent;
-    padding: 0;
-    overflow: visible;
-    display: block;
+    border: 2px solid var(--color-border-primary);
+    overflow: hidden;
 }
 
-/* 确保头像内部的图片正确显示 */
-.avatarImage img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    border-radius: 50%;
-    display: block;
-}
-
-/* 用户名样式 */
 .userName {
     color: var(--color-text-primary);
-    font-size: var(--font-size-xl);
+    font-size: 18px;
     font-weight: 600;
-    line-height: 28px;
-    margin: 0 0 4px 0;
-    text-align: center;
-}
-
-/* 皇冠图标徽章 - 小的灰色框只显示皇冠图标 */
-.crownBadge {
-    position: absolute;
-    bottom: -2px;
-    right: -2px;
-    background: rgba(26, 26, 26, 0.85);
-    /* 使用项目标准的毛玻璃背景色 */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(42, 42, 42, 0.70);
-    /* 使用项目标准边框色 */
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    /* 添加阴影增强层次感 */
-}
-
-.memberBadge {
-    background: rgba(255, 215, 0, 0.10);
-    border-radius: 9999px;
-    padding: 2px 8px;
-    margin-bottom: 4px;
-}
-
-.memberText {
-    color: #EAB308;
-    font-size: var(--font-size-xs);
-    line-height: 16px;
-}
-
-.memberExpiry {
-    color: var(--color-text-muted);
-    font-size: var(--font-size-xs);
-    line-height: 16px;
     margin: 0;
-    text-align: center;
 }
 
-/* 导航菜单 */
-.mainNavigation,
-.settingsNavigation {
+.userBio {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 16px 0;
+    border-top: 1px solid var(--color-border-primary);
+    border-bottom: 1px solid var(--color-border-primary);
+}
+
+.statItem {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    padding: 0 16px;
+    align-items: center;
+    gap: 4px;
 }
 
-.mainNavigation {
-    margin-bottom: 20px;
+.statValue {
+    color: var(--color-text-primary);
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
 }
 
-.settingsNavigation {
-    margin-top: 20px;
+.statLabel {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    margin: 0;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .navItem {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 16px;
+    padding: 12px 16px;
     border-radius: 8px;
+    color: var(--color-text-secondary);
     text-decoration: none;
-    border: none;
-    background: none;
-    cursor: pointer;
     transition: all 0.2s ease;
-    color: var(--color-text-muted);
-    font-size: var(--font-size-lg);
-    line-height: 24px;
-    width: 100%;
-    text-align: left;
-    /* 添加优雅的过渡动画 */
-    transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 .navItem:hover {
-    background: rgba(59, 130, 246, 0.08);
-    color: var(--color-text-secondary);
-    transform: translateX(2px);
-    /* 轻微的移动效果 */
+    background: var(--color-hover);
+    color: var(--color-text-primary);
 }
 
-.navItemActive {
-    background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+.navItem.active {
+    background: var(--color-info-bg);
     color: var(--color-text-primary);
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
-    /* 添加阴影 */
+    border: 1px solid var(--color-border-active);
 }
 
 .navIcon {
@@ -174,131 +106,42 @@
 }
 
 .navLabel {
-    flex: 1;
-    white-space: nowrap;
-}
-
-/* 分割线 */
-.navDivider {
-    width: calc(100% - 32px);
-    height: 1px;
-    margin: 12px 16px;
-    background: rgba(42, 42, 42, 0.70);
-    border-radius: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.dividerIcon {
-    display: none;
-    /* 不使用图标，直接用CSS背景 */
+    font-size: 14px;
+    font-weight: 500;
 }
 
 /* 响应式设计 */
 @media (max-width: 1024px) {
     .userSidebar {
-        width: 300px;
-        /* 中等屏幕适当缩小，保持菜单项完整显示 */
-        padding: 32px 20px;
-    }
-
-    .mainNavigation {
-        margin-bottom: 18px;
-    }
-
-    .settingsNavigation {
-        margin-top: 18px;
-    }
-
-    .navDivider {
-        margin: 10px 16px;
-        background: rgba(42, 42, 42, 0.60);
+        width: 100%;
+        margin-bottom: 24px;
     }
 }
 
 @media (max-width: 768px) {
     .userSidebar {
-        width: 280px;
-        /* 小屏幕适度缩小，确保菜单项不换行 */
-        padding: 24px 16px;
-        border-radius: 0 8px 8px 0;
-        /* 较小的圆角 */
-        background: rgba(0, 0, 0, 0.20);
-        /* 稍深的背景，增强可见性 */
-    }
-
-    .navItem {
-        padding: 8px 12px;
-        font-size: var(--font-size-base);
-    }
-
-    .userName {
-        font-size: var(--font-size-lg);
-    }
-
-    .avatarImage {
-        width: 72px;
-        height: 72px;
-        padding: 16px;
-    }
-
-    .mainNavigation {
-        margin-bottom: 16px;
-    }
-
-    .settingsNavigation {
-        margin-top: 16px;
-    }
-
-    .navDivider {
-        margin: 8px 16px;
-        background: rgba(42, 42, 42, 0.50);
-    }
-}
-
-@media (max-width: 480px) {
-    .userSidebar {
-        width: 240px;
-        /* 超小屏幕保持基本可读性 */
-        padding: 20px 12px;
-        border-radius: 0 6px 6px 0;
-        /* 更小的圆角 */
-    }
-
-    .navItem {
-        padding: 6px 8px;
-        font-size: var(--font-size-sm);
-        gap: 8px;
-        /* 减少间距 */
+        padding: 20px;
+        gap: 20px;
     }
 
     .userProfile {
-        margin-bottom: 28px;
-        /* 优化间距比例 */
+        gap: 12px;
     }
 
-    .mainNavigation {
-        margin-bottom: 16px;
-    }
-
-    .settingsNavigation {
-        margin-top: 16px;
-    }
-
-    .navDivider {
-        margin: 8px 12px;
-        background: rgba(42, 42, 42, 0.40);
-        width: calc(100% - 24px);
-    }
-
-    .avatarImage {
+    .avatar {
         width: 60px;
         height: 60px;
-        padding: 12px;
     }
 
     .userName {
-        font-size: var(--font-size-base);
+        font-size: 16px;
+    }
+
+    .stats {
+        padding: 12px 0;
+    }
+
+    .statValue {
+        font-size: 18px;
     }
 }

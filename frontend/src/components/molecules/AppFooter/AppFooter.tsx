@@ -84,11 +84,12 @@ export function AppFooter() {
     return (
         <footer
             style={{
-                // 毛玻璃效果 - 严格按设计稿
-                background: 'rgba(18, 18, 18, 0.50)',
+                // 毛玻璃效果 - 支持主题切换
+                background: 'var(--color-bg-glass)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
-                borderTop: '1px solid rgba(42, 42, 42, 0.60)',
+                border: '1px solid var(--color-border-primary)',
+                borderTop: '1px solid var(--color-border-primary)',
                 marginTop: 'auto'
             }}
         >
@@ -165,7 +166,7 @@ export function AppFooter() {
 
                             {/* 品牌描述 */}
                             <div style={{
-                                color: '#9CA3AF',
+                                color: 'var(--color-text-muted)',
                                 fontSize: 'var(--font-size-lg)',
                                 lineHeight: '24px',
                                 marginBottom: '20px'
@@ -189,7 +190,7 @@ export function AppFooter() {
                                 minWidth: '80px'
                             }}>
                                 <div style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontWeight: '700',
                                     fontSize: 'var(--font-size-lg)',
                                     lineHeight: '24px',
@@ -202,13 +203,14 @@ export function AppFooter() {
                                         key={item.href}
                                         href={item.href}
                                         style={{
-                                            color: '#9CA3AF',
+                                            color: 'var(--color-text-muted)',
                                             fontSize: 'var(--font-size-lg)',
                                             lineHeight: '24px',
                                             textDecoration: 'none',
                                             transition: 'color 0.2s ease',
                                             whiteSpace: 'nowrap'
                                         }}
+                                        className="footer-nav-link"
                                     >
                                         {item.label}
                                     </Link>
@@ -223,7 +225,7 @@ export function AppFooter() {
                                 minWidth: '120px'
                             }}>
                                 <div style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontWeight: '700',
                                     fontSize: 'var(--font-size-lg)',
                                     lineHeight: '24px',
@@ -232,23 +234,23 @@ export function AppFooter() {
                                     关注我们
                                 </div>
                                 <Link href="#wechat" style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: 'var(--font-size-lg)',
                                     lineHeight: '24px',
                                     textDecoration: 'none',
                                     transition: 'color 0.2s ease',
                                     whiteSpace: 'nowrap'
-                                }}>
+                                }} className="footer-nav-link">
                                     微信公众号
                                 </Link>
                                 <Link href="#zhishixingqiu" style={{
-                                    color: '#9CA3AF',
+                                    color: 'var(--color-text-muted)',
                                     fontSize: 'var(--font-size-lg)',
                                     lineHeight: '24px',
                                     textDecoration: 'none',
                                     transition: 'color 0.2s ease',
                                     whiteSpace: 'nowrap'
-                                }}>
+                                }} className="footer-nav-link">
                                     知识星球
                                 </Link>
                             </div>
@@ -261,7 +263,7 @@ export function AppFooter() {
                                 minWidth: '200px'
                             }}>
                                 <div style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontWeight: '700',
                                     fontSize: 'var(--font-size-lg)',
                                     lineHeight: '24px',
@@ -275,9 +277,9 @@ export function AppFooter() {
                                     alignItems: 'center',
                                     gap: '8px'
                                 }}>
-                                    <Icon name="phone-icon" size="sm" style={{ color: '#9CA3AF' }} />
+                                    <Icon name="phone-icon" size="sm" style={{ color: 'var(--color-text-muted)' }} />
                                     <span style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: 'var(--font-size-lg)',
                                         lineHeight: '24px'
                                     }}>
@@ -291,9 +293,9 @@ export function AppFooter() {
                                     alignItems: 'center',
                                     gap: '8px'
                                 }}>
-                                    <Icon name="email-icon" size="sm" style={{ color: '#9CA3AF' }} />
+                                    <Icon name="email-icon" size="sm" style={{ color: 'var(--color-text-muted)' }} />
                                     <span style={{
-                                        color: '#9CA3AF',
+                                        color: 'var(--color-text-muted)',
                                         fontSize: 'var(--font-size-lg)',
                                         lineHeight: '24px'
                                     }}>
@@ -307,7 +309,7 @@ export function AppFooter() {
 
                 {/* 底部版权区域 - 移到最底部，增加与上方内容的间距 */}
                 <div style={{
-                    borderTop: '1px solid rgba(42, 42, 42, 0.60)',
+                    borderTop: '1px solid var(--color-border-primary)',
                     paddingTop: '32px',
                     paddingBottom: '32px',
                     marginTop: '48px',
@@ -317,7 +319,7 @@ export function AppFooter() {
                 }}>
                     {/* 版权信息 - 左侧 */}
                     <div style={{
-                        color: '#6B7280',
+                        color: 'var(--color-text-disabled)',
                         fontSize: 'var(--font-size-base)',
                         lineHeight: '22px'
                     }}>
@@ -334,12 +336,13 @@ export function AppFooter() {
                                 key={item.href}
                                 href={item.href}
                                 style={{
-                                    color: '#6B7280',
+                                    color: 'var(--color-text-disabled)',
                                     fontSize: 'var(--font-size-base)',
                                     lineHeight: '22px',
                                     textDecoration: 'none',
                                     transition: 'color 0.2s ease'
                                 }}
+                                className="footer-legal-link"
                             >
                                 {item.label}
                             </Link>
@@ -348,7 +351,7 @@ export function AppFooter() {
 
                     {/* Cookie设置 - 右侧 */}
                     <div style={{
-                        color: '#6B7280',
+                        color: 'var(--color-text-disabled)',
                         fontSize: 'var(--font-size-base)',
                         lineHeight: '22px'
                     }}>
@@ -356,7 +359,7 @@ export function AppFooter() {
                             color: 'inherit',
                             textDecoration: 'none',
                             transition: 'color 0.2s ease'
-                        }}>
+                        }} className="footer-legal-link">
                             Cookie 设置
                         </Link>
                     </div>
@@ -365,9 +368,13 @@ export function AppFooter() {
 
             {/* 响应式样式和悬停效果 - 与顶部菜单保持一致的断点 */}
             <style jsx>{`
-                    /* 悬停效果 - 所有链接悬停时变为白色 */
-                    a:hover {
+                    /* 悬停效果 - 避免白色文字，使用主题色 */
+                    .footer-nav-link:hover {
                         color: var(--color-text-primary) !important;
+                    }
+                    
+                    .footer-legal-link:hover {
+                        color: var(--color-text-secondary) !important;
                     }
 
                     /* 大屏桌面端 - 1440px及以上 */

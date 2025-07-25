@@ -669,8 +669,8 @@ export function MainContentSection() {
                                 display: 'flex'
                             }}>
                                 <div style={{
-                                    background: 'rgba(18, 18, 18, 0.50)',
-                                    border: '1px solid #2A2A2A',
+                                    background: 'var(--color-bg-input)',
+                                    border: '1px solid var(--color-border-primary)',
                                     borderRadius: '8px 0 0 8px',
                                     padding: '12px 16px',
                                     width: '288px',
@@ -687,15 +687,15 @@ export function MainContentSection() {
                                             const container = e.target.parentElement
                                             if (container) {
                                                 container.style.borderColor = '#3B82F6'
-                                                container.style.background = 'rgba(18, 18, 18, 0.70)'
+                                                container.style.background = 'var(--color-bg-primary)'
                                                 container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
                                             }
                                         }}
                                         onBlur={(e) => {
                                             const container = e.target.parentElement
                                             if (container) {
-                                                container.style.borderColor = '#2A2A2A'
-                                                container.style.background = 'rgba(18, 18, 18, 0.50)'
+                                                container.style.borderColor = 'var(--color-border-primary)'
+                                                container.style.background = 'var(--color-bg-input)'
                                                 container.style.boxShadow = 'none'
                                             }
                                         }}

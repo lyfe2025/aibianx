@@ -64,8 +64,8 @@ export function HeroSection() {
                         e.target.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
                     }}
                     onBlur={(e) => {
-                        e.target.style.borderColor = '#2A2A2A'
-                        e.target.style.background = 'rgba(18, 18, 18, 0.50)'
+                        e.target.style.borderColor = 'var(--color-border-primary)'
+                        e.target.style.background = 'var(--color-bg-input)'
                         e.target.style.boxShadow = 'none'
                     }}
                     style={{

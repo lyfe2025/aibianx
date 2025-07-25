@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Container, Icon, GradientText } from '@/components/ui'
+import { useThemeStore } from '@/stores'
 
 /**
  * 最终行动召唤区块组件 - FinalCTASection
@@ -17,6 +18,7 @@ export function FinalCTASection() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const { theme } = useThemeStore()
 
     // 核心价值点 - 使用设计稿中的图标
     const benefits = [
@@ -236,21 +238,21 @@ export function FinalCTASection() {
                         </div>
 
                         {/* 称呼输入框 - 精确按设计稿样式 */}
-                        <div style={{
-                            background: 'rgba(18, 18, 18, 0.50)',
-                            border: '1px solid rgba(59, 130, 246, 0.30)',
-                            borderRadius: '8px',
-                            padding: '17px',
-                            display: 'flex',
-                            width: '434px',
-                            gap: '12px',
-                            alignItems: 'stretch',
-                            marginTop: '16px',
-                            marginLeft: '33px',
-                            marginRight: '33px',
-                            flexDirection: 'row',
-                            transition: 'all 0.2s ease'
-                        }}>
+                        <div
+                            className="final-cta-input-container"
+                            style={{
+                                background: 'var(--color-bg-input)',
+                                border: '1px solid var(--color-border-primary)',
+                                borderRadius: '8px',
+                                height: '56px',
+                                width: '398px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                position: 'relative',
+                                transition: 'all 0.2s ease',
+                                boxShadow: 'none'
+                            }}
+                        >
                             <Icon name="input-email-icon" size="sm" style={{
                                 width: '20px',
                                 height: '20px',
@@ -305,8 +307,8 @@ export function FinalCTASection() {
 
                         {/* 邮箱输入框 - 精确按设计稿样式 */}
                         <div style={{
-                            background: 'rgba(18, 18, 18, 0.50)',
-                            border: '1px solid rgba(59, 130, 246, 0.30)',
+                            background: 'var(--color-bg-input)',
+                            border: '1px solid var(--color-border-primary)',
                             borderRadius: '8px',
                             padding: '17px',
                             display: 'flex',
@@ -340,15 +342,15 @@ export function FinalCTASection() {
                                         const container = e.target.parentElement?.parentElement
                                         if (container) {
                                             container.style.borderColor = '#3B82F6'
-                                            container.style.background = 'rgba(18, 18, 18, 0.70)'
+                                            container.style.background = 'var(--color-bg-primary)'
                                             container.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.1)'
                                         }
                                     }}
                                     onBlur={(e) => {
                                         const container = e.target.parentElement?.parentElement
                                         if (container) {
-                                            container.style.borderColor = 'rgba(59, 130, 246, 0.30)'
-                                            container.style.background = 'rgba(18, 18, 18, 0.50)'
+                                            container.style.borderColor = 'var(--color-border-primary)'
+                                            container.style.background = 'var(--color-bg-input)'
                                             container.style.boxShadow = 'none'
                                         }
                                     }}

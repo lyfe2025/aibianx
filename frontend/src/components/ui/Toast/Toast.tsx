@@ -91,7 +91,7 @@ export function Toast({ toast, onClose }: ToastProps) {
 
     const getTypeStyles = () => {
         const baseStyles = {
-            background: 'rgba(26, 26, 26, 0.95)',
+            background: 'var(--color-bg-glass)',
             backdropFilter: 'blur(12px)',
             border: '1px solid',
             borderRadius: '12px',
@@ -101,26 +101,26 @@ export function Toast({ toast, onClose }: ToastProps) {
             case 'success':
                 return {
                     ...baseStyles,
-                    borderColor: 'rgba(34, 197, 94, 0.30)',
-                    background: 'rgba(34, 197, 94, 0.10)',
+                    borderColor: 'var(--color-success-border)',
+                    background: 'var(--color-success-bg)',
                 }
             case 'error':
                 return {
                     ...baseStyles,
-                    borderColor: 'rgba(239, 68, 68, 0.30)',
-                    background: 'rgba(239, 68, 68, 0.10)',
+                    borderColor: 'var(--color-error-border)',
+                    background: 'var(--color-error-bg)',
                 }
             case 'warning':
                 return {
                     ...baseStyles,
-                    borderColor: 'rgba(251, 191, 36, 0.30)',
-                    background: 'rgba(251, 191, 36, 0.10)',
+                    borderColor: 'var(--color-warning-border)',
+                    background: 'var(--color-warning-bg)',
                 }
             case 'info':
                 return {
                     ...baseStyles,
-                    borderColor: 'rgba(59, 130, 246, 0.30)',
-                    background: 'rgba(59, 130, 246, 0.10)',
+                    borderColor: 'var(--color-info-border)',
+                    background: 'var(--color-info-bg)',
                 }
             default:
                 return baseStyles
@@ -145,15 +145,15 @@ export function Toast({ toast, onClose }: ToastProps) {
     const getTypeColor = () => {
         switch (toast.type) {
             case 'success':
-                return '#22C55E'
+                return 'var(--color-success)'
             case 'error':
-                return '#EF4444'
+                return 'var(--color-error)'
             case 'warning':
-                return '#FBBF24'
+                return 'var(--color-warning)'
             case 'info':
-                return '#3B82F6'
+                return 'var(--color-info)'
             default:
-                return '#3B82F6'
+                return 'var(--color-info)'
         }
     }
 
@@ -226,8 +226,8 @@ export function Toast({ toast, onClose }: ToastProps) {
             <button
                 onClick={handleClose}
                 style={{
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                    background: 'var(--color-decoration-light)',
+                    border: '1px solid var(--color-border-primary)',
                     borderRadius: '8px',
                     padding: '8px',
                     minWidth: '44px',
@@ -240,10 +240,10 @@ export function Toast({ toast, onClose }: ToastProps) {
                     flexShrink: 0,
                 }}
                 onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.10)'
+                    e.currentTarget.style.background = 'var(--color-hover)'
                 }}
                 onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'
+                    e.currentTarget.style.background = 'var(--color-decoration-light)'
                 }}
             >
                 <Icon
@@ -265,7 +265,7 @@ export function Toast({ toast, onClose }: ToastProps) {
                     left: 0,
                     right: 0,
                     height: '2px',
-                    background: 'rgba(255, 255, 255, 0.10)',
+                    background: 'var(--color-decoration-light)',
                     borderRadius: '0 0 12px 12px',
                     overflow: 'hidden',
                 }}>

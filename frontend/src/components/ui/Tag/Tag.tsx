@@ -114,34 +114,65 @@ export const Tag = ({
 
             {/* CSS样式 */}
             <style jsx>{`
-        .tag--clickable:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-        
-        .tag--clickable:active {
-          transform: translateY(0);
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-          .tag--lg {
-            font-size: 12px !important;
-            padding: 4px 8px !important;
-          }
-          
-          .tag--md {
-            font-size: 11px !important;
-            padding: 3px 6px !important;
-          }
-          
-          .tag--sm {
-            font-size: 10px !important;
-            padding: 2px 4px !important;
-          }
-        }
-      `}</style>
+                .tag {
+                    transition: all 0.2s ease;
+                }
+                
+                .tag--clickable:hover {
+                    opacity: 0.8;
+                    transform: translateY(-1px);
+                    cursor: pointer;
+                }
+                
+                .tag--clickable:active {
+                    transform: translateY(0);
+                }
+                
+                /* 亮色主题下的标签样式优化 */
+                [data-theme="light"] .tag {
+                    border-width: 1px !important;
+                    border-style: solid !important;
+                    background: var(--color-bg-primary) !important;
+                    color: var(--color-text-primary) !important;
+                }
+                
+                /* 亮色主题下的特定标签颜色 */
+                [data-theme="light"] .tag[style*="#3B82F6"] {
+                    background: rgba(59, 130, 246, 0.08) !important;
+                    border-color: rgba(59, 130, 246, 0.3) !important;
+                    color: #1E40AF !important;
+                }
+                
+                [data-theme="light"] .tag[style*="#F97316"] {
+                    background: rgba(249, 115, 22, 0.08) !important;
+                    border-color: rgba(249, 115, 22, 0.3) !important;
+                    color: #C2410C !important;
+                }
+                
+                [data-theme="light"] .tag[style*="#10B981"] {
+                    background: rgba(16, 185, 129, 0.08) !important;
+                    border-color: rgba(16, 185, 129, 0.3) !important;
+                    color: #047857 !important;
+                }
+                
+                [data-theme="light"] .tag[style*="#8B5CF6"] {
+                    background: rgba(139, 92, 246, 0.08) !important;
+                    border-color: rgba(139, 92, 246, 0.3) !important;
+                    color: #6D28D9 !important;
+                }
+                
+                [data-theme="light"] .tag[style*="#F59E0B"] {
+                    background: rgba(245, 158, 11, 0.08) !important;
+                    border-color: rgba(245, 158, 11, 0.3) !important;
+                    color: #D97706 !important;
+                }
+                
+                [data-theme="light"] .tag[style*="#60A5FA"] {
+                    background: rgba(96, 165, 250, 0.08) !important;
+                    border-color: rgba(96, 165, 250, 0.3) !important;
+                    color: #1D4ED8 !important;
+                }
+            `}</style>
         </span>
     )
 }
