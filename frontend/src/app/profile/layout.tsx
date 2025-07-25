@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { UserSidebar } from '@/components/molecules'
+import { AppHeader } from '@/components/molecules'
 import {
     LoginModal,
     RegisterModal,
@@ -12,12 +13,11 @@ import {
  * 个人中心专用布局组件 - ProfileLayout
  * 
  * ✅ 布局特点：
- * 1. 左侧固定菜单 - UserSidebar统一管理个人中心导航
- * 2. 右侧内容区域 - 动态展示各个子页面内容
- * 3. 无顶部导航栏 - 个人中心使用左侧UserSidebar导航，不需要AppHeader
- * 4. 无底部菜单栏 - 由根布局的LayoutController统一控制，确保全站一致性
- * 5. 完整的弹窗支持 - 包含所有全局弹窗组件
- * 6. 继承主布局的公共组件 - 返回顶部按钮由主布局提供，避免重复
+ * 1. 公共顶部菜单 - AppHeader统一的顶部导航栏
+ * 2. 左侧固定菜单 - UserSidebar统一管理个人中心导航
+ * 3. 右侧内容区域 - 动态展示各个子页面内容
+ * 4. 完整的弹窗支持 - 包含所有全局弹窗组件
+ * 5. 继承主布局的公共组件 - 返回顶部按钮由主布局提供，避免重复
  * 
  * 🎯 适用页面：
  * - 个人中心主页 (/profile)
@@ -26,15 +26,17 @@ import {
  * - 设置 (/profile/settings)
  * 
  * 📍 组件构成：
- * - UserSidebar：左侧固定导航菜单（公共组件）
+ * - AppHeader：公共顶部导航菜单
+ * - UserSidebar：左侧固定导航菜单（个人中心专用）
  * - 页面内容区域：右侧动态内容，由子页面控制
  * - 全局弹窗：登录、注册、会员、支付等弹窗
  * 
  * ⚠️ 重要说明：
- * - 与主站布局(layout.tsx)的区别：移除了AppHeader顶部导航
+ * - 与主站布局(layout.tsx)保持一致：都使用AppHeader顶部导航
  * - AppFooter底部菜单栏由根布局的LayoutController统一管理，确保全站一致性
  * - 个人中心页面不需要搜索引擎索引，设置了robots配置
  * - 左侧菜单在所有profile子页面间共享，避免重复代码
+ * - 已删除左侧菜单中的首页菜单项，避免导航冗余
  * - BackToTopButton由主布局提供，不在此重复添加
  */
 
@@ -57,6 +59,9 @@ export default function ProfileLayout({
 }) {
     return (
         <>
+            {/* 公共顶部导航栏 */}
+            <AppHeader />
+
             {/* 个人中心页面结构 - 左右分栏布局 */}
             <div style={{
                 minHeight: '100vh',
@@ -68,10 +73,12 @@ export default function ProfileLayout({
                   页面主要内容区域 - 左右分栏布局
                   左侧：UserSidebar固定导航菜单
                   右侧：动态页面内容区域
+                  添加marginTop以适应固定顶部菜单高度(98px)
                 */}
                 <main style={{
                     flex: 1,
-                    display: 'flex'
+                    display: 'flex',
+                    marginTop: '98px' // 适应AppHeader的固定高度
                 }}>
                     {/* 左侧导航栏 - UserSidebar */}
                     <UserSidebar />
@@ -79,7 +86,7 @@ export default function ProfileLayout({
                     {/* 右侧内容区域 */}
                     <div style={{
                         flex: 1,
-                        minHeight: '100vh',
+                        minHeight: 'calc(100vh - 98px)', // 减去AppHeader高度
                         background: 'transparent'
                     }}>
                         {children}

@@ -1,344 +1,675 @@
 'use client'
 
 import React from 'react'
-import { GradientButton } from '@/components/ui'
+import { Icon } from '@/components/ui'
 
 export interface InviteRewardSectionProps {
-    className?: string
+  className?: string
 }
 
 export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
-    className = ''
+  className = ''
 }) => {
-    return (
-        <div className={`invite-reward-section ${className}`}>
-            {/* 邀请好友双重奖励卡片 */}
-            <div className="invite-reward-header">
-                <h2>邀请好友 双重奖励</h2>
-                <div className="header-buttons">
-                    <div className="invite-guide-btn">
-                        <img src="/icons/subscription/invite-guide.svg" alt="" />
-                        <span>邀请攻略</span>
-                    </div>
-                    <div className="withdraw-record-btn">
-                        <img src="/icons/subscription/withdraw-record.svg" alt="" />
-                        <span>提现记录</span>
-                    </div>
-                </div>
-            </div>
-
-            <div className="invite-description">
-                <p>邀请好友注册并开通会员，你和好友都将获得额外会员时长+返现奖励</p>
-            </div>
-
-            <div className="invite-stats">
-                <div className="stats-left">
-                    {/* 邀请码区块 */}
-                    <div className="invite-code-section">
-                        <div className="invite-code-icon">
-                            <img src="/icons/subscription/invite-code.svg" alt="" />
-                        </div>
-                        <div className="invite-code-content">
-                            <div className="code-label">您的专属邀请码</div>
-                            <div className="code-display">
-                                <span className="code-value">AI7859</span>
-                                <div className="copy-action">
-                                    <img src="/icons/subscription/copy-icon.svg" alt="" />
-                                    <span>复制</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 统计数据 */}
-                    <div className="stats-grid">
-                        <div className="stat-item">
-                            <div className="stat-icon">
-                                <img src="/icons/subscription/invited-users.svg" alt="" />
-                            </div>
-                            <div className="stat-label">已邀请人数</div>
-                            <div className="stat-value">18</div>
-                        </div>
-                        <div className="stat-item">
-                            <div className="stat-icon">
-                                <img src="/icons/subscription/pending-users.svg" alt="" />
-                            </div>
-                            <div className="stat-label">待激活人数</div>
-                            <div className="stat-value">5</div>
-                        </div>
-                        <div className="stat-item">
-                            <div className="stat-icon">
-                                <img src="/icons/subscription/commission-amount.svg" alt="" />
-                            </div>
-                            <div className="stat-label">累计返佣金额</div>
-                            <div className="stat-value">¥1,235</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="action-buttons">
-                <div className="copy-invite-btn">
-                    <img src="/icons/subscription/copy-invite-link.svg" alt="" />
-                    <span>复制邀请链接</span>
-                </div>
-                <GradientButton variant="primary" size="md">
-                    <img
-                        src="/icons/subscription/generate-poster.svg"
-                        alt=""
-                        className="poster-icon"
-                    />
-                    生成邀请海报
-                </GradientButton>
-            </div>
-
-            <style jsx>{`
-        .invite-reward-section {
-          background: linear-gradient(90deg, rgba(59, 130, 246, 0.20) 0%, rgba(168, 85, 247, 0.20) 100%);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.10);
-          border-radius: 12px;
-          padding: 25px;
-          margin-top: 16px;
-          display: flex;
-          flex-direction: column;
-          gap: 32px;
-        }
-
-        .invite-reward-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .invite-reward-header h2 {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-2xl);
-          line-height: 28px;
-          font-weight: 400;
-          margin: 0;
-        }
-
-        .header-buttons {
-          display: flex;
-          gap: 12px;
-        }
-
-        .invite-guide-btn,
-        .withdraw-record-btn {
-          background: rgba(255, 255, 255, 0.10);
-          border-radius: 8px;
-          padding: 8px 16px;
-          display: flex;
-          gap: 8px;
-          align-items: center;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .invite-guide-btn:hover,
-        .withdraw-record-btn:hover {
-          background: rgba(255, 255, 255, 0.15);
-        }
-
-        .invite-guide-btn img,
-        .withdraw-record-btn img {
-          width: 16px;
-          height: 16px;
-        }
-
-        .invite-guide-btn span,
-        .withdraw-record-btn span {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-base);
-          line-height: 20px;
-          text-align: center;
-        }
-
-        .invite-description {
-          margin-top: -8px;
-        }
-
-        .invite-description p {
-          color: var(--color-text-secondary);
-          font-size: var(--font-size-lg);
-          line-height: 24px;
-          margin: 0;
-          width: 482px;
-        }
-
-        .invite-stats {
-          display: flex;
-          justify-content: space-between;
-          margin-top: -8px;
-        }
-
-        .stats-left {
-          display: flex;
-          gap: 25px;
-        }
-
-        .invite-code-section {
-          border-right: 1px solid rgba(255, 255, 255, 0.10);
-          padding-right: 25px;
-          display: flex;
-          gap: 16px;
-          align-items: center;
-        }
-
-        .invite-code-icon {
-          background: rgba(255, 255, 255, 0.10);
-          border-radius: 8px;
-          width: 56px;
-          height: 56px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 12px;
-          margin-top: 8px;
-          margin-bottom: 8px;
-        }
-
-        .invite-code-icon img {
-          width: 32px;
-          height: 32px;
-        }
-
-        .invite-code-content {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .code-label {
-          color: var(--color-text-secondary);
-          font-size: var(--font-size-base);
-          line-height: 20px;
-        }
-
-        .code-display {
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 8px;
-          padding: 8px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 156px;
-        }
-
-        .code-value {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-2xl);
-          line-height: 28px;
-          font-weight: 400;
-        }
-
-        .copy-action {
-          display: flex;
-          gap: 4px;
-          align-items: center;
-          cursor: pointer;
-          padding: 4px;
-        }
-
-        .copy-action img {
-          width: 14px;
-          height: 14px;
-        }
-
-        .copy-action span {
-          color: #60A5FA;
-          font-size: var(--font-size-base);
-          line-height: 20px;
-        }
-
-        .copy-action:hover span {
-          text-decoration: underline;
-        }
-
-        .stats-grid {
-          display: flex;
-          gap: 36px;
-        }
-
-        .stat-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 4px;
-          min-width: 69px;
-        }
-
-        .stat-icon {
-          background: rgba(255, 255, 255, 0.10);
-          border-radius: 8px;
-          width: 48px;
-          height: 48px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 12px;
-        }
-
-        .stat-icon img {
-          width: 24px;
-          height: 24px;
-        }
-
-        .stat-label {
-          color: var(--color-text-secondary);
-          font-size: var(--font-size-base);
-          line-height: 20px;
-          text-align: center;
-          margin-top: 4px;
-        }
-
-        .stat-value {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-2xl);
-          line-height: 28px;
-          font-weight: 400;
-          text-align: center;
-        }
-
-        .action-buttons {
-          display: flex;
-          gap: 16px;
-          margin-left: 365px;
-        }
-
-        .copy-invite-btn {
-          background: rgba(255, 255, 255, 0.10);
-          border-radius: 8px;
-          padding: 12px 24px;
-          display: flex;
-          gap: 8px;
-          align-items: center;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .copy-invite-btn:hover {
-          background: rgba(255, 255, 255, 0.15);
-        }
-
-        .copy-invite-btn img {
-          width: 20px;
-          height: 20px;
-        }
-
-        .copy-invite-btn span {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-lg);
-          line-height: 24px;
-        }
-
-        .poster-icon {
-          width: 20px;
-          height: 20px;
-          margin-right: 8px;
-        }
-      `}</style>
+  return (
+    <div style={{
+      background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.20) 0%, rgba(168, 85, 247, 0.20) 100%)',
+      backdropFilter: 'blur(12px)',
+      border: '1px solid rgba(255, 255, 255, 0.10)',
+      borderRadius: '12px',
+      width: '100%',
+      fontFamily: 'var(--font-family-primary)',
+      fontSize: '14px',
+      fontWeight: '400',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'stretch',
+      paddingLeft: '25px',
+      paddingRight: '25px',
+      paddingTop: '25px',
+      paddingBottom: '25px',
+      // 防换行保护
+      overflow: 'hidden'
+    }}>
+      {/* 顶部标题和操作按钮 */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        // 防换行保护
+        flexWrap: 'nowrap',
+        overflow: 'hidden',
+        gap: '16px', // 添加间距防止挤压
+        marginBottom: '24px'
+      }}>
+        <div style={{
+          color: '#FFFFFF',
+          fontSize: '20px',
+          lineHeight: '28px',
+          alignItems: 'center',
+          display: 'flex',
+          // 防换行保护 - 主标题
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          minWidth: '180px', // 为"邀请好友 双重奖励"预留空间
+          minHeight: '28px',
+          flexShrink: 0
+        }}>
+          邀请好友 双重奖励
         </div>
-    )
+        <div style={{
+          gap: '12px',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'stretch',
+          // 防换行保护 - 按钮组不能收缩
+          flexShrink: 0,
+          flexWrap: 'nowrap'
+        }}>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.10)',
+            borderRadius: '8px',
+            display: 'flex',
+            gap: '8px',
+            alignItems: 'stretch',
+            flexDirection: 'row',
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            paddingTop: '8px',
+            paddingBottom: '8px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            // 防换行保护 - 邀请攻略按钮
+            minWidth: '120px', // 为"邀请攻略"预留空间
+            whiteSpace: 'nowrap',
+            flexShrink: 0
+          }}>
+            <Icon
+              name="subscription/invite-guide"
+              size="xs"
+              style={{
+                width: '16px',
+                height: '16px',
+                marginTop: '2px',
+                marginBottom: '2px',
+                color: '#FFFFFF',
+                flexShrink: 0
+              }}
+            />
+            <div style={{
+              color: '#FFFFFF',
+              lineHeight: '20px',
+              textAlign: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'flex',
+              // 防换行保护
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '20px'
+            }}>
+              邀请攻略
+            </div>
+          </div>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.10)',
+            borderRadius: '8px',
+            display: 'flex',
+            gap: '8px',
+            alignItems: 'stretch',
+            flexDirection: 'row',
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            paddingTop: '8px',
+            paddingBottom: '8px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            // 防换行保护 - 提现记录按钮
+            minWidth: '120px', // 为"提现记录"预留空间
+            whiteSpace: 'nowrap',
+            flexShrink: 0
+          }}>
+            <Icon
+              name="subscription/withdraw-record"
+              size="xs"
+              style={{
+                width: '16px',
+                height: '16px',
+                marginTop: '2px',
+                marginBottom: '2px',
+                color: '#FFFFFF',
+                flexShrink: 0
+              }}
+            />
+            <div style={{
+              color: '#FFFFFF',
+              lineHeight: '20px',
+              textAlign: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'flex',
+              // 防换行保护
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '20px'
+            }}>
+              提现记录
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 描述文字 */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        minHeight: '24px',
+        marginBottom: '32px',
+        // 防换行保护
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          color: '#D1D5DB',
+          fontSize: '16px',
+          lineHeight: '24px',
+          alignItems: 'center',
+          display: 'flex',
+          // 防换行保护 - 描述文字
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          minHeight: '24px',
+          flex: 1,
+          minWidth: '400px' // 为描述文字预留充足空间
+        }}>
+          邀请好友注册并开通会员，你和好友都将获得额外会员时长+返现奖励
+        </div>
+      </div>
+
+      {/* 统计数据区域 */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: '32px',
+        // 防换行保护
+        flexWrap: 'nowrap',
+        overflow: 'hidden',
+        gap: '32px' // 添加间距防止挤压
+      }}>
+        {/* 左侧：邀请码区块 + 已邀请人数 */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          flex: 1,
+          // 防换行保护
+          flexWrap: 'nowrap',
+          overflow: 'hidden',
+          gap: '32px',
+          minWidth: '400px' // 为左侧区域预留空间
+        }}>
+          {/* 邀请码区块 */}
+          <div style={{
+            borderRight: '1px solid rgba(255, 255, 255, 0.10)',
+            gap: '16px',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'stretch',
+            paddingRight: '25px',
+            paddingBottom: '36px',
+            // 防换行保护
+            flexShrink: 0,
+            minWidth: '280px' // 为邀请码区块预留空间
+          }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.10)',
+              borderRadius: '8px',
+              padding: '12px',
+              display: 'flex',
+              width: '56px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '8px',
+              marginBottom: '8px',
+              flexShrink: 0
+            }}>
+              <Icon
+                name="subscription/invite-code"
+                size="xl"
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  color: '#FFFFFF'
+                }}
+              />
+            </div>
+            <div style={{
+              gap: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'stretch',
+              flex: 1,
+              // 防换行保护
+              minWidth: '180px', // 为邀请码文字预留空间
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                minHeight: '20px'
+              }}>
+                <div style={{
+                  color: '#D1D5DB',
+                  lineHeight: '20px',
+                  alignItems: 'center',
+                  display: 'flex',
+                  // 防换行保护 - 邀请码标签
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  minHeight: '20px',
+                  minWidth: '120px' // 为"您的专属邀请码"预留空间
+                }}>
+                  您的专属邀请码
+                </div>
+              </div>
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                borderRadius: '8px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                paddingLeft: '8px',
+                paddingRight: '8px',
+                paddingTop: '8px',
+                paddingBottom: '8px',
+                // 防换行保护
+                flexWrap: 'nowrap',
+                overflow: 'hidden',
+                gap: '8px',
+                minWidth: '160px' // 为邀请码输入框预留空间
+              }}>
+                <div style={{
+                  color: '#FFFFFF',
+                  fontSize: '20px',
+                  lineHeight: '28px',
+                  alignItems: 'center',
+                  display: 'flex',
+                  // 防换行保护 - 邀请码
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  minHeight: '28px',
+                  flexShrink: 0
+                }}>
+                  AI7859
+                </div>
+                <div style={{
+                  gap: '4px',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'stretch',
+                  paddingTop: '4px',
+                  paddingBottom: '4px',
+                  cursor: 'pointer',
+                  // 防换行保护 - 复制按钮
+                  flexShrink: 0,
+                  whiteSpace: 'nowrap'
+                }}>
+                  <Icon
+                    name="subscription/copy-icon"
+                    size="xs"
+                    style={{
+                      width: '14px',
+                      height: '14px',
+                      marginTop: '3px',
+                      color: '#60A5FA',
+                      flexShrink: 0
+                    }}
+                  />
+                  <div style={{
+                    color: '#60A5FA',
+                    lineHeight: '20px',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    // 防换行保护
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    minHeight: '20px'
+                  }}>
+                    复制
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 已邀请人数 */}
+          <div style={{
+            gap: '4px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            // 防换行保护
+            flexShrink: 0,
+            minWidth: '80px', // 为统计项预留空间
+            textAlign: 'center'
+          }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.10)',
+              borderRadius: '8px',
+              padding: '12px',
+              display: 'flex',
+              width: '48px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              flexShrink: 0
+            }}>
+              <Icon
+                name="subscription/invited-users"
+                size="lg"
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  color: '#FFFFFF'
+                }}
+              />
+            </div>
+            <div style={{
+              color: '#D1D5DB',
+              lineHeight: '20px',
+              alignItems: 'center',
+              display: 'flex',
+              marginTop: '4px',
+              // 防换行保护 - 统计标签
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '20px',
+              justifyContent: 'center'
+            }}>
+              已邀请人数
+            </div>
+            <div style={{
+              color: '#FFFFFF',
+              fontSize: '20px',
+              lineHeight: '28px',
+              alignItems: 'center',
+              display: 'flex',
+              // 防换行保护 - 统计数值
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '28px',
+              justifyContent: 'center'
+            }}>
+              18
+            </div>
+          </div>
+        </div>
+
+        {/* 右侧统计数据 */}
+        <div style={{
+          gap: '4px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'stretch',
+          // 防换行保护
+          flexShrink: 0,
+          minWidth: '300px' // 为右侧统计预留空间
+        }}>
+          {/* 图标行 */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingLeft: '10px',
+            paddingRight: '10px',
+            // 防换行保护
+            flexWrap: 'nowrap'
+          }}>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.10)',
+              borderRadius: '8px',
+              padding: '12px',
+              display: 'flex',
+              width: '48px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexShrink: 0
+            }}>
+              <Icon
+                name="subscription/pending-users"
+                size="lg"
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  color: '#FFFFFF'
+                }}
+              />
+            </div>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.10)',
+              borderRadius: '8px',
+              padding: '12px',
+              display: 'flex',
+              width: '48px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexShrink: 0
+            }}>
+              <Icon
+                name="subscription/commission-amount"
+                size="lg"
+                style={{
+                  width: '24px',
+                  height: '24px',
+                  color: '#FFFFFF'
+                }}
+              />
+            </div>
+          </div>
+
+          {/* 标签行 */}
+          <div style={{
+            marginTop: '4px',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            // 防换行保护
+            flexWrap: 'nowrap'
+          }}>
+            <div style={{
+              color: '#D1D5DB',
+              lineHeight: '20px',
+              alignItems: 'center',
+              display: 'flex',
+              // 防换行保护 - 标签文字
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '20px',
+              flex: 1,
+              textAlign: 'center'
+            }}>
+              待激活人数
+            </div>
+            <div style={{
+              color: '#D1D5DB',
+              lineHeight: '20px',
+              alignItems: 'center',
+              display: 'flex',
+              // 防换行保护 - 标签文字
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '20px',
+              flex: 1,
+              textAlign: 'center'
+            }}>
+              累计返佣金额
+            </div>
+          </div>
+
+          {/* 数值行 */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingLeft: '20px',
+            paddingRight: '20px',
+            // 防换行保护
+            flexWrap: 'nowrap'
+          }}>
+            <div style={{
+              color: '#FFFFFF',
+              fontSize: '20px',
+              lineHeight: '28px',
+              alignItems: 'center',
+              display: 'flex',
+              // 防换行保护 - 数值
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '28px',
+              flex: 1,
+              textAlign: 'center'
+            }}>
+              5
+            </div>
+            <div style={{
+              color: '#FFFFFF',
+              fontSize: '20px',
+              lineHeight: '28px',
+              alignItems: 'center',
+              display: 'flex',
+              // 防换行保护 - 数值
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              minHeight: '28px',
+              flex: 1,
+              textAlign: 'center'
+            }}>
+              ¥1,235
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 底部操作按钮 */}
+      <div style={{
+        gap: '16px',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        justifyContent: 'center',
+        // 防换行保护
+        flexWrap: 'nowrap',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.10)',
+          borderRadius: '8px',
+          display: 'flex',
+          gap: '8px',
+          alignItems: 'stretch',
+          flexDirection: 'row',
+          paddingLeft: '24px',
+          paddingRight: '24px',
+          paddingTop: '12px',
+          paddingBottom: '12px',
+          cursor: 'pointer',
+          transition: 'all 0.2s ease',
+          // 防换行保护 - 复制链接按钮
+          flexShrink: 0,
+          minWidth: '160px', // 为"复制邀请链接"预留空间
+          whiteSpace: 'nowrap'
+        }}>
+          <Icon
+            name="subscription/copy-invite-link"
+            size="sm"
+            style={{
+              width: '20px',
+              height: '20px',
+              marginTop: '2px',
+              marginBottom: '2px',
+              color: '#FFFFFF',
+              flexShrink: 0
+            }}
+          />
+          <div style={{
+            color: '#FFFFFF',
+            fontSize: '16px',
+            lineHeight: '24px',
+            textAlign: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
+            // 防换行保护
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            minHeight: '24px'
+          }}>
+            复制邀请链接
+          </div>
+        </div>
+        <div style={{
+          background: 'linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)',
+          borderRadius: '8px',
+          display: 'flex',
+          gap: '8px',
+          alignItems: 'stretch',
+          flexDirection: 'row',
+          paddingLeft: '24px',
+          paddingRight: '24px',
+          paddingTop: '12px',
+          paddingBottom: '12px',
+          cursor: 'pointer',
+          transition: 'all 0.2s ease',
+          // 防换行保护 - 生成海报按钮
+          flexShrink: 0,
+          minWidth: '160px', // 为"生成邀请海报"预留空间
+          whiteSpace: 'nowrap'
+        }}>
+          <Icon
+            name="subscription/generate-poster"
+            size="sm"
+            style={{
+              width: '20px',
+              height: '20px',
+              marginTop: '2px',
+              marginBottom: '2px',
+              color: '#FFFFFF',
+              flexShrink: 0
+            }}
+          />
+          <div style={{
+            color: '#FFFFFF',
+            fontSize: '16px',
+            lineHeight: '24px',
+            textAlign: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
+            // 防换行保护
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            minHeight: '24px'
+          }}>
+            生成邀请海报
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 } 

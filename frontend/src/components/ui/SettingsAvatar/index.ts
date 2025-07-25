@@ -1,0 +1,1 @@
+export { SettingsAvatar, type SettingsAvatarProps } from './SettingsAvatar' 

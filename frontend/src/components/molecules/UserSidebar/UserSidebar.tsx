@@ -41,20 +41,15 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
     const pathname = usePathname()
     const router = useRouter()
     const { logout } = useUserStore()
-    
+
     // SSR兼容：确保服务端和客户端初始状态一致
     const [isClient, setIsClient] = useState(false)
-    
+
     useEffect(() => {
         setIsClient(true)
     }, [])
 
     const navigationItems = [
-        {
-            href: '/',
-            label: '首页',
-            icon: 'profile-sidebar-home'
-        },
         {
             href: '/profile',
             label: '个人中心',

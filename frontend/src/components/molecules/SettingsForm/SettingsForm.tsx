@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Icon, Input, GradientButton, Avatar } from '@/components/ui'
-import styles from './SettingsForm.module.css'
+import { Icon, SettingsAvatar } from '@/components/ui'
 
 interface SettingsFormProps {
     className?: string
@@ -13,39 +12,16 @@ interface FormData {
     email: string
     phone: string
     bio: string
-    currentPassword: string
-    newPassword: string
-    confirmPassword: string
-    notifications: {
-        email: boolean
-        push: boolean
-        marketing: boolean
-    }
 }
 
 export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) => {
-    const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'notifications'>('profile')
-    const [isEditing, setIsEditing] = useState(false)
+    const [activeTab, setActiveTab] = useState<'profile' | 'security'>('profile')
     const [formData, setFormData] = useState<FormData>({
-        nickname: '李明阳',
-        email: 'liming***@gmail.com',
-        phone: '138****8888',
-        bio: 'AI 创业者，专注于人工智能变现和商业化应用研究。',
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-        notifications: {
-            email: true,
-            push: true,
-            marketing: false
-        }
+        nickname: '张智创',
+        email: 'zhang****@example.com',
+        phone: '138****5678',
+        bio: '介绍一下自己...'
     })
-
-    const tabs = [
-        { key: 'profile', label: '个人资料', icon: 'user-icon' },
-        { key: 'security', label: '安全设置', icon: 'password-icon' },
-        { key: 'notifications', label: '通知设置', icon: 'notification-icon' }
-    ]
 
     const handleInputChange = (field: keyof FormData, value: string) => {
         setFormData(prev => ({
@@ -54,259 +30,456 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
         }))
     }
 
-    const handleNotificationChange = (key: keyof FormData['notifications'], value: boolean) => {
-        setFormData(prev => ({
-            ...prev,
-            notifications: {
-                ...prev.notifications,
-                [key]: value
-            }
-        }))
-    }
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        // 处理表单提交
         console.log('Settings updated:', formData)
-        setIsEditing(false)
     }
 
-    const renderProfileTab = () => (
-        <div className={`${className} settings-form__profile`}>
-            <div className="settings-form__section">
-                <div className="section-header">
-                    <h3 className="section-title">头像</h3>
-                </div>
-                <div className="avatar-section">
-                    <Avatar
-                        src="/images/avatars/author-li-mingyang.jpeg"
-                        alt="用户头像"
-                        size="lg"
-                        className="avatar-large"
-                    />
-                    <div className="avatar-actions">
-                        <GradientButton variant="outline" size="sm">
-                            <Icon name="upload-icon" size="xs" />
-                            更换头像
-                        </GradientButton>
-                        <p className="avatar-tip">支持 JPG、PNG 格式，文件大小不超过 5MB</p>
+    const handleReset = () => {
+        setFormData({
+            nickname: '张智创',
+            email: 'zhang****@example.com',
+            phone: '138****5678',
+            bio: '介绍一下自己...'
+        })
+    }
+
+    const handleAvatarEdit = () => {
+        console.log('Edit avatar clicked')
+        // 这里可以添加头像编辑逻辑，比如打开文件选择器
+    }
+
+    return (
+        <div style={{
+            background: 'rgba(26, 26, 26, 0.30)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(42, 42, 42, 0.70)',
+            borderRadius: '12px',
+            width: '100%',
+            overflow: 'hidden',
+            fontFamily: 'var(--font-family-primary)',
+            fontSize: '16px',
+            fontWeight: '400',
+            gap: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            paddingLeft: '1px',
+            paddingRight: '1px',
+            paddingTop: '1px',
+            paddingBottom: '33px'
+        }}>
+            {/* 标签页导航 */}
+            <div style={{
+                borderBottom: '1px solid rgba(255, 255, 255, 0.10)',
+                display: 'flex',
+                alignItems: 'stretch',
+                gap: '32px',
+                flexDirection: 'row',
+                paddingBottom: '1px'
+            }}>
+                <div
+                    style={{
+                        background: activeTab === 'profile'
+                            ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%)'
+                            : 'transparent',
+                        display: 'flex',
+                        width: '127px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingLeft: '32px',
+                        paddingRight: '32px',
+                        paddingTop: '16px',
+                        paddingBottom: '16px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onClick={() => setActiveTab('profile')}
+                >
+                    <div style={{
+                        color: activeTab === 'profile' ? '#FFFFFF' : '#9CA3AF',
+                        fontWeight: activeTab === 'profile' ? '600' : '400',
+                        lineHeight: '24px',
+                        textAlign: 'center',
+                        width: '63px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                        textOverflow: 'ellipsis',
+                        minHeight: '24px'
+                    }}>
+                        个人信息
                     </div>
                 </div>
-            </div>
-
-            <div className="settings-form__section">
-                <div className="section-header">
-                    <h3 className="section-title">基本信息</h3>
-                </div>
-                <div className="form-grid">
-                    <Input
-                        label="昵称"
-                        value={formData.nickname}
-                        onChange={(e) => handleInputChange('nickname', e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="请输入昵称"
-                    />
-                    <Input
-                        label="邮箱"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="请输入邮箱地址"
-                    />
-                    <Input
-                        label="手机号"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="请输入手机号"
-                    />
-                </div>
-                <div className="form-field">
-                    <label className="field-label">个人简介</label>
-                    <textarea
-                        className="bio-textarea"
-                        value={formData.bio}
-                        onChange={(e) => handleInputChange('bio', e.target.value)}
-                        disabled={!isEditing}
-                        placeholder="介绍一下自己..."
-                        rows={4}
-                    />
+                <div
+                    style={{
+                        color: activeTab === 'security' ? '#FFFFFF' : '#9CA3AF',
+                        lineHeight: '24px',
+                        textAlign: 'center',
+                        width: '63px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                        textOverflow: 'ellipsis',
+                        marginTop: '16px',
+                        marginBottom: '16px',
+                        minHeight: '24px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onClick={() => setActiveTab('security')}
+                >
+                    密码安全
                 </div>
             </div>
 
-            <div className="form-actions">
-                {!isEditing ? (
-                    <GradientButton onClick={() => setIsEditing(true)}>
-                        编辑资料
-                    </GradientButton>
-                ) : (
-                    <div className="edit-actions">
-                        <GradientButton variant="outline" onClick={() => setIsEditing(false)}>
-                            取消
-                        </GradientButton>
-                        <GradientButton onClick={handleSubmit}>
-                            保存修改
-                        </GradientButton>
-                    </div>
-                )}
-            </div>
-        </div>
-    )
-
-    const renderSecurityTab = () => (
-        <div className="settings-form__security">
-            <div className="settings-form__section">
-                <div className="section-header">
-                    <h3 className="section-title">修改密码</h3>
-                    <p className="section-description">定期更新密码，保障账户安全</p>
-                </div>
-                <div className="form-grid">
-                    <Input
-                        label="当前密码"
-                        type="password"
-                        value={formData.currentPassword}
-                        onChange={(e) => handleInputChange('currentPassword', e.target.value)}
-                        placeholder="请输入当前密码"
-                    />
-                    <Input
-                        label="新密码"
-                        type="password"
-                        value={formData.newPassword}
-                        onChange={(e) => handleInputChange('newPassword', e.target.value)}
-                        placeholder="请输入新密码"
-                    />
-                    <Input
-                        label="确认密码"
-                        type="password"
-                        value={formData.confirmPassword}
-                        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                        placeholder="请再次输入新密码"
-                    />
-                </div>
-            </div>
-
-            <div className="settings-form__section">
-                <div className="section-header">
-                    <h3 className="section-title">登录设备</h3>
-                    <p className="section-description">管理登录过的设备</p>
-                </div>
-                <div className="device-list">
-                    <div className="device-item">
-                        <div className="device-icon">
-                            <Icon name="device-desktop" size="md" />
-                        </div>
-                        <div className="device-info">
-                            <h4 className="device-name">Chrome 浏览器 (当前设备)</h4>
-                            <p className="device-detail">Windows 10 • 上海 • 刚刚活跃</p>
-                        </div>
-                        <span className="device-status">当前设备</span>
-                    </div>
-                    <div className="device-item">
-                        <div className="device-icon">
-                            <Icon name="device-mobile" size="md" />
-                        </div>
-                        <div className="device-info">
-                            <h4 className="device-name">iPhone Safari</h4>
-                            <p className="device-detail">iOS 17.1 • 北京 • 2天前</p>
-                        </div>
-                        <button className="device-action">移除</button>
-                    </div>
-                </div>
-            </div>
-
-            <div className="form-actions">
-                <GradientButton onClick={handleSubmit}>
-                    更新密码
-                </GradientButton>
-            </div>
-        </div>
-    )
-
-    const renderNotificationsTab = () => (
-        <div className="settings-form__notifications">
-            <div className="settings-form__section">
-                <div className="section-header">
-                    <h3 className="section-title">通知偏好</h3>
-                    <p className="section-description">管理您接收通知的方式</p>
-                </div>
-
-                <div className="notification-list">
-                    <div className="notification-item">
-                        <div className="notification-info">
-                            <h4 className="notification-title">邮件通知</h4>
-                            <p className="notification-description">接收重要更新和账户相关邮件</p>
-                        </div>
-                        <label className="toggle-switch">
-                            <input
-                                type="checkbox"
-                                checked={formData.notifications.email}
-                                onChange={(e) => handleNotificationChange('email', e.target.checked)}
-                            />
-                            <span className="toggle-slider"></span>
-                        </label>
+            {/* 个人信息内容 */}
+            {activeTab === 'profile' && (
+                <>
+                    {/* 头像区域 - 使用新的SettingsAvatar组件 */}
+                    <div style={{
+                        marginTop: '16px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <SettingsAvatar
+                            src="/images/avatars/settings-avatar.svg"
+                            alt="用户头像"
+                            onEdit={handleAvatarEdit}
+                        />
                     </div>
 
-                    <div className="notification-item">
-                        <div className="notification-info">
-                            <h4 className="notification-title">推送通知</h4>
-                            <p className="notification-description">接收浏览器推送消息</p>
-                        </div>
-                        <label className="toggle-switch">
-                            <input
-                                type="checkbox"
-                                checked={formData.notifications.push}
-                                onChange={(e) => handleNotificationChange('push', e.target.checked)}
-                            />
-                            <span className="toggle-slider"></span>
-                        </label>
+                    {/* 更换头像文字 */}
+                    <div style={{
+                        color: '#D1D5DB',
+                        fontSize: '14px',
+                        lineHeight: '20px',
+                        alignItems: 'center',
+                        display: 'flex',
+                        textOverflow: 'ellipsis',
+                        marginLeft: '539px',
+                        marginRight: '539px',
+                        minHeight: '20px',
+                        textAlign: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        更换头像
                     </div>
 
-                    <div className="notification-item">
-                        <div className="notification-info">
-                            <h4 className="notification-title">营销邮件</h4>
-                            <p className="notification-description">接收产品更新和推广信息</p>
+                    {/* 表单字段 */}
+                    <div style={{
+                        marginTop: '16px',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        minHeight: '318px',
+                        paddingLeft: '264px'
+                    }}>
+                        <div style={{
+                            gap: '24px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'stretch'
+                        }}>
+                            {/* 用户名 */}
+                            <div style={{
+                                gap: '32px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'stretch',
+                                paddingLeft: '15px'
+                            }}>
+                                <div style={{
+                                    color: '#9CA3AF',
+                                    lineHeight: '24px',
+                                    textAlign: 'right',
+                                    width: '48px',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    display: 'flex',
+                                    textOverflow: 'ellipsis',
+                                    marginTop: '13px',
+                                    minHeight: '24px'
+                                }}>
+                                    用户名
+                                </div>
+                                <div style={{
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                                    borderRadius: '8px',
+                                    width: '544px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    paddingLeft: '16px',
+                                    paddingRight: '16px',
+                                    paddingTop: '12px',
+                                    paddingBottom: '12px'
+                                }}>
+                                    <input
+                                        style={{
+                                            width: '512px',
+                                            background: 'transparent',
+                                            border: 'none',
+                                            outline: 'none',
+                                            color: '#FFFFFF',
+                                            lineHeight: '24px',
+                                            fontSize: '16px',
+                                            fontFamily: 'var(--font-family-primary)'
+                                        }}
+                                        value={formData.nickname}
+                                        onChange={(e) => handleInputChange('nickname', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* 手机号码 */}
+                            <div style={{
+                                gap: '32px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'stretch'
+                            }}>
+                                <div style={{
+                                    color: '#9CA3AF',
+                                    lineHeight: '24px',
+                                    textAlign: 'right',
+                                    width: '63px',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    display: 'flex',
+                                    textOverflow: 'ellipsis',
+                                    marginTop: '13px',
+                                    minHeight: '24px'
+                                }}>
+                                    手机号码
+                                </div>
+                                <div style={{
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                                    borderRadius: '8px',
+                                    width: '544px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    paddingLeft: '16px',
+                                    paddingRight: '16px',
+                                    paddingTop: '12px',
+                                    paddingBottom: '12px'
+                                }}>
+                                    <input
+                                        style={{
+                                            width: '512px',
+                                            background: 'transparent',
+                                            border: 'none',
+                                            outline: 'none',
+                                            color: '#FFFFFF',
+                                            lineHeight: '24px',
+                                            fontSize: '16px',
+                                            fontFamily: 'var(--font-family-primary)'
+                                        }}
+                                        value={formData.phone}
+                                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* 邮箱地址 */}
+                            <div style={{
+                                gap: '32px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'stretch'
+                            }}>
+                                <div style={{
+                                    color: '#9CA3AF',
+                                    lineHeight: '24px',
+                                    textAlign: 'right',
+                                    width: '63px',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    display: 'flex',
+                                    textOverflow: 'ellipsis',
+                                    marginTop: '13px',
+                                    minHeight: '24px'
+                                }}>
+                                    邮箱地址
+                                </div>
+                                <div style={{
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                                    borderRadius: '8px',
+                                    width: '544px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    paddingLeft: '16px',
+                                    paddingRight: '16px',
+                                    paddingTop: '12px',
+                                    paddingBottom: '12px'
+                                }}>
+                                    <input
+                                        style={{
+                                            width: '512px',
+                                            background: 'transparent',
+                                            border: 'none',
+                                            outline: 'none',
+                                            color: '#FFFFFF',
+                                            lineHeight: '24px',
+                                            fontSize: '16px',
+                                            fontFamily: 'var(--font-family-primary)'
+                                        }}
+                                        value={formData.email}
+                                        onChange={(e) => handleInputChange('email', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* 个人简介 */}
+                            <div style={{
+                                gap: '32px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'stretch'
+                            }}>
+                                <div style={{
+                                    color: '#9CA3AF',
+                                    lineHeight: '24px',
+                                    textAlign: 'right',
+                                    width: '63px',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    display: 'flex',
+                                    textOverflow: 'ellipsis',
+                                    marginTop: '36px',
+                                    minHeight: '24px'
+                                }}>
+                                    个人简介
+                                </div>
+                                <div style={{
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                                    borderRadius: '8px',
+                                    width: '544px',
+                                    display: 'flex',
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'center',
+                                    minHeight: '96px',
+                                    paddingLeft: '16px',
+                                    paddingRight: '15px',
+                                    paddingBottom: '6px'
+                                }}>
+                                    <textarea
+                                        style={{
+                                            width: '513px',
+                                            background: 'transparent',
+                                            border: 'none',
+                                            outline: 'none',
+                                            color: '#9CA3AF',
+                                            lineHeight: '24px',
+                                            fontSize: '16px',
+                                            fontFamily: 'var(--font-family-primary)',
+                                            resize: 'none',
+                                            minHeight: '72px'
+                                        }}
+                                        value={formData.bio}
+                                        onChange={(e) => handleInputChange('bio', e.target.value)}
+                                        placeholder="介绍一下自己..."
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <label className="toggle-switch">
-                            <input
-                                type="checkbox"
-                                checked={formData.notifications.marketing}
-                                onChange={(e) => handleNotificationChange('marketing', e.target.checked)}
-                            />
-                            <span className="toggle-slider"></span>
-                        </label>
                     </div>
+
+                    {/* 操作按钮 */}
+                    <div style={{
+                        marginTop: '24px',
+                        gap: '16px',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'stretch'
+                    }}>
+                        <div style={{
+                            border: '1px solid rgba(255, 255, 255, 0.20)',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginLeft: '359px',
+                            paddingLeft: '24px',
+                            paddingRight: '24px',
+                            paddingTop: '9px',
+                            paddingBottom: '9px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
+                        }}
+                            onClick={handleReset}
+                        >
+                            <div style={{
+                                color: '#FFFFFF',
+                                lineHeight: '24px',
+                                textAlign: 'center',
+                                width: '32px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                display: 'flex',
+                                textOverflow: 'ellipsis',
+                                minHeight: '24px'
+                            }}>
+                                重置
+                            </div>
+                        </div>
+                        <div style={{
+                            background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            width: '80px',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            paddingLeft: '24px',
+                            paddingRight: '24px',
+                            paddingTop: '9px',
+                            paddingBottom: '9px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
+                        }}
+                            onClick={handleSubmit}
+                        >
+                            <div style={{
+                                color: '#FFFFFF',
+                                lineHeight: '24px',
+                                textAlign: 'center',
+                                width: '32px',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                display: 'flex',
+                                textOverflow: 'ellipsis',
+                                minHeight: '24px'
+                            }}>
+                                保存
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {/* 密码安全内容 - 简化版本 */}
+            {activeTab === 'security' && (
+                <div style={{
+                    padding: '40px',
+                    textAlign: 'center',
+                    color: '#9CA3AF'
+                }}>
+                    <h3 style={{
+                        color: '#FFFFFF',
+                        fontSize: '20px',
+                        marginBottom: '16px'
+                    }}>
+                        密码安全
+                    </h3>
+                    <p>此功能正在开发中...</p>
                 </div>
-            </div>
-
-            <div className="form-actions">
-                <GradientButton onClick={handleSubmit}>
-                    保存设置
-                </GradientButton>
-            </div>
-        </div>
-    )
-
-      return (
-    <div className={`${styles.settingsForm} ${className}`}>
-      <div className={styles.settingsFormTabs}>
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            className={`${styles.tabButton} ${activeTab === tab.key ? styles.tabButtonActive : ''}`}
-            onClick={() => setActiveTab(tab.key as 'profile' | 'security' | 'notifications')}
-          >
-            <Icon name={tab.icon} size="sm" />
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      <div className={styles.settingsFormContent}>
-                {activeTab === 'profile' && renderProfileTab()}
-                {activeTab === 'security' && renderSecurityTab()}
-                {activeTab === 'notifications' && renderNotificationsTab()}
-            </div>
+            )}
         </div>
     )
 }

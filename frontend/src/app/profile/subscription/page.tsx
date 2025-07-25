@@ -9,10 +9,37 @@ import {
 
 export default function MySubscriptionPage() {
   return (
-    <div className="subscription-page">
+    <div style={{
+      padding: '32px 40px',
+      maxWidth: '1440px',
+      margin: '0 auto',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '24px',
+      // 防换行保护
+      overflow: 'hidden'
+    }}>
       {/* 页面标题 */}
-      <div className="page-header">
-        <h1 className="page-title">我的订阅</h1>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        minHeight: '32px',
+        // 防换行保护
+        flexWrap: 'nowrap',
+        overflow: 'hidden'
+      }}>
+        <h1 style={{
+          color: '#FFFFFF',
+          fontSize: 'var(--font-size-3xl)',
+          lineHeight: '32px',
+          fontWeight: 'normal',
+          margin: 0,
+          // 防换行保护 - 页面标题
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          minWidth: '120px' // 为"我的订阅"预留空间
+        }}>我的订阅</h1>
       </div>
 
       {/* 订阅信息卡片 */}
@@ -22,15 +49,62 @@ export default function MySubscriptionPage() {
       <InviteRewardSection />
 
       {/* 最近邀请记录 */}
-      <div className="invite-records">
-        <div className="section-header">
-          <h2 className="section-title">最近邀请记录</h2>
-          <div className="view-all-link">
-            <span className="link-text">查看全部</span>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+        // 防换行保护
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          // 防换行保护
+          flexWrap: 'nowrap',
+          overflow: 'hidden',
+          gap: '16px' // 添加间距防止挤压
+        }}>
+          <h2 style={{
+            color: '#FFFFFF',
+            fontSize: 'var(--font-size-2xl)',
+            lineHeight: '28px',
+            fontWeight: 'normal',
+            margin: 0,
+            // 防换行保护 - 区块标题
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            minWidth: '140px' // 为"最近邀请记录"预留空间
+          }}>最近邀请记录</h2>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            cursor: 'pointer',
+            padding: '4px 0',
+            // 防换行保护 - 查看全部链接
+            flexShrink: 0,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden'
+          }}>
+            <span style={{
+              color: '#60A5FA',
+              fontSize: 'var(--font-size-base)',
+              lineHeight: '20px',
+              // 防换行保护
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}>查看全部</span>
             <img
               src="/icons/subscription/view-all-arrow.svg"
               alt=""
-              className="arrow-icon"
+              style={{
+                width: '14px',
+                height: '14px',
+                flexShrink: 0 // 图标不能收缩
+              }}
             />
           </div>
         </div>
@@ -39,77 +113,6 @@ export default function MySubscriptionPage() {
 
       {/* 邀请奖励规则 */}
       <InviteRulesSection />
-
-      <style jsx>{`
-        .subscription-page {
-          padding: 32px 40px;
-          max-width: 1440px;
-          margin: 0 auto;
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          font-family: var(--font-family-primary);
-          color: var(--color-text-primary);
-        }
-
-        .page-header {
-          display: flex;
-          align-items: flex-start;
-          min-height: 32px;
-        }
-
-        .page-title {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-3xl);
-          line-height: 32px;
-          font-weight: 400;
-          margin: 0;
-        }
-
-        .invite-records {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          margin-top: 16px;
-        }
-
-        .section-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .section-title {
-          color: var(--color-text-primary);
-          font-size: var(--font-size-2xl);
-          line-height: 28px;
-          font-weight: 400;
-          margin: 0;
-        }
-
-        .view-all-link {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          cursor: pointer;
-          padding: 4px 0;
-        }
-
-        .link-text {
-          color: #60A5FA;
-          font-size: var(--font-size-base);
-          line-height: 20px;
-        }
-
-        .arrow-icon {
-          width: 14px;
-          height: 14px;
-        }
-
-        .view-all-link:hover .link-text {
-          text-decoration: underline;
-        }
-      `}</style>
     </div>
   )
 } 
