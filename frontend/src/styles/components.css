@@ -176,27 +176,9 @@ div.hero-subtitle *,
     min-height: 52px;
 }
 
-/* 渐变文字效果 */
-.gradient-text {
-    background: var(--gradient-primary);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 200% 100%;
-    animation: gradient-shift 3s ease-in-out infinite;
-}
+/* 渐变文字效果 - 已移除重复定义，保留第一个完整定义 */
 
-@keyframes gradient-shift {
-
-    0%,
-    100% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-}
+/* gradient-shift 动画已移除，不再需要 */
 
 /* ===== 导航链接样式 ===== */
 

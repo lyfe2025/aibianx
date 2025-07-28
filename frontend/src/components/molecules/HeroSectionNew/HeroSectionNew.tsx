@@ -46,7 +46,13 @@ export function HeroSectionNew() {
                         weight="bold"
                         className={`hero-main-title ${HERO_ANIMATIONS.fadeInUp.titleClass}`}
                         style={{
-                            ...HERO_STYLES.mainTitle,
+                            textAlign: 'center',
+                            margin: '0 0 24px 0',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            width: '100%',
+                            minHeight: '77px',
                             animation: 'fadeInUp 1s ease-out'
                         }}
                     >

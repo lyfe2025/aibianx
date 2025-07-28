@@ -47,15 +47,11 @@ export const HERO_STYLES = {
         paddingTop: '0px'
     },
 
-    // 主标题样式
+    // 主标题样式 (移除渐变相关样式，交给GradientText组件处理)
     mainTitle: {
         fontSize: '64px',
         fontWeight: '700',
         lineHeight: '76.8px',
-        background: 'var(--gradient-primary)',
-        WebkitBackgroundClip: 'text',
-        backgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
         textAlign: 'center' as const,
         margin: '0 0 24px 0',
         whiteSpace: 'nowrap' as const,

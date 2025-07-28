@@ -207,10 +207,12 @@
 
 /* 修复按钮和div元素中的文字颜色 */
 [data-theme="light"] .btn--gradient,
-[data-theme="light"] .btn--gradient *,
-[data-theme="light"] .gradient-text {
+[data-theme="light"] .btn--gradient * {
     color: #FFFFFF !important;
 }
+
+/* 渐变文字在亮色主题下保持渐变效果，移除强制颜色覆盖 */
+/* [data-theme="light"] .gradient-text 不再强制设置颜色，让渐变效果正常显示 */
 
 /* 修复其他蓝色渐变背景的按钮文字 */
 [data-theme="light"] [style*="background: linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)"],
