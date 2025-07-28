@@ -278,18 +278,23 @@
     color: #FFFFFF !important;
 }
 
-/* 修复其他蓝紫色渐变背景的文字 */
+/* 修复其他蓝紫色渐变背景的文字 - 提升优先级 */
 [data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"],
 [data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] *,
 [data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon,
 [data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] span,
 [data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] div,
-[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] img {
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] img,
+[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"],
+[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] *,
+[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] span,
+[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] div {
     color: #FFFFFF !important;
 }
 
-/* 确保Icon组件在深色渐变背景下显示白色 */
-[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon img {
+/* 确保Icon组件在深色渐变背景下显示白色 - 提升优先级 */
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon img,
+[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon img {
     filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
 }
 
@@ -460,7 +465,71 @@
 [data-theme="light"] button[style*="background:linear-gradient"] [style*="color: #FFFFFF"],
 [data-theme="light"] button[style*="background: linear-gradient"] [style*="color: var(--color-text-primary)"],
 [data-theme="light"] button[style*="background:linear-gradient"] [style*="color: var(--color-text-primary)"],
-[data-theme="light"] button[style*="background: var(--gradient-primary)"] [style*="color: var(--color-text-primary)"] {
+[data-theme="light"] button[style*="background: var(--gradient-primary)"] [style*="color: var(--color-text-primary)"],
+[data-theme="light"] div[style*="background: linear-gradient"] [style*="color: #FFFFFF"],
+[data-theme="light"] div[style*="background:linear-gradient"] [style*="color: #FFFFFF"],
+[data-theme="light"] div[style*="background: linear-gradient"] [style*="color: var(--color-text-primary)"],
+[data-theme="light"] div[style*="background:linear-gradient"] [style*="color: var(--color-text-primary)"],
+[data-theme="light"] div[style*="background: var(--gradient-primary)"] [style*="color: var(--color-text-primary)"] {
     color: #FFFFFF !important;
     /* 按钮内的白色文字保持不变 */
+}
+
+/* 亮色主题下渐变背景按钮内的图标也要保持白色 */
+[data-theme="light"] div[style*="background: linear-gradient"] .icon img,
+[data-theme="light"] div[style*="background:linear-gradient"] .icon img,
+[data-theme="light"] div[style*="background: var(--gradient-primary)"] .icon img,
+[data-theme="light"] button[style*="background: linear-gradient"] .icon img,
+[data-theme="light"] button[style*="background:linear-gradient"] .icon img,
+[data-theme="light"] button[style*="background: var(--gradient-primary)"] .icon img {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
+}
+
+/* 强制修复：确保SSR水合后正确应用 - 最高优先级规则 */
+:root[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"],
+:root[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] *,
+:root[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] span,
+:root[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] div,
+html[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"],
+html[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] *,
+html[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] span,
+html[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] div {
+    color: #FFFFFF !important;
+}
+
+/* 强制修复：确保渐变背景按钮图标为白色 - 最高优先级 */
+:root[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon img,
+html[data-theme="light"] div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon img {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
+}
+
+/* 兜底规则：无论主题状态如何，特定渐变背景都使用白色文字（解决SSR水合时机问题） */
+body div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"],
+body div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] *,
+body div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] span,
+body div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] div {
+    color: #FFFFFF !important;
+}
+
+/* 兜底规则：特定渐变背景的图标始终为白色 */
+body div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon img {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
+}
+
+/* 超级强力修复：直接针对具体背景色，绕过CSS变量系统 */
+div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"],
+div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] *,
+div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] span,
+div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] div,
+div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"],
+div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"] *,
+div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"] span,
+div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"] div {
+    color: #FFFFFF !important;
+}
+
+/* 超级强力修复：渐变背景的图标颜色 */
+div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon img,
+div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"] .icon img {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
 }

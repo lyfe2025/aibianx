@@ -206,17 +206,27 @@
     font-weight: 400;
 }
 
+/* 菜单项基础交互状态 */
+.navItem:hover {
+    background: var(--color-hover-secondary);
+}
+
+.navItem:hover .navIcon,
+.navItem:hover .navLabel {
+    color: var(--color-text-secondary);
+}
+
 /* 菜单项激活状态 - 统一的选中样式 */
 .navItemActive {
     background: var(--color-hover-primary) !important;
 }
 
 .navItemActive .navLabel {
-    color: var(--color-text-primary);
+    color: var(--color-text-primary) !important;
 }
 
 .navItemActive .navIcon {
-    color: var(--color-text-primary);
+    color: var(--color-text-primary) !important;
 }
 
 /* 分割线 - 设计稿精确样式 */
@@ -224,7 +234,6 @@
     border-top: 1px solid var(--color-border-primary);
     margin-top: 16px;
     margin-bottom: 16px;
-    /* 调整后续设置项的间距 */
     display: flex;
     align-items: flex-end;
     min-height: 1px;
@@ -238,44 +247,6 @@
 /* 设置菜单项第一个不要上边距，避免与分割线下边距叠加 */
 .settingsNavigation .navItem:first-child {
     margin-top: 0;
-}
-
-/* 设置菜单项选中状态 - 提高优先级以覆盖默认样式 */
-.settingsNavigation .navItem.navItemActive .navIcon {
-    color: var(--color-text-primary) !important;
-}
-
-.settingsNavigation .navItem.navItemActive .navLabel {
-    /* 选中状态的文字变为主色，优先级足够高 */
-    color: var(--color-text-primary) !important;
-}
-
-.settingsNavigation .navItem .navIcon {
-    color: var(--color-text-muted);
-}
-
-.settingsNavigation .navItem .navLabel {
-    color: var(--color-text-muted);
-    /* 默认灰色 */
-}
-
-/* 退出按钮保持普通样式，不应用设置项样式 */
-.settingsNavigation .navItem:last-child {
-    background: none !important;
-}
-
-.settingsNavigation .navItem:last-child:hover {
-    background: var(--color-hover-secondary) !important;
-}
-
-.settingsNavigation .navItem:last-child .navLabel {
-    color: var(--color-text-secondary) !important;
-    /* 退出按钮使用次要文字颜色，在亮色模式下更清晰 */
-}
-
-.settingsNavigation .navItem:last-child .navIcon {
-    color: var(--color-text-secondary) !important;
-    /* 退出图标使用次要文字颜色，在亮色模式下更清晰 */
 }
 
 /* 隐藏其他样式 */

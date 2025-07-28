@@ -4,8 +4,7 @@ import {
     WithdrawActions,
     AccountBalanceCard,
     WithdrawRecordTable,
-    WithdrawInstructions,
-    WithdrawPagination
+    WithdrawInstructions
 } from '@/components/molecules'
 
 export default function WithdrawRecordPage() {

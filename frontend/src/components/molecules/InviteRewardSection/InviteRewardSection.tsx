@@ -648,12 +648,12 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               height: '20px',
               marginTop: '2px',
               marginBottom: '2px',
-              color: 'var(--color-text-primary)',
+              color: '#FFFFFF', // 渐变背景下强制使用白色
               flexShrink: 0
             }}
           />
           <div style={{
-            color: 'var(--color-text-primary)',
+            color: '#FFFFFF', // 渐变背景下强制使用白色
             fontSize: '16px',
             lineHeight: '24px',
             textAlign: 'center',

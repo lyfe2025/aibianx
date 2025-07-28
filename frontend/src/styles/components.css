@@ -104,6 +104,9 @@ div.hero-subtitle *,
     /* 🔧 防止浏览器默认点击效果 */
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+    /* 🎯 确保文字完美居中 */
+    text-align: center;
+    vertical-align: middle;
 }
 
 .btn:disabled {
@@ -156,18 +159,21 @@ div.hero-subtitle *,
     padding: 8px 20px;
     font-size: var(--font-size-sm);
     line-height: 1.2;
+    min-height: 36px;
 }
 
 .btn--md {
     padding: 12px 24px;
     font-size: var(--font-size-base);
     line-height: 1.2;
+    min-height: 44px;
 }
 
 .btn--lg {
     padding: 16px 32px;
     font-size: var(--font-size-lg);
     line-height: 1.2;
+    min-height: 52px;
 }
 
 /* 渐变文字效果 */

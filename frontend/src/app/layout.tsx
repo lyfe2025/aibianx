@@ -106,6 +106,28 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
+        {/* 防止SSR水合时样式闪烁 */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            /* 强制修复：确保渐变背景按钮文字始终为白色 - 内联样式最高优先级 */
+            div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"],
+            div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] *,
+            div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] span,
+            div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] div,
+            div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"],
+            div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"] *,
+            div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"] span,
+            div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"] div {
+              color: #FFFFFF !important;
+            }
+            
+            /* 强制修复：渐变背景按钮图标为白色 */
+            div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon img,
+            div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"] .icon img {
+              filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
+            }
+          `
+        }} />
         {/* 结构化数据 - 增强SEO效果 */}
         <script
           type="application/ld+json"

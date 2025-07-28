@@ -119,22 +119,17 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
         router.push('/')
     }
 
-    // SSR期间显示占位符状态，避免水合错误
+    // SSR期间返回带占位符的布局，确保水合兼容性
     if (!isClient) {
         return (
             <div className={`${styles.userSidebar} ${className}`}>
-                {/* 用户信息区域 */}
+                {/* 用户信息区域 - SSR占位符 */}
                 <div className={styles.userProfile}>
                     <div className={styles.userAvatar}>
-                        <Avatar
-                            src="/images/avatars/user-zhang-zhichuang.svg"
-                            alt="张智创"
-                            size="xxl"
-                            className={styles.avatarImage}
-                        />
-                        {/* 会员皇冠标识 - 高级会员显示 */}
+                        <div className={styles.avatarImage} style={{ width: 84, height: 84, borderRadius: '50%', background: 'var(--color-bg-secondary)' }} />
+                        {/* 会员皇冠标识占位符 */}
                         <div className={styles.crownBadge}>
-                            <CrownIcon size="sm" />
+                            <div style={{ width: 16, height: 16 }} />
                         </div>
                     </div>
                     <h3 className={styles.userName}>张智创</h3>
@@ -144,7 +139,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                     <p className={styles.memberExpiry}>会员有效期：还剩 245 天</p>
                 </div>
 
-                {/* 主导航菜单 - 无激活状态 */}
+                {/* 主导航菜单 - SSR占位符，使用Icon组件的SSR占位符 */}
                 <nav className={styles.mainNavigation}>
                     {navigationItems.map((item) => (
                         <Link
@@ -161,7 +156,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                 {/* 分割线 */}
                 <div className={styles.navDivider} />
 
-                {/* 设置菜单 */}
+                {/* 设置菜单 - SSR占位符，使用Icon组件的SSR占位符 */}
                 <nav className={styles.settingsNavigation}>
                     {settingsItems.map((item) => (
                         <Link
@@ -174,11 +169,11 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                         </Link>
                     ))}
 
-                    {/* 退出按钮 - 执行登出并跳转到首页 */}
+                    {/* 退出按钮 - SSR占位符，使用Icon组件的SSR占位符 */}
                     <button
-                        onClick={handleLogout}
                         className={styles.navItem}
                         title="退出登录并返回首页"
+                        disabled
                     >
                         <Icon name="profile-sidebar-logout" size="sm" className={styles.navIcon} />
                         <span className={styles.navLabel}>退出</span>
@@ -202,7 +197,14 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                     />
                     {/* 会员皇冠标识 - 高级会员显示 */}
                     <div className={styles.crownBadge}>
-                        <CrownIcon size="sm" />
+                        <Icon
+                            name="crown-premium-white"
+                            size="sm"
+                            preserveColor={true}
+                            style={{
+                                filter: 'drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5))'
+                            }}
+                        />
                     </div>
                 </div>
                 <h3 className={styles.userName}>张智创</h3>
@@ -226,9 +228,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                                 name={item.icon}
                                 size="sm"
                                 className={styles.navIcon}
-                                style={{
-                                    color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-muted)'
-                                }}
+                                style={{ color: 'var(--color-text-muted)' }}
                             />
                             <span className={styles.navLabel}>{item.label}</span>
                         </Link>
@@ -247,7 +247,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                         href={item.href}
                         className={`${styles.navItem} ${isActiveRoute(item.href) ? styles.navItemActive : ''}`}
                     >
-                        <Icon name={item.icon} size="sm" className={styles.navIcon} />
+                        <Icon name={item.icon} size="sm" className={styles.navIcon} style={{ color: 'var(--color-text-muted)' }} />
                         <span className={styles.navLabel}>{item.label}</span>
                     </Link>
                 ))}
@@ -258,7 +258,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                     className={styles.navItem}
                     title="退出登录并返回首页"
                 >
-                    <Icon name="profile-sidebar-logout" size="sm" className={styles.navIcon} />
+                    <Icon name="profile-sidebar-logout" size="sm" className={styles.navIcon} style={{ color: 'var(--color-text-muted)' }} />
                     <span className={styles.navLabel}>退出</span>
                 </button>
             </nav>

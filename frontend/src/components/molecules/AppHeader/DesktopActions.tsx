@@ -18,6 +18,7 @@ interface DesktopActionsProps {
  * DesktopActions 组件
  * 
  * 桌面端功能按钮组：语言切换、主题切换、登录
+ * SSR兼容：确保服务端和客户端渲染一致
  */
 export function DesktopActions({
     theme,
@@ -89,9 +90,6 @@ export function DesktopActions({
                 <Icon
                     name={isClient ? (theme === 'dark' ? 'theme-toggle-light' : 'theme-toggle-dark') : 'theme-toggle-light'}
                     size="sm"
-                    style={{
-                        color: 'var(--color-text-muted)'
-                    }}
                 />
             </button>
 

@@ -246,6 +246,11 @@
     .btn {
         min-height: 48px !important;
         padding: 12px 20px !important;
+        /* 🎯 确保文字在任何padding下都居中 */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
     }
 
     .glass-card {
