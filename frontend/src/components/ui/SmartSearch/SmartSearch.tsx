@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Icon, Loading } from '@/components/ui'
 
-interface SearchSuggestion {
+export interface SearchSuggestion {
     id: string
     text: string
     type: 'history' | 'suggestion' | 'popular'
@@ -67,12 +67,12 @@ export function SmartSearch({
 
     // 热门搜索推荐（模拟数据）
     const popularSearches: SearchSuggestion[] = [
-        { id: 'p1', text: 'AI工具推荐', type: 'popular', category: '工具', count: 1234 },
-        { id: 'p2', text: 'ChatGPT使用技巧', type: 'popular', category: '教程', count: 987 },
-        { id: 'p3', text: 'AI变现案例', type: 'popular', category: '案例', count: 765 },
-        { id: 'p4', text: 'Midjourney提示词', type: 'popular', category: '工具', count: 654 },
-        { id: 'p5', text: 'AI写作助手', type: 'popular', category: '工具', count: 543 },
-        { id: 'p6', text: '自动化工作流', type: 'popular', category: '教程', count: 432 },
+        { id: 'p1', text: 'AI工具推荐', type: 'popular' as const, category: '工具', count: 1234 },
+        { id: 'p2', text: 'ChatGPT使用技巧', type: 'popular' as const, category: '教程', count: 987 },
+        { id: 'p3', text: 'AI变现案例', type: 'popular' as const, category: '案例', count: 765 },
+        { id: 'p4', text: 'Midjourney提示词', type: 'popular' as const, category: '工具', count: 654 },
+        { id: 'p5', text: 'AI写作助手', type: 'popular' as const, category: '工具', count: 543 },
+        { id: 'p6', text: '自动化工作流', type: 'popular' as const, category: '教程', count: 432 },
     ]
 
     // 客户端初始化
@@ -107,7 +107,7 @@ export function SmartSearch({
         const newHistoryItem: SearchSuggestion = {
             id: `h${Date.now()}`,
             text: searchQuery.trim(),
-            type: 'history',
+            type: 'history' as const,
         }
 
         setSearchHistory(prev => {
@@ -129,10 +129,10 @@ export function SmartSearch({
 
         // 模拟搜索建议
         const mockSuggestions: SearchSuggestion[] = [
-            { id: 's1', text: `${searchQuery} 教程`, type: 'suggestion', category: '教程' },
-            { id: 's2', text: `${searchQuery} 工具推荐`, type: 'suggestion', category: '工具' },
-            { id: 's3', text: `${searchQuery} 最佳实践`, type: 'suggestion', category: '教程' },
-            { id: 's4', text: `${searchQuery} 案例分析`, type: 'suggestion', category: '案例' },
+            { id: 's1', text: `${searchQuery} 教程`, type: 'suggestion' as const, category: '教程' },
+            { id: 's2', text: `${searchQuery} 工具推荐`, type: 'suggestion' as const, category: '工具' },
+            { id: 's3', text: `${searchQuery} 最佳实践`, type: 'suggestion' as const, category: '教程' },
+            { id: 's4', text: `${searchQuery} 案例分析`, type: 'suggestion' as const, category: '案例' },
         ].filter(item =>
             item.text.toLowerCase().includes(searchQuery.toLowerCase())
         )

@@ -1,160 +1,91 @@
 'use client'
 
-import { Icon, GradientText } from '@/components/ui'
-
-interface MissionItem {
-    icon: string
-    title: string
-    description: string
-    highlight?: string
-    iconColor?: 'blue' | 'green' | 'orange' | 'purple' // 新增颜色配置
-}
+import { GradientText, GlassCard, Icon } from '@/components/ui'
+import { MISSION_CARDS, ABOUT_CONTENT } from '@/constants/about'
 
 interface MissionSectionProps {
-    title?: string
-    subtitle?: string
-    missions: MissionItem[]
     className?: string
 }
 
-export function MissionSection({
-    title = "我们的使命",
-    subtitle = "致力于让每个人都能掌握AI变现技能",
-    missions,
-    className = ''
-}: MissionSectionProps) {
-    // 获取图标背景色
-    const getIconBackground = (iconColor: MissionItem['iconColor'] = 'blue') => {
-        switch (iconColor) {
-            case 'blue':
-                return {
-                    background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
-                    boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)'
-                }
-            case 'green':
-                return {
-                    background: 'linear-gradient(135deg, #22C55E 15%, #34D399 85%)',
-                    boxShadow: '0 8px 24px rgba(34, 197, 94, 0.3)'
-                }
-            case 'orange':
-                return {
-                    background: 'linear-gradient(135deg, #FB923C 15%, #F59E0B 85%)',
-                    boxShadow: '0 8px 24px rgba(251, 146, 60, 0.3)',
-                    border: '2px solid #EF4444'
-                }
-            case 'purple':
-                return {
-                    background: 'linear-gradient(135deg, #A855F7 15%, #EC4899 85%)',
-                    boxShadow: '0 8px 24px rgba(168, 85, 247, 0.3)'
-                }
-            default:
-                return {
-                    background: 'linear-gradient(135deg, #3B82F6 15%, #06B6D4 85%)',
-                    boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)'
-                }
-        }
-    }
-
+/**
+ * MissionSection 我们的使命组件
+ * 
+ * 功能特性：
+ * - 展示三个核心使命卡片
+ * - 分享知识、推动创新、构建社区
+ * - 毛玻璃卡片设计
+ * - 图标和描述展示
+ * 
+ * 从about/page.tsx中分离，符合单一职责原则
+ */
+export function MissionSection({ className }: MissionSectionProps) {
     return (
-        <section className={className} style={{
-            padding: 'var(--page-padding-top-md) 0 var(--page-padding-bottom-md)',
-            textAlign: 'center'
-        }}>
-            {/* 标题区域 */}
-            <div style={{
-                marginBottom: 'var(--section-spacing-md)'
-            }}>
+        <>
+            {/* 我们的使命标题 */}
+            <div className="about-mission-title-section">
                 <GradientText
-                    as="h2"
-                    size="7xl"
+                    size="6xl"
                     weight="bold"
                     style={{
-                        marginBottom: 'var(--title-margin-bottom-md)'
+                        lineHeight: '57.6px'
                     }}
                 >
-                    {title}
+                    {ABOUT_CONTENT.missionTitle}
                 </GradientText>
-                <p style={{
-                    fontSize: 'var(--font-size-2xl)',
-                    fontFamily: 'var(--font-family-primary)',
-                    color: 'var(--color-text-secondary)',
-                    maxWidth: '600px',
-                    margin: '0 auto',
-                    lineHeight: '1.5'
-                }}>
-                    {subtitle}
-                </p>
             </div>
 
-            {/* 使命卡片网格 */}
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                gap: 'var(--spacing-8)',
-                maxWidth: '1000px',
-                margin: '0 auto'
-            }}>
-                {missions.map((mission, index) => (
-                    <div
-                        key={index}
-                        className="glass-card glass-card--hover"
-                        style={{
-                            padding: 'var(--spacing-8)',
-                            textAlign: 'center',
-                            transition: 'all 0.3s ease'
-                        }}
-                    >
-                        {/* 图标 */}
-                        <div style={{
-                            width: '80px',
-                            height: '80px',
-                            margin: '0 auto var(--spacing-6)',
-                            borderRadius: '50%',
+            {/* 三个使命卡片 */}
+            <section className={`about-mission-section ${className || ''}`}>
+                <div className="about-mission-cards-container">
+                    {MISSION_CARDS.map((card) => (
+                        <GlassCard key={card.id} variant="default" style={{
+                            flex: 1,
+                            padding: '34px',
                             display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            ...getIconBackground(mission.iconColor)
+                            flexDirection: 'column',
+                            gap: '14px'
                         }}>
-                            <Icon name={mission.icon} size="xl" style={{ color: 'var(--color-text-primary)' }} />
-                        </div>
-
-                        {/* 标题 */}
-                        <h3 style={{
-                            fontSize: 'var(--font-size-3xl)',
-                            fontWeight: '700',
-                            color: 'var(--color-text-primary)',
-                            marginBottom: 'var(--title-margin-bottom-md)'
-                        }}>
-                            {mission.title}
-                        </h3>
-
-                        {/* 描述 */}
-                        <p style={{
-                            fontSize: 'var(--font-size-lg)',
-                            color: 'var(--color-text-secondary)',
-                            lineHeight: '1.6',
-                            marginBottom: mission.highlight ? 'var(--spacing-4)' : '0'
-                        }}>
-                            {mission.description}
-                        </p>
-
-                        {/* 突出显示文字 */}
-                        {mission.highlight && (
                             <div style={{
-                                background: 'rgba(59, 130, 246, 0.1)',
-                                color: 'var(--color-primary-blue)',
-                                padding: 'var(--spacing-3) var(--spacing-4)',
-                                borderRadius: 'var(--radius-lg)',
-                                fontSize: 'var(--font-size-base)',
-                                fontWeight: '600',
-                                border: '1px solid rgba(59, 130, 246, 0.3)'
+                                background: card.backgroundColor,
+                                borderRadius: '50%',
+                                padding: '14px',
+                                width: '60px',
+                                height: '60px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: '10px',
+                                boxShadow: `0 4px 12px ${card.backgroundColor}`
                             }}>
-                                {mission.highlight}
+                                <Icon
+                                    name={card.icon}
+                                    size="lg"
+                                    style={{ color: card.color }}
+                                />
                             </div>
-                        )}
-                    </div>
-                ))}
-            </div>
-        </section>
+
+                            <h3 style={{
+                                color: 'var(--color-text-primary)',
+                                fontSize: '24px',
+                                fontWeight: '700',
+                                lineHeight: '38.4px',
+                                margin: '0'
+                            }}>
+                                {card.title}
+                            </h3>
+
+                            <p style={{
+                                color: 'var(--color-text-muted)',
+                                fontSize: '16px',
+                                lineHeight: '25.6px',
+                                margin: '0'
+                            }}>
+                                {card.description}
+                            </p>
+                        </GlassCard>
+                    ))}
+                </div>
+            </section>
+        </>
     )
 } 

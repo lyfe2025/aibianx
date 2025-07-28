@@ -1,29 +1,17 @@
 'use client'
 
-import { Container, Icon, GradientText, GlassCard, GradientButton, AnimatedNumber, CrownIcon } from '@/components/ui'
-import { CountdownTimer, PageHeader } from '@/components/molecules'
+import { Container, Icon, GradientText, GlassCard, GradientButton, CrownIcon } from '@/components/ui'
+import { CountdownTimer, PageHeader, StatsSection, MissionSection, WhyChooseSection } from '@/components/molecules'
 import { useModalStore } from '@/stores'
+import { DEFAULT_MEMBERSHIP_PLAN, ABOUT_CONTENT } from '@/constants/about'
 
 export default function AboutPage() {
     const { openModal } = useModalStore()
 
     // 处理立即开通会员按钮点击
     const handleUpgrade = () => {
-        const defaultPlan = {
-            name: '年度会员',
-            price: 299,
-            originalPrice: 399,
-            period: '年',
-            features: [
-                '200+ AI变现教程和指南',
-                '每周更新实战案例',
-                '专属社区和导师指导',
-                'AI工具专属优惠'
-            ]
-        }
-
         openModal('payment', {
-            payment: { plan: defaultPlan }
+            payment: { plan: DEFAULT_MEMBERSHIP_PLAN }
         })
     }
 
@@ -38,171 +26,15 @@ export default function AboutPage() {
                 <Container size="xl">
                     {/* Hero 区域 */}
                     <PageHeader
-                        title="关于AI变现之路"
-                        subtitle="我们致力于探索AI技术的商业价值，帮助创作者、开发者和企业 通过人工智能技术实现商业创新与价值转化"
+                        title={ABOUT_CONTENT.pageTitle}
+                        subtitle={ABOUT_CONTENT.pageSubtitle}
                         description=""
                         alignment="center"
                         className="page-header"
                     />
 
-                    {/* 我们的使命标题 */}
-                    <div className="about-mission-title-section">
-                        <GradientText
-                            size="6xl"
-                            weight="bold"
-                            style={{
-                                lineHeight: '57.6px'
-                            }}
-                        >
-                            我们的使命
-                        </GradientText>
-                    </div>
-
-                    {/* 三个使命卡片 */}
-                    <section className="about-mission-section">
-                        <div className="about-mission-cards-container">
-                            {/* 分享知识 - 蓝色背景 */}
-                            <GlassCard variant="default" style={{
-                                flex: 1,
-                                padding: '34px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '14px'
-                            }}>
-                                <div style={{
-                                    background: 'rgba(59, 130, 246, 0.15)',
-                                    borderRadius: '50%',
-                                    padding: '14px',
-                                    width: '60px',
-                                    height: '60px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    marginBottom: '10px',
-                                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.15)'
-                                }}>
-                                    <Icon
-                                        name="share-knowledge-feature"
-                                        size="lg"
-                                        style={{ color: 'var(--color-primary-blue)' }}
-                                    />
-                                </div>
-
-                                <h3 style={{
-                                    color: 'var(--color-text-primary)',
-                                    fontSize: '24px',
-                                    fontWeight: '700',
-                                    lineHeight: '38.4px',
-                                    margin: '0'
-                                }}>
-                                    分享知识
-                                </h3>
-
-                                <p style={{
-                                    color: 'var(--color-text-muted)',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    margin: '0'
-                                }}>
-                                    汇集AI领域最前沿的变现技巧与商业模式，为读者提供实用且深入的AI应用知识，帮助大家快速掌握AI技术的商业化路径。
-                                </p>
-                            </GlassCard>
-
-                            {/* 推动创新 - 绿色背景 */}
-                            <GlassCard variant="default" style={{
-                                flex: 1,
-                                padding: '34px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '14px'
-                            }}>
-                                <div style={{
-                                    background: 'rgba(34, 197, 94, 0.15)',
-                                    borderRadius: '50%',
-                                    padding: '14px',
-                                    width: '60px',
-                                    height: '60px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    marginBottom: '10px',
-                                    boxShadow: '0 4px 12px rgba(34, 197, 94, 0.15)'
-                                }}>
-                                    <Icon
-                                        name="drive-innovation-new"
-                                        size="lg"
-                                        style={{ color: 'var(--color-success)' }}
-                                    />
-                                </div>
-
-                                <h3 style={{
-                                    color: 'var(--color-text-primary)',
-                                    fontSize: '24px',
-                                    fontWeight: '700',
-                                    lineHeight: '38.4px',
-                                    margin: '0'
-                                }}>
-                                    推动创新
-                                </h3>
-
-                                <p style={{
-                                    color: 'var(--color-text-muted)',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    margin: '0'
-                                }}>
-                                    激发创作者和企业的创新思维，探索AI与各行业的融合可能性，推动新兴商业模式的孵化与发展，创造更多商业价值。
-                                </p>
-                            </GlassCard>
-
-                            {/* 赋能变现 - 橙色背景，红色边框 */}
-                            <GlassCard variant="default" style={{
-                                flex: 1,
-                                padding: '34px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '14px'
-                            }}>
-                                <div style={{
-                                    background: 'rgba(251, 146, 60, 0.15)',
-                                    borderRadius: '50%',
-                                    padding: '14px',
-                                    width: '60px',
-                                    height: '60px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    marginBottom: '10px',
-                                    boxShadow: '0 4px 12px rgba(251, 146, 60, 0.15)'
-                                }}>
-                                    <Icon
-                                        name="enable-monetization-new"
-                                        size="lg"
-                                        style={{ color: 'var(--color-orange)' }}
-                                    />
-                                </div>
-
-                                <h3 style={{
-                                    color: 'var(--color-text-primary)',
-                                    fontSize: '24px',
-                                    fontWeight: '700',
-                                    lineHeight: '38.4px',
-                                    margin: '0'
-                                }}>
-                                    赋能变现
-                                </h3>
-
-                                <p style={{
-                                    color: 'var(--color-text-muted)',
-                                    fontSize: '16px',
-                                    lineHeight: '25.6px',
-                                    margin: '0'
-                                }}>
-                                    提供可落地的AI变现方法与工具，帮助个人创作者和企业挖掘AI技术的盈利潜力，实现技术到财富的高效转化。
-                                </p>
-                            </GlassCard>
-                        </div>
-                    </section>
+                    {/* 我们的使命 */}
+                    <MissionSection />
 
                     {/* 成为会员区域 */}
                     <section style={{
@@ -639,233 +471,10 @@ export default function AboutPage() {
                     </section>
 
                     {/* 为什么选择我们 */}
-                    <section className="about-why-choose-section">
-                        <GradientText
-                            size="6xl"
-                            weight="bold"
-                            style={{
-                                marginBottom: '46px',
-                                lineHeight: '57.6px'
-                            }}
-                        >
-                            为什么选择我们
-                        </GradientText>
-
-                        <p style={{
-                            color: 'var(--color-text-secondary)',
-                            fontSize: '18px',
-                            lineHeight: '28.8px',
-                            textAlign: 'center',
-                            marginBottom: '64px'
-                        }}>
-                            在AI快速发展的时代，我们提供的不仅是知识，更是实用的变现路径和专业的指导支持
-                        </p>
-
-                        <div className="about-why-choose-cards">
-                            <div className="about-why-choose-container">
-                                {/* 实战经验 */}
-                                <GlassCard variant="default" style={{
-                                    flex: 1,
-                                    padding: '34px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '20px'
-                                }}>
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '12px',
-                                        marginTop: '23px'
-                                    }}>
-                                        <div style={{
-                                            background: 'rgba(59, 130, 246, 0.12)',
-                                            borderRadius: '50%',
-                                            padding: '8px',
-                                            width: '40px',
-                                            height: '40px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            boxShadow: '0 2px 8px rgba(59, 130, 246, 0.12)'
-                                        }}>
-                                                                                         {/* 保持暗色模式固定颜色 - 不随主题变化 */}
-                                             <Icon name="practical-experience-new" size="sm" style={{ color: 'var(--color-primary-blue)' }} />
-                                        </div>
-                                        <h3 style={{
-                                            color: 'var(--color-text-primary)',
-                                            fontSize: '24px',
-                                            fontWeight: '700',
-                                            lineHeight: '38.4px',
-                                            margin: '0'
-                                        }}>
-                                            实战经验
-                                        </h3>
-                                    </div>
-
-                                    <p style={{
-                                        color: 'var(--color-text-muted)',
-                                        fontSize: '16px',
-                                        lineHeight: '25.6px',
-                                        margin: '0',
-                                        textAlign: 'left'
-                                    }}>
-                                        所有内容都基于实际变现案例和经验，而非纯理论。我们的团队成员都有丰富的AI变现实战经历，能够提供有价值的指导。
-                                    </p>
-                                </GlassCard>
-
-                                {/* 持续更新 */}
-                                <GlassCard variant="default" style={{
-                                    flex: 1,
-                                    padding: '34px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '20px'
-                                }}>
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '12px',
-                                        marginTop: '21px'
-                                    }}>
-                                        <div style={{
-                                            background: 'rgba(34, 197, 94, 0.12)',
-                                            borderRadius: '50%',
-                                            padding: '8px',
-                                            width: '40px',
-                                            height: '40px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            boxShadow: '0 2px 8px rgba(34, 197, 94, 0.12)'
-                                        }}>
-                                            <Icon name="continuous-update-new" size="sm" style={{ color: 'var(--color-success)' }} />
-                                        </div>
-                                        <h3 style={{
-                                            color: 'var(--color-text-primary)',
-                                            fontSize: '24px',
-                                            fontWeight: '700',
-                                            lineHeight: '38.4px',
-                                            margin: '0'
-                                        }}>
-                                            持续更新
-                                        </h3>
-                                    </div>
-
-                                    <p style={{
-                                        color: 'var(--color-text-muted)',
-                                        fontSize: '16px',
-                                        lineHeight: '25.6px',
-                                        margin: '0',
-                                        textAlign: 'left'
-                                    }}>
-                                        我们每周更新最新的AI工具、变现策略和成功案例，确保您始终站在行业前沿，把握最新的AI变现机会。
-                                    </p>
-                                </GlassCard>
-
-                                {/* 社区支持 */}
-                                <GlassCard variant="default" style={{
-                                    flex: 1,
-                                    padding: '34px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '20px'
-                                }}>
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '12px',
-                                        marginTop: '21px'
-                                    }}>
-                                        <div style={{
-                                            background: 'rgba(168, 85, 247, 0.12)',
-                                            borderRadius: '50%',
-                                            padding: '8px',
-                                            width: '40px',
-                                            height: '40px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            boxShadow: '0 2px 8px rgba(168, 85, 247, 0.12)'
-                                        }}>
-                                            <Icon name="community-advantage-new" size="sm" style={{ color: 'var(--color-primary-purple)' }} />
-                                        </div>
-                                        <h3 style={{
-                                            color: 'var(--color-text-primary)',
-                                            fontSize: '24px',
-                                            fontWeight: '700',
-                                            lineHeight: '38.4px',
-                                            margin: '0'
-                                        }}>
-                                            社区支持
-                                        </h3>
-                                    </div>
-
-                                    <p style={{
-                                        color: 'var(--color-text-muted)',
-                                        fontSize: '16px',
-                                        lineHeight: '25.6px',
-                                        margin: '0',
-                                        textAlign: 'left'
-                                    }}>
-                                        加入我们活跃的会员社区，与其他AI变现实践者交流经验，结识志同道合的伙伴，共同成长。
-                                    </p>
-                                </GlassCard>
-                            </div>
-                        </div>
-                    </section>
+                    <WhyChooseSection />
 
                     {/* 平台数据 */}
-                    <section className="about-stats-section">
-                        <GradientText
-                            size="6xl"
-                            weight="bold"
-                            style={{
-                                marginBottom: '0px',
-                                lineHeight: '57.6px'
-                            }}
-                        >
-                            平台数据
-                        </GradientText>
-
-                        <div className="about-stats-cards">
-                            <div className="about-stats-container">
-                                {[
-                                    { value: '30万+', label: '月活跃用户' },
-                                    { value: '500+', label: '精选案例' },
-                                    { value: '120+', label: '周刊期数' },
-                                    { value: '50+', label: '合作伙伴' }
-                                ].map((stat, index) => (
-                                    <GlassCard key={index} variant="default" style={{
-                                        flex: 1,
-                                        padding: '27px 75px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: '9px',
-                                        alignItems: 'center'
-                                    }}>
-                                        <AnimatedNumber
-                                            value={stat.value}
-                                            duration={2000}
-                                            delay={index * 200}
-                                            size="7xl"
-                                            weight="bold"
-                                            style={{
-                                                lineHeight: '76.8px'
-                                            }}
-                                        />
-
-                                        <span style={{
-                                            color: 'var(--color-text-muted)',
-                                            fontSize: '16px',
-                                            lineHeight: '25.6px'
-                                        }}>
-                                            {stat.label}
-                                        </span>
-                                    </GlassCard>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
+                    <StatsSection />
 
                     {/* 联系我们 */}
                     <section className="about-contact-section">

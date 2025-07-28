@@ -1,141 +1,69 @@
 'use client'
 
-import { Icon, GradientText } from '@/components/ui'
-
-interface StatItem {
-    icon: string
-    value: string
-    label: string
-    description?: string
-}
+import { GradientText, GlassCard, AnimatedNumber } from '@/components/ui'
+import { PLATFORM_STATS, ABOUT_CONTENT } from '@/constants/about'
 
 interface StatsSectionProps {
-    title?: string
-    subtitle?: string
-    stats: StatItem[]
     className?: string
 }
 
-export function StatsSection({
-    title = "平台数据",
-    subtitle = "用数据说话，见证AI变现之路的成长",
-    stats,
-    className = ''
-}: StatsSectionProps) {
+/**
+ * StatsSection 平台数据统计组件
+ * 
+ * 功能特性：
+ * - 平台统计数据展示
+ * - 数字动画效果
+ * - 响应式布局
+ * - 毛玻璃卡片设计
+ * 
+ * 从about/page.tsx中分离，符合单一职责原则
+ */
+export function StatsSection({ className }: StatsSectionProps) {
     return (
-        <section className={className} style={{
-            padding: 'var(--page-padding-top-md) 0 var(--page-padding-bottom-md)',
-            textAlign: 'center'
-        }}>
-            {/* 标题区域 */}
-            <div style={{
-                marginBottom: 'var(--section-spacing-md)'
-            }}>
-                <GradientText
-                    as="h2"
-                    size="7xl"
-                    weight="bold"
-                    style={{
-                        marginBottom: 'var(--title-margin-bottom-md)'
-                    }}
-                >
-                    {title}
-                </GradientText>
-                <p style={{
-                    fontSize: 'var(--font-size-2xl)',
-                    fontFamily: 'var(--font-family-primary)',
-                    color: 'var(--color-text-secondary)',
-                    maxWidth: '600px',
-                    margin: '0 auto',
-                    lineHeight: '1.5'
-                }}>
-                    {subtitle}
-                </p>
-            </div>
+        <section className={`about-stats-section ${className || ''}`}>
+            <GradientText
+                size="6xl"
+                weight="bold"
+                style={{
+                    marginBottom: '0px',
+                    lineHeight: '57.6px'
+                }}
+            >
+                {ABOUT_CONTENT.statsTitle}
+            </GradientText>
 
-            {/* 统计数据网格 */}
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                gap: 'var(--spacing-6)',
-                maxWidth: '1000px',
-                margin: '0 auto'
-            }}>
-                {stats.map((stat, index) => (
-                    <div
-                        key={index}
-                        className="glass-card glass-card--hover"
-                        style={{
-                            padding: 'var(--spacing-6)',
-                            textAlign: 'center',
-                            position: 'relative',
-                            overflow: 'hidden'
-                        }}
-                    >
-                        {/* 背景装饰 */}
-                        <div style={{
-                            position: 'absolute',
-                            top: '-50%',
-                            right: '-50%',
-                            width: '100px',
-                            height: '100px',
-                            background: 'var(--gradient-primary)',
-                            borderRadius: '50%',
-                            opacity: 0.1,
-                            filter: 'blur(30px)'
-                        }} />
-
-                        {/* 图标 */}
-                        <div style={{
-                            position: 'relative',
-                            marginBottom: 'var(--title-margin-bottom-md)'
+            <div className="about-stats-cards">
+                <div className="about-stats-container">
+                    {PLATFORM_STATS.map((stat, index) => (
+                        <GlassCard key={index} variant="default" style={{
+                            flex: 1,
+                            padding: '27px 75px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '9px',
+                            alignItems: 'center'
                         }}>
-                            <Icon
-                                name={stat.icon}
-                                size="lg"
+                            <AnimatedNumber
+                                value={stat.value}
+                                duration={2000}
+                                delay={index * 200}
+                                size="7xl"
+                                weight="bold"
                                 style={{
-                                    color: 'var(--color-primary-blue)',
-                                    filter: 'drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3))'
+                                    lineHeight: '76.8px'
                                 }}
                             />
-                        </div>
 
-                        {/* 数值 */}
-                        <div style={{
-                            fontSize: 'var(--font-size-8xl)',
-                            fontWeight: '800',
-                            background: 'var(--gradient-primary)',
-                            backgroundClip: 'text',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            marginBottom: 'var(--spacing-2)',
-                            lineHeight: '1'
-                        }}>
-                            {stat.value}
-                        </div>
-
-                        {/* 标签 */}
-                        <h3 style={{
-                            fontSize: 'var(--font-size-2xl)',
-                            fontWeight: '600',
-                            color: 'var(--color-text-primary)',
-                            marginBottom: stat.description ? 'var(--spacing-2)' : '0'
-                        }}>
-                            {stat.label}
-                        </h3>
-
-                        {/* 描述 */}
-                        {stat.description && (
-                            <p style={{
-                                fontSize: 'var(--font-size-sm)',
+                            <span style={{
                                 color: 'var(--color-text-muted)',
-                                lineHeight: '1.5'
+                                fontSize: '16px',
+                                lineHeight: '25.6px'
                             }}>
-                                {stat.description}
-                            </p>
-                        )}
-                    </div>
-                ))}
+                                {stat.label}
+                            </span>
+                        </GlassCard>
+                    ))}
+                </div>
             </div>
         </section>
     )

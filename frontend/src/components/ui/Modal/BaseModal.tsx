@@ -71,7 +71,7 @@ export function BaseModal({
     }
 
     // 移动端样式
-    const mobileStyles = isMobile ? {
+    const mobileStyles: React.CSSProperties = isMobile ? {
         position: 'fixed',
         top: mobileFullscreen ? '0' : 'auto',
         bottom: mobileFullscreen ? '0' : '0',

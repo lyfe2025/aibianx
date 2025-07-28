@@ -19,6 +19,13 @@ export { PrivacyContent } from './PrivacyContent'
 export { MembershipPlanCard } from './MembershipPlanCard'
 export { MembershipSection } from './MembershipSection'
 export { MissionSection } from './MissionSection'
+export { WhyChooseSection } from './WhyChooseSection'
+
+// MainContentSection相关组件
+export { ArticleList } from './ArticleList'
+export { WhyChooseCard } from './WhyChooseCard'
+export { UserTestimonialCard } from './UserTestimonialCard'
+export { EmailSubscriptionCard } from './EmailSubscriptionCard'
 export { PageHeader } from './PageHeader'
 export { Pagination } from './Pagination'
 export { RegisterForm } from './RegisterForm'

@@ -10,6 +10,24 @@ interface NetworkStatusProps {
     className?: string
 }
 
+// 网络连接API类型定义
+interface NetworkConnection extends EventTarget {
+    effectiveType?: string
+    type?: string
+    downlink?: number
+    rtt?: number
+}
+
+// 扩展Navigator类型
+interface ExtendedNavigator extends Navigator {
+    connection?: NetworkConnection
+}
+
+// 待处理操作数据类型
+interface PendingActionData {
+    [key: string]: unknown
+}
+
 /**
  * NetworkStatus 网络状态检测组件
  * 
@@ -79,7 +97,7 @@ export function NetworkStatus({
         // 获取连接类型（如果支持）
         const updateConnectionType = () => {
             if ('connection' in navigator) {
-                const connection = (navigator as any).connection
+                const connection = (navigator as ExtendedNavigator).connection
                 if (connection) {
                     setConnectionType(connection.effectiveType || connection.type || '')
                 }
@@ -96,7 +114,7 @@ export function NetworkStatus({
 
         // 监听连接类型变化
         if ('connection' in navigator) {
-            const connection = (navigator as any).connection
+            const connection = (navigator as ExtendedNavigator).connection
             if (connection) {
                 connection.addEventListener('change', updateConnectionType)
             }
@@ -107,7 +125,7 @@ export function NetworkStatus({
             window.removeEventListener('offline', updateNetworkStatus)
 
             if ('connection' in navigator) {
-                const connection = (navigator as any).connection
+                const connection = (navigator as ExtendedNavigator).connection
                 if (connection) {
                     connection.removeEventListener('change', updateConnectionType)
                 }
@@ -164,7 +182,7 @@ export function NetworkStatus({
     }
 
     // 添加待同步数据
-    const addPendingSync = (data: any) => {
+    const addPendingSync = (data: PendingActionData) => {
         try {
             const existing = localStorage.getItem('pending-sync-data')
             const dataArray = existing ? JSON.parse(existing) : []
@@ -360,7 +378,7 @@ export const NetworkUtils = {
     /**
      * 添加离线数据到同步队列
      */
-    addToSyncQueue: (data: any) => {
+    addToSyncQueue: (data: PendingActionData) => {
         try {
             const existing = localStorage.getItem('pending-sync-data')
             const dataArray = existing ? JSON.parse(existing) : []
@@ -394,7 +412,7 @@ export const NetworkUtils = {
         if (!navigator.onLine) return 'offline'
 
         if ('connection' in navigator) {
-            const connection = (navigator as any).connection
+            const connection = (navigator as ExtendedNavigator).connection
             if (connection) {
                 const type = connection.effectiveType || connection.type
                 if (type === 'slow-2g' || type === '2g') return 'poor'

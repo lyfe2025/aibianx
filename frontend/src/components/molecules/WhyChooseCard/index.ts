@@ -1,0 +1,1 @@
+export { WhyChooseCard } from './WhyChooseCard' 

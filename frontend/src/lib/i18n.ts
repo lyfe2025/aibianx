@@ -1,6 +1,14 @@
 export type Language = 'zh' | 'en'
 
-export const translations = {
+// 翻译值类型：可以是字符串或嵌套对象
+type TranslationValue = string | { [key: string]: TranslationValue }
+
+// 翻译对象类型
+interface TranslationObject {
+    [key: string]: TranslationValue
+}
+
+export const translations: Record<Language, TranslationObject> = {
     zh: {
         nav: {
             home: '首页',
@@ -89,7 +97,7 @@ export const translations = {
 
 export const getTranslation = (language: Language, key: string): string => {
     const keys = key.split('.')
-    let translation: any = translations[language]
+    let translation: TranslationValue = translations[language]
 
     for (const k of keys) {
         if (translation && typeof translation === 'object' && k in translation) {
