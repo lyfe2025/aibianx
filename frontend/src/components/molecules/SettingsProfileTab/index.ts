@@ -1,0 +1,1 @@
+export { SettingsProfileTab } from './SettingsProfileTab' 

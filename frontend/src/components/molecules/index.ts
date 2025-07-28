@@ -61,4 +61,26 @@ export { ThreeDSection } from './ThreeDSection'
 export { SubscriptionCard } from './SubscriptionCard'
 export { InviteRewardSection } from './InviteRewardSection'
 export { InviteRecordTable } from './InviteRecordTable'
-export { InviteRulesSection } from './InviteRulesSection' 
+export { InviteRulesSection } from './InviteRulesSection'
+
+// Weekly页面组件
+export { WeeklySearchSection } from './WeeklySearchSection'
+export { WeeklyArticleGrid } from './WeeklyArticleGrid'
+export { WeeklyEmptyState } from './WeeklyEmptyState'
+export { WeeklyPagination } from './WeeklyPagination'
+
+// About页面新组件
+export { MembershipSectionNew } from './MembershipSectionNew'
+export { ContactSectionNew } from './ContactSectionNew'
+
+// Settings页面组件
+export { SettingsTabNavigation } from './SettingsTabNavigation'
+export { SettingsProfileTab } from './SettingsProfileTab'
+export { SettingsSecurityTab } from './SettingsSecurityTab'
+export { SettingsActions } from './SettingsActions'
+
+// Bookmarks页面组件
+export { BookmarksHeader } from './BookmarksHeader'
+export { BookmarksStats } from './BookmarksStats'
+export { BookmarksGrid } from './BookmarksGrid'
+export { BookmarksPagination } from './BookmarksPagination' 

@@ -1,0 +1,1 @@
+export { SettingsTabNavigation } from './SettingsTabNavigation' 
