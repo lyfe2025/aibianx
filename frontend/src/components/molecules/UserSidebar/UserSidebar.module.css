@@ -1,113 +1,232 @@
-/* UserSidebar 组件样式 */
+/* UserSidebar 组件样式 - 精确匹配设计稿 */
 .userSidebar {
-    background: var(--color-bg-glass);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--color-border-primary);
-    border-radius: 16px;
-    padding: 24px;
+    /* 设计稿精确尺寸：240px宽度，只有右侧边框 */
+    width: 240px;
+    border-right: 1px solid rgba(42, 42, 42, 0.60);
+    /* 设计稿精确内边距 */
+    padding-left: 16px;
+    padding-right: 17px;
+    padding-top: 32px;
+    padding-bottom: 190px;
+    /* 无背景和圆角，与设计稿一致 */
+    background: transparent;
+    /* 垂直布局，4px间距 */
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    width: 280px;
-    height: fit-content;
+    gap: 4px;
+    font-family: var(--font-family-primary);
+    font-size: 16px;
+    font-weight: 400;
 }
 
+/* 用户信息区域 */
 .userProfile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
-    text-align: center;
+    margin-bottom: 36px;
 }
 
-.avatar {
-    width: 80px;
-    height: 80px;
+/* 用户头像容器 */
+.userAvatar {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+/* 头像图片 - 设计稿精确尺寸84x84 */
+.avatarImage {
+    width: 84px !important;
+    height: 84px !important;
     border-radius: 50%;
-    border: 2px solid var(--color-border-primary);
-    overflow: hidden;
+    display: block;
+    margin: 0 auto;
 }
 
+/* 皇冠徽章已移除，不再需要 */
+
+/* 用户名 - 设计稿精确样式 */
 .userName {
-    color: var(--color-text-primary);
+    color: #FFFFFF;
     font-size: 18px;
     font-weight: 600;
+    line-height: 28px;
     margin: 0;
-}
-
-.userBio {
-    color: var(--color-text-secondary);
-    font-size: 14px;
-    line-height: 1.5;
-    margin: 0;
-}
-
-.stats {
+    text-align: center;
+    min-height: 28px;
     display: flex;
-    justify-content: space-around;
-    padding: 16px 0;
-    border-top: 1px solid var(--color-border-primary);
-    border-bottom: 1px solid var(--color-border-primary);
-}
-
-.statItem {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 4px;
+    text-overflow: ellipsis;
+    margin-bottom: 12px;
 }
 
-.statValue {
-    color: var(--color-text-primary);
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0;
+/* 会员标签 - 设计稿精确样式 */
+.memberBadge {
+    background: rgba(255, 215, 0, 0.10);
+    border-radius: 9999px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 32px;
+    padding: 9.5px 8px;
+    margin-bottom: 12px;
 }
 
-.statLabel {
-    color: var(--color-text-muted);
+.memberText {
+    color: #EAB308;
     font-size: 12px;
-    margin: 0;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    text-overflow: ellipsis;
+    min-height: 16px;
 }
 
-.navigation {
+/* 会员有效期 - 设计稿精确样式 */
+.memberExpiry {
+    color: #9CA3AF;
+    font-size: 12px;
+    line-height: 16px;
+    margin: 0;
+    text-align: center;
+    min-height: 16px;
+    display: flex;
+    align-items: center;
+    text-overflow: ellipsis;
+}
+
+/* 主导航菜单 */
+.mainNavigation {
     display: flex;
     flex-direction: column;
-    gap: 8px;
 }
 
+/* 设置导航菜单 */
+.settingsNavigation {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 菜单项基础样式 - 设计稿精确间距 */
 .navItem {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 12px;
-    padding: 12px 16px;
-    border-radius: 8px;
-    color: var(--color-text-secondary);
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-top: 36px;
+    color: #9CA3AF;
     text-decoration: none;
     transition: all 0.2s ease;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
 }
 
-.navItem:hover {
-    background: var(--color-hover);
-    color: var(--color-text-primary);
+/* 第一个菜单项不需要上边距 */
+.navItem:first-child {
+    margin-top: 0;
 }
 
-.navItem.active {
-    background: var(--color-info-bg);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border-active);
-}
-
+/* 菜单项图标 - 设计稿精确尺寸 */
 .navIcon {
     width: 20px;
     height: 20px;
+    margin-top: 2px;
     flex-shrink: 0;
+    /* 使用filter将所有图标变为灰色 */
+    filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(645%) hue-rotate(202deg) brightness(92%) contrast(84%);
 }
 
+/* 菜单项文字 - 设计稿精确样式 */
 .navLabel {
-    font-size: 14px;
-    font-weight: 500;
+    color: #9CA3AF;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    text-overflow: ellipsis;
+    min-height: 24px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* 菜单项激活状态 - 统一的选中样式 */
+.navItemActive {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%);
+    border-radius: 8px;
+    padding: 8px 16px !important; /* 选中时统一padding，与设置菜单项保持一致 */
+}
+
+.navItemActive .navLabel {
+    color: #FFFFFF;
+}
+
+.navItemActive .navIcon {
+    /* 使用filter将选中状态的图标变为白色 */
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%);
+}
+
+/* 分割线 - 设计稿精确样式 */
+.navDivider {
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    margin-top: 28px;
+    margin-bottom: -8px;
+    /* 调整后续设置项的间距 */
+    display: flex;
+    align-items: flex-end;
+    min-height: 65px;
+}
+
+/* 设置菜单项基础样式 */
+.settingsNavigation .navItem {
+    padding: 8px 16px;
+    margin-top: 28px;
+    gap: 12px;
+    width: 207px;
+    /* 设计稿精确宽度 */
+    border-radius: 8px;
+    background: none; /* 默认无背景 */
+}
+
+.settingsNavigation .navItem .navIcon {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    /* 设置菜单项图标默认也使用灰色filter，覆盖SVG的原始白色 */
+    filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(645%) hue-rotate(202deg) brightness(92%) contrast(84%);
+}
+
+.settingsNavigation .navItem .navLabel {
+    color: #9CA3AF; /* 默认灰色 */
+    line-height: 24px;
+    min-height: 24px;
+}
+
+/* 设置菜单项选中状态 - 继承通用选中样式，无需重复定义 */
+
+/* 退出按钮保持普通样式，不应用设置项样式 */
+.settingsNavigation .navItem:last-child {
+    background: none !important;
+    border-radius: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 0;
+    padding-bottom: 0;
+    width: auto;
+}
+
+.settingsNavigation .navItem:last-child .navLabel {
+    color: #9CA3AF !important; /* 退出始终灰色 */
+}
+
+/* 隐藏其他样式 */
+.userBio,
+.stats,
+.statItem,
+.statValue,
+.statLabel,
+.navigation {
+    display: none;
 }
 
 /* 响应式设计 */
@@ -115,33 +234,30 @@
     .userSidebar {
         width: 100%;
         margin-bottom: 24px;
+        border-right: none;
+        border-bottom: 1px solid rgba(42, 42, 42, 0.60);
+        padding-bottom: 24px;
     }
 }
 
 @media (max-width: 768px) {
     .userSidebar {
-        padding: 20px;
-        gap: 20px;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 24px;
+        padding-bottom: 24px;
     }
 
     .userProfile {
-        gap: 12px;
+        margin-bottom: 24px;
     }
 
-    .avatar {
-        width: 60px;
-        height: 60px;
+    .avatarImage {
+        width: 60px !important;
+        height: 60px !important;
     }
 
     .userName {
         font-size: 16px;
-    }
-
-    .stats {
-        padding: 12px 0;
-    }
-
-    .statValue {
-        font-size: 18px;
     }
 }
