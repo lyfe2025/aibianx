@@ -138,7 +138,7 @@
 
 /* ===== 亮色主题下的模态弹窗增强 ===== */
 [data-theme="light"] .modal-overlay {
-    background: rgba(255, 255, 255, 0.80);
+    background: rgba(248, 250, 252, 0.80);
     backdrop-filter: blur(12px);
 }
 

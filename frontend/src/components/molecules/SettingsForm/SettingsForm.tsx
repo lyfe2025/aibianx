@@ -71,7 +71,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
         }}>
             {/* 标签页导航 */}
             <div style={{
-                borderBottom: '1px solid rgba(255, 255, 255, 0.10)',
+                borderBottom: '1px solid var(--color-border-primary)',
                 display: 'flex',
                 alignItems: 'stretch',
                 gap: '32px',
@@ -152,7 +152,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                             alt="张智创"
                             onEdit={handleAvatarEdit}
                         />
-                        
+
                         {/* 上传提示 */}
                         <div style={{
                             display: 'flex',
@@ -216,8 +216,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                     用户名
                                 </div>
                                 <div style={{
-                                    background: 'rgba(255, 255, 255, 0.05)',
-                                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                                    background: 'var(--color-bg-input)',
+                                    border: '1px solid var(--color-border-primary)',
                                     borderRadius: '8px',
                                     width: '544px',
                                     display: 'flex',
@@ -267,8 +267,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                     手机号码
                                 </div>
                                 <div style={{
-                                    background: 'rgba(255, 255, 255, 0.05)',
-                                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                                    background: 'var(--color-bg-input)',
+                                    border: '1px solid var(--color-border-primary)',
                                     borderRadius: '8px',
                                     width: '544px',
                                     display: 'flex',
@@ -318,8 +318,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                     邮箱地址
                                 </div>
                                 <div style={{
-                                    background: 'rgba(255, 255, 255, 0.05)',
-                                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                                    background: 'var(--color-bg-input)',
+                                    border: '1px solid var(--color-border-primary)',
                                     borderRadius: '8px',
                                     width: '544px',
                                     display: 'flex',
@@ -369,8 +369,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                                     个人简介
                                 </div>
                                 <div style={{
-                                    background: 'rgba(255, 255, 255, 0.05)',
-                                    border: '1px solid rgba(255, 255, 255, 0.10)',
+                                    background: 'var(--color-bg-input)',
+                                    border: '1px solid var(--color-border-primary)',
                                     borderRadius: '8px',
                                     width: '544px',
                                     display: 'flex',
@@ -412,7 +412,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                         alignItems: 'stretch'
                     }}>
                         <div style={{
-                            border: '1px solid rgba(255, 255, 255, 0.20)',
+                            border: '1px solid var(--color-border-primary)',
                             borderRadius: '8px',
                             display: 'flex',
                             justifyContent: 'center',

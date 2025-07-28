@@ -107,16 +107,17 @@
 
 /* ===== 亮色主题 ===== */
 :root[data-theme="light"] {
-    /* 背景色 - 纯净白色系，避免灰色 */
-    --color-bg-primary: #FFFFFF;
-    /* 极淡的蓝色背景，避免灰色 */
-    --color-bg-secondary: rgba(243, 247, 255, 0.50);
-    /* 纯白玻璃效果 */
-    --color-bg-glass: rgba(255, 255, 255, 0.90);
-    /* 纯白输入框背景 */
-    --color-bg-input: rgba(255, 255, 255, 0.80);
+    /* 背景色 - 浅灰色调，避免纯白 */
+    --color-bg-primary: #F8FAFC;
+    /* 极浅灰色主背景 */
+    --color-bg-secondary: rgba(248, 250, 252, 0.60);
+    /* 浅灰色半透明 */
+    --color-bg-glass: rgba(248, 250, 252, 0.90);
+    /* 浅灰色毛玻璃 */
+    --color-bg-input: rgba(241, 245, 249, 0.80);
+    /* 浅灰色输入框 */
 
-    /* 文字色 - 深色文字，避免白色 */
+    /* 文字色 - 深色文字适配浅色背景 */
     --color-text-primary: #1E293B;
     /* 深蓝灰色主要文字 */
     --color-text-secondary: #475569;
@@ -126,11 +127,11 @@
     --color-text-disabled: #94A3B8;
     /* 禁用状态文字 */
 
-    /* 边框色 - 清淡蓝色系，避免灰色 */
-    --color-border-primary: rgba(226, 232, 240, 0.80);
-    /* 淡蓝色边框 */
-    --color-border-secondary: #E2E8F0;
-    /* 稍深蓝色边框 */
+    /* 边框色 - 浅色主题边框，适配浅色背景 */
+    --color-border-primary: rgba(148, 163, 184, 0.30);
+    /* 浅灰色边框 */
+    --color-border-secondary: #CBD5E1;
+    /* 稍深的浅灰色边框 */
     --color-border-active: #3B82F6;
     /* 活跃状态保持蓝色 */
 
@@ -160,13 +161,13 @@
     --color-info-bg: rgba(59, 130, 246, 0.08);
     --color-info-border: rgba(59, 130, 246, 0.2);
 
-    /* 亮色主题特定装饰色 - 极淡蓝色，避免灰色 */
-    --color-accent-primary: rgba(243, 247, 255, 0.60);
-    --color-accent-secondary: rgba(239, 246, 255, 0.80);
+    /* 亮色主题特定装饰色 - 浅色调，避免纯白 */
+    --color-accent-primary: rgba(241, 245, 249, 0.60);
+    --color-accent-secondary: rgba(226, 232, 240, 0.80);
 
-    /* 亮色主题特定交互色 - 蓝色系，避免灰色 */
+    /* 亮色主题特定交互色 - 浅色调hover效果 */
     --color-hover-primary: rgba(59, 130, 246, 0.08);
-    --color-hover-secondary: rgba(243, 247, 255, 0.60);
+    --color-hover-secondary: rgba(241, 245, 249, 0.60);
     --color-active-primary: rgba(59, 130, 246, 0.12);
 }
 

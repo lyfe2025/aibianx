@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { UserSidebar } from '@/components/molecules'
 import { AppHeader } from '@/components/molecules'
+import { ThemeInit } from '@/components/ui'
 import {
     LoginModal,
     RegisterModal,
@@ -27,6 +28,7 @@ import styles from './layout.module.css'
  * - 设置 (/profile/settings)
  * 
  * 📍 组件构成：
+ * - ThemeInit：主题初始化，确保客户端路由切换时主题正确应用
  * - AppHeader：公共顶部导航菜单
  * - UserSidebar：左侧固定导航菜单（个人中心专用）
  * - 页面内容区域：右侧动态内容，由子页面控制
@@ -60,6 +62,9 @@ export default function ProfileLayout({
 }) {
     return (
         <>
+            {/* 主题初始化 - 确保个人中心页面主题正确应用 */}
+            <ThemeInit />
+            
             {/* 公共顶部导航栏 */}
             <AppHeader />
 

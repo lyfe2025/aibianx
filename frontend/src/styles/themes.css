@@ -232,13 +232,18 @@
     color: #FFFFFF !important;
 }
 
-/* 修复字体控制器 - 深色背景下的文字 */
+/* 修复字体控制器 - 深色背景下的文字 - 已更新为使用CSS变量 */
+/* 注释掉，现在使用CSS变量系统统一管理主题颜色 */
+/*
 [data-theme="light"] [style*="background: rgba(26, 26, 26, 0.85)"],
 [data-theme="light"] [style*="background: rgba(26, 26, 26, 0.85)"] * {
     color: #FFFFFF !important;
 }
+*/
 
-/* 修复深色模态框背景下的文字 */
+/* 修复深色模态框背景下的文字 - 已更新为使用CSS变量 */
+/* 注释掉，现在使用CSS变量系统统一管理主题颜色 */
+/*
 [data-theme="light"] [style*="background: rgba(18, 18, 18, 0.70)"],
 [data-theme="light"] [style*="background: rgba(18, 18, 18, 0.70)"] *,
 [data-theme="light"] [style*="background: rgba(18, 18, 18, 0.50)"],
@@ -247,6 +252,7 @@
 [data-theme="light"] [style*="background: rgba(18, 18, 18, 0.5)"] * {
     color: #FFFFFF !important;
 }
+*/
 
 /* 修复黑色背景下的文字 */
 [data-theme="light"] [style*="background: rgba(0, 0, 0, 0.6)"],
@@ -272,7 +278,7 @@
 [data-theme="light"] [style*="background: rgba(30, 12, 71, 0.80)"],
 [data-theme="light"] [style*="background: rgba(30, 12, 71, 0.80)"] *,
 [data-theme="light"] [style*="background: rgba(30, 58, 138, 0.80)"],
-[data-theme="light"] [style*="background: rgba(30, 58, 138, 0.80)"] *,
+[data-theme="light"] [style*="background: rgba(30, 58, 138, 0.80)"],
 [data-theme="light"] [style*="background: rgba(127, 29, 29, 0.80)"],
 [data-theme="light"] [style*="background: rgba(127, 29, 29, 0.80)"] * {
     color: #FFFFFF !important;
@@ -528,8 +534,60 @@ div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"] div {
     color: #FFFFFF !important;
 }
 
-/* 超级强力修复：渐变背景的图标颜色 */
+/* 超级强力修复：图标颜色 */
 div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon img,
 div[style*="background:linear-gradient(90deg,#3B82F6 0%,#A855F7 100%)"] .icon img {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
+}
+
+/* ===== 全局蓝色渐变背景文字颜色强制修复（终极兜底规则）===== */
+
+/* 修复所有#3B82F6开头的蓝色渐变背景 - 无论主题状态 */
+[style*="background: linear-gradient"][style*="#3B82F6"],
+[style*="background: linear-gradient"][style*="#3B82F6"] *,
+[style*="background: linear-gradient"][style*="#3B82F6"] span,
+[style*="background: linear-gradient"][style*="#3B82F6"] div,
+[style*="background:linear-gradient"][style*="#3B82F6"],
+[style*="background:linear-gradient"][style*="#3B82F6"] *,
+[style*="background:linear-gradient"][style*="#3B82F6"] span,
+[style*="background:linear-gradient"][style*="#3B82F6"] div {
+    color: #FFFFFF !important;
+}
+
+/* 亮色模式下额外强化 */
+[data-theme="light"] [style*="background: linear-gradient"][style*="#3B82F6"],
+[data-theme="light"] [style*="background: linear-gradient"][style*="#3B82F6"] *,
+[data-theme="light"] [style*="background: linear-gradient"][style*="#3B82F6"] span,
+[data-theme="light"] [style*="background: linear-gradient"][style*="#3B82F6"] div,
+[data-theme="light"] [style*="background:linear-gradient"][style*="#3B82F6"],
+[data-theme="light"] [style*="background:linear-gradient"][style*="#3B82F6"] *,
+[data-theme="light"] [style*="background:linear-gradient"][style*="#3B82F6"] span,
+[data-theme="light"] [style*="background:linear-gradient"][style*="#3B82F6"] div {
+    color: #FFFFFF !important;
+}
+
+/* 蓝色渐变背景图标强制白色 */
+[style*="background: linear-gradient"][style*="#3B82F6"] .icon img,
+[style*="background:linear-gradient"][style*="#3B82F6"] .icon img,
+[data-theme="light"] [style*="background: linear-gradient"][style*="#3B82F6"] .icon img,
+[data-theme="light"] [style*="background:linear-gradient"][style*="#3B82F6"] .icon img {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
+}
+
+/* 修复var(--gradient-primary)渐变背景的文字颜色 */
+[style*="background: var(--gradient-primary)"],
+[style*="background: var(--gradient-primary)"] *,
+[style*="background: var(--gradient-primary)"] span,
+[style*="background: var(--gradient-primary)"] div,
+[style*="background:var(--gradient-primary)"],
+[style*="background:var(--gradient-primary)"] *,
+[style*="background:var(--gradient-primary)"] span,
+[style*="background:var(--gradient-primary)"] div {
+    color: #FFFFFF !important;
+}
+
+/* var(--gradient-primary)渐变背景图标白色 */
+[style*="background: var(--gradient-primary)"] .icon img,
+[style*="background:var(--gradient-primary)"] .icon img {
     filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
 }

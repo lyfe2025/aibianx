@@ -29,7 +29,7 @@ export const SettingsAvatar: React.FC<SettingsAvatarProps> = ({
             <div style={{
                 width: '96px',
                 height: '96px',
-                background: 'rgba(255, 255, 255, 0.10)',
+                background: 'var(--color-bg-glass)',
                 borderRadius: '9999px',
                 display: 'flex',
                 alignItems: 'center',

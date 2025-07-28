@@ -15,7 +15,7 @@ interface SettingsTabNavigationProps {
 export function SettingsTabNavigation({ activeTab, onTabChange }: SettingsTabNavigationProps) {
     return (
         <div style={{
-            borderBottom: '1px solid rgba(255, 255, 255, 0.10)',
+            borderBottom: '1px solid var(--color-border-primary)',
             display: 'flex',
             alignItems: 'stretch',
             paddingBottom: '1px',
