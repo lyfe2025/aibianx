@@ -1,0 +1,528 @@
+/**
+ * AI变现之路 - 基础组件样式
+ * 
+ * 按钮、卡片、文字效果、交互状态等基础组件样式
+ * 包括：渐变文字、玻璃卡片、按钮、链接、交互效果等
+ */
+
+/* ===== 基础组件样式 ===== */
+
+/* 渐变文字效果 */
+.gradient-text {
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-family-primary);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+/* Hero区域副标题样式 - 最高优先级强制覆盖 */
+.hero-subtitle,
+.hero-subtitle *,
+div.hero-subtitle,
+section .hero-subtitle {
+    color: #D1D5DB !important;
+}
+
+/* 确保在所有加载阶段都保持灰色 */
+.hero-subtitle {
+    color: #D1D5DB !important;
+    -webkit-text-fill-color: #D1D5DB !important;
+    /* 禁用可能的颜色动画和过渡 */
+    transition: none !important;
+    animation: none !important;
+    /* 确保不被任何渐变文字类影响 */
+    background: none !important;
+    background-clip: initial !important;
+    -webkit-background-clip: initial !important;
+}
+
+/* 🔧 终极覆盖规则 - 最高优先级 */
+html body section div.hero-subtitle,
+html body div.hero-subtitle,
+body div.hero-subtitle,
+div.hero-subtitle {
+    color: #D1D5DB !important;
+    -webkit-text-fill-color: #D1D5DB !important;
+}
+
+/* 🔧 防止任何可能的继承覆盖 */
+div.hero-subtitle,
+div.hero-subtitle *,
+.hero-subtitle,
+.hero-subtitle * {
+    color: #D1D5DB !important;
+    -webkit-text-fill-color: #D1D5DB !important;
+}
+
+/* 玻璃卡片效果 */
+.glass-card {
+    background: var(--color-bg-glass);
+    backdrop-filter: blur(var(--blur-md));
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-xl);
+    transition: var(--transition-normal);
+    /* 🔧 防止点击时的黑色闪烁 */
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.glass-card--hover:hover {
+    border-color: var(--color-border-active);
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
+    transform: translateY(-2px);
+}
+
+/* 🎯 毛玻璃卡片点击状态优化 */
+.glass-card--hover:active {
+    border-color: var(--color-border-active);
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.15);
+    transform: translateY(0) !important;
+}
+
+.glass-card--active {
+    border-color: var(--color-border-active);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* 按钮基础样式 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family-primary);
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    text-decoration: none;
+    outline: none;
+    /* 🔧 防止浏览器默认点击效果 */
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 🎯 全局按钮点击状态优化 - 防止黑色闪烁 */
+.btn:active:not(:disabled) {
+    transform: translateY(0) !important;
+    transition: transform 0.1s ease !important;
+}
+
+/* 渐变按钮 */
+.btn--gradient {
+    background: var(--gradient-primary);
+    color: #FFFFFF;
+    box-shadow: var(--shadow-button);
+}
+
+.btn--gradient:hover:not(:disabled) {
+    box-shadow: 0px 0px 20px 0px rgba(139, 92, 246, 0.70);
+    transform: translateY(-1px);
+}
+
+.btn--gradient:active:not(:disabled) {
+    transform: translateY(0) !important;
+    box-shadow: 0px 0px 15px 0px rgba(139, 92, 246, 0.50) !important;
+}
+
+/* 轮廓按钮 */
+.btn--outline {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-primary);
+}
+
+.btn--outline:hover:not(:disabled) {
+    border-color: var(--color-border-active);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.btn--outline:active:not(:disabled) {
+    background: rgba(59, 130, 246, 0.2) !important;
+    transform: translateY(0) !important;
+}
+
+/* 按钮尺寸 */
+.btn--sm {
+    padding: 8px 20px;
+    font-size: var(--font-size-sm);
+    line-height: 1.2;
+}
+
+.btn--md {
+    padding: 12px 24px;
+    font-size: var(--font-size-base);
+    line-height: 1.2;
+}
+
+.btn--lg {
+    padding: 16px 32px;
+    font-size: var(--font-size-lg);
+    line-height: 1.2;
+}
+
+/* 渐变文字效果 */
+.gradient-text {
+    background: var(--gradient-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* ===== 导航链接样式 ===== */
+
+/* Header导航链接 - 默认（暗色主题）*/
+.nav-link:not(.nav-link--active):hover {
+    color: #FFFFFF !important;
+}
+
+/* Footer社交链接 - 默认（暗色主题）*/
+.social-link:hover {
+    background: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Footer导航链接 - 默认（暗色主题）*/
+.footer-nav-link:hover {
+    color: #FFFFFF !important;
+}
+
+/* Footer法律条款链接 */
+.footer-legal-link:hover {
+    color: var(--color-text-secondary) !important;
+}
+
+/* Footer社交媒体链接 */
+.footer-social-link:hover {
+    border-color: var(--color-border-active) !important;
+    box-shadow: var(--shadow-button) !important;
+}
+
+/* 主要内容区域文章卡片 - 默认（暗色主题）*/
+.main-content-article-card:hover {
+    background: rgba(18, 18, 18, 0.50) !important;
+}
+
+.main-content-article-card:active {
+    background: rgba(18, 18, 18, 0.60) !important;
+    transform: translateY(0) !important;
+}
+
+/* 免费资源卡片 - 默认（暗色主题）*/
+.free-resource-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0px 8px 25px -4px rgba(0, 0, 0, 0.20), 0px 20px 35px -3px rgba(0, 0, 0, 0.15) !important;
+}
+
+.free-resource-card:active {
+    transform: translateY(-2px) !important;
+    box-shadow: 0px 4px 15px -2px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* 相关文章卡片 */
+.related-article-card:hover {
+    border-color: var(--color-border-active) !important;
+    background: rgba(59, 130, 246, 0.05) !important;
+    transform: translateY(-1px) !important;
+}
+
+.related-article-card:active {
+    border-color: var(--color-border-active) !important;
+    background: rgba(59, 130, 246, 0.10) !important;
+    transform: translateY(0) !important;
+}
+
+/* 文章筛选按钮 */
+.article-filter-button:not(.article-filter-button--active):hover {
+    color: var(--color-text-primary) !important;
+    border-color: var(--color-border-active) !important;
+}
+
+.article-filter-button:not(.article-filter-button--active):active {
+    color: var(--color-text-primary) !important;
+    border-color: var(--color-border-active) !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* 联系方式卡片 */
+.contact-method-card:hover {
+    border-color: var(--color-border-active) !important;
+    background: rgba(59, 130, 246, 0.05) !important;
+}
+
+.contact-method-card:active {
+    border-color: var(--color-border-active) !important;
+    background: rgba(59, 130, 246, 0.10) !important;
+}
+
+/* 联系方式链接 */
+.contact-method-link:hover {
+    text-decoration: underline !important;
+}
+
+.contact-method-link:active {
+    text-decoration: underline !important;
+    color: var(--color-primary-blue) !important;
+}
+
+/* 文章操作按钮 */
+.article-action-button:not(.article-action-button--liked):not(.article-action-button--bookmarked):hover {
+    color: var(--color-text-primary) !important;
+    border-color: var(--color-border-active) !important;
+}
+
+.article-action-button:not(.article-action-button--liked):not(.article-action-button--bookmarked):active {
+    color: var(--color-text-primary) !important;
+    border-color: var(--color-border-active) !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Footer联系链接 - 默认（暗色主题）*/
+.footer-contact-link:hover {
+    color: #FFFFFF !important;
+}
+
+.footer-contact-link:active {
+    color: var(--color-primary-blue) !important;
+}
+
+/* ===== 头部图标按钮样式 ===== */
+
+/* 图标按钮基础样式 */
+.icon-button {
+    transition: all 0.2s ease !important;
+    /* 🔧 防止移动端点击黑色闪烁 */
+    -webkit-tap-highlight-color: transparent !important;
+    user-select: none !important;
+    outline: none !important;
+}
+
+/* 图标按钮hover效果 - 默认（暗色主题）*/
+.icon-button:hover {
+    background: rgba(59, 130, 246, 0.10) !important;
+    border-color: rgba(59, 130, 246, 0.40) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* 🎯 图标按钮点击状态优化 - 防止黑色闪烁 */
+.icon-button:active {
+    transform: translateY(0) !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.50) !important;
+    transition: all 0.1s ease !important;
+}
+
+/* 图标按钮中的图标hover效果 - 默认（暗色主题）*/
+.icon-button:hover svg {
+    color: #FFFFFF !important;
+}
+
+/* ===== 会员专享标识完美显示优化 ===== */
+
+/* 基础会员专享标识样式 */
+.premium-badge {
+    transition: all 0.2s ease !important;
+}
+
+/* 暗色主题下的会员专享标识 */
+[data-theme="dark"] .premium-badge {
+    background: rgba(245, 158, 11, 0.18) !important;
+    color: #FCD34D !important;
+    border-color: rgba(245, 158, 11, 0.45) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.20) !important;
+}
+
+/* 会员专享标识悬停效果 */
+.premium-badge:hover {
+    transform: translateY(-1px);
+}
+
+/* 暗色主题下的悬停效果 */
+[data-theme="dark"] .premium-badge:hover {
+    background: rgba(245, 158, 11, 0.25) !important;
+    color: #FEF3C7 !important;
+    border-color: rgba(245, 158, 11, 0.55) !important;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.30) !important;
+}
+
+/* 皇冠图标主题优化 - 与组件内逻辑保持一致 */
+[data-theme="dark"] .crown-icon {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) !important;
+}
+
+/* 大尺寸会员专享标识（用于文章标题页） */
+.premium-badge-large {
+    font-size: var(--font-size-base) !important;
+    padding: 10px 18px !important;
+}
+
+/* 内联皇冠图标优化 */
+.premium-icon-inline {
+    transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .premium-icon-inline {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) !important;
+}
+
+/* 🌟 通用可点击元素点击状态优化 */
+button,
+.clickable,
+[role="button"],
+[tabindex="0"] {
+    -webkit-tap-highlight-color: transparent !important;
+    user-select: none !important;
+    outline: none !important;
+}
+
+/* 🎯 通用点击反馈效果 */
+button:active:not(:disabled),
+.clickable:active,
+[role="button"]:active,
+[tabindex="0"]:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s ease !important;
+}
+
+/* 🔧 覆盖浏览器默认的焦点样式 */
+button:focus-visible,
+.clickable:focus-visible,
+[role="button"]:focus-visible,
+[tabindex="0"]:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.5) !important;
+    outline-offset: 2px !important;
+}
+
+/* 导航链接hover效果 */
+.nav-link:hover {
+    color: var(--color-text-primary) !important;
+    transition: color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 图标按钮hover效果增强 */
+.icon-button {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.icon-button:hover {
+    transform: translateY(-1px);
+}
+
+/* 毛玻璃效果增强 */
+.inner-border {
+    border: 1px solid rgba(59, 130, 246, 0.20);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* 邮箱输入框placeholder样式 */
+.hero-email-input::placeholder {
+    color: var(--color-text-muted);
+    opacity: 1;
+}
+
+.hero-email-input::-webkit-input-placeholder {
+    color: var(--color-text-muted);
+    opacity: 1;
+}
+
+.hero-email-input::-moz-placeholder {
+    color: var(--color-text-muted);
+    opacity: 1;
+}
+
+.hero-email-input:-ms-input-placeholder {
+    color: var(--color-text-muted);
+    opacity: 1;
+}
+
+/* 主内容区域文章卡片样式 */
+.main-content-article-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.main-content-article-card:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* 通用输入框placeholder样式 */
+.input::placeholder,
+input::placeholder,
+textarea::placeholder {
+    color: var(--color-text-muted) !important;
+    opacity: 1 !important;
+}
+
+/* 兼容性支持 */
+.input::-webkit-input-placeholder,
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: var(--color-text-muted) !important;
+    opacity: 1 !important;
+}
+
+.input::-moz-placeholder,
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+    color: var(--color-text-muted) !important;
+    opacity: 1 !important;
+}
+
+.input:-ms-input-placeholder,
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+    color: var(--color-text-muted) !important;
+    opacity: 1 !important;
+}
+
+/* 搜索框输入框特殊处理 - 移除焦点边框 */
+.search-bar-input:focus {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* 搜索框容器特殊处理 - 完全移除所有边框 */
+.search-container-no-border,
+.search-container-no-border:hover,
+.search-container-no-border:focus,
+.search-container-no-border:active {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.search-container-no-border::before,
+.search-container-no-border::after {
+    display: none !important;
+}

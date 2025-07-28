@@ -1,0 +1,115 @@
+/**
+ * AI变现之路 - 工具类样式
+ * 
+ * 通用工具类，提供快速样式应用
+ * 包括：隐藏类、文本对齐、布局、间距等
+ */
+
+/* ===== 隐藏类 ===== */
+.hidden {
+    display: none !important;
+}
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* ===== 文本对齐 ===== */
+.text-center {
+    text-align: center !important;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+/* ===== 宽度工具类 ===== */
+.w-full {
+    width: 100% !important;
+}
+
+/* ===== Flex工具类 ===== */
+.flex {
+    display: flex !important;
+}
+
+.flex-col {
+    flex-direction: column !important;
+}
+
+.items-center {
+    align-items: center !important;
+}
+
+.justify-center {
+    justify-content: center !important;
+}
+
+.justify-between {
+    justify-content: space-between !important;
+}
+
+/* ===== 间距工具类 ===== */
+.mb-4 {
+    margin-bottom: var(--spacing-4) !important;
+}
+
+.mb-6 {
+    margin-bottom: var(--spacing-6) !important;
+}
+
+.mb-8 {
+    margin-bottom: var(--spacing-8) !important;
+}
+
+.mt-4 {
+    margin-top: var(--spacing-4) !important;
+}
+
+.mt-6 {
+    margin-top: var(--spacing-6) !important;
+}
+
+.mt-8 {
+    margin-top: var(--spacing-8) !important;
+}
+
+/* ===== 移动端专用工具类 ===== */
+@media (max-width: 767px) {
+    .mobile-hidden {
+        display: none !important;
+    }
+
+    .mobile-visible {
+        display: block !important;
+    }
+
+    .mobile-full-width {
+        width: 100vw !important;
+        margin-left: calc(-50vw + 50%) !important;
+    }
+
+    .mobile-text-center {
+        text-align: center !important;
+    }
+
+    .mobile-no-padding {
+        padding: 0 !important;
+    }
+
+    .mobile-safe-padding {
+        padding: 0 16px !important;
+    }
+}
