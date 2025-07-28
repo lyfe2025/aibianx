@@ -10,7 +10,7 @@ import {
 export default function MySubscriptionPage() {
   return (
     <div style={{
-      padding: '32px 40px',
+      padding: '32px 8px', // 补偿外层profileMain的32px左右padding，总计40px
       maxWidth: '1440px',
       margin: '0 auto',
       display: 'flex',
@@ -23,10 +23,7 @@ export default function MySubscriptionPage() {
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        minHeight: '32px',
-        // 防换行保护
-        flexWrap: 'nowrap',
-        overflow: 'hidden'
+        minHeight: '32px'
       }}>
         <h1 style={{
           color: 'var(--color-text-primary)',
@@ -34,11 +31,7 @@ export default function MySubscriptionPage() {
           lineHeight: '32px',
           fontWeight: 'normal',
           margin: 0,
-          // 防换行保护 - 页面标题
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          minWidth: '120px' // 为"我的订阅"预留空间
+          whiteSpace: 'nowrap'
         }}>我的订阅</h1>
       </div>
 

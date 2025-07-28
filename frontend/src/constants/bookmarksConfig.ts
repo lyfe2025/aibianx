@@ -102,7 +102,7 @@ export type ViewMode = typeof VIEW_MODES[keyof typeof VIEW_MODES]
 // 样式配置
 export const BOOKMARKS_STYLES = {
     page: {
-        padding: '32px 40px',
+        padding: '32px 8px', // 补偿外层profileMain的32px左右padding，总计40px
         maxWidth: '1440px',
         margin: '0 auto',
         display: 'flex',
@@ -110,27 +110,27 @@ export const BOOKMARKS_STYLES = {
         gap: '24px'
     },
     statsCard: {
-        background: 'rgba(26, 26, 26, 0.30)',
+        background: 'var(--color-bg-secondary)',
         backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(42, 42, 42, 0.70)',
+        border: '1px solid var(--color-border-primary)',
         borderRadius: '12px',
         padding: '21px'
     },
     bookmarkCard: {
-        background: 'rgba(26, 26, 26, 0.30)',
+        background: 'var(--color-bg-secondary)',
         backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(42, 42, 42, 0.70)',
+        border: '1px solid var(--color-border-primary)',
         borderRadius: '12px'
     },
     filterButton: {
-        background: 'rgba(26, 26, 26, 0.60)',
-        border: '1px solid rgba(42, 42, 42, 0.70)',
+        background: 'var(--color-bg-input)',
+        border: '1px solid var(--color-border-primary)',
         borderRadius: '8px',
         padding: '9px 17px'
     },
     paginationButton: {
-        background: 'rgba(26, 26, 26, 0.30)',
-        border: '1px solid rgba(42, 42, 42, 0.70)',
+        background: 'var(--color-bg-secondary)',
+        border: '1px solid var(--color-border-primary)',
         borderRadius: '6px',
         width: '32px',
         height: '32px'

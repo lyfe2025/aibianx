@@ -18,30 +18,29 @@ export default function ProfilePage() {
   return (
     <div
       style={{
-        padding: 'var(--spacing-8) var(--spacing-6)', // 使用间距变量: 32px 24px
+        padding: '32px 8px', // 补偿外层profileMain的32px左右padding，总计40px
         maxWidth: '1440px',
         margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '24px', // 与我的收藏页面保持一致的元素间距
         // 添加防换行保护
         overflow: 'hidden'
       }}
-      className="profile-page-content"
     >
       {/* 页面标题 */}
       <div style={{
-        marginBottom: 'var(--card-gap-lg)',
-        // 防换行保护
-        overflow: 'hidden'
+        display: 'flex',
+        alignItems: 'center',
+        minHeight: '32px'
       }}>
         <h1 style={{
           color: 'var(--color-text-primary)',
-          fontSize: 'var(--font-size-3xl)', // 使用字体变量
-          fontWeight: '700',
+          fontSize: 'var(--font-size-3xl)',
           lineHeight: '32px',
+          fontWeight: 'normal',
           margin: 0,
-          // 防换行保护
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis'
+          whiteSpace: 'nowrap'
         }}>个人中心</h1>
       </div>
 
@@ -49,7 +48,6 @@ export default function ProfilePage() {
       <div style={{
         display: 'flex',
         justifyContent: 'flex-start', // 左对齐
-        marginBottom: 'var(--spacing-10)', // 使用间距变量: 40px
         // 防换行保护
         overflow: 'hidden'
       }}>
@@ -106,9 +104,7 @@ export default function ProfilePage() {
       </div>
 
       {/* 邀请奖励区域 */}
-      <div style={{ marginBottom: 'var(--spacing-10)' }}> {/* 使用间距变量: 40px */}
-        <InviteRewardSection />
-      </div>
+      <InviteRewardSection />
     </div>
   )
 } 

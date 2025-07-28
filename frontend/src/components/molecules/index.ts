@@ -83,4 +83,10 @@ export { SettingsActions } from './SettingsActions'
 export { BookmarksHeader } from './BookmarksHeader'
 export { BookmarksStats } from './BookmarksStats'
 export { BookmarksGrid } from './BookmarksGrid'
-export { BookmarksPagination } from './BookmarksPagination' 
+export { BookmarksPagination } from './BookmarksPagination'
+
+// 提现记录页面组件
+export { WithdrawActions } from './WithdrawActions'
+export { AccountBalanceCard } from './AccountBalanceCard'
+export { WithdrawRecordTable } from './WithdrawRecordTable'
+export { WithdrawInstructions } from './WithdrawInstructions' 

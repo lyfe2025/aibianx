@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import { useRouter } from 'next/navigation'
 import { Icon } from '@/components/ui'
 
 export interface InviteRewardSectionProps {
@@ -10,6 +11,11 @@ export interface InviteRewardSectionProps {
 export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
   className = ''
 }) => {
+  const router = useRouter()
+
+  const handleWithdrawRecord = () => {
+    router.push('/profile/subscription/withdraw')
+  }
   return (
     <div style={{
       background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.20) 0%, rgba(168, 85, 247, 0.20) 100%)',
@@ -112,7 +118,9 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
               邀请攻略
             </div>
           </div>
-          <div style={{
+          <div 
+            onClick={handleWithdrawRecord}
+            style={{
             background: 'rgba(255, 255, 255, 0.10)',
             borderRadius: '8px',
             display: 'flex',

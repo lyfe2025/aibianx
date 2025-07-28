@@ -81,7 +81,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                 <div
                     style={{
                         background: activeTab === 'profile'
-                            ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%)'
+                            ? 'var(--color-hover-primary)'
                             : 'transparent',
                         display: 'flex',
                         width: '127px',
@@ -97,7 +97,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                     onClick={() => setActiveTab('profile')}
                 >
                     <div style={{
-                        color: activeTab === 'profile' ? '#FFFFFF' : '#9CA3AF',
+                        color: activeTab === 'profile' ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                         fontWeight: activeTab === 'profile' ? '600' : '400',
                         lineHeight: '24px',
                         textAlign: 'center',
@@ -113,7 +113,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                 </div>
                 <div
                     style={{
-                        color: activeTab === 'security' ? '#FFFFFF' : '#9CA3AF',
+                        color: activeTab === 'security' ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                         lineHeight: '24px',
                         textAlign: 'center',
                         width: '63px',
@@ -145,7 +145,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ className = '' }) =>
                         marginBottom: '32px',
                         gap: '16px',
                         paddingBottom: '32px',
-                        borderBottom: '1px solid rgba(42, 42, 42, 0.3)'
+                        borderBottom: '1px solid var(--color-border-primary)'
                     }}>
                         <SettingsAvatar
                             src="/images/avatars/user-zhang-zhichuang.svg"

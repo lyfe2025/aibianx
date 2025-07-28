@@ -73,32 +73,32 @@ export const SECURITY_TIPS = [
 // 样式配置
 export const SETTINGS_STYLES = {
     page: {
-        padding: '32px 40px',
+        padding: '32px 8px', // 补偿外层profileMain的32px左右padding，总计40px
         maxWidth: '1440px',
         margin: '0 auto'
     },
     card: {
-        background: 'rgba(26, 26, 26, 0.30)',
+        background: 'var(--color-bg-secondary)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        border: '1px solid rgba(42, 42, 42, 0.70)',
+        border: '1px solid var(--color-border-primary)',
         borderRadius: '12px'
     },
     sectionCard: {
-        background: 'rgba(255, 255, 255, 0.05)',
+        background: 'var(--color-accent-primary)',
         borderRadius: '12px',
         padding: '24px'
     },
     formCard: {
-        background: 'rgba(26, 26, 26, 0.3)',
+        background: 'var(--color-bg-secondary)',
         borderRadius: '12px',
         padding: '32px',
         margin: '0 48px',
         backdropFilter: 'blur(8px)',
-        border: '1px solid rgba(42, 42, 42, 0.4)'
+        border: '1px solid var(--color-border-primary)'
     },
     deviceItem: {
-        background: 'rgba(255, 255, 255, 0.05)',
+        background: 'var(--color-accent-primary)',
         borderRadius: '8px',
         padding: '16px'
     }

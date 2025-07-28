@@ -2,7 +2,7 @@
 .userSidebar {
     /* 设计稿精确尺寸：240px宽度，只有右侧边框 */
     width: 240px;
-    border-right: 1px solid rgba(42, 42, 42, 0.60);
+    border-right: 1px solid var(--color-border-primary);
     /* 设计稿精确内边距 */
     padding-left: 16px;
     padding-right: 17px;
@@ -46,7 +46,7 @@
 
 /* 用户名 - 设计稿精确样式 */
 .userName {
-    color: #FFFFFF;
+    color: var(--color-text-primary);
     font-size: 18px;
     font-weight: 600;
     line-height: 28px;
@@ -61,7 +61,7 @@
 
 /* 会员标签 - 设计稿精确样式 */
 .memberBadge {
-    background: rgba(255, 215, 0, 0.10);
+    background: var(--color-warning-bg);
     border-radius: 9999px;
     display: flex;
     align-items: flex-start;
@@ -72,7 +72,7 @@
 }
 
 .memberText {
-    color: #EAB308;
+    color: var(--color-warning);
     font-size: 12px;
     line-height: 16px;
     display: flex;
@@ -83,7 +83,7 @@
 
 /* 会员有效期 - 设计稿精确样式 */
 .memberExpiry {
-    color: #9CA3AF;
+    color: var(--color-text-muted);
     font-size: 12px;
     line-height: 16px;
     margin: 0;
@@ -111,9 +111,8 @@
     display: flex;
     align-items: stretch;
     gap: 12px;
-    padding-left: 16px;
-    padding-right: 16px;
-    margin-top: 36px;
+    padding: 8px 16px;
+    margin-top: 16px;
     color: #9CA3AF;
     text-decoration: none;
     transition: all 0.2s ease;
@@ -122,10 +121,11 @@
     font-family: inherit;
     font-size: inherit;
     cursor: pointer;
+    border-radius: 8px;
 }
 
 /* 第一个菜单项不需要上边距 */
-.navItem:first-child {
+.mainNavigation .navItem:first-child {
     margin-top: 0;
 }
 
@@ -153,9 +153,7 @@
 
 /* 菜单项激活状态 - 统一的选中样式 */
 .navItemActive {
-    background: linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%);
-    border-radius: 8px;
-    padding: 8px 16px !important; /* 选中时统一padding，与设置菜单项保持一致 */
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%) !important;
 }
 
 .navItemActive .navLabel {
@@ -170,53 +168,58 @@
 /* 分割线 - 设计稿精确样式 */
 .navDivider {
     border-top: 1px solid rgba(255, 255, 255, 0.10);
-    margin-top: 28px;
-    margin-bottom: -8px;
+    margin-top: 16px;
+    margin-bottom: 16px;
     /* 调整后续设置项的间距 */
     display: flex;
     align-items: flex-end;
-    min-height: 65px;
+    min-height: 1px;
 }
 
 /* 设置菜单项基础样式 */
 .settingsNavigation .navItem {
-    padding: 8px 16px;
-    margin-top: 28px;
-    gap: 12px;
-    width: 207px;
-    /* 设计稿精确宽度 */
-    border-radius: 8px;
-    background: none; /* 默认无背景 */
+    margin-top: 16px;
+}
+
+/* 设置菜单项第一个不要上边距，避免与分割线下边距叠加 */
+.settingsNavigation .navItem:first-child {
+    margin-top: 0;
+}
+
+/* 设置菜单项选中状态 - 提高优先级以覆盖默认样式 */
+.settingsNavigation .navItem.navItemActive .navIcon {
+    /* 选中状态的图标变为白色，优先级足够高 */
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
+}
+
+.settingsNavigation .navItem.navItemActive .navLabel {
+    /* 选中状态的文字变为白色，优先级足够高 */
+    color: #FFFFFF !important;
 }
 
 .settingsNavigation .navItem .navIcon {
-    margin-top: 2px;
-    margin-bottom: 2px;
     /* 设置菜单项图标默认也使用灰色filter，覆盖SVG的原始白色 */
     filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(645%) hue-rotate(202deg) brightness(92%) contrast(84%);
 }
 
 .settingsNavigation .navItem .navLabel {
-    color: #9CA3AF; /* 默认灰色 */
-    line-height: 24px;
-    min-height: 24px;
+    color: #9CA3AF;
+    /* 默认灰色 */
 }
-
-/* 设置菜单项选中状态 - 继承通用选中样式，无需重复定义 */
 
 /* 退出按钮保持普通样式，不应用设置项样式 */
 .settingsNavigation .navItem:last-child {
     background: none !important;
-    border-radius: 0;
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 0;
-    padding-bottom: 0;
-    width: auto;
 }
 
 .settingsNavigation .navItem:last-child .navLabel {
-    color: #9CA3AF !important; /* 退出始终灰色 */
+    color: #9CA3AF !important;
+    /* 退出始终灰色 */
+}
+
+.settingsNavigation .navItem:last-child .navIcon {
+    filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(645%) hue-rotate(202deg) brightness(92%) contrast(84%) !important;
+    /* 退出图标始终灰色 */
 }
 
 /* 隐藏其他样式 */

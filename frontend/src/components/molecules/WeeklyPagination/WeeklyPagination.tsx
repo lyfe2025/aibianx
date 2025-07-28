@@ -1,6 +1,6 @@
 'use client'
 
-import { Pagination } from '@/components/molecules'
+import { Pagination } from '@/components/ui'
 import { STYLES_CONFIG } from '@/constants/weeklyConfig'
 
 interface WeeklyPaginationProps {
@@ -12,7 +12,7 @@ interface WeeklyPaginationProps {
 /**
  * WeeklyPagination 组件
  * 
- * 分页组件包装器，优化间距和样式
+ * 分页组件包装器，优化间距和样式 - 使用统一的Pagination组件
  */
 export function WeeklyPagination({
     currentPage,
@@ -34,7 +34,6 @@ export function WeeklyPagination({
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={onPageChange}
-                showFirstLast={false}
             />
         </div>
     )

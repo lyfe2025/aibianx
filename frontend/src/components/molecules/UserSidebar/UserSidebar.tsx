@@ -53,11 +53,6 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
 
     const navigationItems = [
         {
-            href: '/',
-            label: '首页',
-            icon: 'profile-sidebar-home'
-        },
-        {
             href: '/profile',
             label: '个人中心',
             icon: 'profile-sidebar-center'
@@ -154,13 +149,13 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                 {/* 分割线 */}
                 <div className={styles.navDivider} />
 
-                {/* 设置菜单 - 无激活状态 */}
+                {/* 设置菜单 */}
                 <nav className={styles.settingsNavigation}>
                     {settingsItems.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={styles.navItem}
+                            className={`${styles.navItem} ${isActiveRoute(item.href) ? styles.navItemActive : ''}`}
                         >
                             <Icon name={item.icon} size="sm" className={styles.navIcon} />
                             <span className={styles.navLabel}>{item.label}</span>

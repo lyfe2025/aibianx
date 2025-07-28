@@ -21,6 +21,9 @@ export { AnimatedNumber } from './AnimatedNumber/AnimatedNumber'
 export { GlobalCountdownInit } from './GlobalCountdownInit/GlobalCountdownInit'
 export { ThemeInit } from './ThemeInit/ThemeInit'
 
+// 分页组件
+export { Pagination } from '../molecules/Pagination/Pagination'
+
 // 用户体验反馈组件
 export { Toast, ToastContainer, useToast } from './Toast'
 export { Loading } from './Loading'
