@@ -8,7 +8,7 @@
         "description": "文章内容管理"
     },
     "options": {
-        "draftAndPublish": true
+        "draftAndPublish": false
     },
     "pluginOptions": {},
     "attributes": {
