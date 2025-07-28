@@ -44,17 +44,7 @@ export function HeroSectionNew() {
                     <GradientText
                         size="8xl"
                         weight="bold"
-                        className={`hero-main-title ${HERO_ANIMATIONS.fadeInUp.titleClass}`}
-                        style={{
-                            textAlign: 'center',
-                            margin: '0 0 24px 0',
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            width: '100%',
-                            minHeight: '77px',
-                            animation: 'fadeInUp 1s ease-out'
-                        }}
+                        className="hero-main-title hero-title-animation"
                     >
                         {HERO_CONTENT.mainTitle}
                     </GradientText>
@@ -100,9 +90,16 @@ export function HeroSectionNew() {
             <style jsx>{`
                 ${HERO_ANIMATIONS.fadeInUp.keyframes}
 
-                .${HERO_ANIMATIONS.fadeInUp.titleClass} {
+                .hero-title-animation {
                     animation: fadeInUp 1s ease-out;
                     transform: translateZ(0);
+                    text-align: center;
+                    margin: 0 0 24px 0;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: 100%;
+                    min-height: 77px;
                 }
 
                 .${HERO_ANIMATIONS.fadeInUp.subtitleClass} {
@@ -154,6 +151,10 @@ export function HeroSectionNew() {
                         font-size: 52px !important;
                         line-height: 60px !important;
                         margin-bottom: 16px !important;
+                        text-align: center !important;
+                        white-space: nowrap !important;
+                        overflow: hidden !important;
+                        text-overflow: ellipsis !important;
                     }
                     
                     .hero-subtitle-1,
@@ -210,6 +211,8 @@ export function HeroSectionNew() {
                         white-space: normal !important;
                         text-align: center !important;
                         margin-bottom: 20px !important;
+                        overflow: hidden !important;
+                        text-overflow: ellipsis !important;
                     }
                     
                     .hero-subtitle-1,
@@ -261,6 +264,10 @@ export function HeroSectionNew() {
                         line-height: 36px !important;
                         min-height: 36px !important;
                         margin-bottom: 16px !important;
+                        text-align: center !important;
+                        white-space: normal !important;
+                        overflow: hidden !important;
+                        text-overflow: ellipsis !important;
                     }
                     
                     .hero-subtitle-1,
