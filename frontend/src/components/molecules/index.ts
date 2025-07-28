@@ -26,6 +26,9 @@ export { ArticleList } from './ArticleList'
 export { WhyChooseCard } from './WhyChooseCard'
 export { UserTestimonialCard } from './UserTestimonialCard'
 export { EmailSubscriptionCard } from './EmailSubscriptionCard'
+
+// HeroSection相关组件
+export { EmailSubscribeForm } from './EmailSubscribeForm'
 export { PageHeader } from './PageHeader'
 export { Pagination } from './Pagination'
 export { RegisterForm } from './RegisterForm'

@@ -211,7 +211,8 @@ export const AIBrainModel: React.FC = () => {
                 width: '100%',
                 height: '200px', // 减小高度，适配小容器
                 position: 'relative',
-                zIndex: 1
+                zIndex: 1,
+                pointerEvents: 'none' // 关键修复：确保不干扰用户交互
             }}
         />
     )

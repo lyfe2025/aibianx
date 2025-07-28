@@ -696,7 +696,7 @@ export function HeroBackground3D() {
                 height: '100vh', // 使用视口单位确保全屏覆盖
                 zIndex: 2, // 在遮罩层之上，显示3D效果
                 pointerEvents: 'none', // 不干扰用户交互
-                opacity: isLoaded ? 0.9 : 0, // 提高透明度，让动画更明显
+                opacity: isLoaded ? 0.3 : 0, // 降低透明度，避免遮挡前景内容
                 transition: 'opacity 0.5s ease-in-out' // 平滑过渡效果
             }}
         />
