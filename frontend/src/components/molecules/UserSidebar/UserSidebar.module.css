@@ -300,3 +300,45 @@
         border: none;
     }
 }
+
+/* 强制修复：确保profile-sidebar图标在所有主题下可见 */
+.navIcon img {
+    /* 确保图标始终可见，不受SVG原色影响 */
+    opacity: 1 !important;
+}
+
+/* 暗黑模式下的图标颜色修复 */
+[data-theme="dark"] .navIcon,
+[data-theme="dark"] .navIcon img {
+    filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(645%) hue-rotate(202deg) brightness(92%) contrast(84%);
+}
+
+/* 暗黑模式下的悬停状态 */
+[data-theme="dark"] .navItem:hover .navIcon,
+[data-theme="dark"] .navItem:hover .navIcon img {
+    filter: brightness(0) saturate(100%) invert(73%) sepia(8%) saturate(348%) hue-rotate(202deg) brightness(91%) contrast(87%);
+}
+
+/* 暗黑模式下的激活状态 */
+[data-theme="dark"] .navItemActive .navIcon,
+[data-theme="dark"] .navItemActive .navIcon img {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
+}
+
+/* 亮色模式下的图标颜色修复 */
+[data-theme="light"] .navIcon,
+[data-theme="light"] .navIcon img {
+    filter: brightness(0) saturate(100%) invert(45%) sepia(13%) saturate(692%) hue-rotate(202deg) brightness(91%) contrast(87%);
+}
+
+/* 亮色模式下的悬停状态 */
+[data-theme="light"] .navItem:hover .navIcon,
+[data-theme="light"] .navItem:hover .navIcon img {
+    filter: brightness(0) saturate(100%) invert(31%) sepia(15%) saturate(549%) hue-rotate(202deg) brightness(95%) contrast(89%);
+}
+
+/* 亮色模式下的激活状态 */
+[data-theme="light"] .navItemActive .navIcon,
+[data-theme="light"] .navItemActive .navIcon img {
+    filter: brightness(0) saturate(100%) invert(16%) sepia(15%) saturate(1142%) hue-rotate(202deg) brightness(93%) contrast(90%) !important;
+}

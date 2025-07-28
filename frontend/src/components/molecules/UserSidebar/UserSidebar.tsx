@@ -228,7 +228,6 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                                 name={item.icon}
                                 size="sm"
                                 className={styles.navIcon}
-                                style={{ color: 'var(--color-text-muted)' }}
                             />
                             <span className={styles.navLabel}>{item.label}</span>
                         </Link>
@@ -241,16 +240,19 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
 
             {/* 设置菜单 */}
             <nav className={styles.settingsNavigation}>
-                {settingsItems.map((item) => (
-                    <Link
-                        key={item.href}
-                        href={item.href}
-                        className={`${styles.navItem} ${isActiveRoute(item.href) ? styles.navItemActive : ''}`}
-                    >
-                        <Icon name={item.icon} size="sm" className={styles.navIcon} style={{ color: 'var(--color-text-muted)' }} />
-                        <span className={styles.navLabel}>{item.label}</span>
-                    </Link>
-                ))}
+                {settingsItems.map((item) => {
+                    const isActive = isActiveRoute(item.href)
+                    return (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
+                        >
+                            <Icon name={item.icon} size="sm" className={styles.navIcon} />
+                            <span className={styles.navLabel}>{item.label}</span>
+                        </Link>
+                    )
+                })}
 
                 {/* 退出按钮 - 执行登出并跳转到首页 */}
                 <button
@@ -258,7 +260,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                     className={styles.navItem}
                     title="退出登录并返回首页"
                 >
-                    <Icon name="profile-sidebar-logout" size="sm" className={styles.navIcon} style={{ color: 'var(--color-text-muted)' }} />
+                    <Icon name="profile-sidebar-logout" size="sm" className={styles.navIcon} />
                     <span className={styles.navLabel}>退出</span>
                 </button>
             </nav>
