@@ -11,9 +11,9 @@ export const AccountBalanceCard: React.FC<AccountBalanceCardProps> = ({
 }) => {
     return (
         <div style={{
-            background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(168, 85, 247, 0.10) 100%)',
+            background: 'var(--color-info-bg)',
             backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255, 255, 255, 0.10)',
+            border: '1px solid var(--color-border-primary)',
             borderRadius: '12px',
             padding: '25px',
             display: 'flex',
@@ -26,7 +26,7 @@ export const AccountBalanceCard: React.FC<AccountBalanceCardProps> = ({
                 alignItems: 'center'
             }}>
                 <h3 style={{
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     fontSize: '20px',
                     lineHeight: '28px',
                     fontWeight: 600,
@@ -67,7 +67,7 @@ export const AccountBalanceCard: React.FC<AccountBalanceCardProps> = ({
                         可提现金额
                     </span>
                     <span style={{
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontSize: '24px',
                         lineHeight: '32px',
                         fontWeight: 600,
@@ -99,7 +99,7 @@ export const AccountBalanceCard: React.FC<AccountBalanceCardProps> = ({
                         累计提现金额
                     </span>
                     <span style={{
-                        color: '#FFFFFF',
+                        color: 'var(--color-text-primary)',
                         fontSize: '24px',
                         lineHeight: '32px',
                         fontWeight: 600,
@@ -136,7 +136,7 @@ export const AccountBalanceCard: React.FC<AccountBalanceCardProps> = ({
                         gap: '4px'
                     }}>
                         <span style={{
-                            color: '#FFFFFF',
+                            color: 'var(--color-text-primary)',
                             fontSize: '24px',
                             lineHeight: '32px',
                             fontWeight: 600,

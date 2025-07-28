@@ -6,7 +6,7 @@ import { type HTMLAttributes } from 'react'
 export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
   src?: string
   alt?: string
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
   fallback?: string
   className?: string
 }
@@ -23,7 +23,8 @@ export const Avatar = ({
     sm: 32,
     md: 40,
     lg: 48,
-    xl: 64
+    xl: 64,
+    xxl: 84  // 支持UserSidebar的84x84头像尺寸
   }
 
   const avatarSize = sizeMap[size]

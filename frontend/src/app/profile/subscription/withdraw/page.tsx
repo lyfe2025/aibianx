@@ -30,7 +30,7 @@ export default function WithdrawRecordPage() {
                 minHeight: '32px'
             }}>
                 <h1 style={{
-                    color: '#FFFFFF',
+                    color: 'var(--color-text-primary)',
                     fontSize: '24px',
                     lineHeight: '32px',
                     // 移除固定宽度，让标题自然撑开

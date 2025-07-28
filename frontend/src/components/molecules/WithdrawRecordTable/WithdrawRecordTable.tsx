@@ -118,9 +118,9 @@ export const WithdrawRecordTable: React.FC<WithdrawRecordTableProps> = ({
 
     return (
         <div style={{
-            background: 'rgba(0, 0, 0, 0.30)',
+            background: 'var(--color-bg-secondary)',
             backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(42, 42, 42, 0.70)',
+            border: '1px solid var(--color-border-primary)',
             borderRadius: '12px',
             overflow: 'hidden',
             marginTop: '8px',
@@ -139,7 +139,7 @@ export const WithdrawRecordTable: React.FC<WithdrawRecordTableProps> = ({
                     {/* 表头 */}
                     <thead>
                         <tr style={{
-                            borderBottom: '1px solid rgba(255, 255, 255, 0.10)'
+                            borderBottom: '1px solid var(--color-border-primary)'
                         }}>
                             <th style={{
                                 color: '#D1D5DB',
@@ -226,11 +226,11 @@ export const WithdrawRecordTable: React.FC<WithdrawRecordTableProps> = ({
                     <tbody>
                         {mockData.map((record, index) => (
                             <tr key={record.id} style={{
-                                borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                                borderBottom: '1px solid var(--color-border-primary)',
                                 transition: 'background-color 0.2s ease'
                             }}>
                                 <td style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '14px',
                                     lineHeight: '20px',
                                     padding: '16px 24px',
@@ -241,7 +241,7 @@ export const WithdrawRecordTable: React.FC<WithdrawRecordTableProps> = ({
                                     {index + 1}
                                 </td>
                                 <td style={{
-                                    color: '#FFFFFF',
+                                    color: 'var(--color-text-primary)',
                                     fontSize: '14px',
                                     lineHeight: '20px',
                                     fontWeight: '600',
@@ -302,7 +302,7 @@ export const WithdrawRecordTable: React.FC<WithdrawRecordTableProps> = ({
             {/* 使用统一的分页组件 */}
             <div style={{
                 padding: '16px 24px',
-                borderTop: '1px solid rgba(255, 255, 255, 0.05)'
+                borderTop: '1px solid var(--color-border-primary)'
             }}>
                 <Pagination
                     currentPage={currentPage}

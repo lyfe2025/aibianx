@@ -57,14 +57,14 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: var(--color-accent-primary);
-    /* 使用主题变量：极淡的背景 */
-    backdrop-filter: blur(2px);
-    /* 轻微模糊 */
+    background: transparent;
+    /* 完全透明，移除背景色 */
+    backdrop-filter: none;
+    /* 移除模糊效果 */
     border-radius: var(--radius-lg);
     /* 与内容区域保持一致：12px */
-    border: 1px solid var(--color-border-primary);
-    /* 使用主题变量：边框色 */
+    border: none;
+    /* 移除边框，避免在亮色模式下过于明显 */
     pointer-events: none;
     /* 不影响交互 */
     z-index: -1;

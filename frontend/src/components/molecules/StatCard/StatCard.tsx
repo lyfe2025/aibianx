@@ -41,7 +41,7 @@ export const StatCard: React.FC<StatCardProps> = ({
                     className={styles.statCardIcon}
                     style={{ background: getIconBackground() }}
                 >
-                    <Icon name={icon} size="md" className={styles.icon} />
+                    <Icon name={icon} size="md" className={styles.icon} style={{ color: '#FFFFFF' }} />
                 </div>
 
                 <div className={styles.statCardInfo}>

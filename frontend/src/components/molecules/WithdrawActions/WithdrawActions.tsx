@@ -90,7 +90,7 @@ export const WithdrawActions: React.FC<WithdrawActionsProps> = ({
                         style={{
                             width: '16px',
                             height: '16px',
-                            filter: 'brightness(0) invert(1)'
+                            color: 'var(--color-bg-primary)'
                         }}
                     />
                 </button>
@@ -121,7 +121,7 @@ export const WithdrawActions: React.FC<WithdrawActionsProps> = ({
                         style={{
                             width: '16px',
                             height: '16px',
-                            filter: 'brightness(0) invert(1)'
+                            color: 'var(--color-text-primary)'
                         }}
                     />
                     <span style={{
@@ -175,7 +175,7 @@ export const WithdrawActions: React.FC<WithdrawActionsProps> = ({
                         style={{
                             width: '16px',
                             height: '16px',
-                            filter: 'brightness(0) invert(0.7)'
+                            color: 'var(--color-text-secondary)'
                         }}
                     />
                     <span style={{
@@ -195,7 +195,7 @@ export const WithdrawActions: React.FC<WithdrawActionsProps> = ({
                         style={{
                             width: '16px',
                             height: '16px',
-                            filter: 'brightness(0) invert(0.7)'
+                            color: 'var(--color-text-secondary)'
                         }}
                     />
                 </button>
@@ -220,7 +220,7 @@ export const WithdrawActions: React.FC<WithdrawActionsProps> = ({
                         style={{
                             width: '16px',
                             height: '16px',
-                            filter: 'brightness(0) invert(0.7)',
+                            color: 'var(--color-text-secondary)',
                             flexShrink: 0
                         }}
                     />
@@ -271,7 +271,7 @@ export const WithdrawActions: React.FC<WithdrawActionsProps> = ({
                         style={{
                             width: '16px',
                             height: '16px',
-                            filter: 'brightness(0) invert(1)'
+                            color: 'var(--color-bg-primary)'
                         }}
                     />
                 </button>

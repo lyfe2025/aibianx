@@ -241,7 +241,7 @@ export function ThreeDSection() {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: 'rgba(26, 26, 26, 0.15)',
+                background: 'var(--color-bg-glass)',
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)',
                 zIndex: 1

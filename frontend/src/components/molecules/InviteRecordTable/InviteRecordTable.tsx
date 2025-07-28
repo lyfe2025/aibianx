@@ -83,9 +83,9 @@ export const InviteRecordTable: React.FC<InviteRecordTableProps> = ({
         }
 
         .table-container {
-          background: rgba(0, 0, 0, 0.30);
+          background: var(--color-bg-secondary);
           backdrop-filter: blur(12px);
-          border: 1px solid rgba(42, 42, 42, 0.70);
+          border: 1px solid var(--color-border-primary);
           border-radius: 12px;
           overflow: hidden;
         }
@@ -93,7 +93,7 @@ export const InviteRecordTable: React.FC<InviteRecordTableProps> = ({
         .table-header {
           display: flex;
           align-items: center;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+          border-bottom: 1px solid var(--color-border-primary);
           padding: 12px 24px;
           /* 防换行保护 - 表头 */
           flex-wrap: nowrap;
@@ -146,7 +146,7 @@ export const InviteRecordTable: React.FC<InviteRecordTableProps> = ({
           display: flex;
           align-items: center;
           padding: 18px 24px 16px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          border-bottom: 1px solid var(--color-border-primary);
           /* 防换行保护 - 表格行 */
           flex-wrap: nowrap;
           overflow: hidden;
@@ -220,7 +220,7 @@ export const InviteRecordTable: React.FC<InviteRecordTableProps> = ({
         }
 
         .status-badge.pending {
-          background: rgba(107, 114, 128, 0.10);
+          background: var(--color-accent-primary);
           color: var(--color-text-muted);
         }
 

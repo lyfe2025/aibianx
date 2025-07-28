@@ -43,7 +43,7 @@ export function SettingsTabNavigation({ activeTab, onTabChange }: SettingsTabNav
                     }}
                 >
                     <div style={{
-                        color: activeTab === tab.key ? '#FFFFFF' : '#9CA3AF',
+                        color: activeTab === tab.key ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                         fontWeight: '600',
                         lineHeight: '24px',
                         textAlign: 'center',

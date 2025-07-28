@@ -111,8 +111,7 @@ export function BookmarksStats({ onBatchManage }: BookmarksStatsProps) {
                             alignItems: 'center',
                             flexShrink: 0
                         }}>
-                            <Icon name={stat.icon} size="sm" style={{
-                                color: 'var(--color-text-primary)',
+                            <Icon name={stat.icon} size="sm" preserveColor={true} style={{
                                 width: '20px',
                                 height: '20px'
                             }} />

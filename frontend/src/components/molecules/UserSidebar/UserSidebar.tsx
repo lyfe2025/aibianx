@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Icon, Avatar } from '@/components/ui'
+import { Icon, Avatar, CrownIcon } from '@/components/ui'
 import { useUserStore } from '@/stores'
 import styles from './UserSidebar.module.css'
 
@@ -20,6 +20,7 @@ interface UserSidebarProps {
  * 3. 页面导航 - 个人中心各子页面间的跳转
  * 4. 精确路由高亮 - 只有当前页面的菜单项高亮显示，避免多选
  * 5. SSR兼容 - 解决服务端渲染水合错误
+ * 6. 会员标识 - 高级会员用户显示皇冠图标
  * 
  * 🎯 导航路径：
  * - 首页: / (直接跳转)
@@ -34,6 +35,12 @@ interface UserSidebarProps {
  * - 前缀匹配：子页面使用startsWith，但排除父级路径
  * - 优先级：子路径优先于父路径匹配
  * - SSR兼容：服务端期间始终返回非激活状态，客户端水合后正常显示
+ * 
+ * 🎨 头像设计：
+ * - 84x84像素圆形头像，渐变边框效果
+ * - 高级会员显示右上角皇冠图标
+ * - 用户名18px字体，会员标签12px
+ * - 会员有效期提示，温馨的倒计时显示
  * 
  * 🎨 图标资源：
  * - 使用从设计稿下载的本地SVG图标
@@ -122,8 +129,13 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                         <Avatar
                             src="/images/avatars/user-zhang-zhichuang.svg"
                             alt="张智创"
+                            size="xxl"
                             className={styles.avatarImage}
                         />
+                        {/* 会员皇冠标识 - 高级会员显示 */}
+                        <div className={styles.crownBadge}>
+                            <CrownIcon size="sm" />
+                        </div>
                     </div>
                     <h3 className={styles.userName}>张智创</h3>
                     <div className={styles.memberBadge}>
@@ -155,7 +167,7 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`${styles.navItem} ${isActiveRoute(item.href) ? styles.navItemActive : ''}`}
+                            className={styles.navItem}
                         >
                             <Icon name={item.icon} size="sm" className={styles.navIcon} />
                             <span className={styles.navLabel}>{item.label}</span>
@@ -185,8 +197,13 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
                     <Avatar
                         src="/images/avatars/user-zhang-zhichuang.svg"
                         alt="张智创"
+                        size="xxl"
                         className={styles.avatarImage}
                     />
+                    {/* 会员皇冠标识 - 高级会员显示 */}
+                    <div className={styles.crownBadge}>
+                        <CrownIcon size="sm" />
+                    </div>
                 </div>
                 <h3 className={styles.userName}>张智创</h3>
                 <div className={styles.memberBadge}>
@@ -197,16 +214,26 @@ export const UserSidebar: React.FC<UserSidebarProps> = ({ className = '' }) => {
 
             {/* 主导航菜单 */}
             <nav className={styles.mainNavigation}>
-                {navigationItems.map((item) => (
-                    <Link
-                        key={item.href}
-                        href={item.href}
-                        className={`${styles.navItem} ${isActiveRoute(item.href) ? styles.navItemActive : ''}`}
-                    >
-                        <Icon name={item.icon} size="sm" className={styles.navIcon} />
-                        <span className={styles.navLabel}>{item.label}</span>
-                    </Link>
-                ))}
+                {navigationItems.map((item) => {
+                    const isActive = isActiveRoute(item.href)
+                    return (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
+                        >
+                            <Icon
+                                name={item.icon}
+                                size="sm"
+                                className={styles.navIcon}
+                                style={{
+                                    color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-muted)'
+                                }}
+                            />
+                            <span className={styles.navLabel}>{item.label}</span>
+                        </Link>
+                    )
+                })}
             </nav>
 
             {/* 分割线 */}

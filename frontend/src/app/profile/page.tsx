@@ -76,7 +76,7 @@ export default function ProfilePage() {
               marginBottom: 'var(--spacing-3)', // 使用间距变量: 12px
               flexShrink: 0 // 防止收缩
             }}>
-              <Icon name={stat.icon} size="md" style={{ color: 'var(--color-text-primary)' }} />
+              <Icon name={stat.icon} size="md" style={{ color: '#FFFFFF' }} />
             </div>
             <div style={{
               color: 'var(--color-text-muted)',

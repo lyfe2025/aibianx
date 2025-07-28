@@ -48,7 +48,7 @@ export function BookmarksGrid({ viewMode, onBookmarkClick }: BookmarksGridProps)
                         flexShrink: 0
                     }}>
                         <div style={{
-                            background: 'rgba(0, 0, 0, 0.50)',
+                            background: 'var(--color-bg-secondary)',
                             borderRadius: '9999px',
                             padding: '4px 8px',
                             whiteSpace: 'nowrap'

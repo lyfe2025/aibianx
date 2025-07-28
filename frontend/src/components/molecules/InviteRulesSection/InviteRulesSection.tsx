@@ -76,9 +76,9 @@ export const InviteRulesSection: React.FC<InviteRulesSectionProps> = ({
         }
 
         .rules-container {
-          background: rgba(0, 0, 0, 0.30);
+          background: var(--color-bg-secondary);
           backdrop-filter: blur(12px);
-          border: 1px solid rgba(42, 42, 42, 0.70);
+          border: 1px solid var(--color-border-primary);
           border-radius: 12px;
           padding: 25px;
           display: flex;
@@ -110,7 +110,7 @@ export const InviteRulesSection: React.FC<InviteRulesSectionProps> = ({
         }
 
         .reward-card {
-          background: rgba(255, 255, 255, 0.05);
+          background: var(--color-accent-primary);
           border-radius: 8px;
           padding: 16px;
           flex: 1;
@@ -142,15 +142,15 @@ export const InviteRulesSection: React.FC<InviteRulesSectionProps> = ({
           /* 防换行保护 - 图标不能收缩 */
           flex-shrink: 0;
           /* 统一使用与奖励发放规则相同的背景色 */
-          background: rgba(234, 179, 8, 0.10);
+          background: var(--color-warning-bg);
         }
 
         .reward-icon.membership {
-          background: rgba(234, 179, 8, 0.10);
+          background: var(--color-warning-bg);
         }
 
         .reward-icon.cash {
-          background: rgba(234, 179, 8, 0.10);
+          background: var(--color-warning-bg);
         }
 
         .reward-icon img {
@@ -197,7 +197,7 @@ export const InviteRulesSection: React.FC<InviteRulesSectionProps> = ({
         }
 
         .distribution-rules {
-          background: rgba(255, 255, 255, 0.05);
+          background: var(--color-accent-primary);
           border-radius: 8px;
           padding: 16px;
           display: flex;
@@ -217,7 +217,7 @@ export const InviteRulesSection: React.FC<InviteRulesSectionProps> = ({
         }
 
         .rules-icon {
-          background: rgba(234, 179, 8, 0.10);
+          background: var(--color-warning-bg);
           border-radius: 8px;
           width: 40px;
           height: 40px;
@@ -268,7 +268,7 @@ export const InviteRulesSection: React.FC<InviteRulesSectionProps> = ({
         }
 
         .rule-number {
-          background: rgba(255, 255, 255, 0.10);
+          background: var(--color-accent-primary);
           border-radius: 9999px;
           width: 16px;
           height: 16px;

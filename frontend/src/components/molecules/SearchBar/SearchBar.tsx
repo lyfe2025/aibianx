@@ -274,7 +274,7 @@ export function SearchBar({
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.background = 'var(--color-primary-blue)' // 悬停时使用主题蓝色
                                     e.currentTarget.style.borderColor = 'var(--color-primary-blue)'
-                                    e.currentTarget.style.color = '#FFFFFF'
+                                    e.currentTarget.style.color = 'var(--color-bg-primary)' // 使用背景色的反色
                                     e.currentTarget.style.opacity = '1'
                                     e.currentTarget.style.transform = 'scale(1.1)'
                                 }}

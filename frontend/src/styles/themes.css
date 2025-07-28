@@ -194,9 +194,9 @@
 }
 
 [data-theme="light"] .crown-icon {
-    color: #F59E0B !important;
-    /* 亮色模式使用黄色 */
-    filter: drop-shadow(0 1px 3px rgba(245, 158, 11, 0.35)) !important;
+    color: #FFFFFF !important;
+    /* 亮色模式也使用白色，保持一致 */
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1)) !important;
 }
 
 [data-theme="light"] .premium-icon-inline {
@@ -280,8 +280,17 @@
 
 /* 修复其他蓝紫色渐变背景的文字 */
 [data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"],
-[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] * {
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] *,
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon,
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] span,
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] div,
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] img {
     color: #FFFFFF !important;
+}
+
+/* 确保Icon组件在深色渐变背景下显示白色 */
+[data-theme="light"] [style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"] .icon img {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
 }
 
 /* 修复特定渐变的颜色组合 */

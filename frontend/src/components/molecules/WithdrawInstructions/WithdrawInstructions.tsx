@@ -20,7 +20,7 @@ export const WithdrawInstructions: React.FC<WithdrawInstructionsProps> = ({
 
     return (
         <div style={{
-            background: 'rgba(0, 0, 0, 0.30)',
+            background: 'var(--color-bg-secondary)',
             backdropFilter: 'blur(12px)',
             border: '1px solid var(--color-border-primary)',
             borderRadius: 'var(--radius-lg)',
@@ -69,7 +69,7 @@ export const WithdrawInstructions: React.FC<WithdrawInstructionsProps> = ({
                                 height: '4px',
                                 marginTop: '10px', // 与文字第一行对齐
                                 flexShrink: 0, // 不允许图标收缩
-                                filter: 'brightness(0) invert(0.3)' // 深灰色圆点
+                                color: 'var(--color-text-disabled)' // 深灰色圆点
                             }}
                         />
 

@@ -123,7 +123,7 @@ export const BOOKMARKS_STYLES = {
         borderRadius: '12px'
     },
     filterButton: {
-        background: 'var(--color-bg-input)',
+        background: 'var(--color-bg-glass)',
         border: '1px solid var(--color-border-primary)',
         borderRadius: '8px',
         padding: '9px 17px'

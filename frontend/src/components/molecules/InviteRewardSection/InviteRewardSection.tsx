@@ -18,9 +18,9 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
   }
   return (
     <div style={{
-      background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.20) 0%, rgba(168, 85, 247, 0.20) 100%)',
+      background: 'var(--color-info-bg)',
       backdropFilter: 'blur(12px)',
-      border: '1px solid rgba(255, 255, 255, 0.10)',
+      border: '1px solid var(--color-border-primary)',
       borderRadius: '12px',
       width: '100%',
       fontFamily: 'var(--font-family-primary)',
@@ -73,7 +73,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
           flexWrap: 'nowrap'
         }}>
           <div style={{
-            background: 'rgba(255, 255, 255, 0.10)',
+            background: 'var(--color-accent-primary)',
             borderRadius: '8px',
             display: 'flex',
             gap: '8px',
@@ -221,7 +221,7 @@ export const InviteRewardSection: React.FC<InviteRewardSectionProps> = ({
         }}>
           {/* 邀请码区块 */}
           <div style={{
-            background: 'rgba(255, 255, 255, 0.10)',
+            background: 'var(--color-accent-primary)',
             borderRadius: '8px',
             padding: '10px', // 减小内边距
             display: 'flex',

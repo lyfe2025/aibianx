@@ -27,22 +27,60 @@
     margin-bottom: 36px;
 }
 
-/* 用户头像容器 */
+/* 用户头像容器 - 添加相对定位支持皇冠徽章 */
 .userAvatar {
     position: relative;
     margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* 头像图片 - 设计稿精确尺寸84x84 */
+/* 头像图片 - 设计稿精确尺寸84x84，添加微妙边框效果 */
 .avatarImage {
     width: 84px !important;
     height: 84px !important;
     border-radius: 50%;
     display: block;
     margin: 0 auto;
+    /* 添加微妙的渐变边框，提升视觉层次 */
+    border: 2px solid transparent;
+    background: linear-gradient(#030303, #030303) padding-box,
+        var(--gradient-primary) border-box;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08),
+        0 1px 4px rgba(0, 0, 0, 0.12);
 }
 
-/* 皇冠徽章已移除，不再需要 */
+/* 会员皇冠徽章 - 定位到头像右下角 */
+.crownBadge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 移除边框，避免视觉干扰 */
+    border: none;
+    /* 微妙的阴影增强层次感 */
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+    /* 皇冠图标颜色 */
+    color: #FFFFFF;
+    /* 优雅的过渡动画 */
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+/* 皇冠徽章悬停效果 */
+.crownBadge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.4),
+        0 2px 4px rgba(0, 0, 0, 0.15);
+}
 
 /* 用户名 - 设计稿精确样式 */
 .userName {
@@ -57,28 +95,46 @@
     align-items: center;
     text-overflow: ellipsis;
     margin-bottom: 12px;
+    /* 添加微妙的文字阴影 */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* 会员标签 - 设计稿精确样式 */
+/* 会员标签 - 设计稿精确样式，增强视觉效果 */
 .memberBadge {
-    background: var(--color-warning-bg);
+    background: linear-gradient(135deg, #FEF3C7 0%, #FCD34D 100%);
     border-radius: 9999px;
     display: flex;
     align-items: flex-start;
     justify-content: center;
     min-height: 32px;
-    padding: 9.5px 8px;
+    padding: 9.5px 16px;
     margin-bottom: 12px;
+    /* 添加边框和阴影增强层次 */
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    box-shadow: 0 1px 3px rgba(245, 158, 11, 0.1),
+        inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    /* 优雅的过渡动画 */
+    transition: all 0.2s ease;
+}
+
+/* 会员标签悬停效果 */
+.memberBadge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.15),
+        inset 0 1px 2px rgba(255, 255, 255, 0.15);
 }
 
 .memberText {
-    color: var(--color-warning);
+    color: #92400E;
     font-size: 12px;
     line-height: 16px;
     display: flex;
     align-items: center;
     text-overflow: ellipsis;
     min-height: 16px;
+    font-weight: 500;
+    /* 添加微妙的文字阴影 */
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
 /* 会员有效期 - 设计稿精确样式 */
@@ -113,7 +169,7 @@
     gap: 12px;
     padding: 8px 16px;
     margin-top: 16px;
-    color: #9CA3AF;
+    color: var(--color-text-muted);
     text-decoration: none;
     transition: all 0.2s ease;
     background: none;
@@ -135,13 +191,12 @@
     height: 20px;
     margin-top: 2px;
     flex-shrink: 0;
-    /* 使用filter将所有图标变为灰色 */
-    filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(645%) hue-rotate(202deg) brightness(92%) contrast(84%);
+    color: var(--color-text-muted);
 }
 
 /* 菜单项文字 - 设计稿精确样式 */
 .navLabel {
-    color: #9CA3AF;
+    color: var(--color-text-muted);
     line-height: 24px;
     display: flex;
     align-items: center;
@@ -153,21 +208,20 @@
 
 /* 菜单项激活状态 - 统一的选中样式 */
 .navItemActive {
-    background: linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%) !important;
+    background: var(--color-hover-primary) !important;
 }
 
 .navItemActive .navLabel {
-    color: #FFFFFF;
+    color: var(--color-text-primary);
 }
 
 .navItemActive .navIcon {
-    /* 使用filter将选中状态的图标变为白色 */
-    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%);
+    color: var(--color-text-primary);
 }
 
 /* 分割线 - 设计稿精确样式 */
 .navDivider {
-    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    border-top: 1px solid var(--color-border-primary);
     margin-top: 16px;
     margin-bottom: 16px;
     /* 调整后续设置项的间距 */
@@ -188,22 +242,20 @@
 
 /* 设置菜单项选中状态 - 提高优先级以覆盖默认样式 */
 .settingsNavigation .navItem.navItemActive .navIcon {
-    /* 选中状态的图标变为白色，优先级足够高 */
-    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(109deg) brightness(105%) contrast(105%) !important;
+    color: var(--color-text-primary) !important;
 }
 
 .settingsNavigation .navItem.navItemActive .navLabel {
-    /* 选中状态的文字变为白色，优先级足够高 */
-    color: #FFFFFF !important;
+    /* 选中状态的文字变为主色，优先级足够高 */
+    color: var(--color-text-primary) !important;
 }
 
 .settingsNavigation .navItem .navIcon {
-    /* 设置菜单项图标默认也使用灰色filter，覆盖SVG的原始白色 */
-    filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(645%) hue-rotate(202deg) brightness(92%) contrast(84%);
+    color: var(--color-text-muted);
 }
 
 .settingsNavigation .navItem .navLabel {
-    color: #9CA3AF;
+    color: var(--color-text-muted);
     /* 默认灰色 */
 }
 
@@ -212,14 +264,18 @@
     background: none !important;
 }
 
+.settingsNavigation .navItem:last-child:hover {
+    background: var(--color-hover-secondary) !important;
+}
+
 .settingsNavigation .navItem:last-child .navLabel {
-    color: #9CA3AF !important;
-    /* 退出始终灰色 */
+    color: var(--color-text-secondary) !important;
+    /* 退出按钮使用次要文字颜色，在亮色模式下更清晰 */
 }
 
 .settingsNavigation .navItem:last-child .navIcon {
-    filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(645%) hue-rotate(202deg) brightness(92%) contrast(84%) !important;
-    /* 退出图标始终灰色 */
+    color: var(--color-text-secondary) !important;
+    /* 退出图标使用次要文字颜色，在亮色模式下更清晰 */
 }
 
 /* 隐藏其他样式 */
@@ -238,7 +294,7 @@
         width: 100%;
         margin-bottom: 24px;
         border-right: none;
-        border-bottom: 1px solid rgba(42, 42, 42, 0.60);
+        border-bottom: 1px solid var(--color-border-primary);
         padding-bottom: 24px;
     }
 }
@@ -262,5 +318,14 @@
 
     .userName {
         font-size: 16px;
+    }
+
+    /* 移动端皇冠徽章调整 */
+    .crownBadge {
+        width: 20px;
+        height: 20px;
+        bottom: -1px;
+        right: -1px;
+        border: none;
     }
 }

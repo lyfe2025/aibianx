@@ -73,8 +73,8 @@ export function BookmarksHeader({
                             key={filter.label}
                             onClick={() => onFilterClick(filter.label)}
                             style={{
-                                background: 'rgba(26, 26, 26, 0.60)',
-                                border: '1px solid rgba(42, 42, 42, 0.70)',
+                                background: 'var(--color-bg-glass)',
+                                border: '1px solid var(--color-border-primary)',
                                 borderRadius: '8px',
                                 display: 'flex',
                                 gap: '8px',
@@ -133,7 +133,7 @@ export function BookmarksHeader({
                     {/* 搜索框 */}
                     <div style={{ width: '256px', minWidth: '256px' }}>
                         <div style={{
-                            background: isSearchFocused ? 'rgba(18, 18, 18, 0.70)' : 'rgba(18, 18, 18, 0.50)',
+                            background: 'var(--color-bg-input)',
                             backdropFilter: 'blur(4px)',
                             WebkitBackdropFilter: 'blur(4px)',
                             border: `1px solid ${isSearchFocused ? 'var(--color-border-active)' : 'var(--color-border-primary)'}`,
@@ -181,7 +181,7 @@ export function BookmarksHeader({
                                     onClick={onSearchClear}
                                     aria-label="清空搜索"
                                     style={{
-                                        background: 'rgba(107, 114, 128, 0.15)',
+                                        background: 'var(--color-accent-primary)',
                                         border: 'none',
                                         borderRadius: '50%',
                                         width: '20px',
@@ -198,12 +198,12 @@ export function BookmarksHeader({
                                         opacity: 0.7
                                     }}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.background = 'rgba(107, 114, 128, 0.25)'
+                                        e.currentTarget.style.background = 'var(--color-hover-secondary)'
                                         e.currentTarget.style.opacity = '1'
                                         e.currentTarget.style.transform = 'scale(1.1)'
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = 'rgba(107, 114, 128, 0.15)'
+                                        e.currentTarget.style.background = 'var(--color-accent-primary)'
                                         e.currentTarget.style.opacity = '0.7'
                                         e.currentTarget.style.transform = 'scale(1)'
                                     }}
@@ -216,8 +216,8 @@ export function BookmarksHeader({
 
                     {/* 视图切换 */}
                     <div style={{
-                        background: 'rgba(26, 26, 26, 0.60)',
-                        border: '1px solid rgba(42, 42, 42, 0.70)',
+                        background: 'var(--color-bg-glass)',
+                        border: '1px solid var(--color-border-primary)',
                         borderRadius: '8px',
                         display: 'flex',
                         width: '70px',
@@ -229,7 +229,7 @@ export function BookmarksHeader({
                         flexShrink: 0
                     }}>
                         <div style={{
-                            background: viewMode === VIEW_MODES.GRID ? 'rgba(59, 130, 246, 0.20)' : 'transparent',
+                            background: viewMode === VIEW_MODES.GRID ? 'var(--color-hover-primary)' : 'transparent',
                             borderRadius: '6px',
                             width: '33px',
                             height: '44px',
@@ -242,11 +242,11 @@ export function BookmarksHeader({
                             <Icon name="grid-view-icon" size="sm" style={{
                                 width: '18px',
                                 height: '18px',
-                                color: viewMode === VIEW_MODES.GRID ? '#3B82F6' : '#9CA3AF'
+                                color: viewMode === VIEW_MODES.GRID ? 'var(--color-primary-blue)' : 'var(--color-text-muted)'
                             }} />
                         </div>
                         <div style={{
-                            background: viewMode === VIEW_MODES.LIST ? 'rgba(59, 130, 246, 0.20)' : 'transparent',
+                            background: viewMode === VIEW_MODES.LIST ? 'var(--color-hover-primary)' : 'transparent',
                             borderRadius: '6px',
                             width: '33px',
                             height: '44px',
@@ -259,7 +259,7 @@ export function BookmarksHeader({
                             <Icon name="list-view-icon" size="sm" style={{
                                 width: '18px',
                                 height: '18px',
-                                color: viewMode === VIEW_MODES.LIST ? '#3B82F6' : '#9CA3AF'
+                                color: viewMode === VIEW_MODES.LIST ? 'var(--color-primary-blue)' : 'var(--color-text-muted)'
                             }} />
                         </div>
                     </div>

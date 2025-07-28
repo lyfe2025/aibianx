@@ -20,16 +20,16 @@ const PAGINATION_STYLES = {
     fontSize: '14px',
     fontWeight: '400',
 
-    // 统一颜色系统
+    // 统一颜色系统 - 使用主题变量
     colors: {
-        primary: '#FFFFFF',
-        secondary: '#D1D5DB',
-        muted: '#9CA3AF',
-        disabled: '#6B7280',
-        border: 'rgba(255, 255, 255, 0.20)',
-        activeBg: 'linear-gradient(90deg, rgba(59, 130, 246, 0.10) 0%, rgba(139, 92, 246, 0.10) 100%)',
-        activeBorder: 'rgba(59, 130, 246, 0.30)',
-        hoverBg: 'rgba(255, 255, 255, 0.05)'
+        primary: 'var(--color-text-primary)',
+        secondary: 'var(--color-text-secondary)',
+        muted: 'var(--color-text-muted)',
+        disabled: 'var(--color-text-disabled)',
+        border: 'var(--color-border-primary)',
+        activeBg: 'var(--color-hover-primary)',
+        activeBorder: 'var(--color-border-active)',
+        hoverBg: 'var(--color-hover-secondary)'
     },
 
     // 统一间距系统
@@ -150,9 +150,9 @@ export function Pagination({
                         name="arrow-left"
                         size="sm"
                         style={{
-                            filter: currentPage === 1 ?
-                                'brightness(0) invert(0.4)' :
-                                'brightness(0) invert(0.6)'
+                            color: currentPage === 1 ?
+                                PAGINATION_STYLES.colors.disabled :
+                                PAGINATION_STYLES.colors.primary
                         }}
                     />
                 </button>
@@ -219,9 +219,9 @@ export function Pagination({
                         name="arrow-right"
                         size="sm"
                         style={{
-                            filter: currentPage === totalPages ?
-                                'brightness(0) invert(0.4)' :
-                                'brightness(0) invert(0.6)'
+                            color: currentPage === totalPages ?
+                                PAGINATION_STYLES.colors.disabled :
+                                PAGINATION_STYLES.colors.primary
                         }}
                     />
                 </button>
