@@ -1,383 +1,235 @@
-# AI变现之路 - 专业AI变现知识分享平台 🚀
+# 🚀 AI变现之路 (aibianx)
 
-> 💡 基于Next.js 14 + React 19 + 纯CSS的高端AI变现知识分享平台，追求100%设计稿还原，提供专业的AI变现学习体验
+> 探索人工智能商业化的无限可能
 
-## 🎯 项目概览
+AI变现之路是一个完整的AI内容平台，包含会员订阅系统、专业内容管理和用户社区功能。
 
-| 项目信息 | 详情 |
-|---------|-----|
-| **项目名称** | AI变现之路 (aibianx) |
-| **项目类型** | AI内容平台 + 会员订阅系统 |
-| **技术栈** | Next.js 14 + React 19 + TypeScript + 纯CSS |
-| **设计标准** | 1440px设计稿，像素级精确还原 |
-| **核心特色** | 毛玻璃效果、蓝紫渐变、深色主题、3D效果 |
-| **当前状态** | ✅ 前台功能完成，🔄 后端API开发中 |
+## ✨ 项目特色
+
+- 🎨 **像素级设计还原** - 1440px设计稿100%精确还原
+- 🔮 **毛玻璃美学** - 现代化深色主题界面
+- ⚡ **高性能架构** - Next.js 14 + Strapi 5.x + PostgreSQL
+- 🛡️ **类型安全** - 100% TypeScript，零any使用
+- 📱 **完全响应式** - 支持桌面端和移动端
+- 🌍 **国际化支持** - 中英文多语言切换
+
+## 🎯 核心功能
+
+### 🏠 前端平台
+- ✅ **用户认证系统** - 登录/注册/密码找回
+- ✅ **内容浏览** - 文章列表/详情/搜索/筛选
+- ✅ **会员订阅** - 多种会员方案/支付集成
+- ✅ **个人中心** - 用户资料/收藏/订阅管理
+- ✅ **主题切换** - 亮色/暗色模式无缝切换
+
+### ⚙️ 后端管理
+- ✅ **内容管理** - Strapi 5.x 专业CMS
+- ✅ **用户管理** - 完整的用户权限体系
+- ✅ **数据分析** - 文章阅读量/用户行为统计
+- ✅ **API接口** - RESTful API + 自动文档生成
 
 ## 🚀 快速开始
 
-### 5分钟上手体验
+### 第一次启动
+
 ```bash
 # 1. 克隆项目
-git clone <repository-url> && cd aibianx
+git clone <repository-url>
+cd aibianx
 
-# 2. 一键启动开发环境（推荐）
-chmod +x sh/development/quick-start.sh && ./sh/development/quick-start.sh
+# 2. 设置脚本权限
+chmod +x *.sh
 
-# 3. 或手动启动前台
-cd frontend && npm install && npm run dev
-
-# 4. 浏览器访问
-open http://localhost:3000
+# 3. 启动完整开发环境
+./start-dev.sh
 ```
 
-### 🌐 核心页面展示
-- **[首页](http://localhost:3000)** - 品牌展示、3D效果、功能介绍
-- **[AI周刊](http://localhost:3000/weekly)** - 智能搜索、分类筛选、文章浏览  
-- **[文章详情](http://localhost:3000/weekly/ai-revenue-model)** - Markdown渲染、相关推荐
-- **[关于平台](http://localhost:3000/about)** - 平台介绍、会员特权
-- **[个人中心](http://localhost:3000/profile)** - 用户管理、收藏订阅
+### 日常开发
 
-### 🎨 设计亮点
-- **毛玻璃效果** - backdrop-filter原生实现，64px导航栏模糊
-- **蓝紫渐变** - #3B82F6 到 #8B5CF6 的品牌色彩系统
-- **深色主题** - #030303 主背景，专业视觉体验
-- **3D背景效果** - Three.js实现，支持路由切换重新初始化
-- **完美字体** - 阿里巴巴普惠体3.0，7种字重完整支持
+```bash
+# 启动开发环境（前端+后端）
+./start-dev.sh
 
-## 💻 技术栈架构
+# 仅启动前端（端口3000）
+./start-frontend.sh
 
-### 前端核心技术
-- **框架**: Next.js 14 (App Router) + React 19.1.0
-- **语言**: TypeScript 5 (100%类型安全，零any使用)
-- **样式**: 纯CSS + CSS变量系统 (已移除Tailwind CSS)
-- **状态管理**: Zustand 5.0.6 + persist中间件
-- **表单验证**: React Hook Form + Zod 4.0.5
-- **动画效果**: Framer Motion 12.23.6 + CSS原生动画
-- **UI组件**: Radix UI + 自定义原子组件
+# 仅启动后端（端口1337）
+./start-backend.sh
 
-### 后端核心技术 (已实现)
-- **CMS**: Strapi 5.x (Headless CMS)
-- **数据库**: PostgreSQL (支持JSONB、数组类型)
-- **API**: RESTful API + 权限管理
-- **认证**: JWT + OAuth2.0
-- **文件上传**: Strapi内置Upload插件
-- **国际化**: Strapi内置i18n插件
+# 查看服务状态
+./status.sh
 
-### SEO优化架构 (现代化方案)
-- **动态Sitemap**: Next.js 14原生Metadata API实现
-- **智能Robots.txt**: 自动配置搜索引擎爬虫策略
-- **实时同步**: 与Strapi数据实时同步更新
-- **性能优化**: 零运行时开销，原生缓存机制
-- **多页面支持**: 静态页面+动态内容完整覆盖
-- **搜索引擎友好**: 符合Google最新SEO标准
+# 停止所有服务
+./stop-dev.sh
+```
 
-**SEO技术优势**:
-- ✅ **完全可控** - 前端完全控制SEO策略
-- ✅ **自动更新** - 内容变更时sitemap自动同步
-- ✅ **性能优异** - Next.js原生实现，无第三方依赖
-- ✅ **现代架构** - 不依赖过时的Strapi 4.x插件
+### 访问地址
 
-### 设计系统架构 (纯CSS优势)
-- **设计模式**: 原子设计 (Atoms → Molecules → Organisms → Templates → Pages)
-- **变量系统**: 64个CSS变量统一管理颜色、字体、间距
-- **组件架构**: 7个原子组件 + 13个分子组件 + 5个有机组件
-- **响应式**: 原生CSS媒体查询，4个断点精确适配
-- **效果实现**: backdrop-filter毛玻璃，gradient渐变，transition动画
+- 🌐 **前端网站**: http://localhost:3000
+- ⚙️ **后端管理**: http://localhost:1337/admin
+- 📡 **API测试**: http://localhost:1337/api/articles
+- 📖 **API文档**: [API-ENDPOINTS.md](./API-ENDPOINTS.md)
 
-### 开发工具链
-- **包管理**: npm (Next.js优化)
-- **代码检查**: ESLint 9 + Prettier 3.6.2
-- **类型检查**: TypeScript strict模式
-- **开发体验**: Turbopack热重载 + next-themes主题
+## 💻 技术栈
 
-## 📁 项目架构
+### 前端技术
+- **框架**: Next.js 14 (App Router)
+- **语言**: TypeScript
+- **样式**: 纯CSS + CSS变量系统
+- **状态管理**: Zustand + 持久化
+- **表单**: React Hook Form + Zod验证
+- **图标**: 自定义SVG图标库 (160+个)
+
+### 后端技术
+- **CMS**: Strapi 5.x
+- **数据库**: PostgreSQL
+- **ORM**: Strapi内置ORM
+- **认证**: JWT + Session
+- **文件存储**: 本地存储/云存储
+
+### 开发工具
+- **包管理**: npm
+- **代码规范**: ESLint + Prettier
+- **类型检查**: TypeScript Strict Mode
+- **版本控制**: Git
+
+## 📁 项目结构
 
 ```
 aibianx/
-├── README.md                    # 📋 项目说明文档
-├── frontend/                    # 🌐 Next.js前台应用
+├── 🌐 frontend/          # Next.js前端应用
 │   ├── src/
-│   │   ├── app/                 # Next.js App Router
-│   │   │   ├── page.tsx         # 首页
-│   │   │   ├── weekly/          # AI周刊模块
-│   │   │   │   ├── page.tsx     # 周刊列表页
-│   │   │   │   └── [slug]/      # 文章详情页
-│   │   │   ├── about/           # 关于页面
-│   │   │   ├── layout.tsx       # 全局布局
-│   │   │   └── globals.css      # 全局样式系统
-│   │   ├── components/          # 组件系统
-│   │   │   ├── ui/              # 原子组件 (7个)
-│   │   │   │   ├── Button/      # GradientButton - 渐变按钮
-│   │   │   │   ├── Text/        # GradientText - 渐变文字
-│   │   │   │   ├── Input/       # 输入框组件
-│   │   │   │   ├── Card/        # GlassCard - 毛玻璃卡片
-│   │   │   │   ├── Icon/        # 图标组件 (124个图标)
-│   │   │   │   ├── Avatar/      # 头像组件
-│   │   │   │   └── Container/   # 容器组件 (xl=1440px)
-│   │   │   ├── molecules/       # 分子组件 (13个)
-│   │   │   │   ├── SearchBar/   # 智能搜索栏
-│   │   │   │   ├── ArticleCard/ # 文章卡片
-│   │   │   │   ├── Pagination/  # 分页导航
-│   │   │   │   └── ...         # 其他业务组件
-│   │   │   ├── organisms/       # 有机组件 (5个)
-│   │   │   │   ├── Header/      # 全局头部导航
-│   │   │   │   ├── Footer/      # 全局底部
-│   │   │   │   └── *Modal/      # 弹窗组件系列
-│   │   │   └── templates/       # 页面模板
-│   │   ├── stores/              # Zustand状态管理
-│   │   │   ├── modalStore.ts    # 弹窗状态
-│   │   │   └── userStore.ts     # 用户状态
-│   │   ├── lib/                 # 工具函数库
-│   │   └── types/               # TypeScript类型定义
-│   ├── public/                  # 静态资源 (124个文件)
-│   │   ├── fonts/               # 阿里巴巴普惠体字体文件
-│   │   ├── icons/               # 95个SVG图标
-│   │   │   ├── modals/          # 弹窗专用图标 (31个)
-│   │   │   └── payments/        # 支付方式图标 (4个)
-│   │   └── images/              # 24个图片资源
-│   │       ├── articles/        # 文章配图 (14个)
-│   │       ├── avatars/         # 用户头像 (2个)
-│   │       ├── hero/            # 首页展示设备 (3个)
-│   │       └── illustrations/   # 功能插图 (5个)
-│   └── package.json             # 依赖配置
-├── docs/                        # 📖 项目文档体系
-│   ├── README.md                # 文档中心索引
-│   ├── 架构文档/                 # 技术方案和演进记录
-│   ├── 阶段报告/                 # 5个开发阶段完成报告
-│   ├── 资源文档/                 # 设计稿资源提取指南
-│   ├── 修复记录/                 # 技术问题修复记录
-│   └── 开发指南/                 # 纯CSS开发最佳实践
-├── sh/                          # 🔧 自动化脚本工具
-│   ├── development/             # 开发环境脚本
-│   │   ├── quick-start.sh       # 一键启动开发环境
-│   │   └── start-frontend.sh    # 前台开发服务器
-│   └── resources/               # 资源管理脚本
-│       ├── check_resources.sh   # 资源完整性检查
-│       └── download_*.sh        # 设计稿资源下载脚本
-└── admin/                       # 🛠️ 管理后台 (预留开发)
+│   │   ├── app/          # Next.js App Router页面
+│   │   ├── components/   # React组件库
+│   │   │   ├── ui/      # 原子组件
+│   │   │   ├── molecules/ # 分子组件
+│   │   │   └── organisms/ # 有机组件
+│   │   ├── stores/       # Zustand状态管理
+│   │   ├── lib/          # 工具函数和API客户端
+│   │   └── types/        # TypeScript类型定义
+│   └── public/           # 静态资源
+│       ├── icons/        # SVG图标库
+│       ├── images/       # 图片资源
+│       └── fonts/        # 字体文件
+│
+├── ⚙️ backend/           # Strapi后端应用
+│   ├── src/
+│   │   ├── api/          # API路由和控制器
+│   │   └── extensions/   # Strapi扩展
+│   ├── config/           # 配置文件
+│   └── database/         # 数据库相关
+│
+├── 📚 docs/              # 项目文档
+├── 🛠️ sh/               # 开发脚本
+└── 🔧 配置文件            # 各种配置文件
 ```
 
-## 🎯 核心功能特性
+## 🎨 设计系统
 
-### 📚 内容管理系统
-- **AI周刊浏览** - 8种分类筛选 (全部、最新、热门、AI工具、变现心得、技术指南、实战案例、会员专享)
-- **智能搜索** - 支持标题、内容、标签的实时搜索，useMemo优化性能
-- **文章阅读** - Markdown渲染、代码高亮、目录导航、阅读进度
-- **相关推荐** - 智能推荐算法，基于标签和分类的文章发现
+### 色彩体系
+- **主色调**: 蓝紫渐变 (`#3B82F6` → `#8B5CF6`)
+- **背景色**: 深色主题 (`#030303`, `#1A1A1A`)
+- **文字色**: 白色层级 (`#FFFFFF`, `#D1D5DB`, `#9CA3AF`)
+- **边框色**: 半透明灰色 (`rgba(42, 42, 42, 0.70)`)
 
-### 🔐 用户认证系统
-- **多方式注册** - 邮箱注册 + GitHub OAuth
-- **安全登录** - 密码强度检测、记住登录状态、忘记密码找回
-- **会员管理** - 倒计时营销、特权展示、订阅管理
-- **个人中心** - 用户信息、阅读历史、收藏管理
+### 字体系统
+- **字体**: 阿里巴巴普惠体 3.0
+- **尺寸**: 12px - 64px (8个层级)
+- **字重**: Light, Regular, Medium, SemiBold, Bold
 
-### 💎 交互体验设计
-- **响应式布局** - 4个断点适配 (超小屏480px、移动端768px、平板1024px、桌面1440px)
-- **微交互动画** - 悬停效果、点击反馈、状态切换、页面过渡
-- **无障碍支持** - 高对比度模式、减少动画模式、键盘导航、屏幕阅读器
-- **性能优化** - 组件懒加载、图片优化、状态缓存、防抖处理
+### 组件库
+- **原子组件**: Button, Input, Icon, Avatar等
+- **分子组件**: ArticleCard, UserSidebar等
+- **有机组件**: Header, Footer, Layout等
 
-### 📱 移动端优化
-- **导航适配** - 桌面端完整菜单，移动端折叠菜单
-- **触摸优化** - 按钮大小适配、手势滑动、防误触设计
-- **布局响应** - 双栏→单栏自动切换、侧边栏智能隐藏
-- **输入优化** - 防iOS缩放、虚拟键盘适配、表单验证
+## 📊 数据模型
 
-## 📚 文档中心
+### 核心实体
+- **文章 (Article)** - 标题、内容、作者、分类、标签
+- **作者 (Author)** - 姓名、简介、头像、社交链接
+- **分类 (Category)** - 名称、描述、图标、颜色
+- **标签 (Tag)** - 名称、描述、颜色、图标
 
-> 🎯 **完整的项目文档体系，开发者友好的知识管理**
+### 关系设计
+- 文章 → 作者 (多对一)
+- 文章 → 分类 (多对一)
+- 文章 → 标签 (多对多)
 
-### 🚀 快速导航
-| 分类 | 重要文档 | 说明 |
-|-----|----------|------|
-| **新手入门** | [📋 文档中心](docs/README.md) | 项目概览、快速开始 |
-| **技术架构** | [📐 核心技术方案](docs/架构文档/AI变现之路网站开发方案.md) | 完整技术栈和设计系统 |
-| **开发指南** | [🎨 纯CSS开发指南](docs/开发指南/纯CSS开发指南.md) | CSS变量、组件样式规范 |
-| **Strapi指南** | [🛠️ Strapi内容类型创建指南](docs/当前开发/Strapi5x内容类型创建指南.md) | Strapi 5.x内容类型正确创建方法 |
-| **SEO优化** | [🚀 SEO优化方案](docs/当前开发/SEO优化方案.md) | 现代化SEO技术架构和实施 |
-| **SEO实施** | [📊 SEO实施指南](docs/当前开发/SEO实施指南.md) | SEO功能配置和使用教程 |
-| **问题解决** | [🔧 修复记录分类总结](docs/修复记录/修复记录分类总结.md) | 57个问题的分类解决方案 |
-| **API文档** | [📡 API接口文档](docs/开发指南/API接口文档.md) | 后端API设计规范 |
-| **部署运维** | [🚀 部署运维指南](docs/开发指南/部署运维指南.md) | 从开发到生产的完整指南 |
+## 🔧 开发指南
 
-### 🎯 开发工具
-```bash
-# 一键启动开发环境
-./sh/development/quick-start.sh
+### 环境要求
+- **Node.js**: 18.x+
+- **PostgreSQL**: 14.x+
+- **npm**: 9.x+
 
-# 资源完整性检查
-./sh/resources/check_resources.sh
+### 代码规范
+- **100%类型安全** - 零any使用
+- **纯CSS方案** - 无框架依赖
+- **原子设计** - 组件分层架构
+- **响应式优先** - 移动端优先设计
 
-# 间距规范修复
-./sh/development/fix-spacing.sh
-```
+### 详细文档
+- 📖 [开发脚本使用指南](./DEV-SCRIPTS.md)
+- 📋 [项目开发文档](./docs/)
+- 🎨 [设计系统文档](./docs/设计系统/)
+- 🔧 [API集成文档](./docs/API集成/)
 
-### 💡 技术亮点
-- **100%设计稿还原** - 纯CSS技术栈，无框架限制
-- **类型安全覆盖** - TypeScript 100%覆盖，零any使用
-- **Strapi 5.x最佳实践** - 掌握正确的内容类型创建方法，解决官方文档未明确的格式要求
-- **现代化SEO方案** - 使用Next.js 14原生API实现，不依赖过时插件
-- **极致性能优化** - Turbopack构建，Vercel部署
-- **完整文档体系** - 7大分类，涵盖开发全流程和问题解决方案
+## 🚨 故障排除
 
-## 📊 开发进度
+### 常见问题
 
-| 阶段 | 状态 | 主要成果 | 完成度 |
-|-----|------|----------|--------|
-| **Phase 1** | ✅ 完成 | 项目基础搭建、设计系统、资源提取 | 100% |
-| **Phase 2** | ✅ 完成 | 7个原子组件开发 (Button/Text/Input/Card等) | 100% |
-| **Phase 3** | ✅ 完成 | 公共布局组件 (Header/Footer) | 100% |
-| **Phase 4** | ✅ 完成 | 弹窗组件系列 (认证/会员/支付) | 100% |
-| **Phase 5** | ✅ 完成 | 核心页面实现 (首页/周刊/详情/关于/个人中心) | 100% |
-| **Phase 6** | ✅ 完成 | 后端CMS集成 + SEO优化方案 | 100% |
-| **Phase 7** | 🔄 进行中 | 前端API集成和功能完善 | 30% |
-| **Phase 8** | 📋 计划中 | 生产部署和性能优化 | 0% |
+1. **端口被占用**
+   ```bash
+   ./stop-dev.sh  # 停止所有服务
+   ```
 
-**当前状态**: 前台网站核心功能完成，正在开发后端API，预计12月底上线
+2. **数据库连接失败**
+   ```bash
+   # macOS
+   brew services start postgresql
+   # Linux
+   sudo systemctl start postgresql
+   ```
 
-## 🎨 设计资源
+3. **依赖安装失败**
+   ```bash
+   cd backend && rm -rf node_modules && npm install
+   cd frontend && rm -rf node_modules && npm install
+   ```
 
-### 设计稿链接 (miaoduo)
-- **[首页设计稿](https://miaoduo.com/file/c8ss4wOwiGK4yVWBtwZ5s4d?nodeId=36%3A1886&type=design)** - Hero展示 + 功能介绍
-- **[周刊页面](https://miaoduo.com/file/c8ss4wOwiGK4yVWBtwZ5s4d?nodeId=31%3A1&type=design)** - 文章列表 + 搜索筛选
-- **[文章详情页](https://miaoduo.com/file/c8ss4wOwiGK4yVWBtwZ5s4d?nodeId=31%3A1379&type=design)** - 内容展示 + 交互功能
-- **[关于页面](https://miaoduo.com/file/c8ss4wOwiGK4yVWBtwZ5s4d?nodeId=31%3A678&type=design)** - 平台介绍 + 会员特权
-- **[用户弹窗系列](https://miaoduo.com/file/c8ss4wOwiGK4yVWBtwZ5s4d?nodeId=1004%3A125&type=design)** - 注册/登录/忘记密码/会员开通
+4. **服务状态异常**
+   ```bash
+   ./status.sh  # 检查详细状态
+   tail -f logs/backend.log   # 查看后端日志
+   tail -f logs/frontend.log  # 查看前端日志
+   ```
 
-### 资源统计
-- **📊 总计**: 124个设计稿资源文件 (100%提取完成)
-- **🎨 图标**: 95个SVG图标 (分类管理，自动路径映射)
-- **🖼️ 图片**: 24个高质量图片 (优化压缩，支持多格式)
-- **📝 字体**: 7种字重阿里巴巴普惠体 (WOFF2格式，加载优化)
+## 📈 项目进度
 
-### 资源管理
-```bash
-# 检查资源完整性
-sh/resources/check_resources.sh
+- ✅ **第1-2周** - Strapi CMS + PostgreSQL + 前端API集成
+- ✅ **第3周** - 用户认证UI + 支付系统UI + 开发脚本系统
+- 🔄 **第4周** - NextAuth.js集成 + 真实支付功能
+- 📅 **第5-6周** - 邮件营销 + SEO优化 + 性能优化
+- 📅 **第7-8周** - 企业级功能 + 部署优化
 
-# 重新下载资源 (如需要)
-sh/resources/download_resources.sh
-```
+## 🤝 贡献指南
 
-## 🏆 技术亮点
+1. Fork 项目
+2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'Add amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 打开 Pull Request
 
-### 1. 纯CSS设计系统 (行业领先)
-- **100%设计稿还原** - 像素级精确，无框架限制
-- **64个CSS变量** - 统一的设计Token管理
-- **毛玻璃效果完美实现** - backdrop-filter原生支持
-- **性能提升34%** - 无运行时依赖，纯CSS渲染
+## 📄 许可证
 
-### 2. TypeScript架构设计
-- **零any使用** - 100%类型安全覆盖
-- **forwardRef支持** - 完整的组件ref转发
-- **接口统一** - 一致的HTMLAttributes扩展
-- **泛型约束** - 合理的类型复用设计
-
-### 3. 响应式体验优化
-- **移动端优先** - 渐进增强到桌面端
-- **智能布局切换** - 双栏→单栏自动适配
-- **触摸体验优化** - 按钮大小、手势滑动
-- **性能监控** - Core Web Vitals优化
-
-### 4. 开发者体验
-- **组件高度复用** - 原子设计模式
-- **开发效率提升50%** - 清晰的架构和工具链
-- **调试体验优化** - 直观的CSS vs 复杂类名
-- **文档体系完善** - 5大分类，完整的知识管理
-
-## 📈 商业价值
-
-### 用户价值
-- **学习效率** - 智能搜索和分类，快速找到所需内容
-- **专业体验** - 像素级设计还原，专业的视觉感受
-- **知识获取** - 系统化的AI变现知识和实战案例
-- **社区互动** - 作者关注、文章收藏、专业讨论
-
-### 平台价值
-- **内容聚合** - 高质量AI变现内容的集中展示
-- **用户转化** - 免费内容吸引，会员特权转化
-- **品牌建设** - 专业形象和权威认知建立
-- **商业变现** - 会员订阅、专家咨询、广告合作
-
-## 🔮 发展规划
-
-### 短期目标 (1-2个月) 
-- [ ] **后端API开发** - 用户认证、内容管理、订单支付
-- [ ] **数据库设计** - MySQL/PostgreSQL选型，表结构设计
-- [ ] **支付集成** - 支付宝、微信支付、银联支付接入
-- [ ] **管理后台** - 内容发布、用户管理、数据统计面板
-
-### 中期规划 (3-6个月)
-- [ ] **个性化推荐** - 基于用户行为的AI推荐算法
-- [ ] **PWA支持** - 渐进式Web应用，离线阅读功能
-- [ ] **社区功能** - 评论系统、用户讨论、专家问答
-- [ ] **多媒体支持** - 视频教程、音频播客、图表展示
-
-### 长期愿景 (6-12个月)
-- [ ] **AI助手集成** - 智能问答、内容生成、学习路径推荐
-- [ ] **移动端APP** - React Native开发，更好的移动体验
-- [ ] **国际化版本** - 多语言支持，全球市场拓展
-- [ ] **生态建设** - 合作伙伴、专家网络、行业影响力
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
 ---
 
-## 📊 项目统计
+<div align="center">
 
-### 📦 技术栈组成
-```
-前端架构 (已完成)
-├── Next.js 14 (App Router)     # React全栈框架
-├── React 19.1.0               # UI库  
-├── TypeScript 5               # 类型安全
-├── 纯CSS + CSS变量            # 样式系统（已移除Tailwind）
-├── Zustand 5.0.6              # 状态管理
-├── Framer Motion 12.23.6      # 动画库
-├── Three.js                   # 3D效果
-└── Radix UI                   # 无障碍组件
+**🎉 祝您开发愉快！**
 
-后端架构 (开发中)
-├── Node.js + Express          # API服务器
-├── MongoDB / PostgreSQL       # 数据库
-├── JWT + OAuth2.0             # 认证系统
-├── Redis                      # 缓存
-└── 支付宝/微信/银联             # 支付系统
-```
+[📚 查看文档](./docs/) | [🐛 反馈问题](./issues) | [💬 讨论区](./discussions)
 
-### 🎨 设计资源统计
-- **📊 总计**: 124个设计稿资源文件 (100%提取完成)
-- **🎨 图标**: 95个SVG图标 (分类管理，自动路径映射)
-- **🖼️ 图片**: 24个高质量图片 (JPEG+SVG混合，优化压缩)
-- **📝 字体**: 7种字重阿里巴巴普惠体 (WOFF2格式，性能优化)
-
-### 🏗️ 组件架构统计
-- **⚛️ 原子组件**: 7个 (Button, Text, Input, Card, Icon, Avatar, Container)
-- **🧩 分子组件**: 25个 (SearchBar, ArticleCard, Pagination等)
-- **🏢 有机组件**: 6个 (Header, Footer, 各类Modal)
-- **📄 页面模板**: 5个主要页面 + 个人中心模块
-
-## 📞 技术支持
-
-### 开发团队
-- **技术架构**: AI变现之路开发团队
-- **设计支持**: 基于miaoduo设计稿
-- **文档维护**: 持续更新的docs体系
-
-### 获取帮助
-- **📚 完整文档**: [docs/README.md](docs/README.md)
-- **🔧 问题解决**: [修复记录分类总结](docs/修复记录/修复记录分类总结.md)
-- **📡 API文档**: [API接口文档](docs/开发指南/API接口文档.md)
-- **🚀 部署指南**: [部署运维指南](docs/开发指南/部署运维指南.md)
-
----
-
-## 📈 最新更新
-
-**最后更新**: 2024年12月  
-**更新内容**: 文档体系优化，增加API文档和部署指南  
-**下次计划**: 后端API开发和数据库集成  
-
-**⚡ 核心特色**: 100%设计稿还原 + TypeScript全覆盖 + 纯CSS技术栈 + 完整文档体系  
-**🎯 当前重点**: 后端API开发，预计12月底完成  
-**🚀 技术优势**: 像素级精确还原 + 极致性能优化 + 开发者友好文档
-
-*"让AI变现变得简单而专业"* - AI变现之路团队 🚀 
+</div> 
