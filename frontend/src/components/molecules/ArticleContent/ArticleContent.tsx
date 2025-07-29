@@ -17,7 +17,7 @@ export function ArticleContent({ content, className = '', fontSize = 16 }: Artic
         setIsClient(true)
         setRenderedContent(renderMarkdown(content))
     }, [content])
-    
+
     // 字体大小变化时重新渲染内容
     useEffect(() => {
         if (isClient) {
@@ -33,7 +33,7 @@ export function ArticleContent({ content, className = '', fontSize = 16 }: Artic
         const h4Size = fontSize // 16px when fontSize=16
         const codeSize = Math.round(fontSize * 0.875) // 14px when fontSize=16
         const lineHeight = Math.round(fontSize * 1.8) // 动态行高
-        
+
         const processedContent = content
             // 标题渲染 - 使用动态字体大小
             .replace(/^# (.*$)/gim, `<h1 style="background: var(--gradient-primary); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: ${h1Size}px; font-weight: 600; line-height: ${Math.round(h1Size * 1.3)}px; margin: ${Math.round(fontSize * 2.7)}px 0 ${Math.round(fontSize * 0.3)}px 0;">$1</h1>`)
@@ -56,7 +56,7 @@ export function ArticleContent({ content, className = '', fontSize = 16 }: Artic
             .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" style="color: var(--color-primary-blue); text-decoration: underline; text-decoration-color: var(--color-info-border); transition: all 0.2s ease;" onmouseover="this.style.textDecorationColor = \'var(--color-primary-blue)\'" onmouseout="this.style.textDecorationColor = \'var(--color-info-border)\'">$1</a>')
             // 段落 - 使用动态行高和边距
             .replace(/\n\n/gim, `</p><p style="color: var(--color-text-primary); line-height: ${lineHeight}px; margin: ${Math.round(fontSize * 0.75)}px 0;">`)
-        
+
         // 包装整个内容在段落标签中
         return `<p style="color: var(--color-text-primary); line-height: ${lineHeight}px; margin: ${Math.round(fontSize * 0.75)}px 0;">${processedContent}</p>`
     }
