@@ -289,3 +289,51 @@ export function Toast({ toast, onClose }: ToastProps) {
         </div>
     )
 } 
+
+// 添加毛玻璃风格Toast通知函数
+export function showToast(message: string, type: 'success' | 'error' = 'success') {
+    // 创建临时Toast元素
+    const toast = document.createElement('div')
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(26, 26, 26, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(42, 42, 42, 0.70);
+        color: var(--color-text-primary, #FFFFFF);
+        padding: 16px 24px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 100000;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        max-width: 90vw;
+        text-align: center;
+        font-family: var(--font-family-primary);
+    `
+
+    // 添加成功/错误指示器
+    const indicator = type === 'success' ? '✅ ' : '❌ '
+    toast.textContent = indicator + message
+    document.body.appendChild(toast)
+
+    // 动画显示
+    setTimeout(() => {
+        toast.style.transform = 'translateX(-50%) translateY(0)'
+    }, 100)
+
+    // 2.5秒后自动移除
+    setTimeout(() => {
+        toast.style.transform = 'translateX(-50%) translateY(100px)'
+        toast.style.opacity = '0'
+        setTimeout(() => {
+            if (document.body.contains(toast)) {
+                document.body.removeChild(toast)
+            }
+        }, 400)
+    }, 2500)
+} 
