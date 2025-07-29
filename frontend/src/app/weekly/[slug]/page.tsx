@@ -1,13 +1,8 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { Container, Icon, Avatar, TagList } from '@/components/ui'
-import {
-    ArticleContent,
-    RelatedArticles
-} from '@/components/molecules'
-import { MOCK_ARTICLE_DATA, MOCK_RELATED_ARTICLES, WEEKLY_DETAIL_TEXT, type ArticleData } from '@/constants/weeklyDetail'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { Container } from '@/components/ui'
+import { getArticleBySlug, getArticles } from '@/lib/strapi'
+import { ArticleDetailClient } from './ArticleDetailClient'
 
 interface ArticleDetailPageProps {
     params: Promise<{
@@ -15,403 +10,146 @@ interface ArticleDetailPageProps {
     }>
 }
 
-export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
-    const [slug, setSlug] = useState<string>('')
-    const [isLiked, setIsLiked] = useState(false)
-    const [isBookmarked, setIsBookmarked] = useState(false)
-
-    // 解析params
-    useEffect(() => {
-        params.then(resolvedParams => {
-            setSlug(resolvedParams.slug)
-        })
-    }, [params])
-
-    // 根据slug获取文章数据（实际项目中应该从API获取）
-    const article = slug ? MOCK_ARTICLE_DATA[slug as keyof typeof MOCK_ARTICLE_DATA] : null
-
-    if (!slug) {
-        // 加载中状态
-        return (
-            <div style={{
-                color: 'var(--color-text-primary)',
-                fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingTop: '80px'
-            }}>
-                <div style={{ textAlign: 'center' }}>
-                    <Container size="md">
-                        <div style={{
-                            fontSize: 'var(--font-size-2xl)',
-                            color: 'var(--color-text-secondary)'
-                        }}>
-                            {WEEKLY_DETAIL_TEXT.loading}
-                        </div>
-                    </Container>
-                </div>
-            </div>
-        )
+// 生成静态路径（ISR）
+export async function generateStaticParams() {
+    try {
+        const { articles } = await getArticles({ pageSize: 100 })
+        return articles.map((article) => ({
+            slug: article.slug,
+        }))
+    } catch (error) {
+        console.error('Failed to generate static params:', error)
+        return []
     }
+}
+
+// 动态生成SEO元数据
+export async function generateMetadata({ params }: ArticleDetailPageProps): Promise<Metadata> {
+    const resolvedParams = await params
+    const article = await getArticleBySlug(resolvedParams.slug)
 
     if (!article) {
-        // 404页面
-        return (
-            <div style={{
-                color: 'var(--color-text-primary)',
-                fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingTop: '80px'
-            }}>
-                <div style={{ textAlign: 'center' }}>
-                    <Container size="md">
-                        <h1 style={{
-                            fontSize: 'var(--font-size-8xl)',
-                            fontWeight: '700',
-                            color: 'var(--color-text-muted)',
-                            marginBottom: 'var(--spacing-4)'
-                        }}>
-                            404
-                        </h1>
-                        <h2 style={{
-                            fontSize: 'var(--font-size-3xl)',
-                            color: 'var(--color-text-primary)',
-                            marginBottom: 'var(--spacing-2)'
-                        }}>
-                            {WEEKLY_DETAIL_TEXT.notFound}
-                        </h2>
-                        <p style={{
-                            fontSize: 'var(--font-size-lg)',
-                            color: 'var(--color-text-secondary)',
-                            marginBottom: 'var(--spacing-6)'
-                        }}>
-                            抱歉，您访问的文章不存在或已被删除
-                        </p>
-                        <Link href="/weekly" style={{
-                            display: 'inline-block',
-                            padding: 'var(--spacing-3) var(--spacing-6)',
-                            background: 'var(--gradient-primary)',
-                            color: 'var(--color-text-primary)',
-                            textDecoration: 'none',
-                            borderRadius: 'var(--radius-md)',
-                            fontSize: 'var(--font-size-sm)',
-                            fontWeight: '500'
-                        }}>
-                            {WEEKLY_DETAIL_TEXT.backToList}
-                        </Link>
-                    </Container>
-                </div>
-            </div>
-        )
+        return {
+            title: '文章未找到 - AI变现之路',
+            description: '您访问的文章不存在或已被删除'
+        }
+    }
+
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aibianx.com'
+    const articleUrl = `${siteUrl}/weekly/${article.slug}`
+
+    return {
+        title: article.title,
+        description: article.excerpt,
+        keywords: article.tags.join(',') + ',AI变现,AI工具,人工智能',
+        authors: [
+            {
+                name: article.author,
+                url: `/authors/${article.authorSlug}`,
+            },
+        ],
+        openGraph: {
+            title: article.title,
+            description: article.excerpt,
+            type: 'article',
+            url: articleUrl,
+            images: article.coverImage ? [
+                {
+                    url: article.coverImage,
+                    width: 1200,
+                    height: 630,
+                    alt: article.title,
+                }
+            ] : [],
+            authors: [article.author.name],
+            publishedTime: article.publishedAt,
+            section: 'AI变现',
+            tags: article.tags
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: article.title,
+            description: article.excerpt,
+            images: article.coverImage ? [article.coverImage] : []
+        },
+        alternates: {
+            canonical: articleUrl,
+        },
+        // 结构化数据
+        other: {
+            'article:author': article.author.name,
+            'article:published_time': article.publishedAt,
+            'article:section': 'AI变现',
+            'article:tag': article.tags.join(','),
+            'article:reading_time': article.readingTime
+        }
+    }
+}
+
+export default async function ArticleDetailPage({ params }: ArticleDetailPageProps) {
+    const resolvedParams = await params
+    const article = await getArticleBySlug(resolvedParams.slug)
+
+    if (!article) {
+        notFound()
+    }
+
+    // 结构化数据 - 文章类型
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": article.title,
+        "description": article.excerpt,
+        "image": article.coverImage ? [article.coverImage] : [],
+        "datePublished": article.publishedAt,
+        "dateModified": article.publishedAt,
+        "author": {
+            "@type": "Person",
+            "name": article.author.name,
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "AI变现之路",
+            "logo": {
+                "@type": "ImageObject",
+                "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://aibianx.com'}/icons/logo-main.svg`,
+            },
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://aibianx.com'}/weekly/${article.slug}`,
+        },
+        "keywords": article.tags.join(', '),
+        "articleSection": "AI变现",
+        "wordCount": Math.ceil((article.excerpt?.length || 0) * 5), // 估算字数
+        "timeRequired": article.readingTime,
+        "url": `${process.env.NEXT_PUBLIC_SITE_URL || 'https://aibianx.com'}/weekly/${article.slug}`
     }
 
     return (
-        <div style={{
-            color: 'var(--color-text-primary)',
-            fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-            minHeight: '100vh',
-            paddingTop: '80px',
-            paddingBottom: '48px'
-        }}>
-            <Container size="lg">
-                {/* 文章详情内容 */}
-                <div className="glass-card" style={{
-                    borderRadius: '16px',
-                    padding: '50px 48px',
-                    marginTop: '48px',
-                    marginBottom: '30px',
-                    border: '1px solid var(--color-border-primary)',
-                    background: 'var(--color-bg-glass)',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    width: '100%',
-                    margin: '48px auto 30px auto'
-                }}>
-                    {/* 标题 */}
-                    <h1 style={{
-                        fontSize: 'var(--font-size-5xl)',
-                        fontWeight: '700',
-                        lineHeight: '1.2',
-                        margin: '0 0 32px 0',
-                        color: 'var(--color-text-primary)',
-                        width: '1000px'
-                    }}>
-                        {article.title}
-                    </h1>
+        <>
+            {/* 结构化数据嵌入 */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(structuredData)
+                }}
+            />
 
-                    {/* 元信息 */}
-                    <div className="meta-info" style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginBottom: '32px',
-                        flexWrap: 'nowrap'
-                    }}>
-                        {/* 作者信息 */}
-                        <div className="author-info" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '16px',
-                            flexShrink: 0
-                        }}>
-                            <Avatar
-                                src={article.author.avatar}
-                                alt={article.author.name}
-                                size="lg"
-                            />
-                            <div>
-                                <div style={{
-                                    fontSize: 'var(--font-size-lg)',
-                                    fontWeight: '600',
-                                    color: 'var(--color-text-primary)',
-                                    marginBottom: '4px'
-                                }}>
-                                    {article.author.name}
-                                </div>
-                                <div style={{
-                                    fontSize: 'var(--font-size-sm)',
-                                    color: 'var(--color-text-muted)'
-                                }}>
-                                    {article.author.bio}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* 标签和阅读信息 */}
-                        <div className="tags-row" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '16px',
-                            flexShrink: 0
-                        }}>
-                            <TagList
-                                tags={article.tags}
-                                size="md"
-                                maxCount={3}
-                            />
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '16px',
-                                fontSize: 'var(--font-size-sm)',
-                                color: 'var(--color-text-muted)',
-                                whiteSpace: 'nowrap'
-                            }}>
-                                <span>{article.publishedAt}</span>
-                                <span>•</span>
-                                <span>{article.readingTime}</span>
-                                <span>•</span>
-                                <span>{article.viewCount} 浏览</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 文章内容 */}
-                    <ArticleContent content={article.content} />
-
-                    {/* 底部操作区域 */}
-                    <div className="bottom-actions" style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginTop: '48px',
-                        paddingTop: '32px',
-                        borderTop: '1px solid var(--color-border-primary)'
-                    }}>
-                        {/* 左侧操作按钮 */}
-                        <div style={{
-                            display: 'flex',
-                            gap: '12px',
-                            alignItems: 'center'
-                        }}>
-                            {/* 点赞按钮 */}
-                            <button
-                                onClick={() => setIsLiked(!isLiked)}
-                                style={{
-                                    background: 'var(--color-bg-glass)',
-                                    borderRadius: '8px',
-                                    display: 'flex',
-                                    gap: '6px',
-                                    alignItems: 'center',
-                                    padding: '8px 12px',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s ease',
-                                    color: isLiked ? '#EF4444' : 'var(--color-text-muted)'
-                                }}
-                            >
-                                <Icon name="like-icon-detail" size="sm" />
-                                <span style={{ fontSize: '14px' }}>
-                                    {article.likeCount}
-                                </span>
-                            </button>
-
-                            {/* 收藏按钮 */}
-                            <button
-                                onClick={() => setIsBookmarked(!isBookmarked)}
-                                style={{
-                                    background: 'var(--color-bg-glass)',
-                                    borderRadius: '8px',
-                                    display: 'flex',
-                                    gap: '6px',
-                                    alignItems: 'center',
-                                    padding: '8px 12px',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.2s ease',
-                                    color: isBookmarked ? '#FFC107' : 'var(--color-text-muted)'
-                                }}
-                            >
-                                <Icon name="collect-icon-detail" size="sm" />
-                                <span style={{ fontSize: '14px' }}>
-                                    {WEEKLY_DETAIL_TEXT.bookmarkAction}
-                                </span>
-                            </button>
-
-                            {/* 调整按钮 */}
-                            <button style={{
-                                background: 'var(--color-bg-glass)',
-                                borderRadius: '8px',
-                                display: 'flex',
-                                gap: '6px',
-                                alignItems: 'center',
-                                padding: '8px 12px',
-                                border: 'none',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                color: 'var(--color-text-muted)'
-                            }}>
-                                <Icon name="adjust-icon-detail" size="sm" />
-                                <span style={{ fontSize: '14px' }}>
-                                    {WEEKLY_DETAIL_TEXT.adjustAction}
-                                </span>
-                            </button>
-                        </div>
-
-                        {/* 右侧分享按钮 */}
-                        <div style={{
-                            display: 'flex',
-                            gap: '8px',
-                            alignItems: 'center'
-                        }}>
-                            <button style={{
-                                background: 'var(--color-bg-glass)',
-                                borderRadius: '18px',
-                                padding: '10px',
-                                display: 'flex',
-                                width: '36px',
-                                height: '36px',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                border: 'none',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease'
-                            }}>
-                                <Icon name="share-link-detail" size="sm" />
-                            </button>
-                            <button style={{
-                                background: 'var(--color-bg-glass)',
-                                borderRadius: '18px',
-                                padding: '10px',
-                                display: 'flex',
-                                width: '36px',
-                                height: '36px',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                border: 'none',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease'
-                            }}>
-                                <Icon name="share-wechat-detail" size="sm" />
-                            </button>
-                            <button style={{
-                                background: 'var(--color-bg-glass)',
-                                borderRadius: '18px',
-                                padding: '10px',
-                                display: 'flex',
-                                width: '36px',
-                                height: '36px',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                border: 'none',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease'
-                            }}>
-                                <Icon name="share-weibo-detail" size="sm" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* 相关文章推荐 */}
-                <RelatedArticles
-                    articles={MOCK_RELATED_ARTICLES}
-                    title={WEEKLY_DETAIL_TEXT.relatedTitle}
-                />
-            </Container>
-
-            {/* 响应式样式 */}
-            <style jsx>{`
-                @media (max-width: 768px) {
-                    .glass-card {
-                        margin: 0 10px !important;
-                        padding: 20px 16px !important;
-                    }
-                    
-                    h1 {
-                        font-size: 24px !important;
-                        width: 100% !important;
-                        white-space: nowrap !important;
-                        overflow: hidden !important;
-                        text-overflow: ellipsis !important;
-                    }
-                    
-                    .bottom-actions {
-                        flex-direction: column !important;
-                        gap: 16px !important;
-                        align-items: stretch !important;
-                    }
-                    
-                    .meta-info {
-                        flex-wrap: wrap !important;
-                        gap: 8px !important;
-                    }
-                    
-                    .tags-row {
-                        flex-wrap: wrap !important;
-                        gap: 8px !important;
-                    }
-                    
-                    .author-info {
-                        flex-wrap: nowrap !important;
-                    }
-                }
-                
-                @media (max-width: 480px) {
-                    h1 {
-                        font-size: 20px !important;
-                        line-height: 1.3 !important;
-                        white-space: normal !important;
-                        overflow: visible !important;
-                        text-overflow: clip !important;
-                    }
-                    
-                    .meta-info {
-                        flex-direction: column !important;
-                        align-items: flex-start !important;
-                    }
-                    
-                    .tags-row {
-                        flex-direction: column !important;
-                        align-items: flex-start !important;
-                    }
-                }
-            `}</style>
-        </div>
+            {/* 主要内容 */}
+            <div style={{
+                color: 'var(--color-text-primary)',
+                fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+                minHeight: '100vh',
+                paddingTop: '80px'
+            }}>
+                <Container size="xl">
+                    <ArticleDetailClient article={article} />
+                </Container>
+            </div>
+        </>
     )
-} 
+}
+
+// ISR配置 - 提升SEO性能
+export const revalidate = 3600 // 1小时重新验证 
