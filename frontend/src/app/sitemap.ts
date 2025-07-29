@@ -74,24 +74,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // 文章页面
     const articlePages = articles.map((article: any) => ({
-        url: `${SITE_URL}/articles/${article.attributes.slug}`,
-        lastModified: new Date(article.attributes.updatedAt),
+        url: `${SITE_URL}/weekly/${article.slug}`,
+        lastModified: new Date(article.updatedAt),
         changeFrequency: 'weekly' as const,
         priority: 0.6,
     }))
 
     // 分类页面
     const categoryPages = categories.map((category: any) => ({
-        url: `${SITE_URL}/categories/${category.attributes.slug}`,
-        lastModified: new Date(category.attributes.updatedAt),
+        url: `${SITE_URL}/categories/${category.slug}`,
+        lastModified: new Date(category.updatedAt),
         changeFrequency: 'weekly' as const,
         priority: 0.5,
     }))
 
     // 作者页面
     const authorPages = authors.map((author: any) => ({
-        url: `${SITE_URL}/authors/${author.attributes.slug}`,
-        lastModified: new Date(author.attributes.updatedAt),
+        url: `${SITE_URL}/authors/${author.slug}`,
+        lastModified: new Date(author.updatedAt),
         changeFrequency: 'monthly' as const,
         priority: 0.4,
     }))
