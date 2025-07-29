@@ -19,6 +19,9 @@ export interface ArticleCardData {
     tags: string[]
     slug: string
     isPremium?: boolean
+    // SEO优化字段
+    seoTitle?: string
+    seoDescription?: string
 }
 
 interface ArticleCardProps {

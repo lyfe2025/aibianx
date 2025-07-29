@@ -304,7 +304,10 @@ function transformStrapiArticle(strapiArticle: StrapiArticle): ArticleCardData {
                 ? `${STRAPI_URL}${strapiArticle.author.avatar.url}`
                 : undefined
         },
-        tags: strapiArticle.tags?.map(tag => tag.name).filter(Boolean) || []
+        tags: strapiArticle.tags?.map(tag => tag.name).filter(Boolean) || [],
+        // SEO优化字段
+        seoTitle: strapiArticle.seoTitle || undefined,
+        seoDescription: strapiArticle.seoDescription || undefined
     }
 }
 

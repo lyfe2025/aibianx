@@ -38,19 +38,23 @@ export async function generateMetadata({ params }: ArticleDetailPageProps): Prom
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aibianx.com'
     const articleUrl = `${siteUrl}/weekly/${article.slug}`
 
+    // SEO优化：优先使用专用SEO字段，回退到默认字段
+    const seoTitle = article.seoTitle || article.title
+    const seoDescription = article.seoDescription || article.excerpt
+    
     return {
-        title: article.title,
-        description: article.excerpt,
+        title: seoTitle,
+        description: seoDescription,
         keywords: article.tags.join(',') + ',AI变现,AI工具,人工智能',
         authors: [
             {
-                name: article.author,
+                name: article.author.name,
                 url: `/authors/${article.authorSlug}`,
             },
         ],
         openGraph: {
-            title: article.title,
-            description: article.excerpt,
+            title: seoTitle,
+            description: seoDescription,
             type: 'article',
             url: articleUrl,
             images: article.coverImage ? [
@@ -68,8 +72,8 @@ export async function generateMetadata({ params }: ArticleDetailPageProps): Prom
         },
         twitter: {
             card: 'summary_large_image',
-            title: article.title,
-            description: article.excerpt,
+            title: seoTitle,
+            description: seoDescription,
             images: article.coverImage ? [article.coverImage] : []
         },
         alternates: {
@@ -94,12 +98,12 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
         notFound()
     }
 
-    // 结构化数据 - 文章类型
+    // 结构化数据 - 文章类型（使用SEO优化字段）
     const structuredData = {
         "@context": "https://schema.org",
         "@type": "Article",
-        "headline": article.title,
-        "description": article.excerpt,
+        "headline": seoTitle,
+        "description": seoDescription,
         "image": article.coverImage ? [article.coverImage] : [],
         "datePublished": article.publishedAt,
         "dateModified": article.publishedAt,
