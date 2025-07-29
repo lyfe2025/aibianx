@@ -1,106 +1,28 @@
-############################
-# OS X
-############################
+# ================================
+# Strapi 5.x 后端专用忽略文件  
+# ================================
+# 注意：基础规则已在根目录.gitignore中定义
 
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon
-.Spotlight-V100
-.Trashes
-._*
-
-
-############################
-# Linux
-############################
-
-*~
-
-
-############################
-# Windows
-############################
-
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-*.cab
-*.msi
-*.msm
-*.msp
-
-
-############################
-# Packages
-############################
-
-*.7z
-*.csv
-*.dat
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.seed
-*.so
-*.swo
-*.swp
-*.swn
-*.swm
-*.out
-*.pid
-
-
-############################
-# Logs and databases
-############################
-
+# ===== Strapi 5.x 特有 =====
+# Strapi构建和缓存
 .tmp
-*.log
-*.sql
-*.sqlite
-*.sqlite3
+dist/
+build/
+.strapi/
+.strapi-updater.json
+.strapi-cloud.json
 
-
-############################
-# Misc.
-############################
-
-*#
-ssl
-.idea
-nbproject
+# Strapi媒体文件
 public/uploads/*
 !public/uploads/.gitkeep
-.tsbuildinfo
-.eslintcache
+exports/
 
-############################
-# Node.js
-############################
-
-lib-cov
-lcov.info
-pids
-logs
-results
-node_modules
+# ===== 后端开发特有 =====
+# 后端依赖
+node_modules/
 .node_history
 
-############################
-# Package managers
-############################
-
+# Package managers (后端特有配置)
 .yarn/*
 !.yarn/cache
 !.yarn/unplugged
@@ -111,21 +33,35 @@ node_modules
 .pnp.*
 yarn-error.log
 
-############################
-# Tests
-############################
+# ===== 后端日志和进程 =====
+# 后端日志
+*.log
+logs/
+pids/
+results/
+lib-cov
+lcov.info
 
-coverage
+# ===== 数据库 (后端特有) =====
+# 数据库文件
+*.sql
+*.sqlite
+*.sqlite3
+.tmp
 
-############################
-# Strapi
-############################
+# ===== 后端测试 =====
+coverage/
 
+# ===== 后端配置 =====
+# Strapi环境配置
 .env
 license.txt
-exports
-.strapi
-dist
-build
-.strapi-updater.json
-.strapi-cloud.json
+
+# SSL证书
+ssl/
+
+# ===== 开发工具 (后端特有) =====
+.idea/
+nbproject/
+.eslintcache
+.tsbuildinfo

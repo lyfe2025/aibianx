@@ -1,41 +1,48 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ================================
+# Next.js 前端专用忽略文件
+# ================================
+# 注意：基础规则已在根目录.gitignore中定义
 
-# dependencies
+# ===== Next.js 特有 =====
+# Next.js 构建和缓存
+/.next/
+/out/
+/build
+
+# Next.js 类型定义
+next-env.d.ts
+*.tsbuildinfo
+
+# ===== 前端开发特有 =====
+# 前端依赖和包管理
 /node_modules
 /.pnp
 .pnp.*
+
+# Yarn Berry特有
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
 
-# testing
+# 前端测试覆盖率
 /coverage
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# ===== 开发工具特有 =====
+# 前端调试日志
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
+# ===== 部署特有 =====
+# Vercel部署
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# ===== 环境变量 (前端特有) =====
+# Next.js环境变量
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
