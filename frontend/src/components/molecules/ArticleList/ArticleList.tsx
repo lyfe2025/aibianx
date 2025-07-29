@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useHomeArticles } from '@/lib/hooks'
 import { Icon, TagList } from '@/components/ui'
-import { FILTER_OPTIONS, ARTICLES_DATA, MAIN_CONTENT_TEXT } from '@/constants/mainContent'
+import { FILTER_OPTIONS, MAIN_CONTENT_TEXT } from '@/constants/mainContent'
 import Link from 'next/link'
 
 interface ArticleListProps {
@@ -10,18 +10,28 @@ interface ArticleListProps {
 }
 
 /**
- * ArticleList 文章列表组件
+ * ArticleList 文章列表组件 (API版本)
  * 
  * 功能特性：
- * - 筛选标签功能
- * - 文章列表展示
+ * - 筛选标签功能 (最新、热门)
+ * - 真实API文章列表展示
  * - 查看更多按钮
+ * - 加载和错误状态处理
  * - 响应式设计
  * 
  * 从MainContentSection中分离，符合单一职责原则
  */
 export function ArticleList({ className }: ArticleListProps) {
-    const [activeFilter, setActiveFilter] = useState('最新')
+    // 使用API版本的Hook
+    const {
+        activeFilter,
+        isLoading,
+        connectionError,
+        articles,
+        totalCount,
+        handleFilterChange,
+        refetch
+    } = useHomeArticles()
 
     return (
         <div className={`main-content-articles ${className || ''}`} style={{
@@ -52,11 +62,12 @@ export function ArticleList({ className }: ArticleListProps) {
                     {FILTER_OPTIONS.map((option) => (
                         <button
                             key={option}
-                            onClick={() => setActiveFilter(option)}
+                            onClick={() => handleFilterChange(option === '最新' ? 'latest' : 'popular')}
                             style={{
                                 background: 'none',
                                 border: 'none',
-                                color: activeFilter === option ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                                color: (activeFilter === 'latest' && option === '最新') || (activeFilter === 'popular' && option === '热门') 
+                                    ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                                 fontSize: '16px',
                                 lineHeight: '24px',
                                 cursor: 'pointer',
@@ -67,7 +78,7 @@ export function ArticleList({ className }: ArticleListProps) {
                             }}
                         >
                             {option}
-                            {activeFilter === option && (
+                            {((activeFilter === 'latest' && option === '最新') || (activeFilter === 'popular' && option === '热门')) && (
                                 <div style={{
                                     position: 'absolute',
                                     bottom: '-8px',
@@ -84,16 +95,60 @@ export function ArticleList({ className }: ArticleListProps) {
             </div>
 
             {/* 文章列表 */}
-            <div className="articles-list" style={{
-                display: 'flex',
-                flexDirection: 'column',
-                margin: '0 36px',
-                gap: '22px'
-            }}>
-                {ARTICLES_DATA.map((article) => (
-                    <Link
-                        key={article.id}
-                        href={`/weekly/article-${article.id}`}
+            {isLoading ? (
+                <div style={{
+                    textAlign: 'center',
+                    padding: '60px 20px',
+                    color: 'var(--color-text-secondary)'
+                }}>
+                    <div style={{ fontSize: 'var(--font-size-lg)' }}>
+                        加载文章中...
+                    </div>
+                </div>
+            ) : connectionError ? (
+                <div style={{
+                    textAlign: 'center',
+                    padding: '60px 20px',
+                    color: 'var(--color-text-secondary)'
+                }}>
+                    <div style={{ fontSize: 'var(--font-size-lg)', marginBottom: '16px' }}>
+                        无法连接到后端服务
+                    </div>
+                    <button 
+                        onClick={refetch}
+                        style={{
+                            background: 'var(--gradient-primary)',
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '8px 16px',
+                            color: 'white',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        重试
+                    </button>
+                </div>
+            ) : articles.length === 0 ? (
+                <div style={{
+                    textAlign: 'center',
+                    padding: '60px 20px',
+                    color: 'var(--color-text-secondary)'
+                }}>
+                    <div style={{ fontSize: 'var(--font-size-lg)' }}>
+                        暂无{activeFilter === 'latest' ? '最新' : '热门'}文章
+                    </div>
+                </div>
+            ) : (
+                <div className="articles-list" style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    margin: '0 36px',
+                    gap: '22px'
+                }}>
+                    {articles.map((article) => (
+                        <Link
+                            key={article.id}
+                            href={`/weekly/${article.slug}`}
                         style={{
                             textDecoration: 'none',
                             color: 'inherit'
@@ -111,18 +166,24 @@ export function ArticleList({ className }: ArticleListProps) {
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.transform = 'translateY(0)'
                             }}>
-                            <img
-                                src={article.image}
-                                alt={article.title}
-                                style={{
-                                    width: '180px',
-                                    height: '120px',
-                                    borderRadius: '8px',
-                                    objectFit: 'cover',
-                                    marginRight: '24px',
-                                    flexShrink: 0
-                                }}
-                            />
+                            <div style={{
+                                width: '180px',
+                                height: '120px',
+                                borderRadius: '8px',
+                                background: article.coverImage 
+                                    ? `url(${article.coverImage}) center/cover`
+                                    : 'var(--gradient-primary)',
+                                marginRight: '24px',
+                                flexShrink: 0,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'var(--color-text-primary)',
+                                fontSize: '14px',
+                                fontWeight: 600
+                            }}>
+                                {!article.coverImage && '封面图'}
+                            </div>
                             <div style={{
                                 display: 'flex',
                                 flexDirection: 'column',
@@ -172,9 +233,9 @@ export function ArticleList({ className }: ArticleListProps) {
                                             color: 'var(--color-text-disabled)',
                                             fontSize: '12px',
                                             lineHeight: '18px',
-                                            width: article.id === 1 ? '23px' : '24px'
+                                            minWidth: '24px'
                                         }}>
-                                            {article.views}
+                                            {article.viewCount}
                                         </span>
                                     </div>
                                     <div style={{
@@ -194,49 +255,53 @@ export function ArticleList({ className }: ArticleListProps) {
                                             color: 'var(--color-text-disabled)',
                                             fontSize: '12px',
                                             lineHeight: '18px',
-                                            width: article.id === 1 ? '40px' : '48px',
+                                            minWidth: '48px',
                                             whiteSpace: 'nowrap'
                                         }}>
-                                            {article.readTime}
+                                            {article.readingTime}
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </Link>
-                ))}
-            </div>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            )}
 
-            {/* 查看更多按钮 - 底部间距78px，顶部间距10px */}
-            <div className="view-more-container" style={{
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: '10px',
-                marginBottom: '78px'
-            }}>
-                <button
-                    onClick={() => window.location.href = '/weekly'}
-                    style={{
-                        background: 'var(--gradient-primary)',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '16px 24px',
-                        color: 'var(--color-text-primary)',
-                        fontSize: '13.33px',
-                        lineHeight: '15px',
-                        cursor: 'pointer',
-                        fontFamily: 'Arial',
-                        textAlign: 'center',
-                        width: '120px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        whiteSpace: 'nowrap'
-                    }}
-                >
-                    {MAIN_CONTENT_TEXT.viewMoreButtonText}
-                </button>
-            </div>
+            {/* 查看更多按钮 - 上下间距一致 */}
+            {!isLoading && !connectionError && articles.length > 0 && (
+                <div className="view-more-container" style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: '48px',
+                    marginBottom: '48px'
+                }}>
+                    <Link
+                        href="/weekly"
+                        style={{
+                            background: 'var(--gradient-primary)',
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '16px 24px',
+                            color: 'var(--color-text-primary)',
+                            fontSize: '13.33px',
+                            lineHeight: '15px',
+                            cursor: 'pointer',
+                            fontFamily: 'Arial',
+                            textAlign: 'center',
+                            width: '120px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            whiteSpace: 'nowrap',
+                            textDecoration: 'none'
+                        }}
+                    >
+                        {MAIN_CONTENT_TEXT.viewMoreButtonText}
+                    </Link>
+                </div>
+            )}
         </div>
     )
 } 

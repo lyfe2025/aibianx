@@ -5,8 +5,8 @@
  * 便于维护和复用
  */
 
-// 筛选标签选项
-export const FILTER_OPTIONS = ['最新', '热门', '免费'] as const
+// 筛选标签选项 (首页只需要最新和热门)
+export const FILTER_OPTIONS = ['最新', '热门'] as const
 
 // 文章列表数据
 export const ARTICLES_DATA = [

@@ -3,12 +3,12 @@
 import { Container } from '@/components/ui'
 import { PageHeader, SubscriptionSection } from '@/components/molecules'
 import {
-    WeeklySearchSection,
-    WeeklyArticleGrid,
-    WeeklyEmptyState,
-    WeeklyPagination
+  WeeklySearchSection,
+  WeeklyArticleGrid,
+  WeeklyEmptyState,
+  WeeklyPagination
 } from '@/components/molecules'
-import { useWeeklyLogic } from '@/lib/hooks'
+import { useWeeklyLogicWithAPI } from '@/lib/hooks'
 import { PAGE_CONFIG, STYLES_CONFIG } from '@/constants/weeklyConfig'
 
 /**
@@ -22,6 +22,7 @@ import { PAGE_CONFIG, STYLES_CONFIG } from '@/constants/weeklyConfig'
  * - 分页导航
  * - 空状态处理
  * - 订阅区域
+ * - 真实Strapi API集成
  * 
  * 设计规范：
  * - 1440px容器最大宽度
@@ -31,59 +32,97 @@ import { PAGE_CONFIG, STYLES_CONFIG } from '@/constants/weeklyConfig'
  * - 平滑动画过渡
  */
 export default function WeeklyPage() {
-    // 使用自定义Hook管理所有状态和逻辑
-    const {
-        searchQuery,
-        activeFilter,
-        isSearching,
-        filteredArticles,
-        paginatedArticles,
-        totalPages,
-        currentPage,
-        hasResults,
-        handleSearch,
-        handleFilterChange,
-        handlePageChange,
-        resetToDefaults,
-        clearSearch
-    } = useWeeklyLogic()
+  // 使用API版本的Hook管理所有状态和逻辑
+  const {
+    searchQuery,
+    activeFilter,
+    isSearching,
+    isLoading,
+    connectionError,
+    articles,
+    totalPages,
+    totalCount,
+    currentPage,
+    hasResults,
+    handleSearch,
+    handleFilterChange,
+    handlePageChange,
+    resetToDefaults,
+    clearSearch,
+    refetch
+  } = useWeeklyLogicWithAPI()
 
-    return (
-        <div style={{
-            color: 'var(--color-text-primary)',
-            fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-            minHeight: '100vh',
-            paddingTop: STYLES_CONFIG.container.paddingTop
-        }}>
-            <div style={{
-                paddingBottom: STYLES_CONFIG.container.paddingBottom
-            }}>
-                <Container size="xl">
-                    {/* 页面头部 */}
-                    <PageHeader
-                        title={PAGE_CONFIG.title}
-                        subtitle={PAGE_CONFIG.subtitle}
-                        description=""
-                        alignment="center"
-                        className="page-header"
-                    />
+  return (
+    <div style={{
+      color: 'var(--color-text-primary)',
+      fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+      minHeight: '100vh',
+      paddingTop: STYLES_CONFIG.container.paddingTop
+    }}>
+      <div style={{
+        paddingBottom: STYLES_CONFIG.container.paddingBottom
+      }}>
+        <Container size="xl">
+          {/* 页面头部 */}
+          <PageHeader
+            title={PAGE_CONFIG.title}
+            subtitle={PAGE_CONFIG.subtitle}
+            description=""
+            alignment="center"
+            className="page-header"
+          />
 
-                    {/* 搜索和筛选区域 */}
+                              {/* 搜索和筛选区域 */}
                     <WeeklySearchSection
                         searchQuery={searchQuery}
                         activeFilter={activeFilter}
                         isSearching={isSearching}
-                        totalResults={filteredArticles.length}
+                        totalResults={totalCount}
                         onSearch={handleSearch}
                         onFilterChange={handleFilterChange}
                         onClearSearch={clearSearch}
                     />
 
                     {/* 主要内容区域 */}
-                    {hasResults ? (
+                    {isLoading ? (
+                        /* 加载状态 */
+                        <div style={{
+                            textAlign: 'center',
+                            padding: '80px 20px',
+                            color: 'var(--color-text-secondary)'
+                        }}>
+                            <div style={{ fontSize: 'var(--font-size-lg)' }}>
+                                加载文章中...
+                            </div>
+                        </div>
+                    ) : connectionError ? (
+                        /* 连接错误状态 */
+                        <div style={{
+                            textAlign: 'center',
+                            padding: '80px 20px',
+                            color: 'var(--color-text-secondary)'
+                        }}>
+                            <div style={{ fontSize: 'var(--font-size-lg)', marginBottom: '16px' }}>
+                                无法连接到后端服务
+                            </div>
+                            <button 
+                                onClick={refetch}
+                                style={{
+                                    background: 'var(--gradient-primary)',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    padding: '8px 16px',
+                                    color: 'white',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                重试
+                            </button>
+                        </div>
+                    ) : hasResults ? (
                         <>
                             {/* 文章网格 */}
-                            <WeeklyArticleGrid articles={paginatedArticles} />
+                            <WeeklyArticleGrid articles={articles} />
 
                             {/* 分页导航 */}
                             <WeeklyPagination
@@ -108,11 +147,11 @@ export default function WeeklyPage() {
                             onResetToDefaults={resetToDefaults}
                         />
                     )}
-                </Container>
-            </div>
+        </Container>
+      </div>
 
-            {/* CSS样式 - 响应式设计和动画 */}
-            <style jsx>{`
+      {/* CSS样式 - 响应式设计和动画 */}
+      <style jsx>{`
         .search-container {
           max-width: ${STYLES_CONFIG.searchContainer.maxWidth};
         }
@@ -224,6 +263,6 @@ export default function WeeklyPage() {
           }
         }
       `}</style>
-        </div>
-    )
+    </div>
+  )
 } 

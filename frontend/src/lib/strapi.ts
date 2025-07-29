@@ -24,56 +24,64 @@ interface StrapiResponse<T> {
 
 interface StrapiArticle {
     id: number
-    attributes: {
-        title: string
+    documentId: string
+    title: string
+    slug: string
+    content: string
+    excerpt?: string | null
+    publishedAt: string
+    viewCount: number
+    readingTime: number
+    seoTitle?: string | null
+    seoDescription?: string | null
+    featured: boolean
+    createdAt: string
+    updatedAt: string
+    featuredImage?: {
+        id: number
+        documentId: string
+        name: string
+        url: string
+        width: number
+        height: number
+        alternativeText?: string | null
+    } | null
+    author?: {
+        id: number
+        documentId: string
+        name: string
         slug: string
-        content: string
-        excerpt?: string
-        publishedAt: string
-        readingTime: number
-        viewCount: number
-        seoTitle?: string
-        seoDescription?: string
-        featured: boolean
-        featuredImage?: {
-            data?: {
-                attributes: {
-                    url: string
-                    alternativeText?: string
-                }
-            }
-        }
-        author?: {
-            data?: {
-                attributes: {
-                    name: string
-                    avatar?: {
-                        data?: {
-                            attributes: {
-                                url: string
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        tags?: {
-            data: Array<{
-                attributes: {
-                    name: string
-                    slug: string
-                }
-            }>
-        }
-        category?: {
-            data?: {
-                attributes: {
-                    name: string
-                    slug: string
-                }
-            }
-        }
-    }
+        bio?: string | null
+        email?: string | null
+        website?: string | null
+        position?: string | null
+        company?: string | null
+        avatar?: {
+            id: number
+            documentId: string
+            name: string
+            url: string
+            alternativeText?: string | null
+        } | null
+    } | null
+    category?: {
+        id: number
+        documentId: string
+        name: string
+        slug: string
+        description?: string | null
+        icon?: string | null
+        color?: string | null
+    } | null
+    tags?: Array<{
+        id: number
+        documentId: string
+        name: string
+        slug: string
+        color: string
+        description?: string | null
+        icon?: string | null
+    }> | null
 }
 
 // API请求头配置
@@ -99,6 +107,8 @@ export async function getArticles(params: {
     tag?: string
     search?: string
     featured?: boolean
+    sortBy?: string
+    sortOrder?: 'asc' | 'desc'
 } = {}): Promise<{
     articles: ArticleCardData[]
     pagination: {
@@ -115,11 +125,16 @@ export async function getArticles(params: {
         searchParams.append('pagination[page]', String(params.page || 1))
         searchParams.append('pagination[pageSize]', String(params.pageSize || 10))
 
-            // 关联数据 - 使用简化的populate格式
-    searchParams.append('populate', '*')
+        // 关联数据 - 使用简化的populate格式
+        searchParams.append('populate', '*')
 
         // 排序
-        searchParams.append('sort[0]', 'publishedAt:desc')
+        if (params.sortBy) {
+            const sortOrder = params.sortOrder || 'desc'
+            searchParams.append('sort[0]', `${params.sortBy}:${sortOrder}`)
+        } else {
+            searchParams.append('sort[0]', 'publishedAt:desc')
+        }
 
         // 筛选条件
         if (params.category) {
@@ -183,9 +198,9 @@ export async function getArticles(params: {
  */
 export async function getArticleBySlug(slug: string): Promise<ArticleCardData | null> {
     try {
-            const searchParams = new URLSearchParams()
-    searchParams.append('filters[slug][$eq]', slug)
-    searchParams.append('populate', '*')
+        const searchParams = new URLSearchParams()
+        searchParams.append('filters[slug][$eq]', slug)
+        searchParams.append('populate', '*')
 
         const response = await fetch(
             `${STRAPI_URL}/api/articles?${searchParams}`,
@@ -266,28 +281,31 @@ export async function incrementArticleView(articleId: string): Promise<void> {
  * 数据转换函数：将Strapi文章数据转换为前端需要的格式
  */
 function transformStrapiArticle(strapiArticle: StrapiArticle): ArticleCardData {
-    const attr = strapiArticle.attributes
+    if (!strapiArticle || !strapiArticle.title || !strapiArticle.slug) {
+        console.error('Invalid article data - missing required fields:', strapiArticle)
+        throw new Error('Article data is missing required fields (title or slug)')
+    }
 
-      return {
-    id: String(strapiArticle.id),
-    title: attr.title,
-    slug: attr.slug,
-    excerpt: attr.excerpt || '',
-    publishedAt: formatDate(attr.publishedAt),
-    readingTime: `${attr.readingTime || 5}分钟`,
-    viewCount: String(attr.viewCount || 0),
-    isPremium: false, // 暂时设为false，后续可根据需要调整
-    coverImage: attr.featuredImage?.data?.attributes?.url 
-      ? `${STRAPI_URL}${attr.featuredImage.data.attributes.url}`
-      : undefined,
-    author: {
-      name: attr.author?.data?.attributes?.name || '匿名作者',
-      avatar: attr.author?.data?.attributes?.avatar?.data?.attributes?.url
-        ? `${STRAPI_URL}${attr.author.data.attributes.avatar.data.attributes.url}`
-        : undefined
-    },
-    tags: attr.tags?.data?.map(tag => tag.attributes.name) || []
-  }
+    return {
+        id: String(strapiArticle.id),
+        title: strapiArticle.title,
+        slug: strapiArticle.slug,
+        excerpt: strapiArticle.excerpt || '',
+        publishedAt: formatDate(strapiArticle.publishedAt),
+        readingTime: `${strapiArticle.readingTime || 5}分钟`,
+        viewCount: String(strapiArticle.viewCount || 0),
+        isPremium: false, // 暂时设为false，后续可根据需要调整
+        coverImage: strapiArticle.featuredImage?.url
+            ? `${STRAPI_URL}${strapiArticle.featuredImage.url}`
+            : undefined,
+        author: {
+            name: strapiArticle.author?.name || '匿名作者',
+            avatar: strapiArticle.author?.avatar?.url
+                ? `${STRAPI_URL}${strapiArticle.author.avatar.url}`
+                : undefined
+        },
+        tags: strapiArticle.tags?.map(tag => tag.name).filter(Boolean) || []
+    }
 }
 
 /**
