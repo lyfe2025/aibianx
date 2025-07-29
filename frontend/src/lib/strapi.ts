@@ -126,8 +126,12 @@ export async function getArticles(params: {
         searchParams.append('pagination[page]', String(params.page || 1))
         searchParams.append('pagination[pageSize]', String(params.pageSize || 10))
 
-        // 关联数据 - 使用简化的populate格式
-        searchParams.append('populate', '*')
+        // 关联数据 - 使用简化的组合方式
+        searchParams.append('populate[0]', 'author')
+        searchParams.append('populate[1]', 'author.avatar')
+        searchParams.append('populate[2]', 'featuredImage')
+        searchParams.append('populate[3]', 'tags')
+        searchParams.append('populate[4]', 'category')
 
         // 排序
         if (params.sortBy) {
@@ -201,7 +205,12 @@ export async function getArticleBySlug(slug: string): Promise<ArticleCardData | 
     try {
         const searchParams = new URLSearchParams()
         searchParams.append('filters[slug][$eq]', slug)
-        searchParams.append('populate', '*')
+        // 使用简化的组合方式
+        searchParams.append('populate[0]', 'author')
+        searchParams.append('populate[1]', 'author.avatar')
+        searchParams.append('populate[2]', 'featuredImage')
+        searchParams.append('populate[3]', 'tags')
+        searchParams.append('populate[4]', 'category')
 
         const response = await fetch(
             `${STRAPI_URL}/api/articles?${searchParams}`,
@@ -301,9 +310,35 @@ function transformStrapiArticle(strapiArticle: StrapiArticle): ArticleCardData {
             : undefined,
         author: {
             name: strapiArticle.author?.name || '匿名作者',
-            avatar: strapiArticle.author?.avatar?.url
-                ? `${STRAPI_URL}${strapiArticle.author.avatar.url}`
-                : undefined
+            // 🔥 修复：Strapi 5.x扁平化结构 + 多格式支持 + Fallback + 调试信息
+            avatar: (() => {
+                // 调试：输出作者头像数据结构（仅在开发环境）
+                if (process.env.NODE_ENV === 'development' && strapiArticle.author) {
+                    console.log('作者数据结构:', {
+                        name: strapiArticle.author.name,
+                        avatar: strapiArticle.author.avatar
+                    })
+                }
+
+                // 尝试多种可能的头像路径
+                if (strapiArticle.author?.avatar?.url) {
+                    return `${STRAPI_URL}${strapiArticle.author.avatar.url}`
+                }
+
+                if (strapiArticle.author?.avatar?.formats?.thumbnail?.url) {
+                    return `${STRAPI_URL}${strapiArticle.author.avatar.formats.thumbnail.url}`
+                }
+
+                if (strapiArticle.author?.avatar?.formats?.small?.url) {
+                    return `${STRAPI_URL}${strapiArticle.author.avatar.formats.small.url}`
+                }
+
+                if (strapiArticle.author?.avatar?.formats?.medium?.url) {
+                    return `${STRAPI_URL}${strapiArticle.author.avatar.formats.medium.url}`
+                }
+
+                return undefined
+            })()
         },
         tags: strapiArticle.tags?.map(tag => tag.name).filter(Boolean) || [],
         // SEO优化字段

@@ -744,11 +744,55 @@ psql -U aibianx_dev -d aibianx_dev -c "\dt" | grep articles
 psql -U aibianx_dev -d aibianx_dev -c "SELECT action FROM up_permissions WHERE action LIKE '%article%';"
 ```
 
+## 🚨 API调试核心法则
+
+> **原则**: 数据源 → API函数 → 前端显示
+
+### **⚡ 3步调试法（适用所有API问题）**
+```bash
+# 1. 测试Strapi原始API
+curl 'http://localhost:1337/api/{content-type}?populate[0]=关联字段&pagination[pageSize]=1'
+
+# 2. 测试前端API函数  
+curl 'http://localhost:3000/api/test-{content-type}'
+
+# 3. 检查前端显示
+# http://localhost:3000/api-debug
+```
+
+### **✅ Strapi 5.x Populate语法**
+```typescript
+// 深层关联数据获取（通用模板）
+searchParams.append('populate[0]', '关联字段1')
+searchParams.append('populate[1]', '关联字段1.子字段')
+searchParams.append('populate[2]', '关联字段2')
+searchParams.append('populate[3]', '关联字段3')
+
+// 示例：文章API
+searchParams.append('populate[0]', 'author')
+searchParams.append('populate[1]', 'author.avatar')
+searchParams.append('populate[2]', 'featuredImage')
+searchParams.append('populate[3]', 'tags')
+```
+
+### **🔧 必备调试工具**
+```typescript
+// 1. API测试端点模板: /api/test-{content-type}/route.ts
+export async function GET() {
+  const result = await get{ContentType}({ pageSize: 2 })
+  return NextResponse.json({ success: true, data: result })
+}
+
+// 2. 通用调试页面: /api-debug/page.tsx  
+// 显示所有API的原始响应和转换结果
+```
+
 ### API集成常见问题
 1. **CORS错误** - 配置Strapi CORS中间件允许前端域名
 2. **认证失败** - 检查API Token配置和权限设置
 3. **数据转换错误** - 确保正确处理Strapi的data.attributes结构
 4. **缓存问题** - 合理使用Next.js的revalidate配置
+5. **Populate参数错误** - 使用上述标准化的populate语法模板
 
 ### 性能问题避免
 1. **图片未优化** - 强制使用Next.js Image组件
@@ -786,6 +830,13 @@ psql -U aibianx_dev -d aibianx_dev -c "SELECT action FROM up_permissions WHERE a
 3. **数据验证**: 前后端双重验证，确保数据一致性和安全性
 4. **缓存策略**: 合理使用浏览器缓存、CDN缓存和数据库查询缓存
 5. **监控日志**: 配置适当的日志记录和性能监控
+
+### API调试和问题预防最佳实践 (新增)
+1. **调试优先级**: 始终从数据源开始验证，使用"3步调试法"
+2. **必备工具**: 每个项目必须创建`/api/test-{content-type}`和`/api-debug`调试端点
+3. **Populate标准化**: 使用标准化的populate模板，避免语法错误
+4. **数据结构验证**: 开发环境启用console.log输出，生产环境关闭
+5. **文档更新**: 每次解决新问题后，立即更新调试清单和复盘文档
 
 ### 部署和运维最佳实践
 1. **环境分离**: 区分开发、测试、生产环境配置
@@ -895,5 +946,12 @@ npm run start
 2. **Next.js官方文档**: 跟进App Router新特性
 3. **项目实践总结**: 开发过程中的经验积累，包括内容类型创建的实战经验
 4. **社区最佳实践**: 行业标准和社区推荐做法
+5. **问题复盘驱动更新**: 每次重大问题解决后，立即更新规范防止重复出现
 
-每次使用本规范时，请确保参考最新版本，并根据具体需求进行适当调整。 
+### 📝 文档改进机制
+- **复盘文档**: 重大问题解决后创建复盘文档（如：`作者头像显示问题复盘报告.md`）
+- **规范更新**: 基于复盘结果更新项目规范文档
+- **预防措施**: 在相关章节添加预防性指导和检查清单
+- **知识沉淀**: 将解决方案标准化为可复用的模板和工具
+
+每次使用本规范时，请确保参考最新版本，并根据具体需求进行适当调整。如发现新问题，请及时进行复盘并更新相关规范。 

@@ -76,7 +76,7 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
                             {/* 作者信息 */}
                             <div className={styles.authorInfo}>
                                 <Avatar
-                                    src={article.author.avatar || "/images/avatars/author-li-mingyang.jpeg"}
+                                    src={article.author.avatar}
                                     alt={article.author.name}
                                     size="lg"
                                 />
