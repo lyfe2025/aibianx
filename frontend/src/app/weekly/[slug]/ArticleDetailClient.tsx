@@ -4,45 +4,56 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Icon, Avatar, TagList } from '@/components/ui'
-import { ArticleContent, RelatedArticles } from '@/components/molecules'
+import { ArticleContent, RelatedArticles, TableOfContents } from '@/components/molecules'
 import { MOCK_RELATED_ARTICLES, WEEKLY_DETAIL_TEXT } from '@/constants/weeklyDetail'
 import type { ArticleCardData } from '@/components/molecules/ArticleCard/ArticleCard'
 
-// Toast通知函数
+// 毛玻璃风格Toast通知函数
 function showToast(message: string, type: 'success' | 'error' = 'success') {
     // 创建临时Toast元素
     const toast = document.createElement('div')
     toast.style.cssText = `
         position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'success' ? '#10B981' : '#EF4444'};
-        color: white;
-        padding: 12px 16px;
-        border-radius: 8px;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: rgba(26, 26, 26, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(42, 42, 42, 0.70);
+        color: var(--color-text-primary, #FFFFFF);
+        padding: 16px 24px;
+        border-radius: 12px;
         font-size: 14px;
-        z-index: 10000;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
+        font-weight: 500;
+        z-index: 100000;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        max-width: 90vw;
+        text-align: center;
+        font-family: 'Alibaba PuHuiTi 3.0', sans-serif;
     `
-    toast.textContent = message
+
+    // 添加成功/错误指示器
+    const indicator = type === 'success' ? '✅ ' : '❌ '
+    toast.textContent = indicator + message
     document.body.appendChild(toast)
 
     // 动画显示
     setTimeout(() => {
-        toast.style.transform = 'translateX(0)'
+        toast.style.transform = 'translateX(-50%) translateY(0)'
     }, 100)
 
-    // 3秒后自动移除
+    // 2.5秒后自动移除
     setTimeout(() => {
-        toast.style.transform = 'translateX(100%)'
+        toast.style.transform = 'translateX(-50%) translateY(100px)'
+        toast.style.opacity = '0'
         setTimeout(() => {
             if (document.body.contains(toast)) {
                 document.body.removeChild(toast)
             }
-        }, 300)
-    }, 3000)
+        }, 400)
+    }, 2500)
 }
 
 interface ArticleDetailClientProps {
@@ -390,96 +401,42 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
                 }
             `}</style>
 
-            {/* 进度条已通过useEffect直接渲染到body中，确保始终可见 */}
+            {/* 为左侧目录导航留出空间的容器 */}
+            <div
+                className="article-detail-container"
+                style={{
+                    marginLeft: '0px',
+                    transition: 'margin-left 0.3s ease'
+                }}
+            >
 
+                {/* 进度条已通过useEffect直接渲染到body中，确保始终可见 */}
 
-
-            {/* 文章详情内容 */}
-            <div className="glass-card" style={{
-                borderRadius: '16px',
-                padding: '50px 48px',
-                marginTop: '48px',
-                marginBottom: '30px',
-                border: '1px solid var(--color-border-primary)',
-                background: 'var(--color-bg-glass)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                width: '100%',
-                margin: '48px auto 30px auto'
-            }}>
-                {/* 标题区域 - 包含返回按钮、标题和调整按钮 */}
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginBottom: '24px',
-                    gap: '20px'
+                {/* 文章详情内容 */}
+                <div className="glass-card" style={{
+                    borderRadius: '16px',
+                    padding: '50px 48px',
+                    marginTop: '48px',
+                    marginBottom: '30px',
+                    border: '1px solid var(--color-border-primary)',
+                    background: 'var(--color-bg-glass)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    width: '100%',
+                    margin: '48px auto 30px auto'
                 }}>
-                    {/* 返回按钮 */}
-                    <button
-                        onClick={handleGoBack}
-                        title="返回上一页"
-                        style={{
-                            background: 'var(--color-bg-glass)',
-                            borderRadius: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            padding: '12px 16px',
-                            border: '1px solid var(--color-border-primary)',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            color: 'var(--color-text-muted)',
-                            fontSize: 'var(--font-size-sm)',
-                            fontWeight: '500',
-                            flexShrink: 0,
-                            backdropFilter: 'blur(8px)',
-                            WebkitBackdropFilter: 'blur(8px)'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'scale(1.02)'
-                            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'
-                            e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)'
-                            e.currentTarget.style.color = 'var(--color-text-primary)'
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'scale(1)'
-                            e.currentTarget.style.background = 'var(--color-bg-glass)'
-                            e.currentTarget.style.borderColor = 'var(--color-border-primary)'
-                            e.currentTarget.style.color = 'var(--color-text-muted)'
-                        }}
-                    >
-                        <Icon name="arrow-left" size="sm" />
-                        <span>返回</span>
-                    </button>
-
-                    {/* 标题 - 居中显示 */}
-                    <h1 style={{
-                        fontSize: 'var(--font-size-5xl)',
-                        fontWeight: '700',
-                        lineHeight: '1.3',
-                        margin: '0',
-                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                        letterSpacing: '-0.02em',
-                        textShadow: 'none',
-                        textAlign: 'center',
-                        flex: 1,
-                        maxWidth: '800px' // 限制标题最大宽度，保持可读性
+                    {/* 标题区域 - 包含返回按钮、标题和调整按钮 */}
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '24px',
+                        gap: '20px'
                     }}>
-                        {article.title}
-                    </h1>
-
-                    {/* 字体调整按钮 */}
-                    <div className="font-adjust-container" style={{
-                        position: 'relative',
-                        flexShrink: 0
-                    }}>
+                        {/* 返回按钮 */}
                         <button
-                            onClick={handleFontSizeAdjust}
-                            title="调整字体大小"
+                            onClick={handleGoBack}
+                            title="返回上一页"
                             style={{
                                 background: 'var(--color-bg-glass)',
                                 borderRadius: '12px',
@@ -493,13 +450,14 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
                                 color: 'var(--color-text-muted)',
                                 fontSize: 'var(--font-size-sm)',
                                 fontWeight: '500',
+                                flexShrink: 0,
                                 backdropFilter: 'blur(8px)',
                                 WebkitBackdropFilter: 'blur(8px)'
                             }}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.transform = 'scale(1.02)'
-                                e.currentTarget.style.background = 'rgba(156, 163, 175, 0.1)'
-                                e.currentTarget.style.borderColor = 'rgba(156, 163, 175, 0.3)'
+                                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'
+                                e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.3)'
                                 e.currentTarget.style.color = 'var(--color-text-primary)'
                             }}
                             onMouseLeave={(e) => {
@@ -509,436 +467,597 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
                                 e.currentTarget.style.color = 'var(--color-text-muted)'
                             }}
                         >
-                            <Icon name="adjust-icon-detail" size="sm" />
-                            <span>调整</span>
+                            <Icon name="arrow-left" size="sm" />
+                            <span>返回</span>
                         </button>
 
-                        {/* 字体大小选择器 */}
-                        {showFontSelector && (
-                            <div
-                                className="font-selector"
+                        {/* 标题 - 居中显示 */}
+                        <h1 style={{
+                            fontSize: 'var(--font-size-5xl)',
+                            fontWeight: '700',
+                            lineHeight: '1.3',
+                            margin: '0',
+                            background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            letterSpacing: '-0.02em',
+                            textShadow: 'none',
+                            textAlign: 'center',
+                            flex: 1,
+                            maxWidth: '800px' // 限制标题最大宽度，保持可读性
+                        }}>
+                            {article.title}
+                        </h1>
+
+                        {/* 字体调整按钮 */}
+                        <div className="font-adjust-container" style={{
+                            position: 'relative',
+                            flexShrink: 0
+                        }}>
+                            <button
+                                onClick={handleFontSizeAdjust}
+                                title="调整字体大小"
                                 style={{
-                                    position: 'absolute',
-                                    top: '100%',
-                                    right: '0',
-                                    marginTop: '8px',
                                     background: 'var(--color-bg-glass)',
-                                    backdropFilter: 'blur(12px)',
-                                    WebkitBackdropFilter: 'blur(12px)',
-                                    border: '1px solid var(--color-border-primary)',
                                     borderRadius: '12px',
-                                    padding: '12px',
-                                    minWidth: '180px',
-                                    zIndex: 10000,
-                                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-                                    animation: 'fadeIn 0.2s ease'
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    padding: '12px 16px',
+                                    border: '1px solid var(--color-border-primary)',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    color: 'var(--color-text-muted)',
+                                    fontSize: 'var(--font-size-sm)',
+                                    fontWeight: '500',
+                                    backdropFilter: 'blur(8px)',
+                                    WebkitBackdropFilter: 'blur(8px)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.02)'
+                                    e.currentTarget.style.background = 'rgba(156, 163, 175, 0.1)'
+                                    e.currentTarget.style.borderColor = 'rgba(156, 163, 175, 0.3)'
+                                    e.currentTarget.style.color = 'var(--color-text-primary)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1)'
+                                    e.currentTarget.style.background = 'var(--color-bg-glass)'
+                                    e.currentTarget.style.borderColor = 'var(--color-border-primary)'
+                                    e.currentTarget.style.color = 'var(--color-text-muted)'
                                 }}
                             >
-                                <div style={{
-                                    fontSize: '12px',
-                                    color: 'var(--color-text-muted)',
-                                    marginBottom: '12px',
-                                    textAlign: 'center',
-                                    fontWeight: '500'
-                                }}>
-                                    选择字体大小
-                                </div>
-                                {[
-                                    { size: 14, label: '小', desc: '14px' },
-                                    { size: 16, label: '中', desc: '16px' },
-                                    { size: 18, label: '大', desc: '18px' },
-                                    { size: 20, label: '特大', desc: '20px' }
-                                ].map(({ size, label, desc }) => (
-                                    <button
-                                        key={size}
-                                        onClick={() => handleFontSizeSelect(size)}
-                                        style={{
-                                            width: '100%',
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                            padding: '10px 12px',
-                                            margin: '2px 0',
-                                            background: fontSize === size
-                                                ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2))'
-                                                : 'transparent',
-                                            border: fontSize === size
-                                                ? '1px solid rgba(59, 130, 246, 0.3)'
-                                                : '1px solid transparent',
-                                            borderRadius: '8px',
-                                            cursor: 'pointer',
-                                            color: fontSize === size
-                                                ? 'var(--color-text-primary)'
-                                                : 'var(--color-text-muted)',
-                                            fontSize: '13px',
-                                            fontWeight: fontSize === size ? '500' : 'normal',
-                                            transition: 'all 0.2s ease'
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            if (fontSize !== size) {
-                                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'
-                                                e.currentTarget.style.color = 'var(--color-text-primary)'
-                                            }
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            if (fontSize !== size) {
-                                                e.currentTarget.style.background = 'transparent'
-                                                e.currentTarget.style.color = 'var(--color-text-muted)'
-                                            }
-                                        }}
-                                    >
-                                        <span>{label}</span>
-                                        <span style={{
-                                            fontSize: '11px',
-                                            opacity: 0.7
-                                        }}>
-                                            {desc}
-                                        </span>
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </div>
+                                <Icon name="settings-icon" size="sm" />
+                                <span>调整</span>
+                            </button>
 
-                {/* 元信息 */}
-                <div className="meta-info" style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginBottom: '40px',
-                    flexWrap: 'nowrap',
-                    padding: '20px 0',
-                    borderTop: '1px solid rgba(255,255,255,0.08)',
-                    borderBottom: '1px solid rgba(255,255,255,0.08)'
-                }}>
-                    {/* 作者信息 */}
-                    <div className="author-info" style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '16px',
-                        flexShrink: 0
-                    }}>
-                        <Avatar
-                            src={article.author.avatar || "/images/avatars/author-li-mingyang.jpeg"}
-                            alt={article.author.name}
-                            size="lg"
-                        />
-                        <div>
-                            <div style={{
-                                fontSize: 'var(--font-size-lg)',
-                                fontWeight: '600',
-                                color: 'var(--color-text-primary)',
-                                marginBottom: '4px'
-                            }}>
-                                {article.author.name}
-                            </div>
-                            <div style={{
-                                fontSize: 'var(--font-size-sm)',
-                                color: 'var(--color-text-muted)'
-                            }}>
-                                AI变现专家
-                            </div>
+                            {/* 字体大小选择器 */}
+                            {showFontSelector && (
+                                <div
+                                    className="font-selector"
+                                    style={{
+                                        position: 'absolute',
+                                        top: '100%',
+                                        right: '0',
+                                        marginTop: '8px',
+                                        background: 'var(--color-bg-glass)',
+                                        backdropFilter: 'blur(12px)',
+                                        WebkitBackdropFilter: 'blur(12px)',
+                                        border: '1px solid var(--color-border-primary)',
+                                        borderRadius: '12px',
+                                        padding: '12px',
+                                        minWidth: '180px',
+                                        zIndex: 10000,
+                                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                                        animation: 'fadeIn 0.2s ease'
+                                    }}
+                                >
+                                    <div style={{
+                                        fontSize: '12px',
+                                        color: 'var(--color-text-muted)',
+                                        marginBottom: '12px',
+                                        textAlign: 'center',
+                                        fontWeight: '500'
+                                    }}>
+                                        选择字体大小
+                                    </div>
+                                    {[
+                                        { size: 14, label: '小', desc: '14px' },
+                                        { size: 16, label: '中', desc: '16px' },
+                                        { size: 18, label: '大', desc: '18px' },
+                                        { size: 20, label: '特大', desc: '20px' }
+                                    ].map(({ size, label, desc }) => (
+                                        <button
+                                            key={size}
+                                            onClick={() => handleFontSizeSelect(size)}
+                                            style={{
+                                                width: '100%',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                padding: '10px 12px',
+                                                margin: '2px 0',
+                                                background: fontSize === size
+                                                    ? 'linear-gradient(90deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2))'
+                                                    : 'transparent',
+                                                border: fontSize === size
+                                                    ? '1px solid rgba(59, 130, 246, 0.3)'
+                                                    : '1px solid transparent',
+                                                borderRadius: '8px',
+                                                cursor: 'pointer',
+                                                color: fontSize === size
+                                                    ? 'var(--color-text-primary)'
+                                                    : 'var(--color-text-muted)',
+                                                fontSize: '13px',
+                                                fontWeight: fontSize === size ? '500' : 'normal',
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                if (fontSize !== size) {
+                                                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'
+                                                    e.currentTarget.style.color = 'var(--color-text-primary)'
+                                                }
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                if (fontSize !== size) {
+                                                    e.currentTarget.style.background = 'transparent'
+                                                    e.currentTarget.style.color = 'var(--color-text-muted)'
+                                                }
+                                            }}
+                                        >
+                                            <span>{label}</span>
+                                            <span style={{
+                                                fontSize: '11px',
+                                                opacity: 0.7
+                                            }}>
+                                                {desc}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
 
-                    {/* 标签和阅读信息 */}
-                    <div className="tags-row" style={{
+                    {/* 元信息 */}
+                    <div className="meta-info" style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '16px',
-                        flexShrink: 0
+                        justifyContent: 'space-between',
+                        marginBottom: '40px',
+                        flexWrap: 'nowrap',
+                        padding: '20px 0',
+                        borderTop: '1px solid rgba(255,255,255,0.08)',
+                        borderBottom: '1px solid rgba(255,255,255,0.08)'
                     }}>
-                        <TagList
-                            tags={article.tags}
-                            size="md"
-                            maxCount={3}
-                        />
-                        <div style={{
+                        {/* 作者信息 */}
+                        <div className="author-info" style={{
                             display: 'flex',
                             alignItems: 'center',
                             gap: '16px',
-                            fontSize: 'var(--font-size-sm)',
-                            color: 'var(--color-text-muted)',
-                            whiteSpace: 'nowrap'
+                            flexShrink: 0
                         }}>
-                            <span>{article.publishedAt}</span>
-                            <span>•</span>
-                            <span>{article.readingTime}</span>
-                            <span>•</span>
-                            <span>{article.viewCount} 浏览</span>
+                            <Avatar
+                                src={article.author.avatar || "/images/avatars/author-li-mingyang.jpeg"}
+                                alt={article.author.name}
+                                size="lg"
+                            />
+                            <div>
+                                <div style={{
+                                    fontSize: 'var(--font-size-lg)',
+                                    fontWeight: '600',
+                                    color: 'var(--color-text-primary)',
+                                    marginBottom: '4px'
+                                }}>
+                                    {article.author.name}
+                                </div>
+                                <div style={{
+                                    fontSize: 'var(--font-size-sm)',
+                                    color: 'var(--color-text-muted)'
+                                }}>
+                                    AI变现专家
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 标签和阅读信息 */}
+                        <div className="tags-row" style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '16px',
+                            flexShrink: 0
+                        }}>
+                            <TagList
+                                tags={article.tags}
+                                size="md"
+                                maxCount={3}
+                            />
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '16px',
+                                fontSize: 'var(--font-size-sm)',
+                                color: 'var(--color-text-muted)',
+                                whiteSpace: 'nowrap'
+                            }}>
+                                <span>{article.publishedAt}</span>
+                                <span>•</span>
+                                <span>{article.readingTime}</span>
+                                <span>•</span>
+                                <span>{article.viewCount} 浏览</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 文章摘要 */}
+                    {article.excerpt && (
+                        <div style={{
+                            fontSize: `${fontSize}px`, // 使用动态字体大小
+                            lineHeight: '1.7',
+                            color: 'var(--color-text-secondary)',
+                            marginBottom: '40px',
+                            padding: '32px',
+                            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05))',
+                            borderRadius: '12px',
+                            border: '1px solid rgba(59, 130, 246, 0.2)',
+                            position: 'relative',
+                            fontStyle: 'italic',
+                            transition: 'font-size 0.3s ease' // 添加平滑过渡
+                        }}>
+                            {article.excerpt}
+                        </div>
+                    )}
+
+                                    {/* 如果有content字段，显示文章内容，否则显示模拟标题内容 */}
+                {article.content ? (
+                    <ArticleContent content={article.content} fontSize={fontSize} />
+                ) : (
+                        <div style={{
+                            fontSize: `${fontSize}px`,
+                            lineHeight: '1.8',
+                            color: 'var(--color-text-primary)',
+                            marginBottom: '32px',
+                            transition: 'font-size 0.3s ease'
+                        }}>
+                            <h1 style={{
+                                fontSize: `${Math.round(fontSize * 1.5)}px`,
+                                fontWeight: '600',
+                                marginBottom: '24px',
+                                color: 'var(--color-text-primary)'
+                            }}>
+                                一、了解Midjourney的核心优势
+                            </h1>
+                            <p style={{ marginBottom: '24px' }}>
+                                这是文章的详细内容部分。在实际应用中，这里会显示从Strapi CMS获取的完整文章内容。
+                            </p>
+
+                            <h2 style={{
+                                fontSize: `${Math.round(fontSize * 1.25)}px`,
+                                fontWeight: '600',
+                                marginBottom: '20px',
+                                marginTop: '32px',
+                                color: 'var(--color-text-primary)'
+                            }}>
+                                二、核心变现途径详解
+                            </h2>
+                            <p style={{ marginBottom: '24px' }}>
+                                目前显示的是基于API数据的动态内容，包括：
+                            </p>
+
+                            <h3 style={{
+                                fontSize: `${Math.round(fontSize * 1.125)}px`,
+                                fontWeight: '600',
+                                marginBottom: '16px',
+                                marginTop: '28px',
+                                color: 'var(--color-text-primary)'
+                            }}>
+                                1. 数字艺术品销售
+                            </h3>
+                            <ul style={{
+                                paddingLeft: '24px',
+                                marginBottom: '24px',
+                                listStyle: 'disc'
+                            }}>
+                                <li style={{ marginBottom: '8px' }}>✅ 真实的文章标题和摘要</li>
+                                <li style={{ marginBottom: '8px' }}>✅ 动态SEO元数据生成</li>
+                                <li style={{ marginBottom: '8px' }}>✅ 结构化数据嵌入</li>
+                            </ul>
+
+                            <h3 style={{
+                                fontSize: `${Math.round(fontSize * 1.125)}px`,
+                                fontWeight: '600',
+                                marginBottom: '16px',
+                                marginTop: '28px',
+                                color: 'var(--color-text-primary)'
+                            }}>
+                                2. 定制设计服务
+                            </h3>
+                            <ul style={{
+                                paddingLeft: '24px',
+                                marginBottom: '24px',
+                                listStyle: 'disc'
+                            }}>
+                                <li style={{ marginBottom: '8px' }}>✅ 服务端渲染和ISR支持</li>
+                                <li style={{ marginBottom: '8px' }}>✅ 完整的社交媒体分享优化</li>
+                            </ul>
+
+                            <h2 style={{
+                                fontSize: `${Math.round(fontSize * 1.25)}px`,
+                                fontWeight: '600',
+                                marginBottom: '20px',
+                                marginTop: '32px',
+                                color: 'var(--color-text-primary)'
+                            }}>
+                                三、构建可持续的AI绘画变现体系
+                            </h2>
+                            <p style={{ marginBottom: '24px' }}>
+                                文章内容可以通过在Strapi CMS中编辑文章的content字段来更新。现在页面包含了多层级的标题结构，可以测试目录导航功能。
+                            </p>
+
+                            <h3 style={{
+                                fontSize: `${Math.round(fontSize * 1.125)}px`,
+                                fontWeight: '600',
+                                marginBottom: '16px',
+                                marginTop: '28px',
+                                color: 'var(--color-text-primary)'
+                            }}>
+                                1. 建立个人品牌
+                            </h3>
+                            <p style={{ marginBottom: '24px' }}>
+                                通过社交媒体和专业网站建立个人品牌的重要性。
+                            </p>
+
+                            <h3 style={{
+                                fontSize: `${Math.round(fontSize * 1.125)}px`,
+                                fontWeight: '600',
+                                marginBottom: '16px',
+                                marginTop: '28px',
+                                color: 'var(--color-text-primary)'
+                            }}>
+                                2. 提升技术能力
+                            </h3>
+                            <p style={{ marginBottom: '24px' }}>
+                                不断学习和改进技术技能的方法和策略。
+                            </p>
+                        </div>
+                    )}
+
+                    {/* 底部操作区域 */}
+                    <div className="bottom-actions" style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginTop: '56px',
+                        paddingTop: '40px',
+                        borderTop: '2px solid rgba(59, 130, 246, 0.15)',
+                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.02), rgba(139, 92, 246, 0.02))',
+                        borderRadius: '12px',
+                        padding: '40px 24px 24px 24px',
+                        marginLeft: '-24px',
+                        marginRight: '-24px',
+                        position: 'relative',
+                        zIndex: 10000
+                    }}>
+                        {/* 左侧操作按钮 */}
+                        <div style={{
+                            display: 'flex',
+                            gap: '12px',
+                            alignItems: 'center',
+
+                        }}>
+                            {/* 点赞按钮 */}
+                            <button
+                                onClick={handleLike}
+                                title={isLiked ? "取消点赞" : "点赞"}
+                                className="action-button"
+                                style={{
+                                    background: 'var(--color-bg-glass)',
+                                    borderRadius: '8px',
+                                    display: 'flex',
+                                    gap: '6px',
+                                    alignItems: 'center',
+                                    padding: '8px 12px',
+                                    border: '1px solid var(--color-border-primary)',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    color: isLiked ? '#EF4444' : 'var(--color-text-primary)',
+                                    transform: 'scale(1)',
+                                    fontSize: '14px',
+                                    fontWeight: '500'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.05)'
+                                    e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1)'
+                                    e.currentTarget.style.background = 'var(--color-bg-glass)'
+                                }}
+                            >
+                                <span>👍</span> <span>{article.likeCount || '0'}</span>
+                            </button>
+
+                            {/* 收藏按钮 */}
+                            <button
+                                onClick={handleBookmark}
+                                title={isBookmarked ? "取消收藏" : "收藏"}
+                                className="action-button"
+                                style={{
+                                    background: 'var(--color-bg-glass)',
+                                    borderRadius: '8px',
+                                    display: 'flex',
+                                    gap: '6px',
+                                    alignItems: 'center',
+                                    padding: '8px 12px',
+                                    border: '1px solid var(--color-border-primary)',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    color: isBookmarked ? '#FFC107' : 'var(--color-text-primary)',
+                                    transform: 'scale(1)',
+                                    fontSize: '14px',
+                                    fontWeight: '500'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.05)'
+                                    e.currentTarget.style.background = 'rgba(255, 193, 7, 0.1)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1)'
+                                    e.currentTarget.style.background = 'var(--color-bg-glass)'
+                                }}
+                            >
+                                🔖 <span>{WEEKLY_DETAIL_TEXT.bookmarkAction}</span>
+                            </button>
+
+
+                        </div>
+
+                        {/* 右侧分享按钮 */}
+                        <div style={{
+                            display: 'flex',
+                            gap: '8px',
+                            alignItems: 'center',
+                            minWidth: '200px',
+                            justifyContent: 'flex-end',
+
+                        }}>
+                            <button
+                                onClick={() => handleShare('link')}
+                                title="复制链接"
+                                style={{
+                                    background: 'var(--color-bg-glass)',
+                                    borderRadius: '8px',
+                                    padding: '8px 12px',
+                                    display: 'flex',
+                                    gap: '6px',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    minWidth: '70px',
+                                    height: '36px',
+                                    border: '1px solid var(--color-border-primary)',
+                                    cursor: 'pointer',
+                                    color: 'var(--color-text-primary)',
+                                    fontSize: '12px',
+                                    fontWeight: '500',
+                                    transition: 'all 0.2s ease',
+                                    transform: 'scale(1)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.05)'
+                                    e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1)'
+                                    e.currentTarget.style.background = 'var(--color-bg-glass)'
+                                }}
+                            >
+                                🔗 链接
+                            </button>
+                            <button
+                                onClick={() => handleShare('wechat')}
+                                title="微信分享"
+                                style={{
+                                    background: 'var(--color-bg-glass)',
+                                    borderRadius: '8px',
+                                    padding: '8px 12px',
+                                    display: 'flex',
+                                    gap: '6px',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    minWidth: '70px',
+                                    height: '36px',
+                                    border: '1px solid var(--color-border-primary)',
+                                    cursor: 'pointer',
+                                    color: 'var(--color-text-primary)',
+                                    fontSize: '12px',
+                                    fontWeight: '500',
+                                    transition: 'all 0.2s ease',
+                                    transform: 'scale(1)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.05)'
+                                    e.currentTarget.style.background = 'rgba(34, 197, 94, 0.1)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1)'
+                                    e.currentTarget.style.background = 'var(--color-bg-glass)'
+                                }}
+                            >
+                                💬 微信
+                            </button>
+                            <button
+                                onClick={() => handleShare('weibo')}
+                                title="微博分享"
+                                style={{
+                                    background: 'var(--color-bg-glass)',
+                                    borderRadius: '8px',
+                                    padding: '8px 12px',
+                                    display: 'flex',
+                                    gap: '6px',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    minWidth: '70px',
+                                    height: '36px',
+                                    border: '1px solid var(--color-border-primary)',
+                                    cursor: 'pointer',
+                                    color: 'var(--color-text-primary)',
+                                    fontSize: '12px',
+                                    fontWeight: '500',
+                                    transition: 'all 0.2s ease',
+                                    transform: 'scale(1)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.05)'
+                                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1)'
+                                    e.currentTarget.style.background = 'var(--color-bg-glass)'
+                                }}
+                            >
+                                📱 微博
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                {/* 文章摘要 */}
-                {article.excerpt && (
-                    <div style={{
-                        fontSize: `${fontSize}px`, // 使用动态字体大小
-                        lineHeight: '1.7',
-                        color: 'var(--color-text-secondary)',
-                        marginBottom: '40px',
-                        padding: '32px',
-                        background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05))',
-                        borderRadius: '12px',
-                        border: '1px solid rgba(59, 130, 246, 0.2)',
-                        position: 'relative',
-                        fontStyle: 'italic',
-                        transition: 'font-size 0.3s ease' // 添加平滑过渡
-                    }}>
-                        {article.excerpt}
-                    </div>
-                )}
-
-                {/* 如果有content字段，显示文章内容，否则显示占位符 */}
-                {article.content ? (
-                    <ArticleContent content={article.content} fontSize={fontSize} />
-                ) : (
-                    <div style={{
-                        fontSize: `${fontSize}px`,
-                        lineHeight: '1.8',
-                        color: 'var(--color-text-primary)',
-                        marginBottom: '32px',
-                        transition: 'font-size 0.3s ease'
-                    }}>
-                        <p style={{ marginBottom: '24px' }}>
-                            这是文章的详细内容部分。在实际应用中，这里会显示从Strapi CMS获取的完整文章内容。
-                        </p>
-                        <p style={{ marginBottom: '24px' }}>
-                            目前显示的是基于API数据的动态内容，包括：
-                        </p>
-                        <ul style={{
-                            paddingLeft: '24px',
-                            marginBottom: '24px',
-                            listStyle: 'disc'
-                        }}>
-                            <li style={{ marginBottom: '8px' }}>✅ 真实的文章标题和摘要</li>
-                            <li style={{ marginBottom: '8px' }}>✅ 动态SEO元数据生成</li>
-                            <li style={{ marginBottom: '8px' }}>✅ 结构化数据嵌入</li>
-                            <li style={{ marginBottom: '8px' }}>✅ 服务端渲染和ISR支持</li>
-                            <li style={{ marginBottom: '8px' }}>✅ 完整的社交媒体分享优化</li>
-                        </ul>
-                        <p>
-                            文章内容可以通过在Strapi CMS中编辑文章的content字段来更新。
-                        </p>
-                    </div>
-                )}
-
-                {/* 底部操作区域 */}
-                <div className="bottom-actions" style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginTop: '56px',
-                    paddingTop: '40px',
-                    borderTop: '2px solid rgba(59, 130, 246, 0.15)',
-                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.02), rgba(139, 92, 246, 0.02))',
-                    borderRadius: '12px',
-                    padding: '40px 24px 24px 24px',
-                    marginLeft: '-24px',
-                    marginRight: '-24px',
-                    position: 'relative',
-                    zIndex: 1000 // 确保交互按钮可见
-                }}>
-                    {/* 左侧操作按钮 */}
-                    <div style={{
-                        display: 'flex',
-                        gap: '12px',
-                        alignItems: 'center'
-                    }}>
-                        {/* 点赞按钮 */}
-                        <button
-                            onClick={handleLike}
-                            title={isLiked ? "取消点赞" : "点赞"}
-                            className="action-button"
-                            style={{
-                                background: 'var(--color-bg-glass)',
-                                borderRadius: '8px',
-                                display: 'flex',
-                                gap: '6px',
-                                alignItems: 'center',
-                                padding: '8px 12px',
-                                border: 'none',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                color: isLiked ? '#EF4444' : 'var(--color-text-muted)',
-                                transform: 'scale(1)',
-                                position: 'relative',
-                                zIndex: 1001
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'scale(1.05)'
-                                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.1)'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'scale(1)'
-                                e.currentTarget.style.background = 'var(--color-bg-glass)'
-                            }}
-                        >
-                            <Icon name="like-icon-detail" size="sm" />
-                            <span style={{ fontSize: '14px' }}>
-                                {article.likeCount || '0'}
-                            </span>
-                        </button>
-
-                        {/* 收藏按钮 */}
-                        <button
-                            onClick={handleBookmark}
-                            title={isBookmarked ? "取消收藏" : "收藏"}
-                            className="action-button"
-                            style={{
-                                background: 'var(--color-bg-glass)',
-                                borderRadius: '8px',
-                                display: 'flex',
-                                gap: '6px',
-                                alignItems: 'center',
-                                padding: '8px 12px',
-                                border: 'none',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                color: isBookmarked ? '#FFC107' : 'var(--color-text-muted)',
-                                transform: 'scale(1)',
-                                position: 'relative',
-                                zIndex: 1001
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'scale(1.05)'
-                                e.currentTarget.style.background = 'rgba(255, 193, 7, 0.1)'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'scale(1)'
-                                e.currentTarget.style.background = 'var(--color-bg-glass)'
-                            }}
-                        >
-                            <Icon name="collect-icon-detail" size="sm" />
-                            <span style={{ fontSize: '14px' }}>
-                                {WEEKLY_DETAIL_TEXT.bookmarkAction}
-                            </span>
-                        </button>
-
-
-                    </div>
-
-                    {/* 右侧分享按钮 */}
-                    <div style={{
-                        display: 'flex',
-                        gap: '8px',
-                        alignItems: 'center'
-                    }}>
-                        <button
-                            onClick={() => handleShare('link')}
-                            title="复制链接"
-                            className="share-button"
-                            style={{
-                                background: 'var(--color-bg-glass)',
-                                borderRadius: '18px',
-                                padding: '10px',
-                                display: 'flex',
-                                width: '36px',
-                                height: '36px',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                border: 'none',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                transform: 'scale(1)',
-                                position: 'relative',
-                                zIndex: 1001
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'scale(1.1)'
-                                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'scale(1)'
-                                e.currentTarget.style.background = 'var(--color-bg-glass)'
-                            }}
-                        >
-                            <Icon name="share-link-detail" size="sm" />
-                        </button>
-                        <button
-                            onClick={() => handleShare('wechat')}
-                            title="微信分享"
-                            className="share-button"
-                            style={{
-                                background: 'var(--color-bg-glass)',
-                                borderRadius: '18px',
-                                padding: '10px',
-                                display: 'flex',
-                                width: '36px',
-                                height: '36px',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                border: 'none',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                transform: 'scale(1)',
-                                position: 'relative',
-                                zIndex: 1001
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'scale(1.1)'
-                                e.currentTarget.style.background = 'rgba(34, 197, 94, 0.2)'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'scale(1)'
-                                e.currentTarget.style.background = 'var(--color-bg-glass)'
-                            }}
-                        >
-                            <Icon name="share-wechat-detail" size="sm" />
-                        </button>
-                        <button
-                            onClick={() => handleShare('weibo')}
-                            title="微博分享"
-                            className="share-button"
-                            style={{
-                                background: 'var(--color-bg-glass)',
-                                borderRadius: '18px',
-                                padding: '10px',
-                                display: 'flex',
-                                width: '36px',
-                                height: '36px',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                border: 'none',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                transform: 'scale(1)',
-                                position: 'relative',
-                                zIndex: 1001
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'scale(1.1)'
-                                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'scale(1)'
-                                e.currentTarget.style.background = 'var(--color-bg-glass)'
-                            }}
-                        >
-                            <Icon name="share-weibo-detail" size="sm" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* 相关文章推荐 */}
-            <div style={{
-                background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.03), rgba(139, 92, 246, 0.03))',
-                borderRadius: '16px',
-                padding: '16px',
-                marginTop: '48px'
-            }}>
-                <RelatedArticles
-                    articles={relatedArticles}
-                    title={`${WEEKLY_DETAIL_TEXT.relatedTitle} (基于标签智能推荐)`}
+                {/* 目录导航 */}
+                <TableOfContents
+                    content={article.content || '模拟内容'}
                 />
+
+                {/* 相关文章推荐 */}
+                <div style={{
+                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.03), rgba(139, 92, 246, 0.03))',
+                    borderRadius: '16px',
+                    padding: '16px',
+                    marginTop: '48px'
+                }}>
+                    <RelatedArticles
+                        articles={relatedArticles}
+                        title={`${WEEKLY_DETAIL_TEXT.relatedTitle} (基于标签智能推荐)`}
+                    />
+                </div>
+
+                {/* 结束为左侧目录导航留出空间的容器 */}
             </div>
-
-
 
             {/* 响应式样式 */}
             <style jsx>{`
+                /* 为左侧目录导航留出空间 */
+                @media (min-width: 1440px) {
+                    .article-detail-container {
+                        margin-left: 320px !important; /* 280px目录宽度 + 40px间距 */
+                    }
+                }
+                
+                @media (max-width: 1439px) {
+                    .article-detail-container {
+                        margin-left: 0px !important;
+                    }
+                }
+
+                /* 移动端样式优化 */
                 @media (max-width: 768px) {
                     .glass-card {
                         margin: 0 10px !important;

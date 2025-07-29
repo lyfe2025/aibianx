@@ -15,16 +15,19 @@
         "name": {
             "type": "string",
             "required": true,
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "作者姓名（必填，最长100字符）"
         },
         "slug": {
             "type": "uid",
             "targetField": "name",
-            "required": true
+            "required": true,
+            "description": "URL友好的唯一标识符，基于姓名自动生成"
         },
         "bio": {
             "type": "text",
-            "maxLength": 500
+            "maxLength": 500,
+            "description": "作者简介或个人描述（最长500字符）"
         },
         "avatar": {
             "type": "media",
@@ -32,40 +35,50 @@
             "required": false,
             "allowedTypes": [
                 "images"
-            ]
+            ],
+            "description": "作者头像图片，仅支持图片格式"
         },
         "email": {
-            "type": "email"
+            "type": "email",
+            "description": "作者联系邮箱地址"
         },
         "website": {
-            "type": "string"
+            "type": "string",
+            "description": "作者个人网站或博客地址"
         },
         "twitter": {
-            "type": "string"
+            "type": "string",
+            "description": "Twitter用户名或链接"
         },
         "github": {
-            "type": "string"
+            "type": "string",
+            "description": "GitHub用户名或链接"
         },
         "linkedin": {
-            "type": "string"
+            "type": "string",
+            "description": "LinkedIn个人资料链接"
         },
         "position": {
             "type": "string",
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "作者职位或职业角色（最长100字符）"
         },
         "company": {
             "type": "string",
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "作者所在公司或组织（最长100字符）"
         },
         "featured": {
             "type": "boolean",
-            "default": false
+            "default": false,
+            "description": "是否为特色作者（用于首页推荐等）"
         },
         "articles": {
             "type": "relation",
             "relation": "oneToMany",
             "target": "api::article.article",
-            "mappedBy": "author"
+            "mappedBy": "author",
+            "description": "该作者发表的所有文章"
         }
     }
 }

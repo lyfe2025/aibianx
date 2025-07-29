@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: ArticleDetailPageProps): Prom
     // SEO优化：优先使用专用SEO字段，回退到默认字段
     const seoTitle = article.seoTitle || article.title
     const seoDescription = article.seoDescription || article.excerpt
-    
+
     return {
         title: seoTitle,
         description: seoDescription,

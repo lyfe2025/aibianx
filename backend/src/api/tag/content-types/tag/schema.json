@@ -16,39 +16,47 @@
             "type": "string",
             "required": true,
             "unique": true,
-            "maxLength": 50
+            "maxLength": 50,
+            "description": "标签名称（必填，唯一，最长50字符）"
         },
         "slug": {
             "type": "uid",
             "targetField": "name",
-            "required": true
+            "required": true,
+            "description": "URL友好的唯一标识符，基于标签名自动生成"
         },
         "description": {
             "type": "text",
-            "maxLength": 200
+            "maxLength": 200,
+            "description": "标签描述信息（最长200字符，用于标签页面显示）"
         },
         "color": {
             "type": "string",
             "default": "#3B82F6",
-            "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+            "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+            "description": "标签颜色（十六进制格式，如#3B82F6）"
         },
         "icon": {
             "type": "string",
-            "maxLength": 50
+            "maxLength": 50,
+            "description": "标签图标名称或类名（最长50字符）"
         },
         "featured": {
             "type": "boolean",
-            "default": false
+            "default": false,
+            "description": "是否为特色标签（用于推荐标签显示）"
         },
         "sortOrder": {
             "type": "integer",
-            "default": 0
+            "default": 0,
+            "description": "标签排序权重（数字越小越靠前，默认为0）"
         },
         "articles": {
             "type": "relation",
             "relation": "manyToMany",
             "target": "api::article.article",
-            "mappedBy": "tags"
+            "mappedBy": "tags",
+            "description": "使用该标签的所有文章"
         }
     }
 }
