@@ -52,7 +52,7 @@ export function TableOfContents({ content, className = '' }: TableOfContentsProp
         const timer = setTimeout(() => {
             extractHeadings()
         }, 2000) // 增加延迟时间确保ArticleContent完成客户端渲染
-        
+
         // 额外的重试机制，确保能找到标题
         const retryTimer = setTimeout(() => {
             if (headings.length === 0) {
@@ -102,7 +102,7 @@ export function TableOfContents({ content, className = '' }: TableOfContentsProp
 
         setHeadings(headingList)
         setupIntersectionObserver(headingList)
-        
+
         // 初始化时检查当前可见的标题
         initializeActiveHeading(headingList)
     }
@@ -110,10 +110,10 @@ export function TableOfContents({ content, className = '' }: TableOfContentsProp
     // 初始化活动标题
     const initializeActiveHeading = (headingList: HeadingItem[]) => {
         if (headingList.length === 0) return
-        
+
         const viewportTop = window.pageYOffset + 120 // 考虑固定头部
         let activeHeading = headingList[0].id
-        
+
         for (const heading of headingList) {
             if (heading.element) {
                 const elementTop = heading.element.offsetTop
@@ -124,7 +124,7 @@ export function TableOfContents({ content, className = '' }: TableOfContentsProp
                 }
             }
         }
-        
+
         setActiveHeading(activeHeading)
     }
 
@@ -191,30 +191,49 @@ export function TableOfContents({ content, className = '' }: TableOfContentsProp
         })
     }
 
-        // 点击标题跳转 - 优化跳转精度
+    // 点击标题跳转 - 修复重复点击问题
     const handleHeadingClick = (headingId: string) => {
+        console.log('目录导航：点击标题', headingId)
+
         const element = document.getElementById(headingId)
-        if (element) {
-            // 精确计算偏移量，考虑固定头部和一些缓冲空间
-            const headerHeight = 80 // 固定头部高度
-            const buffer = 20 // 额外缓冲空间，让标题不紧贴顶部
-            const elementRect = element.getBoundingClientRect()
-            const offsetTop = window.pageYOffset + elementRect.top - headerHeight - buffer
-            
-            // 平滑滚动到目标位置
-            window.scrollTo({
-                top: Math.max(0, offsetTop), // 确保不会滚动到负数位置
-                behavior: 'smooth'
-            })
-            
-            // 更新活动标题
-            setActiveHeading(headingId)
-            
-            // 移动端点击后自动收起
-            if (window.innerWidth <= 1439) { // 与断点保持一致
-                setIsCollapsed(true)
-            }
+        if (!element) {
+            console.log('目录导航：找不到标题元素', headingId)
+            return
         }
+
+        // 临时禁用IntersectionObserver，避免干扰
+        if (observerRef.current) {
+            observerRef.current.disconnect()
+        }
+
+        // 精确计算偏移量，考虑固定头部和一些缓冲空间
+        const headerHeight = 80 // 固定头部高度
+        const buffer = 20 // 额外缓冲空间，让标题不紧贴顶部
+        const elementRect = element.getBoundingClientRect()
+        const offsetTop = window.pageYOffset + elementRect.top - headerHeight - buffer
+
+        // 立即更新活动标题状态
+        setActiveHeading(headingId)
+
+        // 平滑滚动到目标位置
+        window.scrollTo({
+            top: Math.max(0, offsetTop), // 确保不会滚动到负数位置
+            behavior: 'smooth'
+        })
+
+        console.log('目录导航：滚动到位置', offsetTop)
+
+        // 移动端点击后自动收起
+        if (window.innerWidth <= 1439) { // 与断点保持一致
+            setIsCollapsed(true)
+        }
+
+        // 延迟重新启用IntersectionObserver
+        setTimeout(() => {
+            if (observerRef.current && headings.length > 0) {
+                setupIntersectionObserver(headings)
+            }
+        }, 1000) // 给滚动动画足够时间完成
     }
 
     // 切换收起/展开（移动端）
@@ -238,8 +257,8 @@ export function TableOfContents({ content, className = '' }: TableOfContentsProp
 
     return (
         <>
-                        {/* 桌面端固定目录 - 左侧显示 */}
-            <div 
+            {/* 桌面端固定目录 - 左侧显示 */}
+            <div
                 className={`toc-desktop ${className}`}
                 style={{
                     position: 'fixed',
@@ -325,8 +344,8 @@ export function TableOfContents({ content, className = '' }: TableOfContentsProp
                 </div>
             </div>
 
-                        {/* 移动端浮动目录按钮 - 保持右侧位置 */}
-            <div 
+            {/* 移动端浮动目录按钮 - 保持右侧位置 */}
+            <div
                 className="toc-mobile"
                 style={{
                     position: 'fixed',
@@ -408,7 +427,11 @@ export function TableOfContents({ content, className = '' }: TableOfContentsProp
                             {headings.map((heading) => (
                                 <button
                                     key={heading.id}
-                                    onClick={() => handleHeadingClick(heading.id)}
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        handleHeadingClick(heading.id)
+                                    }}
                                     style={{
                                         display: 'block',
                                         width: '100%',

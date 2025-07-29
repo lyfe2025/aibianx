@@ -708,10 +708,10 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
                         </div>
                     )}
 
-                                    {/* 如果有content字段，显示文章内容，否则显示模拟标题内容 */}
-                {article.content ? (
-                    <ArticleContent content={article.content} fontSize={fontSize} />
-                ) : (
+                    {/* 如果有content字段，显示文章内容，否则显示模拟标题内容 */}
+                    {article.content ? (
+                        <ArticleContent content={article.content} fontSize={fontSize} />
+                    ) : (
                         <div style={{
                             fontSize: `${fontSize}px`,
                             lineHeight: '1.8',
