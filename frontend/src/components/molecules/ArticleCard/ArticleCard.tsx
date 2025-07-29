@@ -7,6 +7,7 @@ export interface ArticleCardData {
     id: string
     title: string
     excerpt?: string
+    content?: string // 新增：文章正文内容
     coverImage?: string
     author: {
         name: string
@@ -15,6 +16,7 @@ export interface ArticleCardData {
     publishedAt: string
     readingTime: string
     viewCount: string
+    likeCount?: string // 新增：点赞数
     // 更新标签类型：使用字符串数组，由TagList组件处理样式
     tags: string[]
     slug: string

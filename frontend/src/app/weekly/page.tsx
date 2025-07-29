@@ -3,10 +3,10 @@
 import { Container } from '@/components/ui'
 import { PageHeader, SubscriptionSection } from '@/components/molecules'
 import {
-  WeeklySearchSection,
-  WeeklyArticleGrid,
-  WeeklyEmptyState,
-  WeeklyPagination
+    WeeklySearchSection,
+    WeeklyArticleGrid,
+    WeeklyEmptyState,
+    WeeklyPagination
 } from '@/components/molecules'
 import { useWeeklyLogicWithAPI } from '@/lib/hooks'
 import { PAGE_CONFIG, STYLES_CONFIG } from '@/constants/weeklyConfig'
@@ -33,46 +33,46 @@ import { PAGE_CONFIG, STYLES_CONFIG } from '@/constants/weeklyConfig'
  */
 export default function WeeklyPage() {
   // 使用API版本的Hook管理所有状态和逻辑
-  const {
-    searchQuery,
-    activeFilter,
-    isSearching,
+    const {
+        searchQuery,
+        activeFilter,
+        isSearching,
     isLoading,
     connectionError,
     articles,
-    totalPages,
+        totalPages,
     totalCount,
-    currentPage,
-    hasResults,
-    handleSearch,
-    handleFilterChange,
-    handlePageChange,
-    resetToDefaults,
+        currentPage,
+        hasResults,
+        handleSearch,
+        handleFilterChange,
+        handlePageChange,
+        resetToDefaults,
     clearSearch,
     refetch
   } = useWeeklyLogicWithAPI()
 
-  return (
-    <div style={{
-      color: 'var(--color-text-primary)',
-      fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-      minHeight: '100vh',
-      paddingTop: STYLES_CONFIG.container.paddingTop
-    }}>
-      <div style={{
-        paddingBottom: STYLES_CONFIG.container.paddingBottom
-      }}>
-        <Container size="xl">
-          {/* 页面头部 */}
-          <PageHeader
-            title={PAGE_CONFIG.title}
-            subtitle={PAGE_CONFIG.subtitle}
-            description=""
-            alignment="center"
-            className="page-header"
-          />
+    return (
+        <div style={{
+            color: 'var(--color-text-primary)',
+            fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+            minHeight: '100vh',
+            paddingTop: STYLES_CONFIG.container.paddingTop
+        }}>
+            <div style={{
+                paddingBottom: STYLES_CONFIG.container.paddingBottom
+            }}>
+                <Container size="xl">
+                    {/* 页面头部 */}
+                    <PageHeader
+                        title={PAGE_CONFIG.title}
+                        subtitle={PAGE_CONFIG.subtitle}
+                        description=""
+                        alignment="center"
+                        className="page-header"
+                    />
 
-                              {/* 搜索和筛选区域 */}
+                    {/* 搜索和筛选区域 */}
                     <WeeklySearchSection
                         searchQuery={searchQuery}
                         activeFilter={activeFilter}
@@ -147,11 +147,11 @@ export default function WeeklyPage() {
                             onResetToDefaults={resetToDefaults}
                         />
                     )}
-        </Container>
-      </div>
+                </Container>
+            </div>
 
-      {/* CSS样式 - 响应式设计和动画 */}
-      <style jsx>{`
+            {/* CSS样式 - 响应式设计和动画 */}
+            <style jsx>{`
         .search-container {
           max-width: ${STYLES_CONFIG.searchContainer.maxWidth};
         }
@@ -263,6 +263,6 @@ export default function WeeklyPage() {
           }
         }
       `}</style>
-    </div>
-  )
+        </div>
+    )
 } 

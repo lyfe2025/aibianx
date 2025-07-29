@@ -139,15 +139,15 @@ export function ArticleList({ className }: ArticleListProps) {
                     </div>
                 </div>
             ) : (
-                <div className="articles-list" style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    margin: '0 36px',
-                    gap: '22px'
-                }}>
+            <div className="articles-list" style={{
+                display: 'flex',
+                flexDirection: 'column',
+                margin: '0 36px',
+                gap: '22px'
+            }}>
                     {articles.map((article) => (
-                        <Link
-                            key={article.id}
+                    <Link
+                        key={article.id}
                             href={`/weekly/${article.slug}`}
                         style={{
                             textDecoration: 'none',
@@ -167,13 +167,13 @@ export function ArticleList({ className }: ArticleListProps) {
                                 e.currentTarget.style.transform = 'translateY(0)'
                             }}>
                             <div style={{
-                                width: '180px',
-                                height: '120px',
-                                borderRadius: '8px',
+                                    width: '180px',
+                                    height: '120px',
+                                    borderRadius: '8px',
                                 background: article.coverImage 
                                     ? `url(${article.coverImage}) center/cover`
                                     : 'var(--gradient-primary)',
-                                marginRight: '24px',
+                                    marginRight: '24px',
                                 flexShrink: 0,
                                 display: 'flex',
                                 alignItems: 'center',
@@ -263,44 +263,44 @@ export function ArticleList({ className }: ArticleListProps) {
                                     </div>
                                 </div>
                             </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+                        </div>
+                    </Link>
+                ))}
+            </div>
             )}
 
             {/* 查看更多按钮 - 上下间距一致 */}
             {!isLoading && !connectionError && articles.length > 0 && (
-                <div className="view-more-container" style={{
-                    display: 'flex',
-                    justifyContent: 'center',
+            <div className="view-more-container" style={{
+                display: 'flex',
+                justifyContent: 'center',
                     marginTop: '48px',
                     marginBottom: '48px'
-                }}>
+            }}>
                     <Link
                         href="/weekly"
-                        style={{
-                            background: 'var(--gradient-primary)',
-                            border: 'none',
-                            borderRadius: '8px',
-                            padding: '16px 24px',
-                            color: 'var(--color-text-primary)',
-                            fontSize: '13.33px',
-                            lineHeight: '15px',
-                            cursor: 'pointer',
-                            fontFamily: 'Arial',
-                            textAlign: 'center',
-                            width: '120px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                    style={{
+                        background: 'var(--gradient-primary)',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '16px 24px',
+                        color: 'var(--color-text-primary)',
+                        fontSize: '13.33px',
+                        lineHeight: '15px',
+                        cursor: 'pointer',
+                        fontFamily: 'Arial',
+                        textAlign: 'center',
+                        width: '120px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                             whiteSpace: 'nowrap',
                             textDecoration: 'none'
-                        }}
-                    >
-                        {MAIN_CONTENT_TEXT.viewMoreButtonText}
+                    }}
+                >
+                    {MAIN_CONTENT_TEXT.viewMoreButtonText}
                     </Link>
-                </div>
+            </div>
             )}
         </div>
     )

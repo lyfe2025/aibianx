@@ -98,6 +98,10 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
         notFound()
     }
 
+    // SEO优化字段（在组件中也需要定义）
+    const seoTitle = article.seoTitle || article.title
+    const seoDescription = article.seoDescription || article.excerpt
+
     // 结构化数据 - 文章类型（使用SEO优化字段）
     const structuredData = {
         "@context": "https://schema.org",

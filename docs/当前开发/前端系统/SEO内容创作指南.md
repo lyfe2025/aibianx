@@ -4,6 +4,16 @@
 
 本指南详细说明如何在AI变现之路项目中创建SEO优化的内容。我们的SEO系统基于前端动态生成，比传统Strapi SEO插件更灵活、更强大。
 
+前台用户看到的内容：
+文章标题：title（原始标题，简洁自然）
+文章摘要：excerpt（如果显示摘要的话）
+文章内容：content
+其他信息：作者、标签、发布时间等
+SEO和搜索引擎看到的内容：
+搜索结果标题：seoTitle || title（优先使用SEO优化标题）
+搜索结果描述：seoDescription || excerpt（优先使用SEO优化描述）
+社交分享标题：seoTitle || title
+社交分享描述：seoDescription || excerpt
 ## 🎯 SEO字段结构
 
 ### Strapi后台字段映射

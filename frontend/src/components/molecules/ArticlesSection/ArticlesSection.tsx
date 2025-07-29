@@ -147,108 +147,108 @@ export function ArticlesSection() {
                     </div>
                 ) : (
                     /* 文章列表 */
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        {articles.map((article, index) => (
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {articles.map((article, index) => (
                             <Link
-                                key={article.id}
+                            key={article.id}
                                 href={`/weekly/${article.slug}`}
-                                className="glass-card glass-card--hover"
-                                style={{
-                                    borderRadius: '12px',
-                                    padding: '16px',
-                                    margin: '0 1px',
-                                    marginBottom: index < articles.length - 1 ? '16px' : '0',
-                                    display: 'flex',
-                                    cursor: 'pointer',
+                            className="glass-card glass-card--hover"
+                            style={{
+                                borderRadius: '12px',
+                                padding: '16px',
+                                margin: '0 1px',
+                                marginBottom: index < articles.length - 1 ? '16px' : '0',
+                                display: 'flex',
+                                cursor: 'pointer',
                                     transition: 'all 0.2s ease',
                                     textDecoration: 'none'
-                                }}
-                            >
-                                {/* 文章封面 */}
-                                <div style={{
-                                    width: '240px',
-                                    height: '128px',
-                                    borderRadius: '8px',
+                            }}
+                        >
+                            {/* 文章封面 */}
+                            <div style={{
+                                width: '240px',
+                                height: '128px',
+                                borderRadius: '8px',
                                     background: article.coverImage 
                                         ? `url(${article.coverImage})` 
                                         : 'var(--gradient-primary)',
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    color: 'var(--color-text-primary)',
-                                    fontSize: '14px',
-                                    fontWeight: 600,
-                                    marginRight: '16px',
-                                    flexShrink: 0
-                                }}>
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'var(--color-text-primary)',
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                marginRight: '16px',
+                                flexShrink: 0
+                            }}>
                                     {!article.coverImage && '封面图'}
-                                </div>
+                            </div>
 
-                                {/* 文章内容 */}
-                                <div style={{ flex: 1, paddingTop: '18px' }}>
-                                    <h3 style={{
-                                        color: 'var(--color-text-primary)',
-                                        fontSize: '18px',
-                                        fontWeight: 700,
-                                        lineHeight: '25px',
-                                        marginBottom: '28px'
-                                    }}>
-                                        {article.title}
-                                    </h3>
+                            {/* 文章内容 */}
+                            <div style={{ flex: 1, paddingTop: '18px' }}>
+                                <h3 style={{
+                                    color: 'var(--color-text-primary)',
+                                    fontSize: '18px',
+                                    fontWeight: 700,
+                                    lineHeight: '25px',
+                                    marginBottom: '28px'
+                                }}>
+                                    {article.title}
+                                </h3>
 
-                                    <div style={{
-                                        display: 'flex',
-                                        gap: '8px',
-                                        marginBottom: '16px'
-                                    }}>
+                                <div style={{
+                                    display: 'flex',
+                                    gap: '8px',
+                                    marginBottom: '16px'
+                                }}>
                                         <TagList 
                                             tags={article.tags}
                                             maxTags={2}
                                             size="sm"
                                         />
-                                    </div>
+                                </div>
 
-                                    <div style={{
-                                        display: 'flex',
-                                        gap: '11px',
-                                        color: 'var(--color-text-disabled)',
-                                        fontSize: '12px',
-                                        lineHeight: '17px'
-                                    }}>
+                                <div style={{
+                                    display: 'flex',
+                                    gap: '11px',
+                                    color: 'var(--color-text-disabled)',
+                                    fontSize: '12px',
+                                    lineHeight: '17px'
+                                }}>
                                         <span>👁 {article.viewCount}</span>
                                         <span>⏱ {article.readingTime}</span>
                                     </div>
                                 </div>
                             </Link>
-                        ))}
-                    </div>
+                    ))}
+                </div>
                 )}
 
                 {/* 查看更多按钮 */}
                 {!isLoading && !connectionError && articles.length > 0 && (
-                    <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                <div style={{ textAlign: 'center', marginTop: '20px' }}>
                         <Link 
                             href="/weekly"
                             style={{
-                                background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
-                                border: 'none',
-                                borderRadius: '8px',
-                                padding: '18px 24px',
-                                color: 'var(--color-text-primary)',
-                                fontSize: '13.33px',
-                                lineHeight: '15px',
-                                cursor: 'pointer',
-                                minWidth: '120px',
+                        background: 'linear-gradient(90deg, #3B82F6 0%, #8B5CF6 100%)',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '18px 24px',
+                        color: 'var(--color-text-primary)',
+                        fontSize: '13.33px',
+                        lineHeight: '15px',
+                        cursor: 'pointer',
+                        minWidth: '120px',
                                 whiteSpace: 'nowrap',
                                 textDecoration: 'none',
                                 display: 'inline-block'
                             }}
                         >
-                            查看更多
+                        查看更多
                         </Link>
-                    </div>
+                </div>
                 )}
             </div>
         </section>

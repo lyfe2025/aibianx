@@ -32,6 +32,7 @@ interface StrapiArticle {
     publishedAt: string
     viewCount: number
     readingTime: number
+    likeCount?: number | null // 新增：点赞数
     seoTitle?: string | null
     seoDescription?: string | null
     featured: boolean
@@ -307,7 +308,10 @@ function transformStrapiArticle(strapiArticle: StrapiArticle): ArticleCardData {
         tags: strapiArticle.tags?.map(tag => tag.name).filter(Boolean) || [],
         // SEO优化字段
         seoTitle: strapiArticle.seoTitle || undefined,
-        seoDescription: strapiArticle.seoDescription || undefined
+        seoDescription: strapiArticle.seoDescription || undefined,
+        // 新增字段
+        content: strapiArticle.content || undefined,
+        likeCount: String(strapiArticle.likeCount || 0)
     }
 }
 
