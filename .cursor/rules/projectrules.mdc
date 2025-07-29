@@ -1,20 +1,20 @@
 ---
 alwaysApply: true
 ---
-# AI变现之路 React + 纯CSS 项目 Cursor Rules
+# AI变现之路 全栈开发规范 (Frontend + Backend)
 
-你是一个专注于"AI变现之路"项目的高级全栈开发专家，精通现代Web开发技术栈，特别擅长1:1设计稿还原和高质量组件开发。
+你是一个专注于"AI变现之路"项目的高级全栈开发专家，精通现代Web开发技术栈，特别擅长1:1设计稿还原、Strapi 5.x后端开发和高质量组件开发。
 
 ## 🎯 项目概述
 - **项目名称**: AI变现之路 (aibianx)
-- **项目类型**: AI内容平台 + 会员订阅系统
+- **项目类型**: AI内容平台 + 会员订阅系统 + CMS管理后台
 - **设计标准**: 1440px设计稿，要求像素级精确还原
 - **核心特色**: 毛玻璃效果、渐变设计、深色主题
-- **技术方案**: React 18 + 纯CSS实现，确保100%设计稿还原
+- **架构模式**: 前后端分离 + Headless CMS
 
-## 💻 核心技术栈
+## 💻 技术栈架构
 
-### 前端架构
+### 前端技术栈
 - **框架**: Next.js 14 (App Router)
 - **语言**: TypeScript (100%类型安全，零any使用)
 - **UI库**: React 18
@@ -24,7 +24,16 @@ alwaysApply: true
 - **动画**: CSS原生动画 + transition
 - **图标**: 自定义SVG图标库 (124个本地化图标)
 
-### 样式架构 (重要更新)
+### 后端技术栈 (基于Strapi 5.19.0)
+- **CMS框架**: Strapi 5.19.0 (最新稳定版)
+- **数据库**: PostgreSQL 8.8+ (支持JSONB、数组类型、全文搜索)
+- **语言**: TypeScript (ES6模块语法)
+- **运行时**: Node.js 18-22 LTS
+- **认证**: Strapi Users & Permissions插件
+- **媒体**: Strapi媒体库 + CDN优化
+- **API**: REST API + GraphQL (可选)
+
+### 样式架构 (前端重要更新)
 - **设计模式**: 原子设计 (Atoms → Molecules → Organisms → Templates → Pages)
 - **样式方案**: CSS变量 + 语义化类名 + CSS Modules
 - **精确还原**: 直接使用设计稿数值，无框架限制
@@ -33,7 +42,7 @@ alwaysApply: true
 - **已完成原子组件**: GradientButton, GradientText, Input, GlassCard, Icon, Avatar, Container
 - **状态管理**: modalStore(弹窗状态), userStore(用户认证和会员状态)
 
-## 🎨 设计系统要求
+## 🎨 设计系统要求 (前端)
 
 ### 1:1设计稿还原标准 (纯CSS优势)
 - **设计稿宽度**: 1440px (使用Container组件的xl尺寸)
@@ -103,7 +112,440 @@ background: var(--color-bg-input);
 backdrop-filter: blur(4px);
 ```
 
-## 🏗️ 组件使用规范
+## 🏗️ Strapi 5.x 后端开发规范
+
+### Strapi 5.x 关键特性应用
+- **Document Service API**: 使用新的文档服务API进行数据操作
+- **Content Type Builder**: 利用图形化界面构建内容类型
+- **TypeScript优先**: 所有控制器、服务、路由使用.ts文件
+- **ES6模块**: 使用import/export语法，禁用CommonJS
+- **Plugin系统**: 合理使用官方和社区插件
+
+### 🚨 内容类型创建规范 (关键要求)
+
+#### **格式要求 (严格遵循)**
+在Strapi 5.x中，内容类型必须使用**TypeScript格式 + ES6语法**才能被正确识别：
+
+```typescript
+// ✅ 正确格式 - controllers/article.ts
+import { factories } from '@strapi/strapi'
+export default factories.createCoreController('api::article.article');
+
+// ❌ 错误格式 - 使用CommonJS语法
+'use strict';
+const { createCoreController } = require('@strapi/strapi').factories;
+module.exports = createCoreController('api::article.article');
+```
+
+#### **标准文件结构**
+```
+src/api/{内容类型名}/
+├── content-types/
+│   └── {内容类型名}/
+│       └── schema.json          # 内容类型定义 (唯一需要的文件)
+├── controllers/
+│   └── {内容类型名}.ts         # 控制器 (TypeScript + ES6)
+├── routes/
+│   └── {内容类型名}.ts         # 路由 (TypeScript + ES6)
+└── services/
+    └── {内容类型名}.ts         # 服务 (TypeScript + ES6)
+```
+
+#### **关键注意事项**
+- ❌ **不需要** `content-types/{name}/index.js` 文件 (会导致冲突)
+- ✅ **必须使用** `.ts` 扩展名 (不能使用.js)
+- ✅ **必须使用** ES6 `import/export` 语法
+- ❌ **不能使用** CommonJS `require/module.exports` 语法
+
+#### **创建方法优先级**
+
+**方法1: Admin界面创建 (强烈推荐)**
+- ✅ 自动生成正确的TypeScript格式文件
+- ✅ 自动注册到Strapi系统，无需手动修复
+- ✅ 界面友好，支持字段拖拽配置
+- ✅ 自动处理关系字段配置
+
+操作步骤：
+1. 访问 `http://localhost:1337/admin`
+2. 点击 **Content-Type Builder** 🛠️
+3. 点击 **"Create new collection type"**
+4. 配置基本信息和字段
+5. 保存并重启
+
+**方法2: 代码创建 (需要格式验证)**
+- ⚠️ 需要手动确保文件格式正确
+- ⚠️ 容易出现格式错误导致无法识别
+- ⚠️ 需要重新构建和重启Strapi
+
+#### **问题诊断和修复流程**
+
+**常见症状识别：**
+```bash
+# 症状1: API返回404错误
+curl http://localhost:1337/api/articles
+# {"data":null,"error":{"status":404,"name":"NotFoundError"}}
+
+# 症状2: Admin界面看不到内容类型权限设置
+# Settings → Roles → Public 中缺少对应权限块
+```
+
+**标准修复流程：**
+```bash
+# 步骤1: 检查文件格式
+find src/api/{内容类型名} -type f -name "*.js" -o -name "*.ts" | sort
+# 应该只有.ts文件，没有.js文件
+
+# 步骤2: 删除多余文件和重命名
+rm src/api/{内容类型名}/content-types/{内容类型名}/index.js  # 删除多余index.js
+mv src/api/{内容类型名}/controllers/{内容类型名}.js src/api/{内容类型名}/controllers/{内容类型名}.ts
+mv src/api/{内容类型名}/routes/{内容类型名}.js src/api/{内容类型名}/routes/{内容类型名}.ts
+mv src/api/{内容类型名}/services/{内容类型名}.js src/api/{内容类型名}/services/{内容类型名}.ts
+
+# 步骤3: 修复文件内容为ES6语法
+# 将每个.ts文件从CommonJS改为ES6语法
+
+# 步骤4: 重新构建和启动
+pkill -f strapi                    # 停止Strapi
+rm -rf .tmp dist build            # 清理缓存
+npm run build                     # 重新构建
+npm run develop                   # 启动Strapi
+
+# 步骤5: 验证修复结果
+curl -s "http://localhost:1337/api/{内容类型名复数}"
+# 404 = 未识别 (需要继续修复)
+# 403 = 已识别但需要权限配置 (修复成功)
+```
+
+#### **API权限配置流程**
+修复格式后必须配置API权限：
+1. 访问 `http://localhost:1337/admin`
+2. 进入 **Settings** → **Roles** → **Public**
+3. 在 **Permissions** 区域找到内容类型权限块
+4. 勾选所需权限：
+   - ☑️ `find` (获取列表)
+   - ☑️ `findOne` (获取单个)
+   - ☑️ `create` (创建，可选)
+   - ☑️ `update` (更新，可选)
+   - ☑️ `delete` (删除，可选)
+5. 保存设置
+
+```bash
+# 验证权限配置成功
+curl -s "http://localhost:1337/api/articles"
+# 应该返回数据而不是403错误
+```
+
+### 内容类型架构 (已实现)
+```typescript
+// 核心内容类型
+interface ContentTypes {
+  'api::article.article': Article    // 文章管理
+  'api::author.author': Author        // 作者管理  
+  'api::category.category': Category  // 分类管理
+  'api::tag.tag': Tag                // 标签管理
+}
+
+// 文章完整字段结构
+interface Article {
+  title: string           // 标题 (必填, 1-255字符)
+  slug: string           // URL友好标识 (自动生成)
+  content: RichText      // 富文本内容 (必填)
+  excerpt: string        // 摘要 (可选, 最多500字符)
+  featuredImage: Media   // 特色图片 (仅图片类型)
+  publishedAt: DateTime  // 发布时间
+  viewCount: number      // 浏览量 (默认0)
+  readingTime: number    // 阅读时长 (默认5分钟)
+  seoTitle: string       // SEO标题 (最多60字符)
+  seoDescription: string // SEO描述 (最多160字符)
+  featured: boolean      // 是否精选 (默认false)
+  
+  // 关系字段
+  tags: Tag[]           // 多对多关系
+  category: Category    // 多对一关系
+  author: Author        // 多对一关系
+}
+```
+
+### 数据库配置规范
+```typescript
+// database.ts - 支持多数据库环境
+export default ({ env }) => ({
+  connection: {
+    client: env('DATABASE_CLIENT', 'postgres'), // 生产环境优选PostgreSQL
+    connection: {
+      host: env('DATABASE_HOST', 'localhost'),
+      port: env.int('DATABASE_PORT', 5432),
+      database: env('DATABASE_NAME', 'aibianx'),
+      user: env('DATABASE_USERNAME', 'strapi'),
+      password: env('DATABASE_PASSWORD'),
+      ssl: env.bool('DATABASE_SSL', false),
+      schema: env('DATABASE_SCHEMA', 'public'),
+    },
+    pool: { 
+      min: env.int('DATABASE_POOL_MIN', 2), 
+      max: env.int('DATABASE_POOL_MAX', 10) 
+    },
+  },
+});
+```
+
+### API配置最佳实践
+```typescript
+// api.ts - REST API优化配置
+export default {
+  rest: {
+    defaultLimit: 25,     // 默认分页大小
+    maxLimit: 100,        // 最大分页限制
+    withCount: true,      // 返回总数统计
+  },
+  // 启用GraphQL (可选)
+  graphql: {
+    endpoint: '/graphql',
+    shadowCRUD: true,
+    playgroundAlways: false,
+    depthLimit: 7,
+    amountLimit: 100,
+  },
+};
+```
+
+### Strapi 5.x 控制器规范
+```typescript
+// controllers/article.ts - TypeScript ES6模块语法
+import { factories } from '@strapi/strapi';
+
+export default factories.createCoreController('api::article.article', ({ strapi }) => ({
+  // 重写查找方法，增加自定义逻辑
+  async find(ctx) {
+    // 调用默认服务
+    const { data, meta } = await super.find(ctx);
+    
+    // 自定义业务逻辑
+    const sanitizedData = data.map(article => ({
+      ...article,
+      // 计算动态字段
+      readingTimeText: `${article.attributes.readingTime}分钟阅读`,
+      isNew: this.isNewArticle(article.attributes.publishedAt)
+    }));
+
+    return { data: sanitizedData, meta };
+  },
+
+  // 自定义方法：增加浏览量
+  async incrementView(ctx) {
+    const { id } = ctx.params;
+    
+    const article = await strapi.entityService.findOne('api::article.article', id);
+    if (!article) return ctx.notFound('文章不存在');
+
+    const updatedArticle = await strapi.entityService.update('api::article.article', id, {
+      data: { viewCount: (article.viewCount || 0) + 1 }
+    });
+
+    return { data: updatedArticle };
+  },
+
+  // 辅助方法
+  isNewArticle(publishedAt: string): boolean {
+    const now = new Date();
+    const published = new Date(publishedAt);
+    const diffDays = (now.getTime() - published.getTime()) / (1000 * 3600 * 24);
+    return diffDays <= 7; // 7天内为新文章
+  }
+}));
+```
+
+### 服务层最佳实践
+```typescript
+// services/article.ts - 业务逻辑封装
+import { factories } from '@strapi/strapi';
+
+export default factories.createCoreService('api::article.article', ({ strapi }) => ({
+  // 获取精选文章
+  async findFeatured(params = {}) {
+    return await strapi.entityService.findMany('api::article.article', {
+      filters: { featured: true },
+      sort: { publishedAt: 'desc' },
+      populate: {
+        author: { fields: ['name'] },
+        category: { fields: ['name', 'slug'] },
+        tags: { fields: ['name', 'slug'] },
+        featuredImage: { fields: ['url', 'alternativeText'] }
+      },
+      ...params
+    });
+  },
+
+  // 按分类获取文章
+  async findByCategory(categorySlug: string, params = {}) {
+    return await strapi.entityService.findMany('api::article.article', {
+      filters: {
+        category: { slug: categorySlug }
+      },
+      populate: ['author', 'tags', 'featuredImage'],
+      sort: { publishedAt: 'desc' },
+      ...params
+    });
+  },
+
+  // 全文搜索 (PostgreSQL)
+  async searchArticles(query: string, params = {}) {
+    const knex = strapi.db.connection;
+    
+    // 使用PostgreSQL全文搜索
+    const articles = await knex('articles')
+      .whereRaw(
+        `to_tsvector('chinese', title || ' ' || excerpt || ' ' || content) @@ plainto_tsquery('chinese', ?)`,
+        [query]
+      )
+      .orderByRaw(`ts_rank(to_tsvector('chinese', title || ' ' || excerpt), plainto_tsquery('chinese', ?)) DESC`, [query]);
+
+    return articles;
+  }
+}));
+```
+
+### 路由配置规范
+```typescript
+// routes/article.ts - 自定义路由
+export default {
+  routes: [
+    // 扩展默认路由
+    {
+      method: 'GET',
+      path: '/articles',
+      handler: 'article.find',
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
+    // 自定义路由
+    {
+      method: 'PUT',
+      path: '/articles/:id/view',
+      handler: 'article.incrementView',
+      config: {
+        policies: [],
+      },
+    },
+    {
+      method: 'GET', 
+      path: '/articles/featured',
+      handler: 'article.findFeatured',
+    },
+    {
+      method: 'GET',
+      path: '/articles/search',
+      handler: 'article.search',
+    }
+  ],
+};
+```
+
+## 🔗 前后端集成规范
+
+### Strapi API客户端规范 (前端)
+```typescript
+// lib/strapi.ts - 类型安全的API客户端
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
+const API_TOKEN = process.env.STRAPI_API_TOKEN
+
+// Strapi响应类型定义
+interface StrapiResponse<T> {
+  data: T
+  meta?: {
+    pagination?: {
+      page: number
+      pageSize: number
+      pageCount: number
+      total: number
+    }
+  }
+}
+
+// 标准API请求函数
+export async function strapiRequest<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<StrapiResponse<T>> {
+  const url = `${STRAPI_URL}/api${endpoint}`
+  
+  const config: RequestInit = {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(API_TOKEN && { 'Authorization': `Bearer ${API_TOKEN}` }),
+      ...options.headers,
+    },
+    ...options,
+  }
+
+  const response = await fetch(url, config)
+  
+  if (!response.ok) {
+    throw new Error(`Strapi API错误: ${response.status}`)
+  }
+
+  return response.json()
+}
+
+// 专用查询函数
+export async function getArticles(params: ArticleQueryParams = {}) {
+  const searchParams = new URLSearchParams()
+  
+  // 分页
+  if (params.page) searchParams.append('pagination[page]', String(params.page))
+  if (params.pageSize) searchParams.append('pagination[pageSize]', String(params.pageSize))
+  
+  // 筛选
+  if (params.category) searchParams.append('filters[category][slug][$eq]', params.category)
+  if (params.featured !== undefined) searchParams.append('filters[featured][$eq]', String(params.featured))
+  
+  // 关联数据
+  searchParams.append('populate', 'author,category,tags,featuredImage')
+  
+  // 排序
+  searchParams.append('sort[0]', 'publishedAt:desc')
+
+  const data = await strapiRequest<StrapiArticle[]>(`/articles?${searchParams}`)
+  
+  return {
+    articles: data.data.map(transformStrapiArticle),
+    pagination: data.meta?.pagination
+  }
+}
+```
+
+### 环境变量配置规范
+```bash
+# .env.local (前端)
+NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
+STRAPI_API_TOKEN=your_api_token_here
+
+# .env (后端Strapi)
+HOST=0.0.0.0
+PORT=1337
+APP_KEYS="key1,key2,key3,key4"
+API_TOKEN_SALT=random_salt
+ADMIN_JWT_SECRET=admin_secret
+TRANSFER_TOKEN_SALT=transfer_salt
+JWT_SECRET=jwt_secret
+
+# 数据库配置
+DATABASE_CLIENT=postgres
+DATABASE_NAME=aibianx
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=strapi
+DATABASE_PASSWORD=your_password
+DATABASE_SSL=false
+
+# 文件上传
+UPLOAD_PROVIDER=local
+UPLOAD_SIZE_LIMIT=52428800  # 50MB
+```
+
+## 🏗️ 组件使用规范 (前端)
 
 ### 已完成原子组件 (必须使用)
 ```typescript
@@ -120,6 +562,43 @@ import {
 
 // 状态管理
 import { useModalStore, useUserStore } from '@/stores'
+
+// Strapi API Hooks
+import { useArticles, useFeaturedArticles, useArticleBySlug } from '@/lib/hooks'
+```
+
+### React Hooks 集成规范
+```typescript
+// lib/hooks/useArticles.ts - Strapi数据获取Hook
+export function useArticles(params: ArticleQueryParams = {}) {
+  const [articles, setArticles] = useState<ArticleCardData[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [pagination, setPagination] = useState<PaginationMeta | null>(null)
+
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const { articles, pagination } = await getArticles(params)
+        
+        setArticles(articles)
+        setPagination(pagination)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '获取文章失败')
+        setArticles([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchArticles()
+  }, [JSON.stringify(params)]) // 深度比较参数变化
+
+  return { articles, loading, error, pagination }
+}
 ```
 
 ### 组件使用原则
@@ -127,10 +606,11 @@ import { useModalStore, useUserStore } from '@/stores'
 2. **组合胜过继承** - 通过组合原子组件构建复杂组件
 3. **一致性优先** - 严格使用设计系统的颜色、字体、间距
 4. **响应式设计** - 移动端优先，渐进增强到桌面端
+5. **API集成优先** - 所有数据通过Strapi API获取，避免硬编码
 
 ## 📁 项目结构约定
 
-### 目录结构
+### 完整目录结构
 ```
 aibianx/
 ├── frontend/                   # Next.js前台应用
@@ -141,213 +621,70 @@ aibianx/
 │   │   │   ├── molecules/     # 分子组件 (组合组件)
 │   │   │   ├── organisms/     # 有机组件 (布局组件)
 │   │   │   └── templates/     # 模板组件 (页面模板)
-│   │   ├── stores/            # Zustand状态管理
 │   │   ├── lib/               # 工具函数
-│   │   └── types/             # TypeScript类型定义
+│   │   │   ├── strapi.ts     # Strapi API客户端
+│   │   │   ├── hooks/        # 自定义React Hooks
+│   │   │   └── utils.ts      # 通用工具函数
+│   │   ├── stores/            # Zustand状态管理
+│   │   ├── types/             # TypeScript类型定义
+│   │   │   ├── api.ts        # API响应类型
+│   │   │   └── components.ts # 组件Props类型
+│   │   └── styles/            # 全局样式
 │   ├── public/                # 静态资源
 │   │   ├── icons/            # SVG图标 (124个)
 │   │   ├── images/           # 图片资源
 │   │   └── fonts/            # 字体文件
-│   └── globals.css           # 全局CSS系统
-├── admin/                      # 管理后台 (预留)
+│   └── .env.local            # 前端环境变量
+│
+├── backend/                    # Strapi 5.x 后端
+│   ├── config/                # Strapi配置
+│   │   ├── database.ts       # 数据库配置
+│   │   ├── api.ts           # API配置
+│   │   ├── admin.ts         # 管理面板配置
+│   │   └── middlewares.ts   # 中间件配置
+│   ├── src/
+│   │   ├── api/             # 内容类型API
+│   │   │   ├── article/     # 文章管理
+│   │   │   ├── author/      # 作者管理
+│   │   │   ├── category/    # 分类管理
+│   │   │   └── tag/         # 标签管理
+│   │   ├── extensions/      # Strapi扩展
+│   │   └── index.ts         # 应用入口
+│   ├── database/            # 数据库文件
+│   ├── public/              # 上传文件存储
+│   └── .env                 # 后端环境变量
+│
 ├── docs/                       # 项目文档
-└── sh/                        # 脚本工具
+└── scripts/                   # 部署脚本
 ```
 
-### 静态资源详细目录 (必须了解)
-
-#### 字体资源 (`/public/fonts/`)
+### 内容类型文件结构 (Strapi 5.x)
 ```
-fonts/
-└── alibaba-puhuiti/          # 阿里巴巴普惠体 3.0 字体文件
-    ├── AlibabaPuHuiTi-3-35-Thin.woff2
-    ├── AlibabaPuHuiTi-3-45-Light.woff2
-    ├── AlibabaPuHuiTi-3-55-Regular.woff2
-    ├── AlibabaPuHuiTi-3-65-Medium.woff2
-    ├── AlibabaPuHuiTi-3-75-SemiBold.woff2
-    ├── AlibabaPuHuiTi-3-85-Bold.woff2
-    └── AlibabaPuHuiTi-3-95-Heavy.woff2
-```
-
-#### 图标资源 (`/public/icons/`)
-```
-icons/
-├── 通用图标 (62个主要图标)
-│   ├── logo-*.svg              # 品牌标识 (6个变体)
-│   ├── nav-indicator-*.svg     # 导航指示器 (4个页面变体)
-│   ├── social-*.svg            # 社交媒体图标 (6个平台)
-│   ├── tag-*.svg               # 标签图标 (4种分类)
-│   ├── user-*.svg              # 用户相关图标 (头像、通知等)
-│   ├── date-*.svg              # 时间相关图标 (日期、时钟等)
-│   ├── share-*.svg             # 分享功能图标 (3个平台)
-│   └── contact-*.svg           # 联系方式图标 (邮箱、电话等)
-│
-├── modals/ (31个弹窗专用图标)
-│   ├── close-button-*.svg      # 关闭按钮 (3个变体)
-│   ├── divider-line-*.svg      # 分割线 (2个变体)
-│   ├── email-icon-*.svg        # 邮箱图标 (4个变体)
-│   ├── password-*.svg          # 密码相关图标 (5个功能)
-│   ├── github-icon-*.svg       # GitHub登录图标 (2个变体)
-│   ├── help-*.svg              # 帮助提示图标
-│   ├── secure-payment.svg      # 安全支付标识
-│   ├── member-check-icon.svg   # 会员验证图标
-│   └── countdown-separator.svg # 倒计时分隔符
-│
-└── payments/ (3个支付方式图标)
-    ├── alipay-icon.svg         # 支付宝
-    ├── wechat-pay-icon.svg     # 微信支付
-    ├── unionpay-icon.svg       # 银联支付
-    └── payment-selected.svg    # 选中状态指示器
-```
-
-#### 图片资源 (`/public/images/`)
-```
-images/
-├── articles/ (14个文章配图)
-│   ├── ai-art-guide.svg        # AI艺术指南
-│   ├── ai-assistant.svg        # AI助手教程
-│   ├── ai-content-automation.svg # AI内容自动化
-│   ├── ai-mcn.svg              # AI MCN运营
-│   ├── ai-revenue-model.jpeg   # AI变现模式 (实拍图)
-│   ├── ai-voice.svg            # AI语音技术
-│   ├── chatgpt-article.jpeg    # ChatGPT文章 (实拍图)
-│   ├── chatgpt-bot.svg         # ChatGPT机器人
-│   ├── gpt4-article.jpeg       # GPT-4文章 (实拍图)
-│   ├── gpt4-copywriting.svg    # GPT-4文案
-│   ├── midjourney-article.jpeg # Midjourney文章 (实拍图)
-│   ├── midjourney-guide.svg    # Midjourney指南
-│   ├── midjourney-workflow.jpeg # Midjourney工作流 (实拍图)
-│   └── nocode-platform.svg     # 无代码平台
-│
-├── avatars/ (2个用户头像)
-│   ├── author-li-mingyang.jpeg # 作者李明阳头像
-│   └── user-zhang.jpeg         # 用户张某头像
-│
-├── hero/ (3个首页展示设备)
-│   ├── device-left.svg         # 左侧设备展示
-│   ├── device-right.svg        # 右侧设备展示
-│   └── devices-main.svg        # 主要设备展示
-│
-└── illustrations/ (5个功能插图)
-    ├── case-studies.svg        # 案例研究插图
-    ├── cta-main.svg            # 主要行动号召插图
-    ├── monetization-guide.svg  # 变现指南插图
-    ├── tech-guide.svg          # 技术指南插图
-    └── tools-handbook.svg      # 工具手册插图
-```
-
-#### 其他文件 (`/public/`)
-```
-public/
-├── favicon.ico               # 网站图标
-├── file.svg                  # 文件通用图标
-├── globe.svg                 # 全球化图标
-├── next.svg                  # Next.js默认图标
-├── vercel.svg                # Vercel部署图标
-└── window.svg                # 窗口图标
-```
-
-### 静态资源使用规范
-
-#### 图标引用规范
-```typescript
-// 统一使用Icon组件，自动路径映射
-import { Icon } from '@/components/ui'
-
-// 使用方式 (自动添加/icons/前缀和.svg后缀)
-<Icon name="logo-detail" size="lg" />           // → /icons/logo-detail.svg
-<Icon name="modals/close-button" size="md" />   // → /icons/modals/close-button.svg
-<Icon name="payments/alipay-icon" size="sm" />  // → /icons/payments/alipay-icon.svg
-```
-
-#### 图片引用规范
-```typescript
-// 必须使用Next.js Image组件优化
-import Image from 'next/image'
-
-// 文章配图
-<Image 
-  src="/images/articles/ai-revenue-model.jpeg" 
-  alt="AI变现模式详解"
-  width={800} 
-  height={450}
-  priority={true}  // 首屏图片设置priority
-/>
-
-// 用户头像
-<Image 
-  src="/images/avatars/author-li-mingyang.jpeg"
-  alt="李明阳"
-  width={48}
-  height={48}
-  className="rounded-full"
-/>
-```
-
-#### 字体引用规范
-```css
-/* globals.css中已配置，直接使用CSS变量 */
-@font-face {
-  font-family: 'Alibaba PuHuiTi 3.0';
-  src: url('/fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-display: swap;
-}
-
-/* 组件中使用 */
-.text-content {
-  font-family: var(--font-family-primary); /* 自动使用阿里巴巴普惠体 */
-}
-```
-
-#### 资源性能优化要求
-1. **图标资源**: 全部为SVG格式，体积小，支持任意缩放
-2. **图片资源**: 混合JPEG(照片)和SVG(矢量图)，确保最佳压缩比
-3. **字体资源**: 使用WOFF2格式，支持现代浏览器，加载性能优异
-4. **预加载策略**: 关键资源设置preload，首屏图片设置priority
-5. **懒加载**: 非首屏图片自动懒加载，提升页面性能
-
-## 🎨 样式编写规范 (纯CSS优势)
-
-### CSS类名使用优先级
-1. **CSS变量优先** - 使用自定义的颜色、字体、间距变量
-2. **语义化类名** - 如 .btn, .glass-card, .gradient-text
-3. **组合类名** - 使用条件类名组合
-4. **响应式设计** - 使用原生CSS媒体查询
-5. **状态变体** - :hover, :focus, :active, :disabled
-
-### 示例：标准组件样式
-```typescript
-const buttonClasses = [
-  'btn',                    // 基础按钮类
-  `btn--${size}`,          // 尺寸变体
-  variant === 'primary' ? 'btn--gradient' : 'btn--outline',
-  fullWidth && 'w-full',
-  className
-].filter(Boolean).join(' ')
-
-// CSS定义
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-full);
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.btn--gradient {
-  background: var(--gradient-primary);
-  box-shadow: var(--shadow-button);
-}
+backend/src/api/article/
+├── content-types/
+│   └── article/
+│       └── schema.json         # 内容类型定义
+├── controllers/
+│   └── article.ts             # 控制器逻辑 (TypeScript)
+├── routes/
+│   └── article.ts             # 路由定义 (TypeScript)
+└── services/
+    └── article.ts             # 服务层逻辑 (TypeScript)
 ```
 
 ## 📝 代码质量标准
 
-### TypeScript要求
+### TypeScript要求 (全栈)
 - **100%类型安全** - 零any使用，完整的接口定义
 - **forwardRef支持** - 输入组件必须支持ref转发
 - **泛型约束** - 合理使用泛型提高代码复用性
+- **ES6模块** - 使用import/export，禁用CommonJS (require/module.exports)
+
+### Strapi 5.x 特定要求
+- **控制器文件**: 必须使用.ts扩展名和ES6语法
+- **Factory模式**: 使用factories.createCoreController创建控制器
+- **Document Service**: 优先使用strapi.entityService进行数据操作
+- **类型安全**: 为所有自定义方法添加TypeScript类型定义
 
 ### 组件接口设计
 ```typescript
@@ -360,40 +697,203 @@ interface ComponentProps extends HTMLAttributes<HTMLElement> {
   style?: CSSProperties               // 内联样式支持
   onClick?: () => void                 // 事件处理
 }
+
+// Strapi API类型定义
+interface StrapiArticle {
+  id: number
+  attributes: {
+    title: string
+    slug: string
+    content: string
+    // ... 其他字段
+  }
+}
 ```
 
 ## 🚨 常见陷阱和解决方案
 
-### 设计还原常见问题
+### 前端设计还原常见问题
 1. **颜色不准确** - 必须使用CSS变量定义的精确颜色值
 2. **字体大小偏差** - 严格使用--font-size-*变量的预定义尺寸
 3. **间距不一致** - 使用--spacing-*变量的标准间距系统
 4. **毛玻璃效果缺失** - 检查backdrop-filter和-webkit-backdrop-filter
 
+### Strapi 5.x 后端常见问题 (重要)
+1. **CommonJS语法错误** - 必须使用ES6 import/export，删除require/module.exports
+2. **内容类型不识别** - 确保使用.ts文件扩展名和正确的factory语法
+3. **多余index.js文件** - 删除content-types/{name}/index.js文件，只保留schema.json
+4. **关系查询失败** - 检查populate参数和关系定义
+5. **PostgreSQL连接问题** - 验证数据库配置和环境变量
+
+### 🛠️ Strapi 内容类型问题诊断清单
+```bash
+# 快速诊断命令
+# 1. 检查文件格式是否正确
+find backend/src/api -name "*.js" -o -name "*.ts" | sort
+
+# 2. 测试API响应状态
+curl -s "http://localhost:1337/api/articles" | jq '.error.status'
+# 404 = 内容类型未识别 (需要修复格式)
+# 403 = 内容类型已识别 (需要配置权限)  
+# 200 = 正常工作
+
+# 3. 检查数据库表是否存在
+psql -U aibianx_dev -d aibianx_dev -c "\dt" | grep articles
+
+# 4. 检查权限配置
+psql -U aibianx_dev -d aibianx_dev -c "SELECT action FROM up_permissions WHERE action LIKE '%article%';"
+```
+
+### API集成常见问题
+1. **CORS错误** - 配置Strapi CORS中间件允许前端域名
+2. **认证失败** - 检查API Token配置和权限设置
+3. **数据转换错误** - 确保正确处理Strapi的data.attributes结构
+4. **缓存问题** - 合理使用Next.js的revalidate配置
+
 ### 性能问题避免
 1. **图片未优化** - 强制使用Next.js Image组件
 2. **状态过度渲染** - 检查useStore的选择器使用
 3. **CSS重复计算** - 使用CSS变量代替内联样式
+4. **API过度请求** - 实现适当的缓存和分页策略
 
-### 代码质量问题
-1. **类型any使用** - 明确禁止，必须定义具体类型
-2. **组件职责不清** - 遵循单一职责原则
-3. **命名不规范** - 使用语义化的组件和变量命名
+## 💡 开发最佳实践
 
-## 💡 纯CSS技术栈优势
+### Strapi 5.x 最佳实践
+1. **内容建模**: 使用Content Type Builder图形化创建内容类型 (强烈推荐)
+2. **权限管理**: 合理配置Users & Permissions插件的角色权限
+3. **媒体优化**: 使用Strapi媒体库管理文件，配置合适的存储提供商
+4. **性能优化**: 启用数据库索引，使用populate优化关联查询
+5. **安全配置**: 设置强密码策略，配置HTTPS，限制API访问
 
-### 相比Tailwind CSS的优势
-1. **100%精确还原** - 无框架限制，直接使用设计稿数值
-2. **更好的毛玻璃效果** - 原生backdrop-filter支持
-3. **更简洁的代码** - 语义化类名，易读易维护
-4. **更好的性能** - 无运行时依赖，纯CSS渲染
-5. **更易调试** - 直观的CSS样式，清晰的组件结构
-6. **更强的可控性** - 完全自定义，无第三方限制
+### 项目启动和测试工作流 (推荐)
+1. **快速启动测试环境** - 使用 `./start-dev.sh` 一键启动前后端
+2. **验证服务状态** - 运行 `./status.sh` 确认所有服务正常运行
+3. **访问测试地址** - 前端 http://localhost:3000，后端 http://localhost:1337/admin
+4. **监控日志输出** - 使用 `tail -f logs/*.log` 实时查看运行状态
+5. **结束测试会话** - 使用 `./stop-dev.sh` 优雅关闭所有服务
 
-### 开发效率提升
-- **设计系统化** - CSS变量统一管理
-- **组件原子化** - 可复用性极高
-- **类型安全** - TypeScript全面覆盖
-- **开发体验** - 热重载，实时预览
+### 内容类型开发工作流 (推荐)
+1. **启动开发环境** - 使用 `./start-dev.sh` 确保后端服务运行
+2. **优先使用Admin界面创建** - 自动生成正确格式，避免手动错误
+3. **配置字段和关系** - 利用图形化界面配置复杂关系
+4. **设置API权限** - 立即在Admin中配置Public角色权限
+5. **测试API功能** - 使用curl或Postman验证API正常响应
+6. **集成到前端应用** - 创建相应的React Hooks和组件
 
-记住：这是一个追求极致设计还原度和用户体验的高端项目，每个细节都要精雕细琢！纯CSS方案让我们有能力实现100%的设计稿还原。 
+### 前后端集成最佳实践
+1. **API设计**: 遵循RESTful约定，使用语义化的端点名称
+2. **错误处理**: 实现统一的错误处理机制，提供友好的用户反馈
+3. **数据验证**: 前后端双重验证，确保数据一致性和安全性
+4. **缓存策略**: 合理使用浏览器缓存、CDN缓存和数据库查询缓存
+5. **监控日志**: 配置适当的日志记录和性能监控
+
+### 部署和运维最佳实践
+1. **环境分离**: 区分开发、测试、生产环境配置
+2. **数据备份**: 定期备份PostgreSQL数据库和用户上传文件
+3. **SSL配置**: 生产环境必须使用HTTPS
+4. **负载均衡**: 高流量时考虑使用负载均衡和CDN
+5. **监控告警**: 配置服务监控和异常告警机制
+
+## 🔧 开发工具配置
+
+### 项目测试和启动脚本 (根目录)
+
+项目提供了完整的脚本套件来快速启动测试环境，所有脚本位于根目录：
+
+#### **快速启动 (推荐)**
+```bash
+# 设置脚本执行权限 (首次使用)
+chmod +x *.sh
+
+# 启动完整开发测试环境
+./start-dev.sh
+```
+
+#### **可用脚本清单**
+| 脚本名称 | 功能描述 | 使用场景 |
+|---------|---------|---------|
+| `start-dev.sh` | 🚀 启动完整开发环境 | 项目测试、日常开发 |
+| `start-backend.sh` | ⚙️ 仅启动后端服务 | 后端API测试 |
+| `start-frontend.sh` | 🌐 仅启动前端服务 | 前端UI测试 |
+| `stop-dev.sh` | 🛑 停止所有服务 | 结束测试环境 |
+| `status.sh` | 📊 查看服务状态 | 诊断问题、监控状态 |
+
+#### **脚本功能特性**
+- ✅ 自动检查并安装依赖
+- ✅ 创建缺失的环境变量文件
+- ✅ 检查端口冲突并自动处理
+- ✅ 等待服务完全启动
+- ✅ 提供详细的启动状态反馈
+- ✅ 智能日志管理
+
+#### **测试环境访问地址**
+- 🌐 **前端网站**: http://localhost:3000
+- ⚙️ **后端管理**: http://localhost:1337/admin  
+- 📡 **API测试**: http://localhost:1337/api/articles
+- 📖 **API文档**: [API-ENDPOINTS.md](./API-ENDPOINTS.md)
+
+#### **日志监控**
+```bash
+# 实时查看日志
+tail -f logs/backend.log   # 后端日志
+tail -f logs/frontend.log  # 前端日志
+tail -f logs/*.log         # 所有日志
+
+# 检查服务状态
+./status.sh
+```
+
+#### **故障排除**
+```bash
+# 强制停止所有服务
+./stop-dev.sh
+
+# 重新启动
+./start-dev.sh
+
+# 查看详细状态
+./status.sh
+```
+
+### Strapi 5.x 开发环境
+```bash
+# 安装Strapi CLI
+npm install -g @strapi/strapi
+
+# 创建新项目 (已完成)
+npx create-strapi-app@latest backend --typescript
+
+# 开发模式启动 (建议使用脚本)
+./start-backend.sh  # 推荐
+# 或手动启动
+npm run develop
+
+# 生产模式构建
+npm run build
+npm run start
+```
+
+### 数据库管理工具
+- **pgAdmin**: PostgreSQL图形化管理工具
+- **DataGrip**: JetBrains数据库管理工具
+- **Strapi Admin**: 内置的内容管理界面
+
+### API测试工具
+- **Postman**: API接口测试
+- **Insomnia**: 轻量级API客户端
+- **Strapi 内置API文档**: http://localhost:1337/documentation
+
+记住：这是一个追求极致设计还原度、内容管理便捷性和用户体验的高端全栈项目，前端用纯CSS实现100%设计稿还原，后端用Strapi 5.x提供强大的内容管理能力！
+
+---
+
+## 🔄 持续更新说明
+
+本规范文档会随着项目发展和技术栈更新持续完善，确保始终反映项目的最新架构和最佳实践。主要更新来源：
+
+1. **Strapi官方文档**: https://docs.strapi.io/cms/intro
+2. **Next.js官方文档**: 跟进App Router新特性
+3. **项目实践总结**: 开发过程中的经验积累，包括内容类型创建的实战经验
+4. **社区最佳实践**: 行业标准和社区推荐做法
+
+每次使用本规范时，请确保参考最新版本，并根据具体需求进行适当调整。 

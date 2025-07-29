@@ -7,5 +7,6 @@
 export { useSubtitleColorFix } from './useSubtitleColorFix'
 export { useHeaderScroll } from './useHeaderScroll'
 export { useWeeklyLogic } from './useWeeklyLogic'
+export { useWeeklyLogicWithAPI } from './useWeeklyLogicWithAPI'
 export { useSettingsLogic } from './useSettingsLogic'
 export { useBookmarksLogic } from './useBookmarksLogic' 

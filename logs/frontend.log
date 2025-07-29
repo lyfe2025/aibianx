@@ -2,18 +2,444 @@
 > aibianx@0.1.0 dev
 > next dev --turbopack
 
- ⚠ Warning: Found multiple lockfiles. Selecting /Volumes/wwx/dev/WebProjects/aibianx/package-lock.json.
-   Consider removing the lockfiles at:
-   * /Volumes/wwx/dev/WebProjects/aibianx/frontend/pnpm-lock.yaml
-
    ▲ Next.js 15.4.2 (Turbopack)
    - Local:        http://localhost:3000
    - Network:      http://192.168.2.17:3000
    - Environments: .env.local
 
  ✓ Starting...
- ✓ Ready in 853ms
+ ✓ Ready in 885ms
  ○ Compiling / ...
- ✓ Compiled / in 1541ms
- GET / 200 in 1883ms
- GET / 200 in 101ms
+ ✓ Compiled / in 1619ms
+ GET / 200 in 1959ms
+ GET / 200 in 138ms
+ ✓ Compiled /_not-found/page in 427ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-75-SemiBold.woff2 404 in 674ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-85-Bold.woff2 404 in 669ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-65-Medium.woff2 404 in 672ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-55-Regular.woff2 404 in 688ms
+ ✓ Compiled /weekly in 300ms
+ GET /weekly 200 in 325ms
+ ✓ Compiled in 267ms
+ GET /weekly 200 in 540ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-55-Regular.woff2 404 in 388ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-75-SemiBold.woff2 404 in 387ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-65-Medium.woff2 404 in 377ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-85-Bold.woff2 404 in 64ms
+ ✓ Compiled /favicon.ico in 120ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 373ms
+ ✓ Compiled in 132ms
+ ⨯ ./src/components/molecules/AppHeader/DesktopActions.tsx:4:1
+Export useTranslation doesn't exist in target module
+[0m [90m 2 |[39m
+ [90m 3 |[39m [36mimport[39m { [33mIcon[39m } [36mfrom[39m [32m'@/components/ui'[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m { getIconButtonStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 6 |[39m [36mimport[39m { [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 7 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-client] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/DesktopActions.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/DesktopActions.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+
+./src/components/molecules/AppHeader/DesktopActions.tsx:4:1
+Export useTranslation doesn't exist in target module
+[0m [90m 2 |[39m
+ [90m 3 |[39m [36mimport[39m { [33mIcon[39m } [36mfrom[39m [32m'@/components/ui'[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m { getIconButtonStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 6 |[39m [36mimport[39m { [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 7 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-ssr] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/DesktopActions.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/DesktopActions.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+
+./src/components/molecules/AppHeader/DesktopNavigation.tsx:4:1
+Export useTranslation doesn't exist in target module
+[0m [90m 2 |[39m
+ [90m 3 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m { isActiveRoute[33m,[39m getNavLinkStyles[33m,[39m getActiveIndicatorStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 6 |[39m [36mimport[39m { [33mNAVIGATION_MENU[39m[33m,[39m [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 7 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-client] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/DesktopNavigation.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/DesktopNavigation.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+
+./src/components/molecules/AppHeader/DesktopNavigation.tsx:4:1
+Export useTranslation doesn't exist in target module
+[0m [90m 2 |[39m
+ [90m 3 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m { isActiveRoute[33m,[39m getNavLinkStyles[33m,[39m getActiveIndicatorStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 6 |[39m [36mimport[39m { [33mNAVIGATION_MENU[39m[33m,[39m [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 7 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-ssr] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/DesktopNavigation.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/DesktopNavigation.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+
+./src/components/molecules/AppHeader/MobileMenu.tsx:5:1
+Export useTranslation doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m
+ [90m 4 |[39m [36mimport[39m { [33mIcon[39m[33m,[39m [33mGradientButton[39m } [36mfrom[39m [32m'@/components/ui'[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { isActiveRoute[33m,[39m getMobileMenuStyles[33m,[39m getMobileNavLinkStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 7 |[39m [36mimport[39m { [33mNAVIGATION_MENU[39m[33m,[39m [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 8 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-client] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/MobileMenu.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/MobileMenu.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+
+./src/components/molecules/AppHeader/MobileMenu.tsx:5:1
+Export useTranslation doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m
+ [90m 4 |[39m [36mimport[39m { [33mIcon[39m[33m,[39m [33mGradientButton[39m } [36mfrom[39m [32m'@/components/ui'[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { isActiveRoute[33m,[39m getMobileMenuStyles[33m,[39m getMobileNavLinkStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 7 |[39m [36mimport[39m { [33mNAVIGATION_MENU[39m[33m,[39m [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 8 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-ssr] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/MobileMenu.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/MobileMenu.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 534ms
+ GET /weekly 500 in 684ms
+ ⨯ ./src/components/molecules/AppHeader/DesktopActions.tsx:4:1
+Export useTranslation doesn't exist in target module
+[0m [90m 2 |[39m
+ [90m 3 |[39m [36mimport[39m { [33mIcon[39m } [36mfrom[39m [32m'@/components/ui'[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m { getIconButtonStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 6 |[39m [36mimport[39m { [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 7 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-client] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/DesktopActions.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/DesktopActions.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+
+./src/components/molecules/AppHeader/DesktopActions.tsx:4:1
+Export useTranslation doesn't exist in target module
+[0m [90m 2 |[39m
+ [90m 3 |[39m [36mimport[39m { [33mIcon[39m } [36mfrom[39m [32m'@/components/ui'[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m { getIconButtonStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 6 |[39m [36mimport[39m { [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 7 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-ssr] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/DesktopActions.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/DesktopActions.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+
+./src/components/molecules/AppHeader/DesktopNavigation.tsx:4:1
+Export useTranslation doesn't exist in target module
+[0m [90m 2 |[39m
+ [90m 3 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m { isActiveRoute[33m,[39m getNavLinkStyles[33m,[39m getActiveIndicatorStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 6 |[39m [36mimport[39m { [33mNAVIGATION_MENU[39m[33m,[39m [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 7 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-client] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/DesktopNavigation.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/DesktopNavigation.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+
+./src/components/molecules/AppHeader/DesktopNavigation.tsx:4:1
+Export useTranslation doesn't exist in target module
+[0m [90m 2 |[39m
+ [90m 3 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m
+[31m[1m>[22m[39m[90m 4 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 5 |[39m [36mimport[39m { isActiveRoute[33m,[39m getNavLinkStyles[33m,[39m getActiveIndicatorStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 6 |[39m [36mimport[39m { [33mNAVIGATION_MENU[39m[33m,[39m [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 7 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-ssr] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/DesktopNavigation.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/DesktopNavigation.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+
+./src/components/molecules/AppHeader/MobileMenu.tsx:5:1
+Export useTranslation doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m
+ [90m 4 |[39m [36mimport[39m { [33mIcon[39m[33m,[39m [33mGradientButton[39m } [36mfrom[39m [32m'@/components/ui'[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { isActiveRoute[33m,[39m getMobileMenuStyles[33m,[39m getMobileNavLinkStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 7 |[39m [36mimport[39m { [33mNAVIGATION_MENU[39m[33m,[39m [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 8 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-client] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/MobileMenu.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/MobileMenu.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+
+./src/components/molecules/AppHeader/MobileMenu.tsx:5:1
+Export useTranslation doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m
+ [90m 4 |[39m [36mimport[39m { [33mIcon[39m[33m,[39m [33mGradientButton[39m } [36mfrom[39m [32m'@/components/ui'[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { useTranslation } [36mfrom[39m [32m'@/lib'[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { isActiveRoute[33m,[39m getMobileMenuStyles[33m,[39m getMobileNavLinkStyles } [36mfrom[39m [32m'@/lib/headerUtils'[39m
+ [90m 7 |[39m [36mimport[39m { [33mNAVIGATION_MENU[39m[33m,[39m [33mHEADER_STYLES[39m } [36mfrom[39m [32m'@/constants/headerConfig'[39m
+ [90m 8 |[39m[0m
+
+The export useTranslation was not found in module [project]/src/lib/index.ts [app-ssr] (ecmascript) <exports>.
+Did you mean to import calculateDiscount?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/molecules/AppHeader/MobileMenu.tsx [Client Component Browser]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component Browser]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/molecules/AppHeader/MobileMenu.tsx [Client Component SSR]
+    ./src/components/molecules/AppHeader/AppHeader.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Client Component SSR]
+    ./src/components/molecules/LayoutController/LayoutController.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+ GET /weekly 500 in 33ms
+ GET /favicon.ico 500 in 30ms
+ GET /api/test 500 in 65ms
+ ✓ Compiled in 150ms
+ ✓ Compiled /weekly in 66ms
+ GET /weekly 200 in 526ms
+ ✓ Compiled /_not-found/page in 23ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-55-Regular.woff2 404 in 375ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-75-SemiBold.woff2 404 in 374ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-65-Medium.woff2 404 in 393ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-85-Bold.woff2 404 in 87ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 274ms
+ ○ Compiling /weekly-api ...
+ ✓ Compiled /weekly-api in 596ms
+ GET /weekly-api 200 in 712ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-85-Bold.woff2 404 in 273ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-75-SemiBold.woff2 404 in 295ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-65-Medium.woff2 404 in 289ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-55-Regular.woff2 404 in 294ms
+ ✓ Compiled / in 17ms
+ GET / 200 in 157ms
+ GET /weekly 200 in 50ms
+ ✓ Compiled in 50ms
+ ✓ Compiled in 17ms
+ ✓ Compiled in 26ms
+ GET /weekly 200 in 195ms
+ GET /weekly 200 in 66ms
+ GET /weekly 200 in 38ms
+ GET /weekly 200 in 41ms
+ GET /weekly 200 in 471ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-75-SemiBold.woff2 404 in 322ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-65-Medium.woff2 404 in 315ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-85-Bold.woff2 404 in 311ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-55-Regular.woff2 404 in 328ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 270ms
+ GET /weekly 200 in 38ms
+ GET /weekly-api 200 in 235ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-65-Medium.woff2 404 in 261ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-75-SemiBold.woff2 404 in 274ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-55-Regular.woff2 404 in 262ms
+ GET /fonts/alibaba-puhuiti/AlibabaPuHuiTi-3-85-Bold.woff2 404 in 245ms
