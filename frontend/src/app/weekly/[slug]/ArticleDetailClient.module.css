@@ -18,27 +18,11 @@
     width: 100%;
 }
 
-/* 内部布局：左侧目录 + 右侧内容 */
-.contentLayout {
-    display: flex;
-    gap: 32px;
-    align-items: flex-start;
-}
-
-/* 左侧目录导航 */
-.sidebarNavigation {
-    width: 280px;
-    flex-shrink: 0;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    padding-right: 16px;
-    margin-right: 16px;
-}
-
-/* 右侧文章内容 */
+/* 文章内容 - 简化为单列布局 */
 .mainContent {
-    flex: 1;
-    min-width: 0;
-    padding: 18px 16px;
+    width: 100%;
+    max-width: none;
+    padding: 0;
 }
 
 /* 标题区域 */
@@ -159,21 +143,6 @@
 
 /* 响应式设计 */
 @media (max-width: 1024px) {
-    .contentLayout {
-        flex-direction: column;
-        gap: 24px;
-    }
-
-    .sidebarNavigation {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        padding-right: 0;
-        padding-bottom: 16px;
-        margin-right: 0;
-        margin-bottom: 16px;
-    }
-
     .titleSection {
         flex-direction: column;
         gap: 16px;
@@ -193,7 +162,7 @@
     }
 
     .mainContent {
-        padding: 12px 8px;
+        padding: 0;
     }
 
     .metaInfo {

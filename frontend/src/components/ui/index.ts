@@ -31,7 +31,6 @@ export type { ToastType, ToastItem } from './Toast'
 export type { LoadingSize, LoadingVariant, LoadingColor } from './Loading'
 
 // 阅读体验优化组件
-export { ReadingProgress } from './ReadingProgress'
 export { FontSizeController } from './FontSizeController'
 
 // 搜索体验增强组件

@@ -90,7 +90,7 @@
     /* 背景色 */
     --color-bg-primary: #030303;
     --color-bg-secondary: rgba(26, 26, 26, 0.30);
-    --color-bg-glass: rgba(26, 26, 26, 0.85);
+    --color-bg-glass: rgba(26, 26, 26, 0.45);
     --color-bg-input: rgba(26, 26, 26, 0.60);
 
     /* 文字色 */
@@ -176,7 +176,7 @@
     /* 背景色 */
     --color-bg-primary: #030303;
     --color-bg-secondary: rgba(26, 26, 26, 0.30);
-    --color-bg-glass: rgba(26, 26, 26, 0.85);
+    --color-bg-glass: rgba(26, 26, 26, 0.45);
     --color-bg-input: rgba(26, 26, 26, 0.60);
 
     /* 文字色 */
