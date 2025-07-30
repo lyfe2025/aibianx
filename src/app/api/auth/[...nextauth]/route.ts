@@ -1,71 +1,83 @@
 /**
  * NextAuth.js API路由配置
  * 
- * 重点配置邮件注册和登录功能
- * 使用JWT策略与Strapi集成
+ * OAuth配置完全从Strapi动态读取
+ * 支持GitHub、Google、微信、QQ等多平台登录
  */
 
 import NextAuth from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
 import GitHubProvider from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
+// 动态OAuth配置接口
+interface OAuthConfig {
+    enabled: boolean
+    autoRegister: boolean
+    providers: {
+        github?: {
+            enabled: boolean
+            clientId: string
+            clientSecret: string
+            callbackUrl: string
+        }
+        google?: {
+            enabled: boolean
+            clientId: string
+            clientSecret: string
+            callbackUrl: string
+        }
+        wechat?: {
+            enabled: boolean
+            appId: string
+            appSecret: string
+            callbackUrl: string
+        }
+        qq?: {
+            enabled: boolean
+            appId: string
+            appSecret: string
+            callbackUrl: string
+        }
+    }
+}
+
 /**
- * Strapi用户数据同步函数
+ * 从Strapi获取OAuth配置
  */
-async function syncStrapiUser(user: any, account: any) {
+async function getOAuthConfig(): Promise<OAuthConfig | null> {
     try {
         const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+        const response = await fetch(`${strapiUrl}/api/system-config/oauth`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
 
-        // 根据登录方式调用不同的Strapi端点
-        if (account?.provider === 'github') {
-            // GitHub OAuth处理 (仅在GitHub配置有效时)
-            try {
-                const response = await fetch(
-                    `${strapiUrl}/api/auth/${account.provider}/callback?access_token=${account.access_token}`
-                )
-
-                if (response.ok) {
-                    const data = await response.json()
-                    return {
-                        strapiToken: data.jwt,
-                        strapiUser: data.user
-                    }
-                }
-            } catch (error) {
-                console.error('GitHub OAuth Strapi同步失败:', error)
-                return null
-            }
-        } else if (account?.provider === 'credentials') {
-            // 邮箱密码登录处理 - 直接使用已认证的用户信息
-            return {
-                strapiUser: user.strapiUser,
-                strapiToken: user.strapiToken
-            }
+        if (response.ok) {
+            const config = await response.json()
+            return config
+        } else {
+            console.error('获取OAuth配置失败:', response.status)
+            return null
         }
-
-        return null
     } catch (error) {
-        console.error('Strapi用户同步失败:', error)
+        console.error('获取OAuth配置时出错:', error)
         return null
     }
 }
 
-export const authOptions: NextAuthOptions = {
-    providers: [
-        // GitHub OAuth Provider (仅在有效配置时启用)
-        ...(process.env.GITHUB_CLIENT_ID &&
-            process.env.GITHUB_CLIENT_SECRET &&
-            process.env.GITHUB_CLIENT_ID !== 'your_github_client_id' &&
-            process.env.GITHUB_CLIENT_SECRET !== 'your_github_client_secret'
-            ? [GitHubProvider({
-                clientId: process.env.GITHUB_CLIENT_ID,
-                clientSecret: process.env.GITHUB_CLIENT_SECRET,
-            })]
-            : []
-        ),
+/**
+ * 根据Strapi配置动态生成OAuth Providers
+ */
+async function createDynamicProviders() {
+    const oauthConfig = await getOAuthConfig()
+    const providers = []
 
-        // 邮箱密码登录Provider
+    // 添加邮箱密码登录Provider (始终启用)
+    providers.push(
         CredentialsProvider({
             id: 'credentials',
             name: 'credentials',
@@ -114,8 +126,102 @@ export const authOptions: NextAuthOptions = {
                     return null
                 }
             }
-        }),
-    ],
+        })
+    )
+
+    // 如果OAuth功能被禁用，只返回邮箱登录
+    if (!oauthConfig || !oauthConfig.enabled) {
+        console.log('OAuth功能已禁用，仅支持邮箱密码登录')
+        return providers
+    }
+
+    // GitHub Provider
+    if (oauthConfig.providers.github?.enabled && 
+        oauthConfig.providers.github?.clientId && 
+        oauthConfig.providers.github?.clientSecret) {
+        providers.push(
+            GitHubProvider({
+                clientId: oauthConfig.providers.github.clientId,
+                clientSecret: oauthConfig.providers.github.clientSecret,
+            })
+        )
+        console.log('✅ GitHub OAuth已启用')
+    }
+
+    // Google Provider
+    if (oauthConfig.providers.google?.enabled && 
+        oauthConfig.providers.google?.clientId && 
+        oauthConfig.providers.google?.clientSecret) {
+        providers.push(
+            GoogleProvider({
+                clientId: oauthConfig.providers.google.clientId,
+                clientSecret: oauthConfig.providers.google.clientSecret,
+            })
+        )
+        console.log('✅ Google OAuth已启用')
+    }
+
+    // 微信和QQ暂时保留占位符（需要额外的Provider包）
+    if (oauthConfig.providers.wechat?.enabled) {
+        console.log('⚠️  微信OAuth已配置但Provider未实现')
+    }
+
+    if (oauthConfig.providers.qq?.enabled) {
+        console.log('⚠️  QQ OAuth已配置但Provider未实现')
+    }
+
+    return providers
+}
+
+/**
+ * Strapi用户数据同步函数
+ */
+async function syncStrapiUser(user: any, account: any) {
+    try {
+        const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+
+        // 根据登录方式调用不同的Strapi端点
+        if (account?.provider === 'github') {
+            // GitHub OAuth处理 (仅在GitHub配置有效时)
+            try {
+                const response = await fetch(
+                    `${strapiUrl}/api/auth/${account.provider}/callback?access_token=${account.access_token}`
+                )
+
+                if (response.ok) {
+                    const data = await response.json()
+                    return {
+                        strapiToken: data.jwt,
+                        strapiUser: data.user
+                    }
+                }
+            } catch (error) {
+                console.error('GitHub OAuth Strapi同步失败:', error)
+                return null
+            }
+        } else if (account?.provider === 'credentials') {
+            // 邮箱密码登录处理 - 直接使用已认证的用户信息
+            return {
+                strapiUser: user.strapiUser,
+                strapiToken: user.strapiToken
+            }
+        }
+
+        return null
+    } catch (error) {
+        console.error('Strapi用户同步失败:', error)
+        return null
+    }
+}
+
+/**
+ * 创建动态NextAuth配置
+ */
+async function createAuthOptions(): Promise<NextAuthOptions> {
+    const dynamicProviders = await createDynamicProviders()
+    
+    return {
+        providers: dynamicProviders,
 
     // 使用JWT策略而不是数据库session
     session: {
@@ -183,10 +289,26 @@ export const authOptions: NextAuthOptions = {
         },
     },
 
-    // 调试模式（生产环境请关闭）
-    debug: process.env.NODE_ENV === 'development',
+        // 调试模式（生产环境请关闭）
+        debug: process.env.NODE_ENV === 'development',
+    }
 }
 
-const handler = NextAuth(authOptions)
+/**
+ * 动态创建NextAuth handler
+ */
+async function createHandler() {
+    const authOptions = await createAuthOptions()
+    return NextAuth(authOptions)
+}
 
-export { handler as GET, handler as POST }
+// 导出GET和POST处理器
+export async function GET(request: Request) {
+    const handler = await createHandler()
+    return handler(request)
+}
+
+export async function POST(request: Request) {
+    const handler = await createHandler()
+    return handler(request)
+}

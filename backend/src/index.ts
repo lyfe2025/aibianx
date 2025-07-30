@@ -1,140 +1,209 @@
+import type { Core } from '@strapi/strapi'
+
 export default {
-  /**
-   * An asynchronous register function that runs before
-   * your application is initialized.
-   *
-   * This gives you an opportunity to extend code.
-   */
-  register({ strapi }) { },
+    /**
+     * 应用启动后的初始化逻辑
+     * 自动配置权限、初始化系统配置等
+     */
+    async bootstrap({ strapi }: { strapi: Core.Strapi }) {
+        console.log('🚀 AI变现之路 - Strapi应用启动中...')
 
-  /**
-   * An asynchronous bootstrap function that runs before
-   * your application gets started.
-   *
-   * This gives you an opportunity to set up your data model,
-   * run jobs, or perform some special logic.
-   */
-  async bootstrap({ strapi }) {
-    console.log('🚀 开始配置SEO管理系统权限...');
+        try {
+            // 1. 配置Public角色权限
+            await configurePublicPermissions(strapi)
+            
+            // 2. 初始化系统配置
+            await initializeSystemConfig(strapi)
+            
+            // 3. 显示API端点信息
+            displayAPIEndpoints()
+            
+            console.log('✅ Strapi应用启动完成！')
+            
+        } catch (error) {
+            console.error('❌ Strapi应用启动失败:', error)
+            throw error
+        }
+    },
+}
 
+/**
+ * 配置Public角色权限
+ */
+async function configurePublicPermissions(strapi: Core.Strapi) {
+    console.log('🔐 配置Public角色权限...')
+    
     try {
-      // 获取Public角色
-      const publicRole = await strapi.query('plugin::users-permissions.role').findOne({
-        where: { type: 'public' }
-      });
+        // 获取Public角色
+        const publicRole = await strapi.query('plugin::users-permissions.role').findOne({
+            where: { type: 'public' },
+            populate: { permissions: true }
+        })
 
-      if (!publicRole) {
-        console.error('❌ 找不到Public角色');
-        return;
-      }
+        if (!publicRole) {
+            console.error('❌ 未找到Public角色')
+            return
+        }
 
-      console.log('✅ 找到Public角色:', publicRole.name);
+        // 需要配置的权限列表（包含OAuth相关权限）
+        const requiredPermissions = [
+            // Article相关权限
+            'api::article.article.find',
+            'api::article.article.findOne',
+            
+            // Author相关权限
+            'api::author.author.find',
+            'api::author.author.findOne',
+            
+            // Category相关权限
+            'api::category.category.find',
+            'api::category.category.findOne',
+            
+            // Tag相关权限
+            'api::tag.tag.find',
+            'api::tag.tag.findOne',
+            
+            // Site Config相关权限
+            'api::site-config.site-config.find',
+            'api::site-config.site-config.findOne',
+            
+            // SEO Metrics相关权限
+            'api::seo-metrics.seo-metrics.find',
+            'api::seo-metrics.seo-metrics.findOne',
+            
+            // System Config相关权限（包含OAuth配置）
+            'api::system-config.system-config.find',
+            'api::system-config.system-config.findOne',
+            'api::system-config.system-config.getPublicConfig',
+            'api::system-config.system-config.getOAuthConfig',
+            'api::system-config.system-config.getEmailConfig',
+            'api::system-config.system-config.getRegistrationConfig',
+            'api::system-config.system-config.getMaintenanceStatus'
+        ]
 
-      // 定义需要的权限
-      const permissions = [
-        // Site Config 权限
-        { action: 'find', subject: 'api::site-config.site-config' },
-        { action: 'findOne', subject: 'api::site-config.site-config' },
+        let permissionsUpdated = 0
 
-        // System Config 权限（系统配置管理）
-        { action: 'find', subject: 'api::system-config.system-config' },
-        { action: 'findOne', subject: 'api::system-config.system-config' },
-        { action: 'getPublicConfig', subject: 'api::system-config.system-config' },
+        for (const permissionAction of requiredPermissions) {
+            try {
+                // 检查权限是否已存在
+                const existingPermission = await strapi.query('plugin::users-permissions.permission').findOne({
+                    where: {
+                        action: permissionAction,
+                        role: publicRole.id
+                    }
+                })
 
-        // SEO Metrics 权限
-        { action: 'find', subject: 'api::seo-metrics.seo-metrics' },
-        { action: 'findOne', subject: 'api::seo-metrics.seo-metrics' },
-        { action: 'create', subject: 'api::seo-metrics.seo-metrics' },
-
-        // 确保现有API正常工作
-        { action: 'find', subject: 'api::article.article' },
-        { action: 'findOne', subject: 'api::article.article' },
-        { action: 'find', subject: 'api::author.author' },
-        { action: 'findOne', subject: 'api::author.author' },
-        { action: 'find', subject: 'api::category.category' },
-        { action: 'findOne', subject: 'api::category.category' },
-        { action: 'find', subject: 'api::tag.tag' },
-        { action: 'findOne', subject: 'api::tag.tag' }
-      ];
-
-      // 为每个权限创建或更新权限记录
-      for (const perm of permissions) {
-        try {
-          // 检查权限是否已存在
-          const existingPermission = await strapi.query('plugin::users-permissions.permission').findOne({
-            where: {
-              action: `${perm.subject}.${perm.action}`,
-              role: publicRole.id
+                if (!existingPermission) {
+                    // 创建新权限
+                    await strapi.query('plugin::users-permissions.permission').create({
+                        data: {
+                            action: permissionAction,
+                            enabled: true,
+                            policy: '',
+                            role: publicRole.id
+                        }
+                    })
+                    permissionsUpdated++
+                    console.log(`  ✅ 已添加权限: ${permissionAction}`)
+                } else if (!existingPermission.enabled) {
+                    // 启用已存在但被禁用的权限
+                    await strapi.query('plugin::users-permissions.permission').update({
+                        where: { id: existingPermission.id },
+                        data: { enabled: true }
+                    })
+                    permissionsUpdated++
+                    console.log(`  ✅ 已启用权限: ${permissionAction}`)
+                }
+            } catch (error) {
+                console.error(`  ❌ 配置权限失败 ${permissionAction}:`, error.message)
             }
-          });
-
-          if (!existingPermission) {
-            // 创建新权限
-            await strapi.query('plugin::users-permissions.permission').create({
-              data: {
-                action: `${perm.subject}.${perm.action}`,
-                subject: perm.subject,
-                properties: {},
-                conditions: [],
-                role: publicRole.id
-              }
-            });
-            console.log(`✅ 创建权限: ${perm.subject}.${perm.action}`);
-          } else {
-            console.log(`⏭️  权限已存在: ${perm.subject}.${perm.action}`);
-          }
-        } catch (error) {
-          console.log(`⚠️  权限配置跳过: ${perm.subject}.${perm.action} - ${error.message}`);
         }
-      }
 
-      console.log('🎉 系统权限配置完成！');
-
-      // 初始化系统配置
-      console.log('⚙️  正在初始化系统配置...');
-      try {
-        // 使用系统配置服务初始化默认配置
-        const systemConfigService = strapi.service('api::system-config.system-config');
-        if (systemConfigService && systemConfigService.initializeDefaultConfig) {
-          await systemConfigService.initializeDefaultConfig();
-          console.log('✅ 系统配置初始化完成');
+        if (permissionsUpdated > 0) {
+            console.log(`✅ Public角色权限配置完成，共更新 ${permissionsUpdated} 个权限`)
+        } else {
+            console.log('✅ Public角色权限已是最新状态')
         }
-      } catch (error) {
-        console.log('⚠️  系统配置初始化失败:', error.message);
-      }
-
-      // 测试权限是否生效
-      console.log('🧪 正在测试API端点...');
-
-      setTimeout(async () => {
-        try {
-          // 简单测试 - 检查内容类型是否注册
-          const contentTypes = Object.keys(strapi.contentTypes);
-          const hasMetrics = contentTypes.some(type => type.includes('seo-metrics'));
-          const hasSiteConfig = contentTypes.some(type => type.includes('site-config'));
-          const hasSystemConfig = contentTypes.some(type => type.includes('system-config'));
-
-          console.log('📋 已注册的内容类型:');
-          console.log('  - SEO监控数据:', hasMetrics ? '✅' : '❌');
-          console.log('  - 网站配置:', hasSiteConfig ? '✅' : '❌');
-          console.log('  - 系统配置:', hasSystemConfig ? '✅' : '❌');
-
-          if (hasMetrics && hasSiteConfig && hasSystemConfig) {
-            console.log('🎊 完整管理系统就绪！');
-            console.log('🌐 API端点现在可以正常访问:');
-            console.log('  - http://localhost:1337/api/site-config');
-            console.log('  - http://localhost:1337/api/seo-metrics');
-            console.log('  - http://localhost:1337/api/system-config/public (前端可用)');
-            console.log('  - http://localhost:1337/api/system-config (管理员)');
-          }
-
-        } catch (error) {
-          console.log('⚠️  API测试出现错误:', error.message);
-        }
-      }, 2000);
 
     } catch (error) {
-      console.error('❌ 权限配置失败:', error);
+        console.error('❌ 配置Public角色权限失败:', error)
+        throw error
     }
-  },
-};
+}
+
+/**
+ * 初始化系统配置
+ */
+async function initializeSystemConfig(strapi: Core.Strapi) {
+    console.log('⚙️  初始化系统配置...')
+    
+    try {
+        // 获取system-config服务
+        const systemConfigService = strapi.service('api::system-config.system-config')
+        
+        if (!systemConfigService) {
+            console.error('❌ 未找到system-config服务')
+            return
+        }
+
+        // 调用初始化方法
+        await systemConfigService.initializeDefaultConfig()
+        
+        console.log('✅ 系统配置初始化完成')
+        
+        // 显示当前配置状态
+        const config = await systemConfigService.getSystemConfig()
+        if (config) {
+            console.log('📊 当前系统配置状态:')
+            console.log(`  📧 邮件服务: ${config.emailServiceEnabled ? '✅ 已启用' : '❌ 已禁用'} (${config.emailServiceProvider})`)
+            console.log(`  🔐 用户注册: ${config.registrationEnabled ? '✅ 已启用' : '❌ 已禁用'}`)
+            console.log(`  📨 邮箱验证: ${config.emailVerificationEnabled ? '✅ 已启用' : '❌ 已禁用'}`)
+            console.log(`  🔄 密码重置: ${config.passwordResetEnabled ? '✅ 已启用' : '❌ 已禁用'}`)
+            console.log(`  🔗 OAuth总开关: ${config.oauthEnabled ? '✅ 已启用' : '❌ 已禁用'}`)
+            
+            // OAuth具体配置状态
+            if (config.oauthEnabled) {
+                console.log('  🔗 OAuth具体配置:')
+                console.log(`    GitHub: ${config.githubOauthEnabled ? '✅ 已启用' : '❌ 已禁用'} ${config.githubClientId ? '(已配置密钥)' : '(未配置密钥)'}`)
+                console.log(`    Google: ${config.googleOauthEnabled ? '✅ 已启用' : '❌ 已禁用'} ${config.googleClientId ? '(已配置密钥)' : '(未配置密钥)'}`)
+                console.log(`    微信: ${config.wechatOauthEnabled ? '✅ 已启用' : '❌ 已禁用'} ${config.wechatAppId ? '(已配置密钥)' : '(未配置密钥)'}`)
+                console.log(`    QQ: ${config.qqOauthEnabled ? '✅ 已启用' : '❌ 已禁用'} ${config.qqAppId ? '(已配置密钥)' : '(未配置密钥)'}`)
+            }
+            
+            console.log(`  🛡️  维护模式: ${config.maintenanceMode ? '⚠️  已启用' : '✅ 正常运行'}`)
+        }
+        
+    } catch (error) {
+        console.error('❌ 初始化系统配置失败:', error)
+        throw error
+    }
+}
+
+/**
+ * 显示API端点信息
+ */
+function displayAPIEndpoints() {
+    console.log('📡 API端点信息:')
+    console.log('  📰 内容管理:')
+    console.log('    GET  /api/articles - 获取文章列表')
+    console.log('    GET  /api/articles/:id - 获取文章详情')
+    console.log('    GET  /api/authors - 获取作者列表')
+    console.log('    GET  /api/categories - 获取分类列表')
+    console.log('    GET  /api/tags - 获取标签列表')
+    
+    console.log('  ⚙️  系统配置 (新增OAuth配置支持):')
+    console.log('    GET  /api/system-config/public - 获取公开配置')
+    console.log('    GET  /api/system-config/oauth - 获取OAuth配置 (内部API)')
+    console.log('    GET  /api/system-config/email - 获取邮件配置 (内部API)')
+    console.log('    GET  /api/system-config/registration - 获取注册配置')
+    console.log('    GET  /api/system-config/maintenance - 获取维护状态')
+    console.log('    GET  /api/system-config - 获取完整配置 (仅管理员)')
+    console.log('    PUT  /api/system-config/:id - 更新配置 (仅管理员)')
+    
+    console.log('  🌐 网站配置:')
+    console.log('    GET  /api/site-config - 获取网站配置')
+    console.log('    GET  /api/seo-metrics - 获取SEO数据')
+    
+    console.log('  📚 API文档: http://localhost:1337/documentation')
+    console.log('  🔧 管理面板: http://localhost:1337/admin')
+}

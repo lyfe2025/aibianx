@@ -848,7 +848,7 @@ export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
 export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
   collectionName: 'system_configs';
   info: {
-    description: '\u7CFB\u7EDF\u529F\u80FD\u914D\u7F6E\u7BA1\u7406 - \u7EDF\u4E00\u7BA1\u7406\u90AE\u4EF6\u670D\u52A1\u3001\u7B2C\u4E09\u65B9\u767B\u5F55\u3001\u7528\u6237\u6CE8\u518C\u7B49\u7CFB\u7EDF\u529F\u80FD\u914D\u7F6E';
+    description: '\u7CFB\u7EDF\u529F\u80FD\u914D\u7F6E\u7BA1\u7406 - \u7EDF\u4E00\u7BA1\u7406\u90AE\u4EF6\u670D\u52A1\u3001OAuth\u7B2C\u4E09\u65B9\u767B\u5F55\u3001\u7528\u6237\u6CE8\u518C\u7B49\u7CFB\u7EDF\u529F\u80FD\u914D\u7F6E';
     displayName: '\u7CFB\u7EDF\u914D\u7F6E';
     pluralName: 'system-configs';
     singularName: 'system-config';
@@ -869,25 +869,24 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
       Schema.Attribute.DefaultTo<900>;
     allowedEmailDomains: Schema.Attribute.Text;
     blockedEmailDomains: Schema.Attribute.Text;
-    configurationNotes: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 1000;
-      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    defaultUserRole: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 50;
-      }> &
-      Schema.Attribute.DefaultTo<'authenticated'>;
     emailFromAddress: Schema.Attribute.Email &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }> &
       Schema.Attribute.DefaultTo<'noreply@aibianx.com'>;
     emailFromName: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 100;
       }> &
       Schema.Attribute.DefaultTo<'AI\u53D8\u73B0\u4E4B\u8DEF'>;
+    emailPassword: Schema.Attribute.Password &
+      Schema.Attribute.Private &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
     emailServiceEnabled: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
     emailServiceProvider: Schema.Attribute.Enumeration<
@@ -908,44 +907,53 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<587>;
-    emailSubjectPrefix: Schema.Attribute.String &
+    emailUsername: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
-        maxLength: 50;
-      }> &
-      Schema.Attribute.DefaultTo<'[AI\u53D8\u73B0\u4E4B\u8DEF]'>;
+        maxLength: 255;
+      }>;
     emailUseTLS: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
-    emailVerificationCodeExpiry: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 3600;
-          min: 60;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<600>;
-    emailVerificationCodeLength: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 8;
-          min: 4;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<6>;
     emailVerificationEnabled: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
     enableAccountDeletion: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
+      Schema.Attribute.DefaultTo<false>;
+    enableUserListPublic: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
     enableUserProfileEdit: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
+    githubCallbackUrl: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }> &
+      Schema.Attribute.DefaultTo<'http://localhost:3000/api/auth/callback/github'>;
+    githubClientId: Schema.Attribute.String &
+      Schema.Attribute.Private &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    githubClientSecret: Schema.Attribute.Password &
+      Schema.Attribute.Private &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
     githubOauthEnabled: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
+    googleCallbackUrl: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }> &
+      Schema.Attribute.DefaultTo<'http://localhost:3000/api/auth/callback/google'>;
+    googleClientId: Schema.Attribute.String &
+      Schema.Attribute.Private &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    googleClientSecret: Schema.Attribute.Password &
+      Schema.Attribute.Private &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
     googleOauthEnabled: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<false>;
-    lastModifiedBy: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -959,6 +967,15 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
       Schema.Attribute.DefaultTo<'\u7F51\u7AD9\u6B63\u5728\u8FDB\u884C\u7CFB\u7EDF\u5347\u7EA7\u7EF4\u62A4\uFF0C\u9884\u8BA130\u5206\u949F\u540E\u6062\u590D\u6B63\u5E38\u8BBF\u95EE\u3002'>;
     maintenanceMode: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<false>;
+    maxAvatarSize: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 10485760;
+          min: 102400;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<2097152>;
     maxLoginAttempts: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
@@ -998,6 +1015,21 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
       > &
       Schema.Attribute.DefaultTo<3600>;
     publishedAt: Schema.Attribute.DateTime;
+    qqAppId: Schema.Attribute.String &
+      Schema.Attribute.Private &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    qqAppSecret: Schema.Attribute.Password &
+      Schema.Attribute.Private &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    qqCallbackUrl: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }> &
+      Schema.Attribute.DefaultTo<'http://localhost:3000/api/auth/callback/qq'>;
     qqOauthEnabled: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<false>;
     registrationEnabled: Schema.Attribute.Boolean &
@@ -1011,11 +1043,33 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<2592000>;
-    systemNotificationEmail: Schema.Attribute.Email &
-      Schema.Attribute.DefaultTo<'admin@aibianx.com'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    verificationCodeExpiry: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 3600;
+          min: 60;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<600>;
+    wechatAppId: Schema.Attribute.String &
+      Schema.Attribute.Private &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    wechatAppSecret: Schema.Attribute.Password &
+      Schema.Attribute.Private &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    wechatCallbackUrl: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }> &
+      Schema.Attribute.DefaultTo<'http://localhost:3000/api/auth/callback/wechat'>;
     wechatOauthEnabled: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<false>;
   };

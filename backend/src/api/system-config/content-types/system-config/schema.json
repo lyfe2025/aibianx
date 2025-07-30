@@ -5,7 +5,7 @@
         "singularName": "system-config",
         "pluralName": "system-configs",
         "displayName": "系统配置",
-        "description": "系统功能配置管理 - 统一管理邮件服务、第三方登录、用户注册等系统功能配置"
+        "description": "系统功能配置管理 - 统一管理邮件服务、OAuth第三方登录、用户注册等系统功能配置"
     },
     "options": {
         "draftAndPublish": false,
@@ -46,54 +46,53 @@
         },
         "emailFromAddress": {
             "type": "email",
+            "maxLength": 255,
             "default": "noreply@aibianx.com",
-            "description": "发件人邮箱：邮件发送方显示地址，收件人看到的发件人"
+            "description": "发送邮箱地址：系统发送邮件时使用的发件人邮箱地址"
         },
         "emailFromName": {
             "type": "string",
             "maxLength": 100,
             "default": "AI变现之路",
-            "description": "发件人姓名：邮件发送方显示名称，收件人看到的发件人名字"
+            "description": "发送邮箱名称：系统发送邮件时显示的发件人名称"
+        },
+        "emailUsername": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "邮箱用户名：SMTP认证用户名，通常是完整邮箱地址"
+        },
+        "emailPassword": {
+            "type": "password",
+            "maxLength": 255,
+            "private": true,
+            "description": "邮箱密码：SMTP认证密码或应用专用密码（Gmail需要使用应用密码）"
         },
         "emailUseTLS": {
             "type": "boolean",
             "default": true,
-            "description": "使用TLS加密：是否启用传输层安全协议"
-        },
-        "emailSubjectPrefix": {
-            "type": "string",
-            "maxLength": 50,
-            "default": "[AI变现之路]",
-            "description": "邮件主题前缀：统一的邮件主题前缀，用于品牌识别"
+            "description": "启用TLS加密：是否使用TLS加密连接（推荐启用）"
         },
         "registrationEnabled": {
             "type": "boolean",
             "default": true,
-            "description": "注册功能开关：是否允许用户注册新账号"
+            "description": "用户注册开关：是否允许新用户注册账号"
         },
         "emailVerificationEnabled": {
             "type": "boolean",
             "default": true,
-            "description": "邮箱验证开关：注册时是否需要邮箱验证"
+            "description": "邮箱验证开关：新用户注册时是否需要邮箱验证"
         },
-        "emailVerificationCodeLength": {
-            "type": "integer",
-            "default": 6,
-            "min": 4,
-            "max": 8,
-            "description": "验证码长度：邮箱验证码的数字位数（4-8位）"
+        "passwordResetEnabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "密码重置开关：是否允许用户通过邮件重置密码"
         },
-        "emailVerificationCodeExpiry": {
+        "verificationCodeExpiry": {
             "type": "integer",
             "default": 600,
             "min": 60,
             "max": 3600,
             "description": "验证码有效期：邮箱验证码的有效时间（秒），默认600秒（10分钟）"
-        },
-        "passwordResetEnabled": {
-            "type": "boolean",
-            "default": true,
-            "description": "密码重置开关：是否启用忘记密码功能"
         },
         "passwordResetTokenExpiry": {
             "type": "integer",
@@ -134,20 +133,92 @@
             "default": true,
             "description": "GitHub登录开关：是否启用GitHub OAuth登录"
         },
+        "githubClientId": {
+            "type": "string",
+            "maxLength": 255,
+            "private": true,
+            "description": "GitHub客户端ID：在GitHub Developer Settings中创建OAuth App获得的Client ID"
+        },
+        "githubClientSecret": {
+            "type": "password",
+            "maxLength": 255,
+            "private": true,
+            "description": "GitHub客户端密钥：在GitHub Developer Settings中创建OAuth App获得的Client Secret"
+        },
+        "githubCallbackUrl": {
+            "type": "string",
+            "maxLength": 255,
+            "default": "http://localhost:3000/api/auth/callback/github",
+            "description": "GitHub回调地址：OAuth授权成功后的回调URL，生产环境需修改为实际域名"
+        },
         "googleOauthEnabled": {
             "type": "boolean",
             "default": false,
             "description": "Google登录开关：是否启用Google OAuth登录"
+        },
+        "googleClientId": {
+            "type": "string",
+            "maxLength": 255,
+            "private": true,
+            "description": "Google客户端ID：在Google Cloud Console中创建OAuth 2.0客户端获得的Client ID"
+        },
+        "googleClientSecret": {
+            "type": "password",
+            "maxLength": 255,
+            "private": true,
+            "description": "Google客户端密钥：在Google Cloud Console中创建OAuth 2.0客户端获得的Client Secret"
+        },
+        "googleCallbackUrl": {
+            "type": "string",
+            "maxLength": 255,
+            "default": "http://localhost:3000/api/auth/callback/google",
+            "description": "Google回调地址：OAuth授权成功后的回调URL，生产环境需修改为实际域名"
         },
         "wechatOauthEnabled": {
             "type": "boolean",
             "default": false,
             "description": "微信登录开关：是否启用微信OAuth登录"
         },
+        "wechatAppId": {
+            "type": "string",
+            "maxLength": 255,
+            "private": true,
+            "description": "微信AppID：在微信开放平台注册应用获得的AppID"
+        },
+        "wechatAppSecret": {
+            "type": "password",
+            "maxLength": 255,
+            "private": true,
+            "description": "微信AppSecret：在微信开放平台注册应用获得的AppSecret"
+        },
+        "wechatCallbackUrl": {
+            "type": "string",
+            "maxLength": 255,
+            "default": "http://localhost:3000/api/auth/callback/wechat",
+            "description": "微信回调地址：OAuth授权成功后的回调URL，需在微信开放平台配置"
+        },
         "qqOauthEnabled": {
             "type": "boolean",
             "default": false,
             "description": "QQ登录开关：是否启用QQ OAuth登录"
+        },
+        "qqAppId": {
+            "type": "string",
+            "maxLength": 255,
+            "private": true,
+            "description": "QQ互联AppID：在QQ互联平台注册应用获得的APP ID"
+        },
+        "qqAppSecret": {
+            "type": "password",
+            "maxLength": 255,
+            "private": true,
+            "description": "QQ互联AppSecret：在QQ互联平台注册应用获得的APP KEY"
+        },
+        "qqCallbackUrl": {
+            "type": "string",
+            "maxLength": 255,
+            "default": "http://localhost:3000/api/auth/callback/qq",
+            "description": "QQ回调地址：OAuth授权成功后的回调URL，需在QQ互联平台配置"
         },
         "oauthAutoRegister": {
             "type": "boolean",
@@ -192,38 +263,29 @@
         },
         "blockedEmailDomains": {
             "type": "text",
-            "description": "禁止的邮箱域名：不允许注册的邮箱域名黑名单，一行一个域名。例：tempmail.com"
-        },
-        "systemNotificationEmail": {
-            "type": "email",
-            "default": "admin@aibianx.com",
-            "description": "系统通知邮箱：接收系统重要通知的管理员邮箱地址"
+            "description": "禁止的邮箱域名：限制注册邮箱的域名黑名单，一行一个域名。例：temp-mail.org"
         },
         "enableUserProfileEdit": {
             "type": "boolean",
             "default": true,
-            "description": "用户资料编辑：是否允许用户修改个人资料信息"
+            "description": "用户资料编辑权限：是否允许用户编辑个人资料信息"
         },
         "enableAccountDeletion": {
             "type": "boolean",
-            "default": true,
-            "description": "账号删除功能：是否允许用户删除自己的账号"
+            "default": false,
+            "description": "账号删除权限：是否允许用户自主删除账号"
         },
-        "defaultUserRole": {
-            "type": "string",
-            "default": "authenticated",
-            "maxLength": 50,
-            "description": "默认用户角色：新注册用户的默认权限角色"
+        "enableUserListPublic": {
+            "type": "boolean",
+            "default": false,
+            "description": "用户列表公开：是否允许公开访问用户列表"
         },
-        "configurationNotes": {
-            "type": "text",
-            "maxLength": 1000,
-            "description": "配置说明：管理员备注信息，记录重要的配置变更、注意事项等"
-        },
-        "lastModifiedBy": {
-            "type": "string",
-            "maxLength": 100,
-            "description": "最后修改人：记录最后一次修改此配置的管理员信息"
+        "maxAvatarSize": {
+            "type": "integer",
+            "default": 2097152,
+            "min": 102400,
+            "max": 10485760,
+            "description": "头像最大尺寸：用户头像文件大小限制（字节），默认2MB"
         }
     }
 }

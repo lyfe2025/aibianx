@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-07-30T17:28:18.250Z"
+    "x-generation-date": "2025-07-30T17:55:36.753Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -2559,7 +2559,9 @@
           }
         ],
         "operationId": "get/system-config"
-      },
+      }
+    },
+    "/system-config/{id}": {
       "put": {
         "responses": {
           "200": {
@@ -2626,8 +2628,19 @@
         "tags": [
           "System-config"
         ],
-        "parameters": [],
-        "operationId": "put/system-config",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "put/system-config/{id}",
         "requestBody": {
           "required": true,
           "content": {
@@ -2711,6 +2724,77 @@
         "operationId": "get/system-config/public"
       }
     },
+    "/system-config/oauth": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "System-config"
+        ],
+        "parameters": [],
+        "operationId": "get/system-config/oauth"
+      }
+    },
     "/system-config/email": {
       "get": {
         "responses": {
@@ -2780,6 +2864,148 @@
         ],
         "parameters": [],
         "operationId": "get/system-config/email"
+      }
+    },
+    "/system-config/registration": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "System-config"
+        ],
+        "parameters": [],
+        "operationId": "get/system-config/registration"
+      }
+    },
+    "/system-config/maintenance": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "System-config"
+        ],
+        "parameters": [],
+        "operationId": "get/system-config/maintenance"
       }
     },
     "/tags": {
@@ -11536,11 +11762,16 @@
               "emailFromName": {
                 "type": "string"
               },
+              "emailUsername": {
+                "type": "string"
+              },
+              "emailPassword": {
+                "type": "string",
+                "format": "password",
+                "example": "*******"
+              },
               "emailUseTLS": {
                 "type": "boolean"
-              },
-              "emailSubjectPrefix": {
-                "type": "string"
               },
               "registrationEnabled": {
                 "type": "boolean"
@@ -11548,14 +11779,11 @@
               "emailVerificationEnabled": {
                 "type": "boolean"
               },
-              "emailVerificationCodeLength": {
-                "type": "integer"
-              },
-              "emailVerificationCodeExpiry": {
-                "type": "integer"
-              },
               "passwordResetEnabled": {
                 "type": "boolean"
+              },
+              "verificationCodeExpiry": {
+                "type": "integer"
               },
               "passwordResetTokenExpiry": {
                 "type": "integer"
@@ -11578,14 +11806,58 @@
               "githubOauthEnabled": {
                 "type": "boolean"
               },
+              "githubClientId": {
+                "type": "string"
+              },
+              "githubClientSecret": {
+                "type": "string",
+                "format": "password",
+                "example": "*******"
+              },
+              "githubCallbackUrl": {
+                "type": "string"
+              },
               "googleOauthEnabled": {
                 "type": "boolean"
+              },
+              "googleClientId": {
+                "type": "string"
+              },
+              "googleClientSecret": {
+                "type": "string",
+                "format": "password",
+                "example": "*******"
+              },
+              "googleCallbackUrl": {
+                "type": "string"
               },
               "wechatOauthEnabled": {
                 "type": "boolean"
               },
+              "wechatAppId": {
+                "type": "string"
+              },
+              "wechatAppSecret": {
+                "type": "string",
+                "format": "password",
+                "example": "*******"
+              },
+              "wechatCallbackUrl": {
+                "type": "string"
+              },
               "qqOauthEnabled": {
                 "type": "boolean"
+              },
+              "qqAppId": {
+                "type": "string"
+              },
+              "qqAppSecret": {
+                "type": "string",
+                "format": "password",
+                "example": "*******"
+              },
+              "qqCallbackUrl": {
+                "type": "string"
               },
               "oauthAutoRegister": {
                 "type": "boolean"
@@ -11611,24 +11883,17 @@
               "blockedEmailDomains": {
                 "type": "string"
               },
-              "systemNotificationEmail": {
-                "type": "string",
-                "format": "email"
-              },
               "enableUserProfileEdit": {
                 "type": "boolean"
               },
               "enableAccountDeletion": {
                 "type": "boolean"
               },
-              "defaultUserRole": {
-                "type": "string"
+              "enableUserListPublic": {
+                "type": "boolean"
               },
-              "configurationNotes": {
-                "type": "string"
-              },
-              "lastModifiedBy": {
-                "type": "string"
+              "maxAvatarSize": {
+                "type": "integer"
               },
               "locale": {
                 "type": "string"
@@ -11722,11 +11987,11 @@
           "emailFromName": {
             "type": "string"
           },
+          "emailUsername": {
+            "type": "string"
+          },
           "emailUseTLS": {
             "type": "boolean"
-          },
-          "emailSubjectPrefix": {
-            "type": "string"
           },
           "registrationEnabled": {
             "type": "boolean"
@@ -11734,14 +11999,11 @@
           "emailVerificationEnabled": {
             "type": "boolean"
           },
-          "emailVerificationCodeLength": {
-            "type": "integer"
-          },
-          "emailVerificationCodeExpiry": {
-            "type": "integer"
-          },
           "passwordResetEnabled": {
             "type": "boolean"
+          },
+          "verificationCodeExpiry": {
+            "type": "integer"
           },
           "passwordResetTokenExpiry": {
             "type": "integer"
@@ -11764,14 +12026,38 @@
           "githubOauthEnabled": {
             "type": "boolean"
           },
+          "githubClientId": {
+            "type": "string"
+          },
+          "githubCallbackUrl": {
+            "type": "string"
+          },
           "googleOauthEnabled": {
             "type": "boolean"
+          },
+          "googleClientId": {
+            "type": "string"
+          },
+          "googleCallbackUrl": {
+            "type": "string"
           },
           "wechatOauthEnabled": {
             "type": "boolean"
           },
+          "wechatAppId": {
+            "type": "string"
+          },
+          "wechatCallbackUrl": {
+            "type": "string"
+          },
           "qqOauthEnabled": {
             "type": "boolean"
+          },
+          "qqAppId": {
+            "type": "string"
+          },
+          "qqCallbackUrl": {
+            "type": "string"
           },
           "oauthAutoRegister": {
             "type": "boolean"
@@ -11797,24 +12083,17 @@
           "blockedEmailDomains": {
             "type": "string"
           },
-          "systemNotificationEmail": {
-            "type": "string",
-            "format": "email"
-          },
           "enableUserProfileEdit": {
             "type": "boolean"
           },
           "enableAccountDeletion": {
             "type": "boolean"
           },
-          "defaultUserRole": {
-            "type": "string"
+          "enableUserListPublic": {
+            "type": "boolean"
           },
-          "configurationNotes": {
-            "type": "string"
-          },
-          "lastModifiedBy": {
-            "type": "string"
+          "maxAvatarSize": {
+            "type": "integer"
           },
           "createdAt": {
             "type": "string",
@@ -12143,11 +12422,11 @@
                 "emailFromName": {
                   "type": "string"
                 },
+                "emailUsername": {
+                  "type": "string"
+                },
                 "emailUseTLS": {
                   "type": "boolean"
-                },
-                "emailSubjectPrefix": {
-                  "type": "string"
                 },
                 "registrationEnabled": {
                   "type": "boolean"
@@ -12155,14 +12434,11 @@
                 "emailVerificationEnabled": {
                   "type": "boolean"
                 },
-                "emailVerificationCodeLength": {
-                  "type": "integer"
-                },
-                "emailVerificationCodeExpiry": {
-                  "type": "integer"
-                },
                 "passwordResetEnabled": {
                   "type": "boolean"
+                },
+                "verificationCodeExpiry": {
+                  "type": "integer"
                 },
                 "passwordResetTokenExpiry": {
                   "type": "integer"
@@ -12185,14 +12461,38 @@
                 "githubOauthEnabled": {
                   "type": "boolean"
                 },
+                "githubClientId": {
+                  "type": "string"
+                },
+                "githubCallbackUrl": {
+                  "type": "string"
+                },
                 "googleOauthEnabled": {
                   "type": "boolean"
+                },
+                "googleClientId": {
+                  "type": "string"
+                },
+                "googleCallbackUrl": {
+                  "type": "string"
                 },
                 "wechatOauthEnabled": {
                   "type": "boolean"
                 },
+                "wechatAppId": {
+                  "type": "string"
+                },
+                "wechatCallbackUrl": {
+                  "type": "string"
+                },
                 "qqOauthEnabled": {
                   "type": "boolean"
+                },
+                "qqAppId": {
+                  "type": "string"
+                },
+                "qqCallbackUrl": {
+                  "type": "string"
                 },
                 "oauthAutoRegister": {
                   "type": "boolean"
@@ -12218,24 +12518,17 @@
                 "blockedEmailDomains": {
                   "type": "string"
                 },
-                "systemNotificationEmail": {
-                  "type": "string",
-                  "format": "email"
-                },
                 "enableUserProfileEdit": {
                   "type": "boolean"
                 },
                 "enableAccountDeletion": {
                   "type": "boolean"
                 },
-                "defaultUserRole": {
-                  "type": "string"
+                "enableUserListPublic": {
+                  "type": "boolean"
                 },
-                "configurationNotes": {
-                  "type": "string"
-                },
-                "lastModifiedBy": {
-                  "type": "string"
+                "maxAvatarSize": {
+                  "type": "integer"
                 },
                 "createdAt": {
                   "type": "string",
