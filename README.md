@@ -65,7 +65,7 @@ chmod +x *.sh
 
 ### 访问地址
 
-- 🌐 **前端网站**: http://localhost:3000
+- 🌐 **前端网站**: http://localhost
 - ⚙️ **后端管理**: http://localhost:1337/admin
 - 📡 **API测试**: http://localhost:1337/api/articles
 - 📖 **API文档**: [API-ENDPOINTS.md](./API-ENDPOINTS.md)

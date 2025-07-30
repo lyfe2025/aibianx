@@ -83,7 +83,7 @@ check_port_status() {
 }
 
 check_port_status 1337 "后端"
-check_port_status 3000 "前端"
+check_port_status 80 "前端"
 
 echo ""
 echo "✅ 开发环境已完全停止"

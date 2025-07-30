@@ -31,19 +31,21 @@ if [ ! -f "frontend/.env.local" ]; then
 # AI变现之路 - 前端环境变量配置
 NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
 STRAPI_API_TOKEN=
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost
 NEXT_PUBLIC_SITE_NAME=AI变现之路
 EOF
     echo "✅ 已创建 frontend/.env.local"
 fi
 
-# 检查端口占用
-if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null; then
-    echo "⚠️  端口 3000 已被占用，正在尝试停止..."
+# 检查端口占用 (注意：80端口需要管理员权限)
+if lsof -Pi :80 -sTCP:LISTEN -t >/dev/null; then
+    echo "⚠️  端口 80 已被占用，正在尝试停止..."
     pkill -f "next dev" 2>/dev/null || true
     sleep 2
-    if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null; then
-        echo "❌ 无法释放端口 3000，请手动停止相关进程"
+    if lsof -Pi :80 -sTCP:LISTEN -t >/dev/null; then
+        echo "❌ 无法释放端口 80，请手动停止相关进程"
+        echo "💡 提示：80端口可能被系统服务占用，请检查："
+        echo "   sudo lsof -i :80"
         exit 1
     fi
 fi
@@ -62,7 +64,7 @@ echo "📝 日志文件: logs/frontend.log"
 # 等待服务启动
 echo "⏳ 等待前端服务启动完成..."
 for i in {1..20}; do
-    if curl -s http://localhost:3000 > /dev/null 2>&1; then
+    if curl -s http://localhost > /dev/null 2>&1; then
         echo "✅ 前端服务启动完成"
         break
     fi
@@ -77,6 +79,6 @@ done
 echo ""
 echo "🎉 前端服务启动完成！"
 echo "========================="
-echo "🌐 前端网站: http://localhost:3000"
+echo "🌐 前端网站: http://localhost"
 echo "📝 实时日志: tail -f logs/frontend.log"
 echo "🛑 停止服务: ./stop-dev.sh 或 kill $FRONTEND_PID" 

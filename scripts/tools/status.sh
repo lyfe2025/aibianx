@@ -35,8 +35,8 @@ if [ -f "logs/frontend.pid" ]; then
     FRONTEND_PID=$(cat logs/frontend.pid)
     if kill -0 $FRONTEND_PID 2>/dev/null; then
         echo "   ✅ 运行中 (PID: $FRONTEND_PID)"
-        if curl -s http://localhost:3000 > /dev/null 2>&1; then
-            echo "   ✅ HTTP服务正常 (http://localhost:3000)"
+        if curl -s http://localhost > /dev/null 2>&1; then
+        echo "   ✅ HTTP服务正常 (http://localhost)"
         else
             echo "   ⚠️  HTTP服务异常"
         fi
@@ -68,7 +68,7 @@ check_port() {
 }
 
 check_port 1337 "后端"
-check_port 3000 "前端"
+check_port 80 "前端"
 
 echo ""
 

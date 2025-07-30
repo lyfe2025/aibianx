@@ -107,7 +107,7 @@ if [ ! -f "frontend/.env.local" ]; then
 # AI变现之路 - 前端环境变量配置
 NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
 STRAPI_API_TOKEN=
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost
 NEXT_PUBLIC_SITE_NAME=AI变现之路
 EOF
     echo "✅ 已创建 frontend/.env.local"
@@ -160,7 +160,7 @@ check_port() {
 
 echo "🔍 检查端口占用..."
 check_port 1337 "strapi"
-check_port 3000 "next"
+check_port 80 "next"
 
 # 启动后端服务
 echo "🔄 启动Strapi后端服务..."
@@ -239,7 +239,7 @@ for i in {1..30}; do
     fi
     
     # 检查前端是否可访问
-    if curl -s http://localhost:3000 > /dev/null 2>&1; then
+    if curl -s http://localhost > /dev/null 2>&1; then
         echo ""
         echo "✅ 前端服务启动完成"
         FRONTEND_READY=true
@@ -261,7 +261,7 @@ echo ""
 echo "🎉 开发环境启动完成！"
 echo "========================================="
 echo "📍 访问地址："
-echo "   🌐 前端网站: http://localhost:3000"
+echo "   🌐 前端网站: http://localhost"
 echo "   ⚙️  后端管理: http://localhost:1337/admin"
 echo "   📡 API测试: http://localhost:1337/api/articles"
 echo "   📊 API文档: http://localhost:1337/documentation"
@@ -284,7 +284,7 @@ echo ""
 echo "💡 故障排除："
 echo "   - 查看实时日志: tail -f logs/backend.log"
 echo "   - 查看错误信息: tail -n 50 logs/backend.log | grep -i error"
-echo "   - 检查端口占用: lsof -i :1337 或 lsof -i :3000"
+echo "   - 检查端口占用: lsof -i :1337 或 lsof -i :80"
 echo "   - 检查数据库连接: ./scripts/database/check-database.sh"
 echo "   - 第一次运行可能需要较长时间进行编译"
 echo ""

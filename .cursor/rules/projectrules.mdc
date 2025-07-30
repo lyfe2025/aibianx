@@ -90,6 +90,9 @@ export default {
 - **Tag** (标签): name, slug, color
 - **SiteConfig** (网站配置): siteName, siteUrl, 搜索引擎验证码, Analytics配置
 - **SeoMetrics** (SEO监控): 收录数据, 性能指标, 流量数据, 关键词排名
+- **Search** (搜索配置): MeiliSearch引擎配置, 同义词, 停用词, 中文分词设置
+- **SearchAnalytics** (搜索分析): 搜索历史, 热门查询, 搜索趋势, 点击率统计
+- **SystemConfig** (系统配置): OAuth配置(GitHub/Google/微信/QQ), 邮件服务, 支付配置
 
 ## ⚙️ 核心配置
 - **数据库**: PostgreSQL + 连接池(min:2, max:10) + JSONB支持
@@ -100,7 +103,7 @@ export default {
 ## 🔗 API集成要点
 - **客户端**: `lib/strapi.ts` 统一API客户端 + TypeScript类型安全
 - **Populate**: `'author,category,tags,featuredImage'` 关联数据获取
-- **环境变量**: 前端(`NEXT_PUBLIC_STRAPI_API_URL`) + 后端(完整配置)
+- **环境变量**: 前端(`NEXT_PUBLIC_STRAPI_URL`, `NEXTAUTH_URL=http://localhost`) + 后端(数据库+运行环境)
 - **错误处理**: 统一fetch包装 + 状态码检查
 
 ## 🏗️ 组件规范
@@ -168,7 +171,10 @@ aibianx/
 │   │   │   ├── category/    # 分类管理
 │   │   │   ├── tag/         # 标签管理
 │   │   │   ├── site-config/ # 网站配置 (SEO系统)
-│   │   │   └── seo-metrics/ # SEO监控数据 (SEO系统)
+│   │   │   ├── seo-metrics/ # SEO监控数据 (SEO系统)
+│   │   │   ├── search/      # 搜索引擎API (MeiliSearch集成)
+│   │   │   ├── search-analytics/ # 搜索分析API
+│   │   │   └── system-config/ # 系统配置API (OAuth/邮件等)
 │   │   ├── extensions/      # Strapi扩展
 │   │   ├── plugins/         # 自定义插件
 │   │   └── index.ts         # 应用入口 (含Bootstrap权限配置)
@@ -192,16 +198,29 @@ aibianx/
 │
 ├── backups/                    # 数据库备份
 ├── logs/                       # 日志文件
-├── scripts/                    # 部署和管理脚本
-│   ├── backup-*.sh           # 数据库备份脚本
-│   └── cleanup-*.sh          # 清理脚本
+├── scripts/                    # 分类管理脚本
+│   ├── deployment/           # 部署启动脚本
+│   │   ├── start-dev.sh     # 开发环境启动脚本
+│   │   ├── start-backend.sh # 后端启动脚本
+│   │   ├── start-frontend.sh# 前端启动脚本
+│   │   └── stop-dev.sh      # 停止所有服务脚本
+│   ├── database/            # 数据库管理脚本
+│   │   ├── backup-database-only.sh # 数据库备份
+│   │   ├── check-database.sh # 数据库检查
+│   │   └── restore-database-only.sh # 数据库恢复
+│   ├── backup/              # 完整备份脚本
+│   │   ├── backup-strapi.sh # Strapi完整备份
+│   │   ├── cleanup-backup-temp.sh # 清理备份临时文件
+│   │   ├── restore-strapi.sh # Strapi恢复
+│   │   └── verify-backup.sh # 备份验证
+│   ├── search/              # 搜索引擎管理脚本
+│   │   ├── deploy-meilisearch.sh # MeiliSearch部署
+│   │   └── check-meilisearch.sh # MeiliSearch检查
+│   └── tools/               # 工具脚本
+│       ├── status.sh        # 系统状态检查
+│       └── load-env.sh      # 环境变量加载
 │
-├── start-dev.sh               # 开发环境启动脚本
-├── start-backend.sh           # 后端启动脚本
-├── start-frontend.sh          # 前端启动脚本
-├── stop-dev.sh                # 停止所有服务脚本
-├── status.sh                  # 服务状态检查脚本
-│
+├── scripts.sh                 # 统一脚本入口 (交互式+命令行)
 ├── API-ENDPOINTS.md           # API端点文档
 └── README.md                  # 项目说明文档
 ```
@@ -230,14 +249,29 @@ aibianx/
 curl 'http://localhost:1337/api/articles?populate[0]=author&pagination[pageSize]=1'
 
 # 2. 测试前端API函数
-curl 'http://localhost:3000/api/test-articles'
+curl 'http://localhost/api/test-articles'
 
 # 3. 检查前端显示
-# http://localhost:3000/api-debug
+# http://localhost/api-debug
 ```
 
 ## 🚀 开发工作流
-- **启动**: `./start-dev.sh` (一键启动前后端)
-- **访问**: 前端 http://localhost:3000 | 后端 http://localhost:1337/admin
-- **调试**: `./status.sh` (查看服务状态) | `tail -f logs/*.log` (查看日志)
-- **停止**: `./stop-dev.sh` (优雅关闭所有服务) 
+- **统一入口**: `./scripts.sh` (交互式菜单) 或 `./scripts.sh [category] [action]` (命令行)
+- **快速启动**: `./scripts.sh deploy start` 或选择菜单 `1) 启动完整开发环境`
+- **访问地址**: 前端 http://localhost (端口80) | 后端 http://localhost:1337/admin
+- **状态检查**: `./scripts.sh tools status` 或选择菜单 `5) 查看系统状态`
+- **日志查看**: `tail -f logs/backend.log` | `tail -f logs/frontend.log`
+- **停止服务**: `./scripts.sh deploy stop` 或选择菜单 `4) 停止所有服务`
+
+### 脚本分类使用示例
+```bash
+# 交互式菜单模式
+./scripts.sh
+
+# 命令行模式 
+./scripts.sh deploy start     # 启动开发环境
+./scripts.sh tools status     # 查看系统状态  
+./scripts.sh db check         # 检查数据库
+./scripts.sh search deploy    # 部署MeiliSearch
+./scripts.sh backup full      # 完整备份
+``` 
