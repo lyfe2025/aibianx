@@ -276,12 +276,16 @@ class MeiliSearchClient {
             const endpoint = '/health'
             const response = await this.request<{
                 data: {
-                    status: 'healthy' | 'unhealthy'
+                    status: 'available' | 'unhealthy' // 修复：后端返回'available'
                     message?: string
                 }
             }>(endpoint)
 
-            return response.data
+            // 修复：将'available'映射为'healthy'以兼容前端逻辑
+            return {
+                status: response.data.status === 'available' ? 'healthy' : 'unhealthy',
+                message: response.data.message
+            }
         } catch (error) {
             return {
                 status: 'unhealthy',

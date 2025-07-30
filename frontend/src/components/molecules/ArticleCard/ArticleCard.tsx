@@ -190,10 +190,7 @@ export function ArticleCard({
                                     color: 'var(--color-text-muted)',
                                     lineHeight: '1.2'
                                 }}>
-                                    {new Date(article.publishedAt).toLocaleDateString('zh-CN', {
-                                        month: 'short',
-                                        day: 'numeric'
-                                    })}
+                                    {article.publishedAt}
                                 </div>
                             </div>
                         </div>

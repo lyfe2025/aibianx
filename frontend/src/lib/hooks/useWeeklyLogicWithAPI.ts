@@ -55,38 +55,50 @@ export function useWeeklyLogicWithAPI(): UseWeeklyLogicReturn {
     const [searchMode, setSearchMode] = useState<'strapi' | 'meilisearch'>('strapi')
 
     // 转换MeiliSearch文章为组件所需格式
-    const transformMeiliSearchArticle = (article: MeiliSearchArticle): ArticleCardData => ({
-        id: article.documentId,
-        title: article.title,
-        slug: article.slug,
-        excerpt: article.excerpt || '',
-        coverImage: article.featuredImage?.url || '',
-        author: {
-            name: article.author?.name || '匿名作者',
-            avatar: article.author?.avatar?.url || '',
-            slug: article.author?.slug || ''
-        },
-        category: {
-            name: article.category?.name || '未分类',
-            slug: article.category?.slug || '',
-            icon: '',
-            color: ''
-        },
-        tags: article.tags?.map(tag => ({
-            id: tag.documentId,
-            name: tag.name,
-            slug: tag.slug,
-            color: '',
-            lightColor: '',
-            darkColor: ''
-        })) || [],
-        publishDate: article.publishedAt,
-        readingTime: article.readingTime,
-        viewCount: article.viewCount,
-        featured: article.featured,
-        likes: 0,
-        bookmarked: false
-    })
+    const transformMeiliSearchArticle = (article: MeiliSearchArticle): ArticleCardData => {
+        // 格式化日期函数
+        const formatDate = (dateString: string): string => {
+            try {
+                const date = new Date(dateString)
+                if (isNaN(date.getTime())) {
+                    return '日期未知'
+                }
+                return date.toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                })
+            } catch {
+                return '日期未知'
+            }
+        }
+
+        return {
+            id: article.documentId,
+            title: article.title,
+            slug: article.slug,
+            excerpt: article.excerpt || '',
+            coverImage: article.featuredImage?.url
+                ? `http://localhost:1337${article.featuredImage.url}`
+                : undefined,
+            author: {
+                name: article.author?.name || '匿名作者',
+                avatar: article.author?.avatar?.url
+                    ? `http://localhost:1337${article.author.avatar.url}`
+                    : undefined
+            },
+            // 修复：使用正确的字段名和格式
+            publishedAt: formatDate(article.publishedAt),
+            readingTime: `${article.readingTime}分钟`,
+            viewCount: String(article.viewCount),
+            // 修复：标签应该是字符串数组，不是对象数组
+            tags: article.tags?.map(tag => tag.name) || [],
+            isPremium: article.featured || false,
+            // 可选字段
+            content: undefined,
+            likeCount: '0'
+        }
+    }
 
     // 获取文章数据（智能选择搜索引擎）
     const fetchArticles = useCallback(async (
@@ -104,16 +116,20 @@ export function useWeeklyLogicWithAPI(): UseWeeklyLogicReturn {
             let useSearch = false
             if (hasSearchQuery) {
                 try {
+                    console.log('🔍 检查MeiliSearch健康状态...')
                     const searchHealth = await checkSearchHealth()
+                    console.log('🔍 健康检查结果:', searchHealth)
+
                     if (searchHealth.status === 'healthy') {
                         useSearch = true
                         setSearchMode('meilisearch')
+                        console.log('✅ 使用MeiliSearch搜索引擎')
                     } else {
-                        console.warn('MeiliSearch不可用，降级到Strapi搜索')
+                        console.warn('⚠️ MeiliSearch不可用，降级到Strapi搜索:', searchHealth.message)
                         setSearchMode('strapi')
                     }
                 } catch (error) {
-                    console.warn('MeiliSearch健康检查失败，使用Strapi搜索')
+                    console.error('❌ MeiliSearch健康检查失败，使用Strapi搜索:', error)
                     setSearchMode('strapi')
                 }
             } else {

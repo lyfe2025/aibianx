@@ -10,7 +10,20 @@ echo ""
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
+
+# 读取API密钥配置
+API_KEY=""
+if [ -f "backend/.env" ]; then
+    API_KEY=$(grep "MEILISEARCH_API_KEY=" backend/.env | cut -d'=' -f2- | tr -d '"' | tr -d "'")
+fi
+
+# 构建认证头
+AUTH_HEADER=""
+if [ ! -z "$API_KEY" ]; then
+    AUTH_HEADER="-H \"Authorization: Bearer $API_KEY\""
+fi
 
 # 检查函数
 check_status() {
@@ -41,7 +54,12 @@ fi
 # 3. 检查索引状态
 echo ""
 echo "3. 检查索引配置..."
-INDEXES=$(curl -s http://localhost:7700/indexes 2>/dev/null)
+if [ ! -z "$API_KEY" ]; then
+    INDEXES=$(curl -s -H "Authorization: Bearer $API_KEY" http://localhost:7700/indexes 2>/dev/null)
+else
+    INDEXES=$(curl -s http://localhost:7700/indexes 2>/dev/null)
+fi
+
 if [[ $INDEXES == *"articles"* ]]; then
     echo -e "${GREEN}✅ articles索引: 已创建${NC}"
 else
@@ -51,31 +69,44 @@ fi
 # 4. 检查文档数量
 echo ""
 echo "4. 检查索引文档..."
-STATS=$(curl -s http://localhost:7700/indexes/articles/stats 2>/dev/null)
-DOC_COUNT=$(echo $STATS | grep -o '"numberOfDocuments":[0-9]*' | cut -d':' -f2)
+if [ ! -z "$API_KEY" ]; then
+    STATS=$(curl -s -H "Authorization: Bearer $API_KEY" http://localhost:7700/indexes/articles/stats 2>/dev/null)
+else
+    STATS=$(curl -s http://localhost:7700/indexes/articles/stats 2>/dev/null)
+fi
 
-if [ ! -z "$DOC_COUNT" ] && [ "$DOC_COUNT" -gt 0 ]; then
+DOC_COUNT=$(echo "$STATS" | grep -o '"numberOfDocuments":[0-9]*' | cut -d':' -f2)
+
+# 修复空值检查
+if [ ! -z "$DOC_COUNT" ] && [ "$DOC_COUNT" -gt 0 ] 2>/dev/null; then
     echo -e "${GREEN}✅ 索引文档: ${DOC_COUNT}篇文章${NC}"
 else
     echo -e "${YELLOW}⚠️  索引文档: 0篇文章（需要同步数据）${NC}"
     echo ""
     echo "🔄 数据同步建议:"
     echo "   curl -X POST http://localhost:1337/api/search/reindex"
+    DOC_COUNT=0
 fi
 
 # 5. 测试搜索功能
 echo ""
 echo "5. 测试搜索功能..."
-SEARCH_RESULT=$(curl -s "http://localhost:7700/indexes/articles/search?q=AI&limit=1" 2>/dev/null)
+if [ ! -z "$API_KEY" ]; then
+    SEARCH_RESULT=$(curl -s -H "Authorization: Bearer $API_KEY" "http://localhost:7700/indexes/articles/search?q=AI&limit=1" 2>/dev/null)
+else
+    SEARCH_RESULT=$(curl -s "http://localhost:7700/indexes/articles/search?q=AI&limit=1" 2>/dev/null)
+fi
+
 if [[ $SEARCH_RESULT == *"hits"* ]]; then
-    HITS_COUNT=$(echo $SEARCH_RESULT | grep -o '"estimatedTotalHits":[0-9]*' | cut -d':' -f2)
-    if [ ! -z "$HITS_COUNT" ] && [ "$HITS_COUNT" -gt 0 ]; then
+    HITS_COUNT=$(echo "$SEARCH_RESULT" | grep -o '"estimatedTotalHits":[0-9]*' | cut -d':' -f2)
+    if [ ! -z "$HITS_COUNT" ] && [ "$HITS_COUNT" -gt 0 ] 2>/dev/null; then
         echo -e "${GREEN}✅ 搜索功能: 正常（找到${HITS_COUNT}条结果）${NC}"
     else
         echo -e "${YELLOW}⚠️  搜索功能: 可用但无搜索结果${NC}"
     fi
 else
     echo -e "${RED}❌ 搜索功能: 异常${NC}"
+    echo "   响应: $(echo "$SEARCH_RESULT" | head -c 100)..."
 fi
 
 # 6. 检查Strapi集成
@@ -115,7 +146,8 @@ fi
 echo ""
 echo "🎯 === 操作建议 ==="
 
-if [ "$DOC_COUNT" -eq 0 ]; then
+# 修复数值比较的语法错误
+if [ ! -z "$DOC_COUNT" ] && [ "$DOC_COUNT" -eq 0 ] 2>/dev/null; then
     echo -e "${YELLOW}1. 需要同步搜索数据:${NC}"
     echo "   ./scripts.sh search reindex"
 fi

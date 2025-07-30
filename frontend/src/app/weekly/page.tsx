@@ -79,6 +79,7 @@ export default function WeeklyPage() {
             activeFilter={activeFilter}
             isSearching={isSearching}
             totalResults={totalCount}
+            searchMode={searchMode}
             onSearch={handleSearch}
             onFilterChange={handleFilterChange}
             onClearSearch={clearSearch}
@@ -265,50 +266,7 @@ export default function WeeklyPage() {
         }
       `}</style>
 
-              {/* 开发调试信息 - 扩展显示内容 */}
-        {process.env.NODE_ENV === 'development' && (
-            <div style={{
-                position: 'fixed',
-                bottom: '20px',
-                right: '20px',
-                padding: '12px 16px',
-                background: searchQuery ? 
-                    (searchMode === 'meilisearch' 
-                        ? 'rgba(59, 130, 246, 0.9)' 
-                        : 'rgba(34, 197, 94, 0.9)')
-                    : 'rgba(107, 114, 128, 0.9)',
-                color: 'white',
-                borderRadius: '8px',
-                fontSize: '12px',
-                fontWeight: 600,
-                zIndex: 1000,
-                backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                minWidth: '200px'
-            }}>
-                {searchQuery ? (
-                    <>
-                        🔍 搜索引擎: {searchMode === 'meilisearch' ? 'MeiliSearch' : 'Strapi'}
-                        <br />
-                        📝 搜索词: "{searchQuery}"
-                        <br />
-                        📊 结果: {articles.length} 篇文章
-                        <br />
-                        {searchMode === 'strapi' && (
-                            <span style={{ color: '#FEF3C7' }}>
-                                ⚠️ MeiliSearch未启用
-                            </span>
-                        )}
-                    </>
-                ) : (
-                    <>
-                        🏠 浏览模式
-                        <br />
-                        📄 文章: {articles.length} 篇
-                    </>
-                )}
-            </div>
-        )}
+
     </div>
   )
 } 

@@ -92,7 +92,7 @@ export function RelatedArticles({
                                 position: 'relative'
                             }}>
                                 {article.isPremium && (
-                                    <span 
+                                    <span
                                         className="premium-icon-inline"
                                         style={{
                                             display: 'inline-flex',
@@ -153,10 +153,7 @@ export function RelatedArticles({
                                     whiteSpace: 'nowrap',
                                     flexShrink: 0
                                 }}>
-                                    {new Date(article.publishedAt).toLocaleDateString('zh-CN', {
-                                        month: 'short',
-                                        day: 'numeric'
-                                    })}
+                                    {article.publishedAt}
                                 </span>
 
                                 <span style={{
