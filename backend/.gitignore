@@ -65,3 +65,8 @@ ssl/
 nbproject/
 .eslintcache
 .tsbuildinfo
+
+# ===== 搜索引擎 (后端特有) =====
+# MeiliSearch 二进制文件和数据目录
+meilisearch
+meilisearch_data/

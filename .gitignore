@@ -192,3 +192,10 @@ private/
 
 # 本地开发工具
 .local/
+
+# ===== 搜索引擎 =====
+# MeiliSearch 二进制文件和数据
+backend/meilisearch
+backend/meilisearch_data/
+meilisearch
+meilisearch_data/
