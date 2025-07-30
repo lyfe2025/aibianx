@@ -215,7 +215,8 @@ aibianx/
 │   │   └── verify-backup.sh # 备份验证
 │   ├── search/              # 搜索引擎管理脚本
 │   │   ├── deploy-meilisearch.sh # MeiliSearch部署
-│   │   └── check-meilisearch.sh # MeiliSearch检查
+│   │   ├── check-meilisearch.sh # MeiliSearch检查
+│   │   └── manage-meilisearch.sh # MeiliSearch管理工具
 │   └── tools/               # 工具脚本
 │       ├── status.sh        # 系统状态检查
 │       └── load-env.sh      # 环境变量加载
@@ -260,18 +261,39 @@ curl 'http://localhost/api/test-articles'
 - **快速启动**: `./scripts.sh deploy start` 或选择菜单 `1) 启动完整开发环境`
 - **访问地址**: 前端 http://localhost (端口80) | 后端 http://localhost:1337/admin
 - **状态检查**: `./scripts.sh tools status` 或选择菜单 `5) 查看系统状态`
-- **日志查看**: `tail -f logs/backend.log` | `tail -f logs/frontend.log`
+- **搜索管理**: `./scripts.sh search manage` 或选择菜单 `9) 搜索管理工具`
+- **日志查看**: `./scripts.sh search logs` | `tail -f logs/backend.log` | `tail -f logs/frontend.log`
 - **停止服务**: `./scripts.sh deploy stop` 或选择菜单 `4) 停止所有服务`
+
+### 🔍 搜索引擎管理增强
+- **部署搜索**: `./scripts.sh search deploy` - 一键部署MeiliSearch容器
+- **管理工具**: `./scripts.sh search manage` - 完整的搜索管理界面
+- **快速重启**: `./scripts.sh search restart` - 重启搜索服务
+- **数据同步**: `./scripts.sh search reindex` - 重建搜索索引
+- **状态检查**: `./scripts.sh search check` - 检查搜索引擎状态
+- **日志监控**: `./scripts.sh search logs` - 实时查看搜索日志
 
 ### 脚本分类使用示例
 ```bash
 # 交互式菜单模式
 ./scripts.sh
 
-# 命令行模式 
+# 命令行模式 - 服务管理
 ./scripts.sh deploy start     # 启动开发环境
-./scripts.sh tools status     # 查看系统状态  
-./scripts.sh db check         # 检查数据库
+./scripts.sh deploy backend   # 启动后端服务
+./scripts.sh deploy frontend  # 启动前端服务
+./scripts.sh deploy stop      # 停止所有服务
+
+# 命令行模式 - 搜索引擎
 ./scripts.sh search deploy    # 部署MeiliSearch
+./scripts.sh search manage    # 搜索管理工具
+./scripts.sh search restart   # 重启搜索服务
+./scripts.sh search reindex   # 重建搜索索引
+./scripts.sh search check     # 检查搜索状态
+./scripts.sh search logs      # 查看搜索日志
+
+# 命令行模式 - 系统监控
+./scripts.sh tools status     # 查看系统状态
+./scripts.sh db check         # 检查数据库
 ./scripts.sh backup full      # 完整备份
 ``` 

@@ -38,6 +38,10 @@ show_usage() {
     echo -e "${GREEN}🔍 搜索引擎 (search)${NC}"
     echo "  deploy       - 部署MeiliSearch"
     echo "  check        - 检查搜索引擎状态"
+    echo "  restart      - 重启MeiliSearch服务"
+    echo "  logs         - 查看MeiliSearch日志"
+    echo "  reindex      - 重建搜索索引"
+    echo "  manage       - 搜索管理工具"
     echo ""
     echo -e "${GREEN}💾 备份管理 (backup)${NC}"
     echo "  full         - 完整系统备份"
@@ -53,7 +57,10 @@ show_usage() {
     echo "  ./scripts.sh deploy start    # 启动开发环境"
     echo "  ./scripts.sh db check        # 检查数据库"
     echo "  ./scripts.sh search deploy   # 部署搜索引擎"
+    echo "  ./scripts.sh search restart  # 重启搜索服务"
+    echo "  ./scripts.sh search reindex  # 重建搜索索引"
     echo "  ./scripts.sh backup full     # 完整备份"
+    echo "  ./scripts.sh tools status    # 查看系统状态"
     echo ""
 }
 
@@ -80,10 +87,16 @@ show_menu() {
     echo -e "${GREEN} 🔍 搜索引擎${NC}"
     echo -e "  ${CYAN}8${NC}) 部署MeiliSearch     (一键安装配置)"
     echo ""
+    echo -e "${GREEN} 🔧 搜索管理${NC}"
+    echo -e "  ${CYAN}9${NC}) 搜索管理工具        (完整管理界面)"
+    echo -e " ${CYAN}10${NC}) 重启MeiliSearch     (重启搜索服务)"
+    echo -e " ${CYAN}11${NC}) 查看搜索日志        (实时日志查看)"
+    echo -e " ${CYAN}12${NC}) 重建搜索索引        (重新同步数据)"
+    echo ""
     echo -e "${GREEN} 💾 数据管理${NC}"
-    echo -e "  ${CYAN}9${NC}) 数据库备份          (仅数据库)"
-    echo -e " ${CYAN}10${NC}) 完整系统备份        (数据库+文件)"
-    echo -e " ${CYAN}11${NC}) 清理备份临时文件"
+    echo -e " ${CYAN}13${NC}) 数据库备份          (仅数据库)"
+    echo -e " ${CYAN}14${NC}) 完整系统备份        (数据库+文件)"
+    echo -e " ${CYAN}15${NC}) 清理备份临时文件"
     echo ""
     echo -e "${PURPLE} h${NC}) 显示命令行帮助"
     echo -e "${RED} 0${NC}) 退出"
@@ -130,14 +143,46 @@ execute_choice() {
             exec "$SCRIPT_DIR/scripts/search/deploy-meilisearch.sh"
             ;;
         9)
+            echo -e "${BLUE}🔧 启动搜索管理工具...${NC}"
+            exec "$SCRIPT_DIR/scripts/search/manage-meilisearch.sh"
+            ;;
+        10)
+            echo -e "${YELLOW}🔄 重启MeiliSearch...${NC}"
+            echo "重启搜索引擎服务..."
+            docker restart meilisearch 2>/dev/null && echo -e "${GREEN}✅ MeiliSearch已重启${NC}" || echo -e "${RED}❌ 重启失败${NC}"
+            echo ""
+            read -p "按回车键返回主菜单..."
+            return 1
+            ;;
+        11)
+            echo -e "${BLUE}📋 查看MeiliSearch日志...${NC}"
+            echo "按 Ctrl+C 退出日志查看"
+            echo ""
+            sleep 2
+            docker logs meilisearch -f 2>/dev/null || echo -e "${RED}❌ MeiliSearch容器未运行${NC}"
+            return 1
+            ;;
+        12)
+            echo -e "${GREEN}🔄 重建搜索索引...${NC}"
+            echo "正在重新同步搜索数据..."
+            if curl -s -X POST http://localhost:1337/api/search/reindex > /dev/null 2>&1; then
+                echo -e "${GREEN}✅ 搜索索引重建成功${NC}"
+            else
+                echo -e "${RED}❌ 重建失败，请确保后端服务正在运行${NC}"
+            fi
+            echo ""
+            read -p "按回车键返回主菜单..."
+            return 1
+            ;;
+        13)
             echo -e "${PURPLE}💾 备份数据库...${NC}"
             exec "$SCRIPT_DIR/scripts/database/backup-database-only.sh"
             ;;
-        10)
+        14)
             echo -e "${PURPLE}📦 完整系统备份...${NC}"
             exec "$SCRIPT_DIR/scripts/backup/backup-strapi.sh"
             ;;
-        11)
+        15)
             echo -e "${YELLOW}🧹 清理备份临时文件...${NC}"
             exec "$SCRIPT_DIR/scripts/backup/cleanup-backup-temp.sh"
             ;;
@@ -153,7 +198,7 @@ execute_choice() {
             ;;
         *)
             echo -e "${RED}❌ 无效选择: $choice${NC}"
-            echo "请输入 0-11 之间的数字，或 'h' 查看帮助"
+            echo "请输入 0-15 之间的数字，或 'h' 查看帮助"
             echo ""
             read -p "按回车键继续..." 
             return 1
@@ -231,9 +276,29 @@ handle_command_line() {
                 "check")
                     exec "$SCRIPT_DIR/scripts/search/check-meilisearch.sh" "$@"
                     ;;
+                "restart")
+                    echo -e "${YELLOW}🔄 重启MeiliSearch...${NC}"
+                    docker restart meilisearch 2>/dev/null && echo -e "${GREEN}✅ MeiliSearch已重启${NC}" || echo -e "${RED}❌ 重启失败${NC}"
+                    ;;
+                "logs")
+                    echo -e "${BLUE}📋 查看MeiliSearch日志...${NC}"
+                    docker logs meilisearch -f 2>/dev/null || echo -e "${RED}❌ MeiliSearch容器未运行${NC}"
+                    ;;
+                "reindex")
+                    echo -e "${GREEN}🔄 重建搜索索引...${NC}"
+                    if curl -s -X POST http://localhost:1337/api/search/reindex > /dev/null 2>&1; then
+                        echo -e "${GREEN}✅ 搜索索引重建成功${NC}"
+                    else
+                        echo -e "${RED}❌ 重建失败，请确保后端服务正在运行${NC}"
+                    fi
+                    ;;
+                "manage")
+                    echo -e "${BLUE}🔧 启动搜索管理工具...${NC}"
+                    exec "$SCRIPT_DIR/scripts/search/manage-meilisearch.sh"
+                    ;;
                 *)
                     echo -e "${RED}❌ 未知的搜索操作: $action${NC}"
-                    echo "可用操作: deploy, check"
+                    echo "可用操作: deploy, check, restart, logs, reindex, manage"
                     exit 1
                     ;;
             esac

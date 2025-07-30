@@ -159,7 +159,7 @@ echo ""
 echo -e "${BLUE}🌐 === 访问信息 ===${NC}"
 echo "• MeiliSearch服务: http://localhost:7700"
 echo "• 健康检查: http://localhost:7700/health"
-echo "• 前端搜索测试: http://localhost:3000/weekly"
+echo "• 前端搜索测试: http://localhost/weekly"
 
 if [ "$DEPLOY_MODE" = "2" ]; then
     echo "• API密钥管理: curl -H 'Authorization: Bearer $MASTER_KEY' http://localhost:7700/keys"
@@ -168,18 +168,20 @@ fi
 # 显示后续步骤
 echo ""
 echo -e "${BLUE}📋 === 后续步骤 ===${NC}"
-echo "1. 启动后端服务: cd backend && npm run develop"
-echo "2. 启动前端服务: cd frontend && npm run dev"
-echo "3. 访问前端页面: http://localhost:3000/weekly"
+echo "1. 启动后端服务: ./scripts.sh deploy backend"
+echo "2. 启动前端服务: ./scripts.sh deploy frontend"
+echo "3. 访问前端页面: http://localhost/weekly"
 echo "4. 进行搜索测试: 在搜索框输入关键词"
 
 # 显示管理命令
 echo ""
 echo -e "${BLUE}🔧 === 管理命令 ===${NC}"
-echo "• 查看状态: ./scripts/search/check-meilisearch.sh"
-echo "• 查看日志: docker logs meilisearch -f"
-echo "• 重启服务: docker restart meilisearch"
-echo "• 停止服务: docker stop meilisearch"
+echo "• 搜索管理工具: ./scripts.sh search manage"
+echo "• 查看搜索状态: ./scripts.sh search check"
+echo "• 重启搜索服务: ./scripts.sh search restart"
+echo "• 查看搜索日志: ./scripts.sh search logs"
+echo "• 重建搜索索引: ./scripts.sh search reindex"
+echo "• 查看系统状态: ./scripts.sh tools status"
 
 echo ""
 echo -e "${GREEN}🎉 === 部署完成 ===${NC}"

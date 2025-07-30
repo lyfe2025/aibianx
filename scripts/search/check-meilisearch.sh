@@ -95,7 +95,7 @@ echo "🌐 === 访问信息 ==="
 echo "• MeiliSearch服务: http://localhost:7700"
 echo "• 健康检查: http://localhost:7700/health"
 echo "• 搜索测试: http://localhost:7700/indexes/articles/search?q=AI"
-echo "• 前端搜索: http://localhost:3000/weekly"
+echo "• 前端搜索: http://localhost/weekly"
 echo "• API文档: http://localhost:1337/documentation"
 
 # 8. 显示部署模式
@@ -113,20 +113,26 @@ else
 fi
 
 echo ""
-echo "🎯 === 部署建议 ==="
+echo "🎯 === 操作建议 ==="
 
 if [ "$DOC_COUNT" -eq 0 ]; then
     echo -e "${YELLOW}1. 需要同步搜索数据:${NC}"
-    echo "   curl -X POST http://localhost:1337/api/search/reindex"
+    echo "   ./scripts.sh search reindex"
 fi
 
 if [[ $STRAPI_HEALTH != *"available"* ]]; then
     echo -e "${YELLOW}2. 需要启动后端服务:${NC}"
-    echo "   cd backend && npm run develop"
+    echo "   ./scripts.sh deploy backend"
 fi
 
 echo -e "${GREEN}3. 测试前端搜索:${NC}"
-echo "   访问 http://localhost:3000/weekly 并进行搜索测试"
+echo "   访问 http://localhost/weekly 并进行搜索测试"
+
+echo ""
+echo -e "${BLUE}🔧 更多管理操作:${NC}"
+echo "   ./scripts.sh search manage     # 搜索管理工具"
+echo "   ./scripts.sh search restart    # 重启搜索服务"
+echo "   ./scripts.sh tools status      # 查看系统状态"
 
 echo ""
 echo "✨ === 检查完成 ==="
