@@ -7,6 +7,8 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { getArticles, checkStrapiConnection } from '@/lib/strapi'
+import { searchArticles, checkSearchHealth, SearchHistoryManager } from '@/lib/meilisearch'
+import type { MeiliSearchArticle } from '@/lib/meilisearch'
 import { scrollToTop } from '@/lib/weeklyUtils'
 import { PAGE_CONFIG } from '@/constants/weeklyConfig'
 import type { ArticleCardData } from '@/components/molecules/ArticleCard/ArticleCard'
@@ -19,6 +21,7 @@ interface UseWeeklyLogicReturn {
     isSearching: boolean
     isLoading: boolean
     connectionError: boolean
+    searchMode: 'strapi' | 'meilisearch'
 
     // 数据
     articles: ArticleCardData[]
@@ -49,8 +52,43 @@ export function useWeeklyLogicWithAPI(): UseWeeklyLogicReturn {
     const [articles, setArticles] = useState<ArticleCardData[]>([])
     const [totalPages, setTotalPages] = useState(1)
     const [totalCount, setTotalCount] = useState(0)
+    const [searchMode, setSearchMode] = useState<'strapi' | 'meilisearch'>('strapi')
 
-    // 获取文章数据
+    // 转换MeiliSearch文章为组件所需格式
+    const transformMeiliSearchArticle = (article: MeiliSearchArticle): ArticleCardData => ({
+        id: article.documentId,
+        title: article.title,
+        slug: article.slug,
+        excerpt: article.excerpt || '',
+        coverImage: article.featuredImage?.url || '',
+        author: {
+            name: article.author?.name || '匿名作者',
+            avatar: article.author?.avatar?.url || '',
+            slug: article.author?.slug || ''
+        },
+        category: {
+            name: article.category?.name || '未分类',
+            slug: article.category?.slug || '',
+            icon: '',
+            color: ''
+        },
+        tags: article.tags?.map(tag => ({
+            id: tag.documentId,
+            name: tag.name,
+            slug: tag.slug,
+            color: '',
+            lightColor: '',
+            darkColor: ''
+        })) || [],
+        publishDate: article.publishedAt,
+        readingTime: article.readingTime,
+        viewCount: article.viewCount,
+        featured: article.featured,
+        likes: 0,
+        bookmarked: false
+    })
+
+    // 获取文章数据（智能选择搜索引擎）
     const fetchArticles = useCallback(async (
         search?: string,
         filter?: string,
@@ -60,50 +98,123 @@ export function useWeeklyLogicWithAPI(): UseWeeklyLogicReturn {
             setIsLoading(true)
             setConnectionError(false)
 
-            // 检查Strapi连接
-            const isConnected = await checkStrapiConnection()
-            if (!isConnected) {
-                setConnectionError(true)
-                setIsLoading(false)
-                return
-            }
+            const hasSearchQuery = search && search.trim()
 
-            // 准备API参数
-            const apiParams: any = {
-                page: page || currentPage,
-                pageSize: PAGE_CONFIG.itemsPerPage,
-            }
-
-            // 搜索参数
-            if (search && search.trim()) {
-                apiParams.search = search.trim()
-            }
-
-            // 筛选参数
-            if (filter && filter !== 'latest') {
-                switch (filter) {
-                    case 'featured':
-                        apiParams.featured = true
-                        break
-                    case 'ai-tools':
-                        apiParams.tag = 'AI工具'
-                        break
-                    case 'monetization':
-                        apiParams.tag = '变现指南'
-                        break
-                    case 'case-study':
-                        apiParams.tag = '案例分析'
-                        break
-                    // 更多筛选条件可以在这里添加
+            // 智能选择搜索引擎：有搜索词时优先使用MeiliSearch
+            let useSearch = false
+            if (hasSearchQuery) {
+                try {
+                    const searchHealth = await checkSearchHealth()
+                    if (searchHealth.status === 'healthy') {
+                        useSearch = true
+                        setSearchMode('meilisearch')
+                    } else {
+                        console.warn('MeiliSearch不可用，降级到Strapi搜索')
+                        setSearchMode('strapi')
+                    }
+                } catch (error) {
+                    console.warn('MeiliSearch健康检查失败，使用Strapi搜索')
+                    setSearchMode('strapi')
                 }
+            } else {
+                setSearchMode('strapi')
             }
 
-            // 调用API
-            const result = await getArticles(apiParams)
+            if (useSearch && hasSearchQuery) {
+                // 使用MeiliSearch搜索
+                console.log('🔍 使用MeiliSearch搜索:', search)
 
-            setArticles(result.articles)
-            setTotalPages(result.pagination.pageCount)
-            setTotalCount(result.pagination.total)
+                // 准备MeiliSearch参数
+                const searchParams: any = {
+                    query: search.trim(),
+                    page: page || currentPage,
+                    pageSize: PAGE_CONFIG.itemsPerPage,
+                    highlight: true,
+                    sortBy: 'relevance'
+                }
+
+                // 添加筛选条件
+                if (filter && filter !== 'latest') {
+                    switch (filter) {
+                        case 'featured':
+                            searchParams.featured = true
+                            break
+                        case 'ai-tools':
+                            searchParams.tags = 'ai-tools'
+                            break
+                        case 'monetization':
+                            searchParams.tags = 'monetization'
+                            break
+                        case 'case-study':
+                            searchParams.tags = 'case-study'
+                            break
+                    }
+                }
+
+                const searchResult = await searchArticles(searchParams)
+
+                // 转换结果
+                const transformedArticles = searchResult.articles.map(transformMeiliSearchArticle)
+
+                setArticles(transformedArticles)
+                setTotalPages(searchResult.pagination.pageCount)
+                setTotalCount(searchResult.pagination.total)
+
+                // 保存搜索历史
+                SearchHistoryManager.addToHistory(search.trim())
+
+                console.log(`✅ MeiliSearch搜索完成: ${transformedArticles.length} 篇文章`)
+
+            } else {
+                // 使用Strapi原生搜索
+                console.log('📝 使用Strapi搜索:', search || '(无搜索词)')
+
+                // 检查Strapi连接
+                const isConnected = await checkStrapiConnection()
+                if (!isConnected) {
+                    setConnectionError(true)
+                    setIsLoading(false)
+                    return
+                }
+
+                // 准备Strapi API参数
+                const apiParams: any = {
+                    page: page || currentPage,
+                    pageSize: PAGE_CONFIG.itemsPerPage,
+                }
+
+                // 搜索参数
+                if (hasSearchQuery) {
+                    apiParams.search = search.trim()
+                }
+
+                // 筛选参数
+                if (filter && filter !== 'latest') {
+                    switch (filter) {
+                        case 'featured':
+                            apiParams.featured = true
+                            break
+                        case 'ai-tools':
+                            apiParams.tag = 'AI工具'
+                            break
+                        case 'monetization':
+                            apiParams.tag = '变现指南'
+                            break
+                        case 'case-study':
+                            apiParams.tag = '案例分析'
+                            break
+                    }
+                }
+
+                // 调用Strapi API
+                const result = await getArticles(apiParams)
+
+                setArticles(result.articles)
+                setTotalPages(result.pagination.pageCount)
+                setTotalCount(result.pagination.total)
+
+                console.log(`✅ Strapi搜索完成: ${result.articles.length} 篇文章`)
+            }
 
         } catch (error) {
             console.error('获取文章失败:', error)
@@ -181,6 +292,7 @@ export function useWeeklyLogicWithAPI(): UseWeeklyLogicReturn {
         isSearching,
         isLoading,
         connectionError,
+        searchMode,
 
         // 数据
         articles,

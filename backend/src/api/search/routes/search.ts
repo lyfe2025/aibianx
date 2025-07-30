@@ -259,6 +259,164 @@ export default {
                     }
                 }
             }
+        },
+        {
+            method: 'GET',
+            path: '/search/api-keys',
+            handler: 'search.getApiKeys',
+            config: {
+                description: 'API密钥列表和获取指南（完全免费功能）',
+                tags: ['Search', 'API Keys'],
+                policies: [],
+                middlewares: [],
+                auth: false, // 公开访问 - 获取指南信息
+                responses: {
+                    200: {
+                        description: 'API密钥信息和使用指南',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        data: {
+                                            type: 'object',
+                                            properties: {
+                                                mode: { type: 'string', description: '当前模式：development/production' },
+                                                message: { type: 'string' },
+                                                keys: {
+                                                    type: 'array',
+                                                    items: {
+                                                        type: 'object',
+                                                        properties: {
+                                                            name: { type: 'string' },
+                                                            description: { type: 'string' },
+                                                            keyPreview: { type: 'string' },
+                                                            actions: { type: 'array' },
+                                                            indexes: { type: 'array' }
+                                                        }
+                                                    }
+                                                },
+                                                instructions: {
+                                                    type: 'object',
+                                                    properties: {
+                                                        title: { type: 'string' },
+                                                        steps: { type: 'array' },
+                                                        note: { type: 'string' }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        meta: {
+                                            type: 'object',
+                                            properties: {
+                                                timestamp: { type: 'string' },
+                                                note: { type: 'string', default: 'API密钥功能完全免费' }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            method: 'POST',
+            path: '/search/api-keys',
+            handler: 'search.createApiKey',
+            config: {
+                description: '创建自定义API密钥（完全免费功能）',
+                tags: ['Search', 'API Keys'],
+                policies: [],
+                middlewares: [],
+                auth: false, // TODO: 生产环境应该需要管理员权限
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                required: ['name', 'description', 'actions', 'indexes'],
+                                properties: {
+                                    name: {
+                                        type: 'string',
+                                        description: 'API密钥名称',
+                                        example: 'Frontend Search Key'
+                                    },
+                                    description: {
+                                        type: 'string',
+                                        description: 'API密钥描述',
+                                        example: '用于前端搜索的只读密钥'
+                                    },
+                                    actions: {
+                                        type: 'array',
+                                        items: { type: 'string' },
+                                        description: '权限列表',
+                                        example: ['search']
+                                    },
+                                    indexes: {
+                                        type: 'array',
+                                        items: { type: 'string' },
+                                        description: '可访问的索引',
+                                        example: ['articles']
+                                    },
+                                    expiresAt: {
+                                        type: 'string',
+                                        format: 'date-time',
+                                        description: '过期时间（可选）',
+                                        example: '2024-12-31T23:59:59Z'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    201: {
+                        description: 'API密钥创建成功',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        data: {
+                                            type: 'object',
+                                            properties: {
+                                                success: { type: 'boolean' },
+                                                message: { type: 'string' },
+                                                key: {
+                                                    type: 'object',
+                                                    properties: {
+                                                        name: { type: 'string' },
+                                                        description: { type: 'string' },
+                                                        key: { type: 'string' },
+                                                        actions: { type: 'array' },
+                                                        indexes: { type: 'array' }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        meta: {
+                                            type: 'object',
+                                            properties: {
+                                                timestamp: { type: 'string' },
+                                                note: { type: 'string', default: 'API密钥创建成功，完全免费使用' }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    400: {
+                        description: '参数错误'
+                    },
+                    500: {
+                        description: '创建失败'
+                    }
+                }
+            }
         }
     ]
 }

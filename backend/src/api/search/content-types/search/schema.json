@@ -35,7 +35,7 @@
         "searchApiKey": {
             "type": "string",
             "private": true,
-            "description": "MeiliSearch API密钥（仅管理员可见）"
+            "description": "MeiliSearch API密钥（完全免费）- 开发模式无需设置，生产模式自动生成3个免费密钥。获取方法：访问 /api/search/api-keys 查看详细指南。当前为开发模式，可留空。"
         }
     }
 }

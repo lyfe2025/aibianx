@@ -274,5 +274,99 @@ export default factories.createCoreController('api::search.search', ({ strapi })
                 }
             }
         }
+    },
+
+    /**
+     * 获取API密钥列表和使用指南（完全免费功能）
+     * GET /api/search/api-keys
+     */
+    async getApiKeys(ctx) {
+        try {
+            const service = getMeiliSearchService()
+            const keysInfo = await service.getApiKeys()
+
+            ctx.body = {
+                data: keysInfo,
+                meta: {
+                    timestamp: new Date().toISOString(),
+                    note: 'API密钥功能完全免费，无任何使用限制',
+                    documentation: {
+                        title: 'MeiliSearch API密钥使用指南',
+                        pricing: '完全免费 - 开源版本包含完整的API密钥管理功能',
+                        modes: {
+                            development: '开发模式：无需密钥，便于调试',
+                            production: '生产模式：自动生成免费密钥，保障安全'
+                        }
+                    }
+                }
+            }
+
+        } catch (error) {
+            strapi.log.error('❌ 获取API密钥失败:', error)
+
+            ctx.status = 500
+            ctx.body = {
+                error: {
+                    status: 500,
+                    name: 'ApiKeysError',
+                    message: 'API密钥获取失败',
+                    details: process.env.NODE_ENV === 'development' ? error.message : undefined
+                }
+            }
+        }
+    },
+
+    /**
+     * 创建自定义API密钥（完全免费功能）
+     * POST /api/search/api-keys
+     */
+    async createApiKey(ctx) {
+        try {
+            const { name, description, actions, indexes, expiresAt } = ctx.request.body
+
+            // 参数验证
+            if (!name || !description || !actions || !indexes) {
+                ctx.status = 400
+                ctx.body = {
+                    error: {
+                        status: 400,
+                        name: 'ValidationError',
+                        message: '缺少必要参数：name, description, actions, indexes'
+                    }
+                }
+                return
+            }
+
+            const service = getMeiliSearchService()
+            const result = await service.createApiKey(
+                name, 
+                description, 
+                actions, 
+                indexes, 
+                expiresAt ? new Date(expiresAt) : undefined
+            )
+
+            ctx.status = 201
+            ctx.body = {
+                data: result,
+                meta: {
+                    timestamp: new Date().toISOString(),
+                    note: 'API密钥创建成功，完全免费使用'
+                }
+            }
+
+        } catch (error) {
+            strapi.log.error('❌ 创建API密钥失败:', error)
+
+            ctx.status = 500
+            ctx.body = {
+                error: {
+                    status: 500,
+                    name: 'CreateApiKeyError',
+                    message: '创建API密钥失败',
+                    details: error.message
+                }
+            }
+        }
     }
 }))

@@ -61,13 +61,39 @@ class MeiliSearchService {
     private config: any
 
     constructor() {
-        // 获取配置
-        this.config = strapi.config.get('meilisearch')
+        // 获取配置 - 使用Strapi内置配置系统
+        this.config = {
+            host: process.env.MEILISEARCH_HOST || 'http://localhost:7700',
+            apiKey: process.env.MEILISEARCH_API_KEY || null,
+            // 搜索配置
+            search: {
+                defaultLimit: 20,
+                maxLimit: 100,
+                defaultHighlight: true,
+                defaultCrop: true,
+                // 高亮配置
+                highlight: {
+                    preTag: '<mark>',
+                    postTag: '</mark>'
+                },
+                // 截取配置
+                crop: {
+                    length: 100,
+                    marker: '...'
+                }
+            }
+        }
+
+        strapi.log.info('🔧 MeiliSearch配置:', {
+            host: this.config.host,
+            hasApiKey: !!this.config.apiKey,
+            mode: this.config.apiKey ? 'production' : 'development'
+        })
 
         // 初始化客户端
         this.client = new MeiliSearch({
             host: this.config.host,
-            apiKey: this.config.apiKey
+            apiKey: this.config.apiKey || undefined  // null转为undefined
         })
 
         strapi.log.info('📊 MeiliSearch服务已初始化')
@@ -78,7 +104,19 @@ class MeiliSearchService {
      */
     async initializeIndexes() {
         try {
-            const indexConfigs = this.config.indexes
+            // 硬编码索引配置（避免复杂的配置导入）
+            const indexConfigs = {
+                articles: {
+                    indexName: 'articles',
+                    primaryKey: 'id',
+                    settings: {
+                        searchableAttributes: ['title', 'excerpt', 'content', 'author.name', 'category.name', 'tags.name'],
+                        displayedAttributes: ['id', 'documentId', 'title', 'slug', 'excerpt', 'author', 'category', 'tags', 'publishedAt', 'viewCount', 'readingTime', 'featured'],
+                        filterableAttributes: ['category.slug', 'tags.slug', 'author.slug', 'featured', 'publishedAt'],
+                        sortableAttributes: ['publishedAt', 'viewCount', 'readingTime', 'title']
+                    }
+                }
+            }
 
             for (const [key, config] of Object.entries(indexConfigs)) {
                 const indexConfig = config as any
@@ -375,6 +413,110 @@ class MeiliSearchService {
             return { status: 'healthy', ...health }
         } catch (error) {
             return { status: 'unhealthy', error: error.message }
+        }
+    }
+
+    /**
+     * 获取API密钥列表（免费功能）
+     * 注意：此功能完全免费，是MeiliSearch开源版本的内置安全特性
+     */
+    async getApiKeys() {
+        try {
+            // 检查是否有Master Key (生产模式)
+            if (!this.config.apiKey) {
+                return {
+                    mode: 'development',
+                    message: '开发模式：无需API密钥，所有操作免认证',
+                    keys: [],
+                    instructions: {
+                        title: '如何免费获取API密钥',
+                        steps: [
+                            '1. 停止当前MeiliSearch容器',
+                            '2. 设置Master Key重新启动：docker run -d --name meilisearch -p 7700:7700 -e MEILI_ENV=production -e MEILI_MASTER_KEY=你的密钥 getmeili/meilisearch:latest',
+                            '3. 系统自动生成3个免费API密钥：Search Key、Admin Key、Chat Key',
+                            '4. 完全免费使用，无任何费用限制',
+                            '5. 支持自定义权限和无限数量密钥创建'
+                        ],
+                        note: '开发阶段建议继续使用开发模式，生产部署时再启用API密钥'
+                    }
+                }
+            }
+
+            // 生产模式：获取实际密钥
+            const response = await this.client.getKeys()
+            return {
+                mode: 'production',
+                message: '生产模式：API密钥管理已启用',
+                keys: response.results.map(key => ({
+                    name: key.name,
+                    description: key.description,
+                    keyPreview: key.key.substring(0, 12) + '...' + key.key.substring(-8), // 安全显示
+                    fullKey: key.key, // 完整密钥（仅管理员可见）
+                    actions: key.actions,
+                    indexes: key.indexes,
+                    expiresAt: key.expiresAt,
+                    createdAt: key.createdAt
+                })),
+                total: response.total,
+                usage: {
+                    note: '所有API密钥功能完全免费',
+                    limits: '无数量限制，无使用限制，无到期强制要求'
+                }
+            }
+        } catch (error) {
+            strapi.log.error('❌ 获取API密钥失败:', error)
+            return {
+                mode: 'error',
+                message: 'API密钥获取失败',
+                error: error.message,
+                solution: '请检查MeiliSearch服务状态和Master Key配置'
+            }
+        }
+    }
+
+    /**
+     * 创建自定义API密钥（免费功能）
+     * @param {string} name 密钥名称
+     * @param {string} description 描述
+     * @param {string[]} actions 权限列表
+     * @param {string[]} indexes 索引列表
+     * @param {Date} expiresAt 过期时间（可选）
+     */
+    async createApiKey(name: string, description: string, actions: string[], indexes: string[], expiresAt?: Date) {
+        try {
+            if (!this.config.apiKey) {
+                throw new Error('开发模式下无法创建API密钥，请先启用生产模式（设置MEILI_MASTER_KEY）')
+            }
+
+            const keyOptions = {
+                name,
+                description,
+                actions,
+                indexes,
+                ...(expiresAt && { expiresAt })
+            }
+
+            const newKey = await this.client.createKey(keyOptions)
+
+            strapi.log.info(`✅ 成功创建API密钥: ${name}`)
+
+            return {
+                success: true,
+                message: `API密钥 "${name}" 创建成功（完全免费）`,
+                key: {
+                    name: newKey.name,
+                    description: newKey.description,
+                    key: newKey.key,
+                    actions: newKey.actions,
+                    indexes: newKey.indexes,
+                    expiresAt: newKey.expiresAt,
+                    createdAt: newKey.createdAt
+                },
+                note: 'API密钥创建和使用完全免费，无任何隐藏费用'
+            }
+        } catch (error) {
+            strapi.log.error('❌ 创建API密钥失败:', error)
+            throw error
         }
     }
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Icon, Loading } from '@/components/ui'
+import { getSuggestions, SearchHistoryManager } from '@/lib/meilisearch'
 
 export interface SearchSuggestion {
     id: string
@@ -65,38 +66,36 @@ export function SmartSearch({
     const dropdownRef = useRef<HTMLDivElement>(null)
     const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-    // 热门搜索推荐（模拟数据）
-    const popularSearches: SearchSuggestion[] = [
-        { id: 'p1', text: 'AI工具推荐', type: 'popular' as const, category: '工具', count: 1234 },
-        { id: 'p2', text: 'ChatGPT使用技巧', type: 'popular' as const, category: '教程', count: 987 },
-        { id: 'p3', text: 'AI变现案例', type: 'popular' as const, category: '案例', count: 765 },
-        { id: 'p4', text: 'Midjourney提示词', type: 'popular' as const, category: '工具', count: 654 },
-        { id: 'p5', text: 'AI写作助手', type: 'popular' as const, category: '工具', count: 543 },
-        { id: 'p6', text: '自动化工作流', type: 'popular' as const, category: '教程', count: 432 },
-    ]
+    // 热门搜索推荐（基于真实搜索历史）
+    const [popularSearches, setPopularSearches] = useState<SearchSuggestion[]>([])
+
+    // 初始化热门搜索
+    useEffect(() => {
+        if (isClient) {
+            const popular = SearchHistoryManager.getPopularSearches(6)
+            setPopularSearches(popular.map(item => ({
+                id: item.id,
+                text: item.text,
+                type: 'popular' as const,
+                count: item.count
+            })))
+        }
+    }, [isClient])
 
     // 客户端初始化
     useEffect(() => {
         setIsClient(true)
 
-        // 从本地存储加载搜索历史
-        const savedHistory = localStorage.getItem('search-history')
-        if (savedHistory) {
-            try {
-                const history = JSON.parse(savedHistory)
-                setSearchHistory(history.slice(0, 10)) // 最多保存10条
-            } catch (error) {
-                console.warn('Failed to load search history:', error)
-            }
-        }
-    }, [])
-
-    // 保存搜索历史到本地存储
-    const saveSearchHistory = useCallback((newHistory: SearchSuggestion[]) => {
+        // 从MeiliSearch历史管理器加载搜索历史
         try {
-            localStorage.setItem('search-history', JSON.stringify(newHistory))
+            const history = SearchHistoryManager.getHistory()
+            setSearchHistory(history.map(item => ({
+                id: item.id,
+                text: item.query,
+                type: 'history' as const
+            })).slice(0, 10))
         } catch (error) {
-            console.warn('Failed to save search history:', error)
+            console.warn('Failed to load search history:', error)
         }
     }, [])
 
@@ -104,40 +103,61 @@ export function SmartSearch({
     const addToHistory = useCallback((searchQuery: string) => {
         if (!searchQuery.trim()) return
 
-        const newHistoryItem: SearchSuggestion = {
-            id: `h${Date.now()}`,
-            text: searchQuery.trim(),
-            type: 'history' as const,
+        try {
+            // 使用MeiliSearch历史管理器保存
+            SearchHistoryManager.addToHistory(searchQuery)
+
+            // 更新本地状态
+            const newHistoryItem: SearchSuggestion = {
+                id: `h${Date.now()}`,
+                text: searchQuery.trim(),
+                type: 'history' as const,
+            }
+
+            setSearchHistory(prev => {
+                // 移除重复项
+                const filtered = prev.filter(item => item.text !== newHistoryItem.text)
+                // 添加到顶部，限制数量
+                return [newHistoryItem, ...filtered].slice(0, 10)
+            })
+
+            // 更新热门搜索（可能有变化）
+            const popular = SearchHistoryManager.getPopularSearches(6)
+            setPopularSearches(popular.map(item => ({
+                id: item.id,
+                text: item.text,
+                type: 'popular' as const,
+                count: item.count
+            })))
+        } catch (error) {
+            console.warn('Failed to save search history:', error)
         }
+    }, [])
 
-        setSearchHistory(prev => {
-            // 移除重复项
-            const filtered = prev.filter(item => item.text !== newHistoryItem.text)
-            // 添加到顶部，限制数量
-            const newHistory = [newHistoryItem, ...filtered].slice(0, 10)
-            saveSearchHistory(newHistory)
-            return newHistory
-        })
-    }, [saveSearchHistory])
-
-    // 获取搜索建议（模拟API调用）
+    // 获取搜索建议（使用MeiliSearch API）
     const fetchSuggestions = useCallback(async (searchQuery: string): Promise<SearchSuggestion[]> => {
         if (!searchQuery.trim()) return []
 
-        // 模拟API延迟
-        await new Promise(resolve => setTimeout(resolve, 100))
+        try {
+            const response = await getSuggestions(searchQuery, 5)
 
-        // 模拟搜索建议
-        const mockSuggestions: SearchSuggestion[] = [
-            { id: 's1', text: `${searchQuery} 教程`, type: 'suggestion' as const, category: '教程' },
-            { id: 's2', text: `${searchQuery} 工具推荐`, type: 'suggestion' as const, category: '工具' },
-            { id: 's3', text: `${searchQuery} 最佳实践`, type: 'suggestion' as const, category: '教程' },
-            { id: 's4', text: `${searchQuery} 案例分析`, type: 'suggestion' as const, category: '案例' },
-        ].filter(item =>
-            item.text.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+            // 转换MeiliSearch响应为组件需要的格式
+            return response.suggestions.map(suggestion => ({
+                id: suggestion.id,
+                text: suggestion.text,
+                type: 'suggestion' as const,
+                category: suggestion.category || '文章'
+            }))
+        } catch (error) {
+            console.warn('获取搜索建议失败:', error)
 
-        return mockSuggestions.slice(0, 4)
+            // 降级处理：返回基于查询的通用建议
+            return [
+                { id: 's1', text: `${searchQuery} 教程`, type: 'suggestion' as const, category: '教程' },
+                { id: 's2', text: `${searchQuery} 工具`, type: 'suggestion' as const, category: '工具' },
+                { id: 's3', text: `${searchQuery} 案例`, type: 'suggestion' as const, category: '案例' },
+            ]
+        }
     }, [])
 
     // 防抖搜索建议
@@ -276,8 +296,15 @@ export function SmartSearch({
 
     // 清空历史记录
     const clearHistory = () => {
-        setSearchHistory([])
-        saveSearchHistory([])
+        try {
+            SearchHistoryManager.clearHistory()
+            setSearchHistory([])
+
+            // 重新获取热门搜索（现在应该为空）
+            setPopularSearches([])
+        } catch (error) {
+            console.warn('清空搜索历史失败:', error)
+        }
     }
 
     const displaySuggestions = getDisplaySuggestions()
@@ -520,11 +547,11 @@ export function SmartSearch({
                             marginBottom: '4px',
                             borderTop: '1px solid rgba(42, 42, 42, 0.50)',
                         }}>
-                                                            <span style={{
-                                    color: 'var(--color-text-muted)',
-                                    fontSize: '13px',
-                                    fontWeight: 500
-                                }}>
+                            <span style={{
+                                color: 'var(--color-text-muted)',
+                                fontSize: '13px',
+                                fontWeight: 500
+                            }}>
                                 热门搜索
                             </span>
                         </div>

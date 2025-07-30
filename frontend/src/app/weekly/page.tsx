@@ -3,10 +3,10 @@
 import { Container } from '@/components/ui'
 import { PageHeader, SubscriptionSection } from '@/components/molecules'
 import {
-    WeeklySearchSection,
-    WeeklyArticleGrid,
-    WeeklyEmptyState,
-    WeeklyPagination
+  WeeklySearchSection,
+  WeeklyArticleGrid,
+  WeeklyEmptyState,
+  WeeklyPagination
 } from '@/components/molecules'
 import { useWeeklyLogicWithAPI } from '@/lib/hooks'
 import { PAGE_CONFIG, STYLES_CONFIG } from '@/constants/weeklyConfig'
@@ -33,125 +33,126 @@ import { PAGE_CONFIG, STYLES_CONFIG } from '@/constants/weeklyConfig'
  */
 export default function WeeklyPage() {
   // 使用API版本的Hook管理所有状态和逻辑
-    const {
-        searchQuery,
-        activeFilter,
-        isSearching,
+  const {
+    searchQuery,
+    activeFilter,
+    isSearching,
     isLoading,
     connectionError,
+    searchMode, // 新增：显示当前使用的搜索引擎
     articles,
-        totalPages,
+    totalPages,
     totalCount,
-        currentPage,
-        hasResults,
-        handleSearch,
-        handleFilterChange,
-        handlePageChange,
-        resetToDefaults,
+    currentPage,
+    hasResults,
+    handleSearch,
+    handleFilterChange,
+    handlePageChange,
+    resetToDefaults,
     clearSearch,
     refetch
   } = useWeeklyLogicWithAPI()
 
-    return (
-        <div style={{
-            color: 'var(--color-text-primary)',
-            fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
-            minHeight: '100vh',
-            paddingTop: STYLES_CONFIG.container.paddingTop
-        }}>
+  return (
+    <div style={{
+      color: 'var(--color-text-primary)',
+      fontFamily: "'Alibaba PuHuiTi 3.0', sans-serif",
+      minHeight: '100vh',
+      paddingTop: STYLES_CONFIG.container.paddingTop
+    }}>
+      <div style={{
+        paddingBottom: STYLES_CONFIG.container.paddingBottom
+      }}>
+        <Container size="xl">
+          {/* 页面头部 */}
+          <PageHeader
+            title={PAGE_CONFIG.title}
+            subtitle={PAGE_CONFIG.subtitle}
+            description=""
+            alignment="center"
+            className="page-header"
+          />
+
+          {/* 搜索和筛选区域 */}
+          <WeeklySearchSection
+            searchQuery={searchQuery}
+            activeFilter={activeFilter}
+            isSearching={isSearching}
+            totalResults={totalCount}
+            onSearch={handleSearch}
+            onFilterChange={handleFilterChange}
+            onClearSearch={clearSearch}
+          />
+
+          {/* 主要内容区域 */}
+          {isLoading ? (
+            /* 加载状态 */
             <div style={{
-                paddingBottom: STYLES_CONFIG.container.paddingBottom
+              textAlign: 'center',
+              padding: '80px 20px',
+              color: 'var(--color-text-secondary)'
             }}>
-                <Container size="xl">
-                    {/* 页面头部 */}
-                    <PageHeader
-                        title={PAGE_CONFIG.title}
-                        subtitle={PAGE_CONFIG.subtitle}
-                        description=""
-                        alignment="center"
-                        className="page-header"
-                    />
-
-                    {/* 搜索和筛选区域 */}
-                    <WeeklySearchSection
-                        searchQuery={searchQuery}
-                        activeFilter={activeFilter}
-                        isSearching={isSearching}
-                        totalResults={totalCount}
-                        onSearch={handleSearch}
-                        onFilterChange={handleFilterChange}
-                        onClearSearch={clearSearch}
-                    />
-
-                    {/* 主要内容区域 */}
-                    {isLoading ? (
-                        /* 加载状态 */
-                        <div style={{
-                            textAlign: 'center',
-                            padding: '80px 20px',
-                            color: 'var(--color-text-secondary)'
-                        }}>
-                            <div style={{ fontSize: 'var(--font-size-lg)' }}>
-                                加载文章中...
-                            </div>
-                        </div>
-                    ) : connectionError ? (
-                        /* 连接错误状态 */
-                        <div style={{
-                            textAlign: 'center',
-                            padding: '80px 20px',
-                            color: 'var(--color-text-secondary)'
-                        }}>
-                            <div style={{ fontSize: 'var(--font-size-lg)', marginBottom: '16px' }}>
-                                无法连接到后端服务
-                            </div>
-                            <button 
-                                onClick={refetch}
-                                style={{
-                                    background: 'var(--gradient-primary)',
-                                    border: 'none',
-                                    borderRadius: '8px',
-                                    padding: '8px 16px',
-                                    color: 'white',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                重试
-                            </button>
-                        </div>
-                    ) : hasResults ? (
-                        <>
-                            {/* 文章网格 */}
-                            <WeeklyArticleGrid articles={articles} />
-
-                            {/* 分页导航 */}
-                            <WeeklyPagination
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                onPageChange={handlePageChange}
-                            />
-
-                            {/* 订阅区域 */}
-                            <div style={{
-                                marginTop: totalPages > 1 ? '0px' : STYLES_CONFIG.spacing.sectionGap,
-                                marginBottom: '0px'
-                            }}>
-                                <SubscriptionSection />
-                            </div>
-                        </>
-                    ) : (
-                        /* 空状态 */
-                        <WeeklyEmptyState
-                            searchQuery={searchQuery}
-                            onSearch={handleSearch}
-                            onResetToDefaults={resetToDefaults}
-                        />
-                    )}
-                </Container>
+              <div style={{ fontSize: 'var(--font-size-lg)' }}>
+                加载文章中...
+              </div>
             </div>
+          ) : connectionError ? (
+            /* 连接错误状态 */
+            <div style={{
+              textAlign: 'center',
+              padding: '80px 20px',
+              color: 'var(--color-text-secondary)'
+            }}>
+              <div style={{ fontSize: 'var(--font-size-lg)', marginBottom: '16px' }}>
+                无法连接到后端服务
+              </div>
+              <button
+                onClick={refetch}
+                style={{
+                  background: 'var(--gradient-primary)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  color: 'white',
+                  cursor: 'pointer'
+                }}
+              >
+                重试
+              </button>
+            </div>
+          ) : hasResults ? (
+            <>
+              {/* 文章网格 */}
+              <WeeklyArticleGrid articles={articles} />
 
-            {/* CSS样式 - 响应式设计和动画 */}
-            <style jsx>{`
+              {/* 分页导航 */}
+              <WeeklyPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+
+              {/* 订阅区域 */}
+              <div style={{
+                marginTop: totalPages > 1 ? '0px' : STYLES_CONFIG.spacing.sectionGap,
+                marginBottom: '0px'
+              }}>
+                <SubscriptionSection />
+              </div>
+            </>
+          ) : (
+            /* 空状态 */
+            <WeeklyEmptyState
+              searchQuery={searchQuery}
+              onSearch={handleSearch}
+              onResetToDefaults={resetToDefaults}
+            />
+          )}
+        </Container>
+      </div>
+
+      {/* CSS样式 - 响应式设计和动画 */}
+      <style jsx>{`
         .search-container {
           max-width: ${STYLES_CONFIG.searchContainer.maxWidth};
         }
@@ -263,6 +264,51 @@ export default function WeeklyPage() {
           }
         }
       `}</style>
-        </div>
-    )
+
+              {/* 开发调试信息 - 扩展显示内容 */}
+        {process.env.NODE_ENV === 'development' && (
+            <div style={{
+                position: 'fixed',
+                bottom: '20px',
+                right: '20px',
+                padding: '12px 16px',
+                background: searchQuery ? 
+                    (searchMode === 'meilisearch' 
+                        ? 'rgba(59, 130, 246, 0.9)' 
+                        : 'rgba(34, 197, 94, 0.9)')
+                    : 'rgba(107, 114, 128, 0.9)',
+                color: 'white',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: 600,
+                zIndex: 1000,
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                minWidth: '200px'
+            }}>
+                {searchQuery ? (
+                    <>
+                        🔍 搜索引擎: {searchMode === 'meilisearch' ? 'MeiliSearch' : 'Strapi'}
+                        <br />
+                        📝 搜索词: "{searchQuery}"
+                        <br />
+                        📊 结果: {articles.length} 篇文章
+                        <br />
+                        {searchMode === 'strapi' && (
+                            <span style={{ color: '#FEF3C7' }}>
+                                ⚠️ MeiliSearch未启用
+                            </span>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        🏠 浏览模式
+                        <br />
+                        📄 文章: {articles.length} 篇
+                    </>
+                )}
+            </div>
+        )}
+    </div>
+  )
 } 
