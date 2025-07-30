@@ -4,7 +4,7 @@
     "info": {
         "singularName": "author",
         "pluralName": "authors",
-        "displayName": "Author",
+        "displayName": "作者",
         "description": "作者信息管理"
     },
     "options": {

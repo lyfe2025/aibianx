@@ -1,0 +1,177 @@
+{
+    "kind": "collectionType",
+    "collectionName": "seo_metrics",
+    "info": {
+        "singularName": "seo-metrics",
+        "pluralName": "seo-metrics-data",
+        "displayName": "SEO监控数据",
+        "description": "搜索引擎收录和性能监控数据 - 记录每日SEO指标，包括收录状况、性能数据、搜索流量等"
+    },
+    "options": {
+        "draftAndPublish": false,
+        "comment": "SEO监控数据表 - 按日期记录网站SEO相关指标，用于趋势分析和效果评估"
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "date": {
+            "type": "date",
+            "required": true,
+            "unique": true,
+            "description": "监控数据日期：每日一条记录，格式YYYY-MM-DD。用于区分不同日期的监控数据。"
+        },
+        "googleIndexedPages": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "description": "Google收录页面数：当前被Google搜索引擎收录的页面总数。通过site:domain.com查询或GSC API获取。"
+        },
+        "baiduIndexedPages": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "description": "百度收录页面数：当前被百度搜索引擎收录的页面总数。通过site:domain.com查询或百度API获取。"
+        },
+        "bingIndexedPages": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "description": "Bing收录页面数：当前被Bing搜索引擎收录的页面总数。通过Bing站长工具获取。"
+        },
+        "totalPages": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "description": "网站总页面数：网站当前的总页面数量，包括文章、分类、标签等所有页面。用于计算收录率。"
+        },
+        "avgPageLoadTime": {
+            "type": "decimal",
+            "default": 0,
+            "min": 0,
+            "description": "平均页面加载时间：网站页面的平均加载时间，单位秒。影响用户体验和SEO排名的重要指标。"
+        },
+        "mobileSpeedScore": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "max": 100,
+            "description": "移动端性能分数：Google PageSpeed Insights移动端测试分数（0-100分）。90分以上为优秀。"
+        },
+        "desktopSpeedScore": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "max": 100,
+            "description": "桌面端性能分数：Google PageSpeed Insights桌面端测试分数（0-100分）。90分以上为优秀。"
+        },
+        "coreWebVitalsLCP": {
+            "type": "decimal",
+            "default": 0,
+            "min": 0,
+            "description": "LCP加载性能：Largest Contentful Paint（最大内容绘制）时间，单位秒。良好：≤2.5s，需要改进：2.5s-4s，较差：>4s"
+        },
+        "coreWebVitalsFID": {
+            "type": "decimal",
+            "default": 0,
+            "min": 0,
+            "description": "FID交互性能：First Input Delay（首次输入延迟）时间，单位毫秒。良好：≤100ms，需要改进：100ms-300ms，较差：>300ms"
+        },
+        "coreWebVitalsCLS": {
+            "type": "decimal",
+            "default": 0,
+            "min": 0,
+            "description": "CLS视觉稳定性：Cumulative Layout Shift（累积布局偏移）分数。良好：≤0.1，需要改进：0.1-0.25，较差：>0.25"
+        },
+        "organicTraffic": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "description": "有机搜索流量：当日通过搜索引擎自然结果访问的用户数量。不包括付费广告流量。"
+        },
+        "organicClicks": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "description": "搜索结果点击数：用户在搜索结果页面点击网站链接的次数。来源于Google Search Console数据。"
+        },
+        "organicImpressions": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "description": "搜索结果展示数：网站在搜索结果中被展示的次数。展示不等于点击，用于计算点击率。"
+        },
+        "avgClickThroughRate": {
+            "type": "decimal",
+            "default": 0,
+            "min": 0,
+            "max": 100,
+            "description": "平均点击率：搜索结果的点击率百分比。计算公式：(点击数/展示数)*100。一般2-5%为正常范围。"
+        },
+        "avgPosition": {
+            "type": "decimal",
+            "default": 0,
+            "min": 0,
+            "description": "平均搜索排名：网站关键词在搜索结果中的平均排名位置。数值越小排名越靠前，1为最佳位置。"
+        },
+        "keywordRankings": {
+            "type": "json",
+            "description": "关键词排名详情：具体关键词的排名数据。JSON格式：[{keyword: '关键词', googleRank: 排名, baiduRank: 排名, changeFromPrev: 变化}]"
+        },
+        "topQueries": {
+            "type": "json",
+            "description": "热门搜索查询：带来流量最多的搜索关键词。JSON格式：[{query: '查询词', clicks: 点击数, impressions: 展示数, ctr: 点击率, position: 平均排名}]"
+        },
+        "topPages": {
+            "type": "json",
+            "description": "热门页面数据：表现最好的页面统计。JSON格式：[{url: '页面地址', clicks: 点击数, impressions: 展示数, ctr: 点击率, position: 平均排名}]"
+        },
+        "crawlErrors": {
+            "type": "integer",
+            "default": 0,
+            "min": 0,
+            "description": "爬虫错误数量：搜索引擎爬取网站时遇到的错误数量。包括404错误、服务器错误、超时等。应保持为0。"
+        },
+        "indexCoverage": {
+            "type": "json",
+            "description": "索引覆盖率统计：页面索引状态详情。JSON格式：{valid: 有效页面数, error: 错误页面数, excluded: 排除页面数, warning: 警告页面数}"
+        },
+        "sitemapStatus": {
+            "type": "enumeration",
+            "enum": [
+                "status_normal",
+                "status_error",
+                "status_warning",
+                "status_not_submitted"
+            ],
+            "default": "status_not_submitted",
+            "description": "Sitemap状态：网站地图的提交和处理状态。status_normal=正常，status_error=错误，status_warning=警告，status_not_submitted=未提交。"
+        },
+        "robotsTxtStatus": {
+            "type": "enumeration",
+            "enum": [
+                "status_normal",
+                "status_error",
+                "status_warning",
+                "status_not_detected"
+            ],
+            "default": "status_not_detected",
+            "description": "Robots.txt状态：robots.txt文件的状态检查。status_normal=正常，status_error=错误，status_warning=警告，status_not_detected=未检测。"
+        },
+        "dataSource": {
+            "type": "enumeration",
+            "enum": [
+                "source_manual",
+                "source_google_api",
+                "source_baidu_api",
+                "source_third_party",
+                "source_auto_collect"
+            ],
+            "default": "source_manual",
+            "description": "数据来源方式：标识此条数据的获取方式。source_manual=手动输入，source_google_api=Google API，source_baidu_api=百度API，source_third_party=第三方工具，source_auto_collect=自动采集。"
+        },
+        "notes": {
+            "type": "text",
+            "maxLength": 500,
+            "description": "备注信息：记录当日SEO相关的重要事件、异常情况、优化措施等。如：'发布5篇新文章'、'修复404错误10个'等。"
+        }
+    }
+}

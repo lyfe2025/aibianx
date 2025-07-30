@@ -377,7 +377,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   collectionName: 'articles';
   info: {
     description: '\u6587\u7AE0\u5185\u5BB9\u7BA1\u7406';
-    displayName: 'Article';
+    displayName: '\u6587\u7AE0';
     pluralName: 'articles';
     singularName: 'article';
   };
@@ -446,7 +446,7 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   collectionName: 'authors';
   info: {
     description: '\u4F5C\u8005\u4FE1\u606F\u7BA1\u7406';
-    displayName: 'Author';
+    displayName: '\u4F5C\u8005';
     pluralName: 'authors';
     singularName: 'author';
   };
@@ -500,7 +500,7 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   collectionName: 'categories';
   info: {
     description: '\u6587\u7AE0\u5206\u7C7B\u7BA1\u7406';
-    displayName: 'Category';
+    displayName: '\u5206\u7C7B';
     pluralName: 'categories';
     singularName: 'category';
   };
@@ -552,11 +552,304 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiSeoMetricsSeoMetrics extends Struct.CollectionTypeSchema {
+  collectionName: 'seo_metrics';
+  info: {
+    description: '\u641C\u7D22\u5F15\u64CE\u6536\u5F55\u548C\u6027\u80FD\u76D1\u63A7\u6570\u636E - \u8BB0\u5F55\u6BCF\u65E5SEO\u6307\u6807\uFF0C\u5305\u62EC\u6536\u5F55\u72B6\u51B5\u3001\u6027\u80FD\u6570\u636E\u3001\u641C\u7D22\u6D41\u91CF\u7B49';
+    displayName: 'SEO\u76D1\u63A7\u6570\u636E';
+    pluralName: 'seo-metrics-data';
+    singularName: 'seo-metrics';
+  };
+  options: {
+    comment: 'SEO\u76D1\u63A7\u6570\u636E\u8868 - \u6309\u65E5\u671F\u8BB0\u5F55\u7F51\u7AD9SEO\u76F8\u5173\u6307\u6807\uFF0C\u7528\u4E8E\u8D8B\u52BF\u5206\u6790\u548C\u6548\u679C\u8BC4\u4F30';
+    draftAndPublish: false;
+  };
+  attributes: {
+    avgClickThroughRate: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 100;
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    avgPageLoadTime: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    avgPosition: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    baiduIndexedPages: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    bingIndexedPages: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    coreWebVitalsCLS: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    coreWebVitalsFID: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    coreWebVitalsLCP: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    crawlErrors: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    dataSource: Schema.Attribute.Enumeration<
+      [
+        'source_manual',
+        'source_google_api',
+        'source_baidu_api',
+        'source_third_party',
+        'source_auto_collect',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'source_manual'>;
+    date: Schema.Attribute.Date &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    desktopSpeedScore: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 100;
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    googleIndexedPages: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    indexCoverage: Schema.Attribute.JSON;
+    keywordRankings: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::seo-metrics.seo-metrics'
+    > &
+      Schema.Attribute.Private;
+    mobileSpeedScore: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 100;
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    notes: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 500;
+      }>;
+    organicClicks: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    organicImpressions: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    organicTraffic: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    publishedAt: Schema.Attribute.DateTime;
+    robotsTxtStatus: Schema.Attribute.Enumeration<
+      ['status_normal', 'status_error', 'status_warning', 'status_not_detected']
+    > &
+      Schema.Attribute.DefaultTo<'status_not_detected'>;
+    sitemapStatus: Schema.Attribute.Enumeration<
+      [
+        'status_normal',
+        'status_error',
+        'status_warning',
+        'status_not_submitted',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'status_not_submitted'>;
+    topPages: Schema.Attribute.JSON;
+    topQueries: Schema.Attribute.JSON;
+    totalPages: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
+  collectionName: 'site_configs';
+  info: {
+    description: '\u5168\u7AD9SEO\u548C\u641C\u7D22\u5F15\u64CE\u914D\u7F6E\u7BA1\u7406 - \u7EDF\u4E00\u7BA1\u7406\u7F51\u7AD9\u57FA\u672C\u4FE1\u606F\u3001\u641C\u7D22\u5F15\u64CE\u9A8C\u8BC1\u4EE3\u7801\u3001\u793E\u4EA4\u5A92\u4F53\u914D\u7F6E\u7B49';
+    displayName: '\u7F51\u7AD9\u914D\u7F6E';
+    pluralName: 'site-configs';
+    singularName: 'site-config';
+  };
+  options: {
+    comment: '\u7F51\u7AD9\u914D\u7F6E\u5355\u4F8B - \u5B58\u50A8\u5168\u7AD9\u901A\u7528\u7684SEO\u548C\u57FA\u7840\u914D\u7F6E\u4FE1\u606F';
+    draftAndPublish: false;
+  };
+  attributes: {
+    analyticsId: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 50;
+      }>;
+    baiduSiteToken: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    baiduSubmissionStatus: Schema.Attribute.Enumeration<
+      [
+        'status_not_submitted',
+        'status_submitted',
+        'status_pending',
+        'status_indexed',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'status_not_submitted'>;
+    baiduVerificationCode: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    bingVerificationCode: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    defaultOgImage: Schema.Attribute.Media<'images'>;
+    enableIndexingMonitoring: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    enablePerformanceTracking: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    googleSubmissionStatus: Schema.Attribute.Enumeration<
+      [
+        'status_not_submitted',
+        'status_submitted',
+        'status_pending',
+        'status_indexed',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'status_not_submitted'>;
+    googleVerificationCode: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    gscPropertyUrl: Schema.Attribute.String;
+    lastSitemapUpdate: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::site-config.site-config'
+    > &
+      Schema.Attribute.Private;
+    primaryKeywords: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    siteDescription: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 160;
+      }> &
+      Schema.Attribute.DefaultTo<'\u6C47\u805AAI\u9886\u57DF\u4E13\u5BB6\u5B9E\u6218\u7ECF\u9A8C\uFF0C\u6BCF\u5468\u5206\u4EAB\u6700\u65B0\u53D8\u73B0\u673A\u4F1A\u4E0E\u5B9E\u7528\u5DE5\u5177'>;
+    siteName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }> &
+      Schema.Attribute.DefaultTo<'AI\u53D8\u73B0\u4E4B\u8DEF'>;
+    siteUrl: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'https://aibianx.com'>;
+    twitterHandle: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 50;
+      }> &
+      Schema.Attribute.DefaultTo<'@aibianx'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    yandexVerificationCode: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+  };
+}
+
 export interface ApiTagTag extends Struct.CollectionTypeSchema {
   collectionName: 'tags';
   info: {
     description: '\u6807\u7B7E\u7BA1\u7406';
-    displayName: 'Tag';
+    displayName: '\u6807\u7B7E';
     pluralName: 'tags';
     singularName: 'tag';
   };
@@ -1108,6 +1401,8 @@ declare module '@strapi/strapi' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
+      'api::seo-metrics.seo-metrics': ApiSeoMetricsSeoMetrics;
+      'api::site-config.site-config': ApiSiteConfigSiteConfig;
       'api::tag.tag': ApiTagTag;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

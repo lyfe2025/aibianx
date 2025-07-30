@@ -1,0 +1,126 @@
+{
+    "kind": "singleType",
+    "collectionName": "site_configs",
+    "info": {
+        "singularName": "site-config",
+        "pluralName": "site-configs",
+        "displayName": "网站配置",
+        "description": "全站SEO和搜索引擎配置管理 - 统一管理网站基本信息、搜索引擎验证代码、社交媒体配置等"
+    },
+    "options": {
+        "draftAndPublish": false,
+        "comment": "网站配置单例 - 存储全站通用的SEO和基础配置信息"
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "siteName": {
+            "type": "string",
+            "required": true,
+            "default": "AI变现之路",
+            "maxLength": 100,
+            "description": "网站名称：显示在浏览器标题栏、搜索结果和社交分享中。建议保持简洁且包含核心关键词。"
+        },
+        "siteDescription": {
+            "type": "text",
+            "required": true,
+            "maxLength": 160,
+            "default": "汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具",
+            "description": "网站描述：显示在搜索结果摘要中的描述文字。长度控制在150-160字符以内，包含核心关键词。"
+        },
+        "siteUrl": {
+            "type": "string",
+            "required": true,
+            "default": "https://aibianx.com",
+            "description": "网站主域名：完整的网站地址（含https://），用于生成sitemap、canonical链接和社交分享。"
+        },
+        "googleVerificationCode": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Google Search Console验证代码：从Google站长工具获取的meta验证标签content属性值。格式如：abcdefghijklmnop"
+        },
+        "baiduVerificationCode": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "百度站长平台验证代码：从百度站长工具获取的验证代码。格式如：codeva-abcdefghijklmnop"
+        },
+        "bingVerificationCode": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Bing站长工具验证代码：从Bing Webmaster Tools获取的验证代码。格式如：1234567890ABCDEF"
+        },
+        "yandexVerificationCode": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Yandex站长工具验证代码：从Yandex Webmaster获取的验证代码。格式如：1234567890abcdef"
+        },
+        "defaultOgImage": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": [
+                "images"
+            ],
+            "description": "默认社交分享图片：当页面没有设置专门分享图时使用。推荐尺寸1200x630px，支持JPG/PNG格式。"
+        },
+        "twitterHandle": {
+            "type": "string",
+            "maxLength": 50,
+            "default": "@aibianx",
+            "description": "Twitter账号：网站官方Twitter账号，用于Twitter Cards标签。格式：@用户名"
+        },
+        "googleSubmissionStatus": {
+            "type": "enumeration",
+            "enum": [
+                "status_not_submitted",
+                "status_submitted",
+                "status_pending",
+                "status_indexed"
+            ],
+            "default": "status_not_submitted",
+            "description": "Google收录状态：追踪网站在Google Search Console的提交和收录状态。status_not_submitted=未提交，status_submitted=已提交，status_pending=待审核，status_indexed=已收录。"
+        },
+        "baiduSubmissionStatus": {
+            "type": "enumeration",
+            "enum": [
+                "status_not_submitted",
+                "status_submitted",
+                "status_pending",
+                "status_indexed"
+            ],
+            "default": "status_not_submitted",
+            "description": "百度收录状态：追踪网站在百度站长平台的提交和收录状态。status_not_submitted=未提交，status_submitted=已提交，status_pending=待审核，status_indexed=已收录。"
+        },
+        "lastSitemapUpdate": {
+            "type": "datetime",
+            "description": "Sitemap更新时间：记录最后一次更新sitemap.xml的时间，用于SEO监控。"
+        },
+        "enablePerformanceTracking": {
+            "type": "boolean",
+            "default": true,
+            "description": "启用性能监控：是否开启PageSpeed Insights、Core Web Vitals等性能指标监控。"
+        },
+        "enableIndexingMonitoring": {
+            "type": "boolean",
+            "default": true,
+            "description": "启用收录监控：是否开启搜索引擎收录情况的定期检查和统计。"
+        },
+        "primaryKeywords": {
+            "type": "text",
+            "description": "主要关键词：网站核心关键词列表，用逗号分隔。用于关键词排名监控和SEO优化。示例：AI变现,ChatGPT赚钱,AI工具"
+        },
+        "analyticsId": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Google Analytics ID：GA4测量ID，格式如G-XXXXXXXXXX。用于网站流量统计和用户行为分析。"
+        },
+        "gscPropertyUrl": {
+            "type": "string",
+            "description": "Google Search Console资源URL：在GSC中验证的网站地址，用于API数据获取。"
+        },
+        "baiduSiteToken": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "百度推送Token：百度站长平台的主动推送密钥，用于自动提交新页面到百度。"
+        }
+    }
+}

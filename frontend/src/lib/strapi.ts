@@ -5,6 +5,76 @@
 
 import { ArticleCardData } from '@/components/molecules/ArticleCard/ArticleCard'
 
+// SiteConfig相关类型定义
+interface StrapiSiteConfig {
+    id: number
+    documentId: string
+    siteName: string
+    siteDescription: string
+    siteUrl: string
+    googleVerificationCode?: string | null
+    baiduVerificationCode?: string | null
+    bingVerificationCode?: string | null
+    yandexVerificationCode?: string | null
+    twitterHandle?: string | null
+    googleSubmissionStatus: '未提交' | '已提交' | '待审核' | '已收录'
+    baiduSubmissionStatus: '未提交' | '已提交' | '待审核' | '已收录'
+    lastSitemapUpdate?: string | null
+    enablePerformanceTracking: boolean
+    enableIndexingMonitoring: boolean
+    primaryKeywords?: string | null
+    analyticsId?: string | null
+    gscPropertyUrl?: string | null
+    baiduSiteToken?: string | null
+    defaultOgImage?: {
+        id: number
+        documentId: string
+        name: string
+        url: string
+        width: number
+        height: number
+        alternativeText?: string | null
+    } | null
+    createdAt: string
+    updatedAt: string
+}
+
+// 前端使用的SiteConfig类型
+interface SiteConfigData {
+    siteName: string
+    siteDescription: string
+    siteUrl: string
+    twitterHandle: string
+    defaultOgImage: string | null
+    primaryKeywords: string[]
+    verificationCodes: {
+        google: string
+        baidu: string
+        bing: string
+        yandex: string
+    }
+    submissionStatus: {
+        google: string
+        baidu: string
+    }
+    analyticsId: string
+}
+
+// SEO监控数据类型
+interface SeoMetricsData {
+    date: string
+    googleIndexedPages: number
+    baiduIndexedPages: number
+    totalPages: number
+    mobileSpeedScore: number
+    desktopSpeedScore: number
+    organicTraffic: number
+    avgPosition: number
+    crawlErrors: number
+    sitemapStatus: string
+    robotsTxtStatus: string
+}
+
 // Strapi API配置
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
 const API_TOKEN = process.env.STRAPI_API_TOKEN
@@ -368,6 +438,281 @@ export async function checkStrapiConnection(): Promise<boolean> {
         return response.ok
     } catch (error) {
         console.error('Strapi连接检查失败:', error)
+        return false
+    }
+}
+
+/**
+ * 转换Strapi网站配置数据为前端使用格式
+ */
+function transformStrapiSiteConfig(strapiConfig: StrapiSiteConfig): SiteConfigData {
+    return {
+        siteName: strapiConfig.siteName || 'AI变现之路',
+        siteDescription: strapiConfig.siteDescription || '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具',
+        siteUrl: strapiConfig.siteUrl || 'https://aibianx.com',
+        twitterHandle: strapiConfig.twitterHandle || '@aibianx',
+        defaultOgImage: strapiConfig.defaultOgImage?.url || null,
+        primaryKeywords: strapiConfig.primaryKeywords
+            ? strapiConfig.primaryKeywords.split(',').map(k => k.trim()).filter(k => k)
+            : [],
+        verificationCodes: {
+            google: strapiConfig.googleVerificationCode || '',
+            baidu: strapiConfig.baiduVerificationCode || '',
+            bing: strapiConfig.bingVerificationCode || '',
+            yandex: strapiConfig.yandexVerificationCode || '',
+        },
+        submissionStatus: {
+            google: strapiConfig.googleSubmissionStatus || '未提交',
+            baidu: strapiConfig.baiduSubmissionStatus || '未提交',
+        },
+        analyticsId: strapiConfig.analyticsId || '',
+    }
+}
+
+/**
+ * 获取网站配置
+ */
+export async function getSiteConfig(): Promise<SiteConfigData> {
+    try {
+        const response = await fetch(`${STRAPI_URL}/api/site-config?populate=defaultOgImage`, {
+            headers: getHeaders(),
+            next: { revalidate: 300 }, // 5分钟缓存
+        })
+
+        if (!response.ok) {
+            throw new Error(`获取网站配置失败: ${response.status}`)
+        }
+
+        const data: StrapiResponse<StrapiSiteConfig> = await response.json()
+
+        // 处理singleType的响应格式 - 可能返回数组或单个对象
+        const siteConfig = Array.isArray(data.data) ? data.data[0] : data.data || data
+
+        if (!siteConfig) {
+            throw new Error('No site config found')
+        }
+
+        return transformStrapiSiteConfig(siteConfig as StrapiSiteConfig)
+    } catch (error) {
+        console.error('获取网站配置失败:', error)
+
+        // 返回默认配置
+        return {
+            siteName: 'AI变现之路',
+            siteDescription: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具',
+            siteUrl: 'https://aibianx.com',
+            twitterHandle: '@aibianx',
+            defaultOgImage: null,
+            primaryKeywords: ['AI变现', 'ChatGPT赚钱', 'AI工具', '人工智能创业'],
+            verificationCodes: {
+                google: '',
+                baidu: '',
+                bing: '',
+                yandex: '',
+            },
+            submissionStatus: {
+                google: 'status_not_submitted',
+                baidu: 'status_not_submitted',
+            },
+            analyticsId: '',
+        }
+    }
+}
+
+/**
+ * 获取搜索引擎验证代码（专用于前端meta标签）
+ */
+export async function getVerificationCodes(): Promise<{
+    google: string
+    baidu: string
+    bing: string
+    yandex: string
+}> {
+    try {
+        const response = await fetch(`${STRAPI_URL}/api/site-config/verification-codes`, {
+            headers: getHeaders(),
+            next: { revalidate: 3600 }, // 1小时缓存
+        })
+
+        if (!response.ok) {
+            throw new Error(`获取验证代码失败: ${response.status}`)
+        }
+
+        const result = await response.json()
+        return result.data
+    } catch (error) {
+        console.error('获取验证代码失败:', error)
+        return {
+            google: '',
+            baidu: '',
+            bing: '',
+            yandex: '',
+        }
+    }
+}
+
+/**
+ * 获取最新SEO监控数据
+ */
+export async function getLatestSeoMetrics(): Promise<SeoMetricsData | null> {
+    try {
+        const response = await fetch(`${STRAPI_URL}/api/seo-metrics-data?sort[0]=date:desc&pagination[limit]=1&populate=*`, {
+            headers: getHeaders(),
+            next: { revalidate: 300 }, // 5分钟缓存
+        })
+
+        if (!response.ok) {
+            throw new Error(`获取SEO监控数据失败: ${response.status}`)
+        }
+
+        const result = await response.json()
+
+        if (!result.data || result.data.length === 0) {
+            return null
+        }
+
+        return transformStrapiSeoMetrics(result.data[0])
+    } catch (error) {
+        console.error('获取SEO监控数据失败:', error)
+        return null
+    }
+}
+
+/**
+ * 获取收录统计摘要
+ */
+export async function getIndexingSummary(days: number = 30): Promise<{
+    lastUpdate: string | null
+    totalPages: number
+    indexedPages: { google: number; baidu: number; bing: number }
+    indexingRate: { google: number; baidu: number; bing: number }
+    crawlErrors: number
+    sitemapStatus: string
+    robotsTxtStatus: string
+} | null> {
+    try {
+        const response = await fetch(`${STRAPI_URL}/api/seo-metrics-data?sort[0]=date:desc&pagination[limit]=1&populate=*`, {
+            headers: getHeaders(),
+            next: { revalidate: 300 }, // 5分钟缓存
+        })
+
+        if (!response.ok) {
+            throw new Error(`获取收录摘要失败: ${response.status}`)
+        }
+
+        const result = await response.json()
+
+        if (!result.data || result.data.length === 0) {
+            return null
+        }
+
+        const latest = result.data[0]
+        const totalPages = latest.totalPages || 1
+
+        return {
+            lastUpdate: latest.date,
+            totalPages: latest.totalPages || 0,
+            indexedPages: {
+                google: latest.googleIndexedPages || 0,
+                baidu: latest.baiduIndexedPages || 0,
+                bing: latest.bingIndexedPages || 0
+            },
+            indexingRate: {
+                google: Math.round(((latest.googleIndexedPages || 0) / totalPages) * 100),
+                baidu: Math.round(((latest.baiduIndexedPages || 0) / totalPages) * 100),
+                bing: Math.round(((latest.bingIndexedPages || 0) / totalPages) * 100)
+            },
+            crawlErrors: latest.crawlErrors || 0,
+            sitemapStatus: latest.sitemapStatus || 'status_not_submitted',
+            robotsTxtStatus: latest.robotsTxtStatus || 'status_not_detected'
+        }
+    } catch (error) {
+        console.error('获取收录摘要失败:', error)
+        return null
+    }
+}
+
+/**
+ * 获取性能监控摘要
+ */
+export async function getPerformanceSummary(): Promise<{
+    lastUpdate: string | null
+    avgPageLoadTime: number
+    speedScores: { mobile: number; desktop: number }
+    coreWebVitals: { lcp: number; fid: number; cls: number }
+} | null> {
+    try {
+        const response = await fetch(`${STRAPI_URL}/api/seo-metrics-data?sort[0]=date:desc&pagination[limit]=1&populate=*`, {
+            headers: getHeaders(),
+            next: { revalidate: 300 }, // 5分钟缓存
+        })
+
+        if (!response.ok) {
+            throw new Error(`获取性能摘要失败: ${response.status}`)
+        }
+
+        const result = await response.json()
+
+        if (!result.data || result.data.length === 0) {
+            return null
+        }
+
+        const latest = result.data[0]
+
+        return {
+            lastUpdate: latest.date,
+            avgPageLoadTime: latest.avgPageLoadTime || 0,
+            speedScores: {
+                mobile: latest.mobileSpeedScore || 0,
+                desktop: latest.desktopSpeedScore || 0
+            },
+            coreWebVitals: {
+                lcp: latest.coreWebVitalsLCP || 0,
+                fid: latest.coreWebVitalsFID || 0,
+                cls: latest.coreWebVitalsCLS || 0
+            }
+        }
+    } catch (error) {
+        console.error('获取性能摘要失败:', error)
+        return null
+    }
+}
+
+/**
+ * 更新sitemap时间戳
+ */
+export async function updateSitemapTimestamp(): Promise<boolean> {
+    try {
+        // 获取当前配置
+        const getResponse = await fetch(`${STRAPI_URL}/api/site-config?populate=*`, {
+            headers: getHeaders(),
+        })
+
+        if (!getResponse.ok) {
+            throw new Error('获取配置失败')
+        }
+
+        const result = await getResponse.json()
+        const data = Array.isArray(result.data) ? result.data[0] : result.data
+
+        if (!data) {
+            throw new Error('配置不存在')
+        }
+
+        // 更新时间戳
+        const updateResponse = await fetch(`${STRAPI_URL}/api/site-config/${data.documentId}`, {
+            method: 'PUT',
+            headers: getHeaders(),
+            body: JSON.stringify({
+                data: {
+                    lastSitemapUpdate: new Date().toISOString()
+                }
+            })
+        })
+
+        return updateResponse.ok
+    } catch (error) {
+        console.error('更新sitemap时间戳失败:', error)
         return false
     }
 } 

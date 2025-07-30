@@ -8,6 +8,7 @@ import {
   MembershipModal,
   PaymentModal
 } from '@/components/organisms'
+import { getSiteConfig } from '@/lib/strapi'
 import './globals.css'
 
 /**
@@ -38,71 +39,85 @@ import './globals.css'
  * - 全局样式引用
  */
 
-const siteConfig = {
-  name: 'AI变现之路',
-  description: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具。助你掌握AI变现技能，实现财务突破。',
-  keywords: ['AI变现', 'AI商业化', 'ChatGPT', 'Midjourney', '人工智能', 'AI工具', 'AI赚钱', 'AI创业', 'AI教程', 'AI应用'],
-}
+/**
+ * 生成动态metadata
+ */
+async function generateRootMetadata(): Promise<Metadata> {
+  // 获取动态网站配置
+  const siteConfig = await getSiteConfig()
 
-const metadata: Metadata = {
-  title: {
-    default: `${siteConfig.name} - 专业的AI商业化平台`,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  keywords: siteConfig.keywords,
-  authors: [
-    {
-      name: 'AI变现之路团队',
-      url: '/about',
+  return {
+    title: {
+      default: `${siteConfig.siteName} - 专业的AI商业化平台`,
+      template: `%s | ${siteConfig.siteName}`,
     },
-  ],
-  creator: 'AI变现之路',
-  metadataBase: new URL('https://aibianx.com'),
-  openGraph: {
-    type: 'website',
-    locale: 'zh_CN',
-    url: 'https://aibianx.com',
-    siteName: 'AI变现之路',
-    title: 'AI变现之路 - 专业的AI商业化平台',
-    description: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具。助你掌握AI变现技能，实现财务突破。',
-    images: [
+    description: siteConfig.siteDescription,
+    keywords: siteConfig.primaryKeywords,
+    authors: [
       {
-        url: '/og-image.jpg', // 使用本地资源
-        width: 1200,
-        height: 630,
-        alt: 'AI变现之路 - 专业的AI商业化平台',
+        name: `${siteConfig.siteName}团队`,
+        url: '/about',
       },
     ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@aibianx',
-    creator: '@aibianx',
-    title: 'AI变现之路 - 专业的AI商业化平台',
-    description: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具。助你掌握AI变现技能，实现财务突破。',
-    images: ['/og-image.jpg'], // 使用本地资源
-  },
-  verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code',
-    yahoo: 'your-yahoo-verification-code',
-  },
-  alternates: {
-    canonical: 'https://aibianx.com',
-    languages: {
-      'zh-CN': 'https://aibianx.com',
+    creator: siteConfig.siteName,
+    metadataBase: new URL(siteConfig.siteUrl),
+    openGraph: {
+      type: 'website',
+      locale: 'zh_CN',
+      url: siteConfig.siteUrl,
+      siteName: siteConfig.siteName,
+      title: `${siteConfig.siteName} - 专业的AI商业化平台`,
+      description: siteConfig.siteDescription,
+      images: [
+        {
+          url: siteConfig.defaultOgImage || '/og-image.jpg',
+          width: 1200,
+          height: 630,
+          alt: `${siteConfig.siteName} - 专业的AI商业化平台`,
+        },
+      ],
     },
-  },
+    twitter: {
+      card: 'summary_large_image',
+      site: siteConfig.twitterHandle,
+      creator: siteConfig.twitterHandle,
+      title: `${siteConfig.siteName} - 专业的AI商业化平台`,
+      description: siteConfig.siteDescription,
+      images: [siteConfig.defaultOgImage || '/og-image.jpg'],
+    },
+    verification: {
+      google: siteConfig.verificationCodes.google || undefined,
+      yandex: siteConfig.verificationCodes.yandex || undefined,
+      other: {
+        baidu: siteConfig.verificationCodes.baidu || undefined,
+        bing: siteConfig.verificationCodes.bing || undefined,
+      },
+    },
+    alternates: {
+      canonical: siteConfig.siteUrl,
+      languages: {
+        'zh-CN': siteConfig.siteUrl,
+      },
+    },
+    other: {
+      // Google Analytics
+      ...(siteConfig.analyticsId && {
+        'google-site-verification': siteConfig.verificationCodes.google,
+      }),
+    },
+  }
 }
 
-export { metadata }
+// 导出动态生成的metadata
+export const metadata = await generateRootMetadata()
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // 获取动态网站配置
+  const siteConfig = await getSiteConfig()
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
@@ -128,32 +143,53 @@ export default function RootLayout({
             }
           `
         }} />
-        {/* 结构化数据 - 增强SEO效果 */}
+        {/* 动态结构化数据 - 增强SEO效果 */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "name": "AI变现之路",
-              "description": "汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具",
-              "url": "https://aibianx.com",
+              "name": siteConfig.siteName,
+              "description": siteConfig.siteDescription,
+              "url": siteConfig.siteUrl,
               "publisher": {
                 "@type": "Organization",
-                "name": "AI变现之路",
+                "name": siteConfig.siteName,
                 "logo": {
                   "@type": "ImageObject",
-                  "url": "/icons/logo-main.svg"
+                  "url": `${siteConfig.siteUrl}/icons/logo-main.svg`
                 }
               },
               "potentialAction": {
                 "@type": "SearchAction",
-                "target": "https://aibianx.com/weekly?q={search_term_string}",
+                "target": `${siteConfig.siteUrl}/weekly?q={search_term_string}`,
                 "query-input": "required name=search_term_string"
-              }
+              },
+              "keywords": siteConfig.primaryKeywords.join(', '),
+              "sameAs": [
+                `https://twitter.com/${siteConfig.twitterHandle.replace('@', '')}`
+              ]
             }),
           }}
         />
+
+        {/* Google Analytics (如果配置了) */}
+        {siteConfig.analyticsId && (
+          <>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${siteConfig.analyticsId}`} />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${siteConfig.analyticsId}');
+                `,
+              }}
+            />
+          </>
+        )}
       </head>
       <body>
         {/* 主题初始化 - 确保主题正确应用 */}
