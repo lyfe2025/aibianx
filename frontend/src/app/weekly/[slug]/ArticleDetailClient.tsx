@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { incrementArticleView } from '@/lib/strapi'
 import { Icon, Avatar, TagList, GradientButton } from '@/components/ui'
 import {
     ArticleContent,
@@ -19,6 +20,23 @@ interface ArticleDetailClientProps {
 export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
     const router = useRouter()
     const [fontSize, setFontSize] = useState(16)
+    const [currentViewCount, setCurrentViewCount] = useState(article.viewCount)
+
+    // 增加文章浏览量
+    useEffect(() => {
+        const incrementView = async () => {
+            try {
+                const newViewCount = await incrementArticleView(article.id)
+                if (newViewCount !== null) {
+                    setCurrentViewCount(String(newViewCount))
+                }
+            } catch (error) {
+                console.error('增加浏览量失败:', error)
+            }
+        }
+
+        incrementView()
+    }, [article.id])
 
     // 返回上一页
     const handleGoBack = () => {
@@ -98,7 +116,7 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
                                     <span>•</span>
                                     <span>{article.readingTime}</span>
                                     <span>•</span>
-                                    <span>{article.viewCount} 浏览</span>
+                                    <span>{currentViewCount} 浏览</span>
                                 </div>
                             </div>
                         </div>

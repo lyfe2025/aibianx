@@ -256,34 +256,29 @@ export async function getFeaturedArticles(limit: number = 6): Promise<ArticleCar
 /**
  * 增加文章浏览量
  */
-export async function incrementArticleView(articleId: string): Promise<void> {
+export async function incrementArticleView(articleId: string): Promise<number | null> {
     try {
-        // 先获取当前文章数据
-        const response = await fetch(
-            `${STRAPI_URL}/api/articles/${articleId}`,
-            {
-                headers: getHeaders(),
-            }
-        )
-
-        if (!response.ok) return
-
-        const { data } = await response.json()
-        const currentViewCount = data.attributes.viewCount || 0
-
-        // 更新浏览量
-        await fetch(`${STRAPI_URL}/api/articles/${articleId}`, {
+        // 调用专用的浏览量增加API
+        const response = await fetch(`${STRAPI_URL}/api/articles/${articleId}/view`, {
             method: 'PUT',
-            headers: getHeaders(),
-            body: JSON.stringify({
-                data: {
-                    viewCount: currentViewCount + 1
-                }
-            })
+            headers: {
+                'Content-Type': 'application/json',
+            }
         })
+
+        if (!response.ok) {
+            console.error('增加浏览量失败:', response.status, response.statusText)
+            return null
+        }
+
+        const result = await response.json()
+        const newViewCount = result.data?.viewCount
+        console.log('浏览量更新成功:', newViewCount)
+        return newViewCount
     } catch (error) {
         console.error('更新浏览量失败:', error)
         // 静默失败，不影响用户体验
+        return null
     }
 }
 
