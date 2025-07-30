@@ -1,0 +1,229 @@
+{
+    "kind": "singleType",
+    "collectionName": "system_configs",
+    "info": {
+        "singularName": "system-config",
+        "pluralName": "system-configs",
+        "displayName": "系统配置",
+        "description": "系统功能配置管理 - 统一管理邮件服务、第三方登录、用户注册等系统功能配置"
+    },
+    "options": {
+        "draftAndPublish": false,
+        "comment": "系统配置单例 - 存储邮件服务、OAuth登录、用户管理等系统功能配置"
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "emailServiceEnabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "邮件服务总开关：是否启用邮件发送功能（注册验证、密码重置等）"
+        },
+        "emailServiceProvider": {
+            "type": "enumeration",
+            "enum": [
+                "gmail",
+                "sendgrid",
+                "aliyun",
+                "tencent",
+                "mailgun",
+                "custom_smtp"
+            ],
+            "default": "gmail",
+            "description": "邮件服务商：选择使用的邮件服务提供商。gmail=Gmail，sendgrid=SendGrid，aliyun=阿里云邮件推送，tencent=腾讯企业邮箱，mailgun=Mailgun，custom_smtp=自定义SMTP"
+        },
+        "emailSmtpHost": {
+            "type": "string",
+            "maxLength": 255,
+            "default": "smtp.gmail.com",
+            "description": "SMTP服务器地址：邮件服务器主机名，如smtp.gmail.com、smtp.sendgrid.net等"
+        },
+        "emailSmtpPort": {
+            "type": "integer",
+            "default": 587,
+            "min": 1,
+            "max": 65535,
+            "description": "SMTP端口：邮件服务器端口号。常用：587(TLS)、465(SSL)、25(明文)"
+        },
+        "emailFromAddress": {
+            "type": "email",
+            "default": "noreply@aibianx.com",
+            "description": "发件人邮箱：邮件发送方显示地址，收件人看到的发件人"
+        },
+        "emailFromName": {
+            "type": "string",
+            "maxLength": 100,
+            "default": "AI变现之路",
+            "description": "发件人姓名：邮件发送方显示名称，收件人看到的发件人名字"
+        },
+        "emailUseTLS": {
+            "type": "boolean",
+            "default": true,
+            "description": "使用TLS加密：是否启用传输层安全协议"
+        },
+        "emailSubjectPrefix": {
+            "type": "string",
+            "maxLength": 50,
+            "default": "[AI变现之路]",
+            "description": "邮件主题前缀：统一的邮件主题前缀，用于品牌识别"
+        },
+        "registrationEnabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "注册功能开关：是否允许用户注册新账号"
+        },
+        "emailVerificationEnabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "邮箱验证开关：注册时是否需要邮箱验证"
+        },
+        "emailVerificationCodeLength": {
+            "type": "integer",
+            "default": 6,
+            "min": 4,
+            "max": 8,
+            "description": "验证码长度：邮箱验证码的数字位数（4-8位）"
+        },
+        "emailVerificationCodeExpiry": {
+            "type": "integer",
+            "default": 600,
+            "min": 60,
+            "max": 3600,
+            "description": "验证码有效期：邮箱验证码的有效时间（秒），默认600秒（10分钟）"
+        },
+        "passwordResetEnabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "密码重置开关：是否启用忘记密码功能"
+        },
+        "passwordResetTokenExpiry": {
+            "type": "integer",
+            "default": 3600,
+            "min": 300,
+            "max": 86400,
+            "description": "重置令牌有效期：密码重置链接的有效时间（秒），默认3600秒（1小时）"
+        },
+        "passwordMinLength": {
+            "type": "integer",
+            "default": 8,
+            "min": 6,
+            "max": 20,
+            "description": "密码最小长度：用户密码最少字符数要求（6-20位）"
+        },
+        "passwordRequireSpecialChar": {
+            "type": "boolean",
+            "default": true,
+            "description": "密码特殊字符要求：是否要求密码包含特殊字符"
+        },
+        "passwordRequireNumber": {
+            "type": "boolean",
+            "default": true,
+            "description": "密码数字要求：是否要求密码包含数字"
+        },
+        "passwordRequireUppercase": {
+            "type": "boolean",
+            "default": false,
+            "description": "密码大写字母要求：是否要求密码包含大写字母"
+        },
+        "oauthEnabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "OAuth登录总开关：是否启用第三方登录功能"
+        },
+        "githubOauthEnabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "GitHub登录开关：是否启用GitHub OAuth登录"
+        },
+        "googleOauthEnabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Google登录开关：是否启用Google OAuth登录"
+        },
+        "wechatOauthEnabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "微信登录开关：是否启用微信OAuth登录"
+        },
+        "qqOauthEnabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "QQ登录开关：是否启用QQ OAuth登录"
+        },
+        "oauthAutoRegister": {
+            "type": "boolean",
+            "default": true,
+            "description": "OAuth自动注册：第三方登录时是否自动创建用户账号"
+        },
+        "sessionTimeout": {
+            "type": "integer",
+            "default": 2592000,
+            "min": 3600,
+            "max": 31536000,
+            "description": "会话超时时间：用户登录会话的有效期（秒），默认2592000秒（30天）"
+        },
+        "maxLoginAttempts": {
+            "type": "integer",
+            "default": 5,
+            "min": 3,
+            "max": 10,
+            "description": "最大登录尝试次数：连续登录失败后锁定账号的次数限制"
+        },
+        "accountLockoutDuration": {
+            "type": "integer",
+            "default": 900,
+            "min": 300,
+            "max": 86400,
+            "description": "账号锁定时长：登录失败次数达到上限后的锁定时间（秒），默认900秒（15分钟）"
+        },
+        "maintenanceMode": {
+            "type": "boolean",
+            "default": false,
+            "description": "维护模式：是否启用网站维护模式（用户将看到维护页面）"
+        },
+        "maintenanceMessage": {
+            "type": "text",
+            "maxLength": 500,
+            "default": "网站正在进行系统升级维护，预计30分钟后恢复正常访问。",
+            "description": "维护提示信息：维护模式下向用户显示的提示信息"
+        },
+        "allowedEmailDomains": {
+            "type": "text",
+            "description": "允许的邮箱域名：限制注册邮箱的域名白名单，一行一个域名。留空表示不限制。例：gmail.com"
+        },
+        "blockedEmailDomains": {
+            "type": "text",
+            "description": "禁止的邮箱域名：不允许注册的邮箱域名黑名单，一行一个域名。例：tempmail.com"
+        },
+        "systemNotificationEmail": {
+            "type": "email",
+            "default": "admin@aibianx.com",
+            "description": "系统通知邮箱：接收系统重要通知的管理员邮箱地址"
+        },
+        "enableUserProfileEdit": {
+            "type": "boolean",
+            "default": true,
+            "description": "用户资料编辑：是否允许用户修改个人资料信息"
+        },
+        "enableAccountDeletion": {
+            "type": "boolean",
+            "default": true,
+            "description": "账号删除功能：是否允许用户删除自己的账号"
+        },
+        "defaultUserRole": {
+            "type": "string",
+            "default": "authenticated",
+            "maxLength": 50,
+            "description": "默认用户角色：新注册用户的默认权限角色"
+        },
+        "configurationNotes": {
+            "type": "text",
+            "maxLength": 1000,
+            "description": "配置说明：管理员备注信息，记录重要的配置变更、注意事项等"
+        },
+        "lastModifiedBy": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "最后修改人：记录最后一次修改此配置的管理员信息"
+        }
+    }
+}

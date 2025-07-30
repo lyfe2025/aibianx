@@ -8,6 +8,7 @@ import {
   MembershipModal,
   PaymentModal
 } from '@/components/organisms'
+import { AuthProvider } from '@/components/auth'
 import { getSiteConfig } from '@/lib/strapi'
 import './globals.css'
 
@@ -192,40 +193,43 @@ export default async function RootLayout({
         )}
       </head>
       <body>
-        {/* 主题初始化 - 确保主题正确应用 */}
-        <ThemeInit />
+        {/* NextAuth Session Provider - 为整个应用提供认证状态 */}
+        <AuthProvider>
+          {/* 主题初始化 - 确保主题正确应用 */}
+          <ThemeInit />
 
-        {/* 
-          全站粒子背景效果 - DynamicParticleBackground
-          使用动态导入，完全避免SSR水合问题，绝对稳定可靠
-        */}
-        <DynamicParticleBackground />
+          {/* 
+            全站粒子背景效果 - DynamicParticleBackground
+            使用动态导入，完全避免SSR水合问题，绝对稳定可靠
+          */}
+          <DynamicParticleBackground />
 
-        {/* 
-          动态布局控制器 - LayoutController
-          根据页面路径智能控制AppHeader的显示
-          个人中心页面不包含AppHeader，其他页面正常显示
-        */}
-        <LayoutController>{children}</LayoutController>
+          {/* 
+            动态布局控制器 - LayoutController
+            根据页面路径智能控制AppHeader的显示
+            个人中心页面不包含AppHeader，其他页面正常显示
+          */}
+          <LayoutController>{children}</LayoutController>
 
-        {/* 
-          全站返回顶部按钮 - BackToTopButton
-          客户端组件，在所有页面中可用
-        */}
-        <BackToTopButton />
+          {/* 
+            全站返回顶部按钮 - BackToTopButton
+            客户端组件，在所有页面中可用
+          */}
+          <BackToTopButton />
 
-        {/* 
-          全站弹窗组件 - 所有页面共享
-          确保登录、注册、支付等弹窗在任何页面都能正常显示
-        */}
-        <LoginModal />
-        <RegisterModal />
-        <ForgotPasswordModal />
-        <MembershipModal />
-        <PaymentModal />
+          {/* 
+            全站弹窗组件 - 所有页面共享
+            确保登录、注册、支付等弹窗在任何页面都能正常显示
+          */}
+          <LoginModal />
+          <RegisterModal />
+          <ForgotPasswordModal />
+          <MembershipModal />
+          <PaymentModal />
 
-        {/* 全局倒计时初始化 */}
-        <GlobalCountdownInit />
+          {/* 全局倒计时初始化 */}
+          <GlobalCountdownInit />
+        </AuthProvider>
       </body>
     </html>
   )

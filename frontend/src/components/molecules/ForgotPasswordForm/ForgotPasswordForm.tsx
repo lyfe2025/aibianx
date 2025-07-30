@@ -62,13 +62,26 @@ export function ForgotPasswordForm({ onSubmit, isLoading: externalLoading }: For
                 setErrors({ submit: '发送失败，请稍后重试' })
             }
         } else {
-            // 使用默认处理逻辑
+            // 使用默认处理逻辑 - 调用忘记密码API
             setIsLoading(true)
             try {
-                console.log('找回密码数据:', formData)
-                await new Promise(resolve => setTimeout(resolve, 2000))
-                setIsSubmitted(true)
+                const response = await fetch('/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: formData.email }),
+                })
+
+                const data = await response.json()
+
+                if (response.ok) {
+                    setIsSubmitted(true)
+                } else {
+                    setErrors({ submit: data.error || '发送失败，请稍后重试' })
+                }
             } catch (error) {
+                console.error('发送重置密码邮件失败:', error)
                 setErrors({ submit: '发送失败，请稍后重试' })
             } finally {
                 setIsLoading(false)

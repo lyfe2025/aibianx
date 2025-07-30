@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-07-30T15:57:13.826Z"
+    "x-generation-date": "2025-07-30T17:28:18.250Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -2385,6 +2385,401 @@
         ],
         "parameters": [],
         "operationId": "delete/site-config"
+      }
+    },
+    "/system-config": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "System-config"
+        ],
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort by attributes ascending (asc) or descending (desc)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pagination[withCount]",
+            "in": "query",
+            "description": "Return page/pageSize (default: true)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "pagination[page]",
+            "in": "query",
+            "description": "Page number (default: 0)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pagination[pageSize]",
+            "in": "query",
+            "description": "Page size (default: 25)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pagination[start]",
+            "in": "query",
+            "description": "Offset value (default: 0)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pagination[limit]",
+            "in": "query",
+            "description": "Number of entities to return (default: 25)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Fields to return (ex: title,author)",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "populate",
+            "in": "query",
+            "description": "Relations to return",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filters",
+            "in": "query",
+            "description": "Filters to apply",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "style": "deepObject"
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "description": "Locale to apply",
+            "deprecated": false,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "operationId": "get/system-config"
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "System-config"
+        ],
+        "parameters": [],
+        "operationId": "put/system-config",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SystemConfigRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system-config/public": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "System-config"
+        ],
+        "parameters": [],
+        "operationId": "get/system-config/public"
+      }
+    },
+    "/system-config/email": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemConfigResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "System-config"
+        ],
+        "parameters": [],
+        "operationId": "get/system-config/email"
       }
     },
     "/tags": {
@@ -11099,6 +11494,810 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/SiteConfig"
+          },
+          "meta": {
+            "type": "object"
+          }
+        }
+      },
+      "SystemConfigRequest": {
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "emailServiceEnabled": {
+                "type": "boolean"
+              },
+              "emailServiceProvider": {
+                "type": "string",
+                "enum": [
+                  "gmail",
+                  "sendgrid",
+                  "aliyun",
+                  "tencent",
+                  "mailgun",
+                  "custom_smtp"
+                ]
+              },
+              "emailSmtpHost": {
+                "type": "string"
+              },
+              "emailSmtpPort": {
+                "type": "integer"
+              },
+              "emailFromAddress": {
+                "type": "string",
+                "format": "email"
+              },
+              "emailFromName": {
+                "type": "string"
+              },
+              "emailUseTLS": {
+                "type": "boolean"
+              },
+              "emailSubjectPrefix": {
+                "type": "string"
+              },
+              "registrationEnabled": {
+                "type": "boolean"
+              },
+              "emailVerificationEnabled": {
+                "type": "boolean"
+              },
+              "emailVerificationCodeLength": {
+                "type": "integer"
+              },
+              "emailVerificationCodeExpiry": {
+                "type": "integer"
+              },
+              "passwordResetEnabled": {
+                "type": "boolean"
+              },
+              "passwordResetTokenExpiry": {
+                "type": "integer"
+              },
+              "passwordMinLength": {
+                "type": "integer"
+              },
+              "passwordRequireSpecialChar": {
+                "type": "boolean"
+              },
+              "passwordRequireNumber": {
+                "type": "boolean"
+              },
+              "passwordRequireUppercase": {
+                "type": "boolean"
+              },
+              "oauthEnabled": {
+                "type": "boolean"
+              },
+              "githubOauthEnabled": {
+                "type": "boolean"
+              },
+              "googleOauthEnabled": {
+                "type": "boolean"
+              },
+              "wechatOauthEnabled": {
+                "type": "boolean"
+              },
+              "qqOauthEnabled": {
+                "type": "boolean"
+              },
+              "oauthAutoRegister": {
+                "type": "boolean"
+              },
+              "sessionTimeout": {
+                "type": "integer"
+              },
+              "maxLoginAttempts": {
+                "type": "integer"
+              },
+              "accountLockoutDuration": {
+                "type": "integer"
+              },
+              "maintenanceMode": {
+                "type": "boolean"
+              },
+              "maintenanceMessage": {
+                "type": "string"
+              },
+              "allowedEmailDomains": {
+                "type": "string"
+              },
+              "blockedEmailDomains": {
+                "type": "string"
+              },
+              "systemNotificationEmail": {
+                "type": "string",
+                "format": "email"
+              },
+              "enableUserProfileEdit": {
+                "type": "boolean"
+              },
+              "enableAccountDeletion": {
+                "type": "boolean"
+              },
+              "defaultUserRole": {
+                "type": "string"
+              },
+              "configurationNotes": {
+                "type": "string"
+              },
+              "lastModifiedBy": {
+                "type": "string"
+              },
+              "locale": {
+                "type": "string"
+              },
+              "localizations": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ],
+                  "example": "string or id"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SystemConfigListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SystemConfig"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "pagination": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "integer"
+                  },
+                  "pageSize": {
+                    "type": "integer",
+                    "minimum": 25
+                  },
+                  "pageCount": {
+                    "type": "integer",
+                    "maximum": 1
+                  },
+                  "total": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "SystemConfig": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "documentId": {
+            "type": "string"
+          },
+          "emailServiceEnabled": {
+            "type": "boolean"
+          },
+          "emailServiceProvider": {
+            "type": "string",
+            "enum": [
+              "gmail",
+              "sendgrid",
+              "aliyun",
+              "tencent",
+              "mailgun",
+              "custom_smtp"
+            ]
+          },
+          "emailSmtpHost": {
+            "type": "string"
+          },
+          "emailSmtpPort": {
+            "type": "integer"
+          },
+          "emailFromAddress": {
+            "type": "string",
+            "format": "email"
+          },
+          "emailFromName": {
+            "type": "string"
+          },
+          "emailUseTLS": {
+            "type": "boolean"
+          },
+          "emailSubjectPrefix": {
+            "type": "string"
+          },
+          "registrationEnabled": {
+            "type": "boolean"
+          },
+          "emailVerificationEnabled": {
+            "type": "boolean"
+          },
+          "emailVerificationCodeLength": {
+            "type": "integer"
+          },
+          "emailVerificationCodeExpiry": {
+            "type": "integer"
+          },
+          "passwordResetEnabled": {
+            "type": "boolean"
+          },
+          "passwordResetTokenExpiry": {
+            "type": "integer"
+          },
+          "passwordMinLength": {
+            "type": "integer"
+          },
+          "passwordRequireSpecialChar": {
+            "type": "boolean"
+          },
+          "passwordRequireNumber": {
+            "type": "boolean"
+          },
+          "passwordRequireUppercase": {
+            "type": "boolean"
+          },
+          "oauthEnabled": {
+            "type": "boolean"
+          },
+          "githubOauthEnabled": {
+            "type": "boolean"
+          },
+          "googleOauthEnabled": {
+            "type": "boolean"
+          },
+          "wechatOauthEnabled": {
+            "type": "boolean"
+          },
+          "qqOauthEnabled": {
+            "type": "boolean"
+          },
+          "oauthAutoRegister": {
+            "type": "boolean"
+          },
+          "sessionTimeout": {
+            "type": "integer"
+          },
+          "maxLoginAttempts": {
+            "type": "integer"
+          },
+          "accountLockoutDuration": {
+            "type": "integer"
+          },
+          "maintenanceMode": {
+            "type": "boolean"
+          },
+          "maintenanceMessage": {
+            "type": "string"
+          },
+          "allowedEmailDomains": {
+            "type": "string"
+          },
+          "blockedEmailDomains": {
+            "type": "string"
+          },
+          "systemNotificationEmail": {
+            "type": "string",
+            "format": "email"
+          },
+          "enableUserProfileEdit": {
+            "type": "boolean"
+          },
+          "enableAccountDeletion": {
+            "type": "boolean"
+          },
+          "defaultUserRole": {
+            "type": "string"
+          },
+          "configurationNotes": {
+            "type": "string"
+          },
+          "lastModifiedBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "documentId": {
+                "type": "string"
+              },
+              "firstname": {
+                "type": "string"
+              },
+              "lastname": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "resetPasswordToken": {
+                "type": "string"
+              },
+              "registrationToken": {
+                "type": "string"
+              },
+              "isActive": {
+                "type": "boolean"
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "documentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "permissions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "documentId": {
+                            "type": "string"
+                          },
+                          "action": {
+                            "type": "string"
+                          },
+                          "actionParameters": {},
+                          "subject": {
+                            "type": "string"
+                          },
+                          "properties": {},
+                          "conditions": {},
+                          "role": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "documentId": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "publishedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "createdBy": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "documentId": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "updatedBy": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "documentId": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "locale": {
+                            "type": "string"
+                          },
+                          "localizations": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "number"
+                                },
+                                "documentId": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "publishedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "createdBy": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        },
+                        "documentId": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "updatedBy": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        },
+                        "documentId": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "locale": {
+                      "type": "string"
+                    },
+                    "localizations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "documentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "blocked": {
+                "type": "boolean"
+              },
+              "preferedLanguage": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "publishedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "createdBy": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "documentId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "updatedBy": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "documentId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "locale": {
+                "type": "string"
+              },
+              "localizations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "updatedBy": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "documentId": {
+                "type": "string"
+              }
+            }
+          },
+          "locale": {
+            "type": "string"
+          },
+          "localizations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "documentId": {
+                  "type": "string"
+                },
+                "emailServiceEnabled": {
+                  "type": "boolean"
+                },
+                "emailServiceProvider": {
+                  "type": "string",
+                  "enum": [
+                    "gmail",
+                    "sendgrid",
+                    "aliyun",
+                    "tencent",
+                    "mailgun",
+                    "custom_smtp"
+                  ]
+                },
+                "emailSmtpHost": {
+                  "type": "string"
+                },
+                "emailSmtpPort": {
+                  "type": "integer"
+                },
+                "emailFromAddress": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "emailFromName": {
+                  "type": "string"
+                },
+                "emailUseTLS": {
+                  "type": "boolean"
+                },
+                "emailSubjectPrefix": {
+                  "type": "string"
+                },
+                "registrationEnabled": {
+                  "type": "boolean"
+                },
+                "emailVerificationEnabled": {
+                  "type": "boolean"
+                },
+                "emailVerificationCodeLength": {
+                  "type": "integer"
+                },
+                "emailVerificationCodeExpiry": {
+                  "type": "integer"
+                },
+                "passwordResetEnabled": {
+                  "type": "boolean"
+                },
+                "passwordResetTokenExpiry": {
+                  "type": "integer"
+                },
+                "passwordMinLength": {
+                  "type": "integer"
+                },
+                "passwordRequireSpecialChar": {
+                  "type": "boolean"
+                },
+                "passwordRequireNumber": {
+                  "type": "boolean"
+                },
+                "passwordRequireUppercase": {
+                  "type": "boolean"
+                },
+                "oauthEnabled": {
+                  "type": "boolean"
+                },
+                "githubOauthEnabled": {
+                  "type": "boolean"
+                },
+                "googleOauthEnabled": {
+                  "type": "boolean"
+                },
+                "wechatOauthEnabled": {
+                  "type": "boolean"
+                },
+                "qqOauthEnabled": {
+                  "type": "boolean"
+                },
+                "oauthAutoRegister": {
+                  "type": "boolean"
+                },
+                "sessionTimeout": {
+                  "type": "integer"
+                },
+                "maxLoginAttempts": {
+                  "type": "integer"
+                },
+                "accountLockoutDuration": {
+                  "type": "integer"
+                },
+                "maintenanceMode": {
+                  "type": "boolean"
+                },
+                "maintenanceMessage": {
+                  "type": "string"
+                },
+                "allowedEmailDomains": {
+                  "type": "string"
+                },
+                "blockedEmailDomains": {
+                  "type": "string"
+                },
+                "systemNotificationEmail": {
+                  "type": "string",
+                  "format": "email"
+                },
+                "enableUserProfileEdit": {
+                  "type": "boolean"
+                },
+                "enableAccountDeletion": {
+                  "type": "boolean"
+                },
+                "defaultUserRole": {
+                  "type": "string"
+                },
+                "configurationNotes": {
+                  "type": "string"
+                },
+                "lastModifiedBy": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "updatedBy": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "locale": {
+                  "type": "string"
+                },
+                "localizations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "documentId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "SystemConfigResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/SystemConfig"
           },
           "meta": {
             "type": "object"

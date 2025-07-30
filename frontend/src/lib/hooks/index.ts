@@ -9,5 +9,18 @@ export { useHeaderScroll } from './useHeaderScroll'
 export { useWeeklyLogic } from './useWeeklyLogic'
 export { useWeeklyLogicWithAPI } from './useWeeklyLogicWithAPI'
 export { useSettingsLogic } from './useSettingsLogic'
-export { useBookmarksLogic } from './useBookmarksLogic' 
-export { useHomeArticles } from './useHomeArticles' 
+export { useBookmarksLogic } from './useBookmarksLogic'
+export { useHomeArticles } from './useHomeArticles'
+
+// 系统配置相关Hooks
+export {
+    useSystemConfig,
+    useOAuthProviders,
+    usePasswordValidation,
+    useMaintenanceMode,
+    useRegistrationAvailability,
+    useOAuthAvailability,
+    useUserPermissions,
+    usePasswordPolicy,
+    useSystemStatus
+} from './useSystemConfig' 

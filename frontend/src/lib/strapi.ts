@@ -75,6 +75,88 @@ interface SeoMetricsData {
     robotsTxtStatus: string
 }
 
+// 系统配置相关类型定义
+interface StrapiSystemConfig {
+    id: number
+    documentId: string
+    emailServiceEnabled: boolean
+    emailServiceProvider: 'gmail' | 'sendgrid' | 'aliyun' | 'tencent' | 'mailgun' | 'custom_smtp'
+    emailSmtpHost: string
+    emailSmtpPort: number
+    emailFromAddress: string
+    emailFromName: string
+    emailUseTLS: boolean
+    emailSubjectPrefix: string
+    registrationEnabled: boolean
+    emailVerificationEnabled: boolean
+    emailVerificationCodeLength: number
+    emailVerificationCodeExpiry: number
+    passwordResetEnabled: boolean
+    passwordResetTokenExpiry: number
+    passwordMinLength: number
+    passwordRequireSpecialChar: boolean
+    passwordRequireNumber: boolean
+    passwordRequireUppercase: boolean
+    oauthEnabled: boolean
+    githubOauthEnabled: boolean
+    googleOauthEnabled: boolean
+    wechatOauthEnabled: boolean
+    qqOauthEnabled: boolean
+    oauthAutoRegister: boolean
+    sessionTimeout: number
+    maxLoginAttempts: number
+    accountLockoutDuration: number
+    maintenanceMode: boolean
+    maintenanceMessage: string
+    allowedEmailDomains?: string | null
+    blockedEmailDomains?: string | null
+    systemNotificationEmail: string
+    enableUserProfileEdit: boolean
+    enableAccountDeletion: boolean
+    defaultUserRole: string
+    configurationNotes?: string | null
+    lastModifiedBy?: string | null
+    createdAt: string
+    updatedAt: string
+}
+
+// 前端使用的公开系统配置类型
+interface PublicSystemConfig {
+    registrationEnabled: boolean
+    emailVerificationEnabled: boolean
+    passwordResetEnabled: boolean
+    oauthEnabled: boolean
+    githubOauthEnabled: boolean
+    googleOauthEnabled: boolean
+    wechatOauthEnabled: boolean
+    qqOauthEnabled: boolean
+    oauthAutoRegister: boolean
+    passwordMinLength: number
+    passwordRequireSpecialChar: boolean
+    passwordRequireNumber: boolean
+    passwordRequireUppercase: boolean
+    maintenanceMode: boolean
+    maintenanceMessage: string
+    enableUserProfileEdit: boolean
+    enableAccountDeletion: boolean
+    emailServiceEnabled: boolean
+}
+
+// 邮件配置类型（服务端使用）
+interface EmailConfig {
+    emailServiceEnabled: boolean
+    emailServiceProvider: string
+    emailSmtpHost: string
+    emailSmtpPort: number
+    emailFromAddress: string
+    emailFromName: string
+    emailUseTLS: boolean
+    emailSubjectPrefix: string
+    emailVerificationCodeLength: number
+    emailVerificationCodeExpiry: number
+    passwordResetTokenExpiry: number
+}
+
 // Strapi API配置
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
 const API_TOKEN = process.env.STRAPI_API_TOKEN
@@ -714,5 +796,179 @@ export async function updateSitemapTimestamp(): Promise<boolean> {
     } catch (error) {
         console.error('更新sitemap时间戳失败:', error)
         return false
+    }
+}
+
+// =================== 系统配置相关API ===================
+
+/**
+ * 获取公开的系统配置（前端使用）
+ */
+export async function getPublicSystemConfig(): Promise<PublicSystemConfig | null> {
+    try {
+        const response = await fetch(`${STRAPI_URL}/api/system-config/public`, {
+            headers: getHeaders(),
+            next: { revalidate: 300 }, // 5分钟缓存
+        })
+
+        if (!response.ok) {
+            throw new Error(`获取系统配置失败: ${response.status}`)
+        }
+
+        const data = await response.json()
+        return data as PublicSystemConfig
+    } catch (error) {
+        console.error('获取公开系统配置失败:', error)
+        return null
+    }
+}
+
+/**
+ * 获取完整的系统配置（管理员使用）
+ */
+export async function getFullSystemConfig(): Promise<StrapiSystemConfig | null> {
+    try {
+        const response = await fetch(`${STRAPI_URL}/api/system-config`, {
+            headers: getHeaders(),
+        })
+
+        if (!response.ok) {
+            throw new Error(`获取完整系统配置失败: ${response.status}`)
+        }
+
+        const result = await response.json()
+        const data = Array.isArray(result.data) ? result.data[0] : result.data
+        return data as StrapiSystemConfig
+    } catch (error) {
+        console.error('获取完整系统配置失败:', error)
+        return null
+    }
+}
+
+/**
+ * 更新系统配置（管理员使用）
+ */
+export async function updateSystemConfig(configData: Partial<StrapiSystemConfig>): Promise<boolean> {
+    try {
+        // 先获取当前配置以获取documentId
+        const currentConfig = await getFullSystemConfig()
+        if (!currentConfig) {
+            throw new Error('无法获取当前系统配置')
+        }
+
+        const response = await fetch(`${STRAPI_URL}/api/system-config`, {
+            method: 'PUT',
+            headers: getHeaders(),
+            body: JSON.stringify({
+                data: configData
+            })
+        })
+
+        return response.ok
+    } catch (error) {
+        console.error('更新系统配置失败:', error)
+        return false
+    }
+}
+
+/**
+ * 获取邮件服务配置（服务端使用）
+ */
+export async function getEmailServiceConfig(): Promise<EmailConfig | null> {
+    try {
+        const response = await fetch(`${STRAPI_URL}/api/system-config/email`, {
+            headers: getHeaders(),
+        })
+
+        if (!response.ok) {
+            throw new Error(`获取邮件配置失败: ${response.status}`)
+        }
+
+        const data = await response.json()
+        return data as EmailConfig
+    } catch (error) {
+        console.error('获取邮件配置失败:', error)
+        return null
+    }
+}
+
+/**
+ * 检查系统是否处于维护模式
+ */
+export async function isMaintenanceMode(): Promise<boolean> {
+    try {
+        const config = await getPublicSystemConfig()
+        return config?.maintenanceMode || false
+    } catch (error) {
+        console.error('检查维护模式状态失败:', error)
+        return false
+    }
+}
+
+/**
+ * 验证密码是否符合系统要求
+ */
+export async function validatePassword(password: string): Promise<{
+    isValid: boolean
+    errors: string[]
+}> {
+    try {
+        const config = await getPublicSystemConfig()
+        const errors: string[] = []
+
+        if (!config) {
+            return { isValid: true, errors: [] } // 无法获取配置时，使用默认验证
+        }
+
+        // 检查最小长度
+        if (password.length < config.passwordMinLength) {
+            errors.push(`密码长度至少需要${config.passwordMinLength}个字符`)
+        }
+
+        // 检查是否需要数字
+        if (config.passwordRequireNumber && !/\d/.test(password)) {
+            errors.push('密码必须包含至少一个数字')
+        }
+
+        // 检查是否需要特殊字符
+        if (config.passwordRequireSpecialChar && !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            errors.push('密码必须包含至少一个特殊字符')
+        }
+
+        // 检查是否需要大写字母
+        if (config.passwordRequireUppercase && !/[A-Z]/.test(password)) {
+            errors.push('密码必须包含至少一个大写字母')
+        }
+
+        return {
+            isValid: errors.length === 0,
+            errors
+        }
+    } catch (error) {
+        console.error('验证密码失败:', error)
+        return { isValid: true, errors: [] } // 出错时使用宽松验证
+    }
+}
+
+/**
+ * 获取启用的OAuth提供商列表
+ */
+export async function getEnabledOAuthProviders(): Promise<string[]> {
+    try {
+        const config = await getPublicSystemConfig()
+        if (!config || !config.oauthEnabled) {
+            return []
+        }
+
+        const providers: string[] = []
+        if (config.githubOauthEnabled) providers.push('github')
+        if (config.googleOauthEnabled) providers.push('google')
+        if (config.wechatOauthEnabled) providers.push('wechat')
+        if (config.qqOauthEnabled) providers.push('qq')
+
+        return providers
+    } catch (error) {
+        console.error('获取OAuth提供商列表失败:', error)
+        return []
     }
 } 
