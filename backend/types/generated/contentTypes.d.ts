@@ -552,6 +552,40 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiSearchSearch extends Struct.SingleTypeSchema {
+  collectionName: 'searches';
+  info: {
+    description: '\u641C\u7D22\u5F15\u64CE\u914D\u7F6E\u548C\u7BA1\u7406';
+    displayName: '\u641C\u7D22\u914D\u7F6E';
+    pluralName: 'searches';
+    singularName: 'search';
+  };
+  options: {
+    comment: '\u641C\u7D22\u5F15\u64CE\u7684\u914D\u7F6E\u548C\u72B6\u6001\u7BA1\u7406\uFF0C\u7528\u4E8E\u652F\u6301MeiliSearch\u641C\u7D22\u529F\u80FD';
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    enabled: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    indexStatus: Schema.Attribute.String & Schema.Attribute.DefaultTo<'ready'>;
+    lastIndexUpdate: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::search.search'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    searchApiKey: Schema.Attribute.String & Schema.Attribute.Private;
+    totalDocuments: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSeoMetricsSeoMetrics extends Struct.CollectionTypeSchema {
   collectionName: 'seo_metrics';
   info: {
@@ -1631,6 +1665,7 @@ declare module '@strapi/strapi' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
+      'api::search.search': ApiSearchSearch;
       'api::seo-metrics.seo-metrics': ApiSeoMetricsSeoMetrics;
       'api::site-config.site-config': ApiSiteConfigSiteConfig;
       'api::system-config.system-config': ApiSystemConfigSystemConfig;

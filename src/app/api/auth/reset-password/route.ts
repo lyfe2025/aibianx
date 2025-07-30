@@ -1,161 +1,131 @@
 /**
- * 重置密码API
- * 使用重置token设置新密码
+ * 重置密码API端点
+ * POST /api/auth/reset-password
+ * 
+ * 使用重置令牌重置用户密码
  */
 
 import { NextRequest, NextResponse } from 'next/server'
 
-// 引入重置token存储
-const resetTokens = new Map<string, { email: string; expires: number }>()
-
-export async function POST(request: NextRequest) {
-    try {
-        const { token, password } = await request.json()
-
-        if (!token || !password) {
-            return NextResponse.json({ error: '重置token和新密码不能为空' }, { status: 400 })
-        }
-
-        // 验证密码强度
-        if (password.length < 6) {
-            return NextResponse.json({ error: '密码长度至少6位' }, { status: 400 })
-        }
-
-        // 验证token
-        const tokenData = resetTokens.get(token)
-        if (!tokenData) {
-            return NextResponse.json({ error: '重置链接无效或已过期' }, { status: 400 })
-        }
-
-        // 检查token是否过期
-        if (Date.now() > tokenData.expires) {
-            resetTokens.delete(token)
-            return NextResponse.json({ error: '重置链接已过期，请重新申请' }, { status: 400 })
-        }
-
-        try {
-            const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
-
-            // 获取用户信息
-            const userResponse = await fetch(`${strapiUrl}/api/users?filters[email][$eq]=${tokenData.email}`)
-
-            if (!userResponse.ok) {
-                throw new Error('获取用户信息失败')
-            }
-
-            const users = await userResponse.json()
-            if (users.length === 0) {
-                return NextResponse.json({ error: '用户不存在' }, { status: 404 })
-            }
-
-            const user = users[0]
-
-            // 调用Strapi的密码重置API
-            const resetResponse = await fetch(`${strapiUrl}/api/auth/reset-password`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    code: token, // 使用我们的token作为code
-                    password: password,
-                    passwordConfirmation: password,
-                }),
-            })
-
-            // 如果Strapi的重置API不可用，直接更新用户密码
-            if (!resetResponse.ok) {
-                // 获取管理员token（需要在环境变量中配置）
-                const adminResponse = await fetch(`${strapiUrl}/api/auth/local`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        identifier: process.env.STRAPI_ADMIN_EMAIL,
-                        password: process.env.STRAPI_ADMIN_PASSWORD,
-                    }),
-                })
-
-                if (adminResponse.ok) {
-                    const adminData = await adminResponse.json()
-
-                    // 使用管理员token更新用户密码
-                    const updateResponse = await fetch(`${strapiUrl}/api/users/${user.id}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${adminData.jwt}`,
-                        },
-                        body: JSON.stringify({
-                            password: password,
-                        }),
-                    })
-
-                    if (!updateResponse.ok) {
-                        throw new Error('更新密码失败')
-                    }
-                } else {
-                    throw new Error('权限验证失败')
-                }
-            }
-
-            // 密码重置成功，删除token
-            resetTokens.delete(token)
-
-            return NextResponse.json({
-                message: '密码重置成功！请使用新密码登录。'
-            })
-
-        } catch (strapiError) {
-            console.error('Strapi密码重置过程中出错:', strapiError)
-            return NextResponse.json({ error: '密码重置失败，请稍后重试' }, { status: 500 })
-        }
-
-    } catch (error) {
-        console.error('重置密码API出错:', error)
-        return NextResponse.json(
-            { error: '密码重置失败，请稍后重试' },
-            { status: 500 }
-        )
-    }
+interface ResetPasswordRequest {
+    code: string
+    password: string
+    passwordConfirmation: string
 }
 
-// 验证重置token的GET请求
-export async function GET(request: NextRequest) {
+interface ResetPasswordResponse {
+    success: boolean
+    message: string
+    user?: {
+        id: string
+        email: string
+        username: string
+    }
+    jwt?: string
+    error?: string
+}
+
+export async function POST(request: NextRequest): Promise<NextResponse<ResetPasswordResponse>> {
     try {
-        const url = new URL(request.url)
-        const token = url.searchParams.get('token')
+        const body: ResetPasswordRequest = await request.json()
+        const { code, password, passwordConfirmation } = body
 
-        if (!token) {
-            return NextResponse.json({ error: '重置token不能为空' }, { status: 400 })
+        // 输入验证
+        if (!code || !password || !passwordConfirmation) {
+            return NextResponse.json({
+                success: false,
+                message: '请填写所有必填字段',
+                error: 'MISSING_FIELDS'
+            }, { status: 400 })
         }
 
-        // 验证token
-        const tokenData = resetTokens.get(token)
-        if (!tokenData) {
-            return NextResponse.json({ error: '重置链接无效', valid: false }, { status: 400 })
+        if (password !== passwordConfirmation) {
+            return NextResponse.json({
+                success: false,
+                message: '两次输入的密码不一致',
+                error: 'PASSWORD_MISMATCH'
+            }, { status: 400 })
         }
 
-        // 检查token是否过期
-        if (Date.now() > tokenData.expires) {
-            resetTokens.delete(token)
-            return NextResponse.json({ error: '重置链接已过期', valid: false }, { status: 400 })
+        if (password.length < 6) {
+            return NextResponse.json({
+                success: false,
+                message: '密码长度至少6位',
+                error: 'PASSWORD_TOO_SHORT'
+            }, { status: 400 })
         }
 
-        return NextResponse.json({
-            valid: true,
-            email: tokenData.email.replace(/(.{2}).*(@.*)/, '$1****$2'), // 脱敏显示邮箱
+        // 调用Strapi重置密码API
+        const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+        const response = await fetch(`${strapiUrl}/api/auth/reset-password`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                code,
+                password,
+                passwordConfirmation,
+            }),
         })
 
+        const data = await response.json()
+
+        if (!response.ok) {
+            // 处理Strapi错误响应
+            if (data.error?.message?.includes('Incorrect code provided')) {
+                return NextResponse.json({
+                    success: false,
+                    message: '重置码无效或已过期，请重新申请密码重置',
+                    error: 'INVALID_CODE'
+                }, { status: 400 })
+            }
+
+            if (data.error?.message?.includes('code has expired')) {
+                return NextResponse.json({
+                    success: false,
+                    message: '重置码已过期，请重新申请密码重置',
+                    error: 'CODE_EXPIRED'
+                }, { status: 400 })
+            }
+
+            return NextResponse.json({
+                success: false,
+                message: data.error?.message || '密码重置失败，请稍后重试',
+                error: 'RESET_PASSWORD_FAILED'
+            }, { status: response.status })
+        }
+
+        // 密码重置成功
+        return NextResponse.json({
+            success: true,
+            message: '密码重置成功！您现在可以使用新密码登录',
+            user: {
+                id: data.user.id.toString(),
+                email: data.user.email,
+                username: data.user.username
+            },
+            jwt: data.jwt
+        }, { status: 200 })
+
     } catch (error) {
-        console.error('验证重置token失败:', error)
-        return NextResponse.json(
-            { error: '验证失败', valid: false },
-            { status: 500 }
-        )
+        console.error('重置密码API错误:', error)
+        return NextResponse.json({
+            success: false,
+            message: '服务器内部错误，请稍后重试',
+            error: 'INTERNAL_ERROR'
+        }, { status: 500 })
     }
 }
 
-// 导出重置token存储
-export { resetTokens }
+// 支持OPTIONS请求（CORS预检）
+export async function OPTIONS() {
+    return new NextResponse(null, {
+        status: 200,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+    })
+}
