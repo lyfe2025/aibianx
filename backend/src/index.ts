@@ -283,24 +283,34 @@ function registerSearchRoutes(strapi: any, meilisearchService: any) {
                 ctx.throw(503, 'MeiliSearch服务不可用')
             }
 
-            const { query = '', limit = 20, offset = 0, filters = '', highlight = true } = ctx.query
+            // 正确解析查询参数，处理URL编码
+            const queryParam = ctx.query.q || ctx.query.query || ''
+            const limitParam = ctx.query.limit || 20
+            const offsetParam = ctx.query.offset || 0
+            const filtersParam = ctx.query.filters || ''
+            const highlightParam = ctx.query.highlight !== 'false' // 默认true
+
+            // 解码查询字符串（处理中文字符）
+            const decodedQuery = queryParam ? decodeURIComponent(queryParam.toString()) : ''
+
+            console.log(`🔍 搜索查询参数: "${decodedQuery}" (原始: "${queryParam}")`)
 
             const searchResult = await meilisearchService.search({
-                query: query as string,
-                limit: Math.min(parseInt(limit as string) || 20, 100),
-                offset: parseInt(offset as string) || 0,
-                filters: filters ? (filters as string).split(',') : undefined,
-                highlight: highlight === 'true'
+                query: decodedQuery,
+                limit: Math.min(parseInt(limitParam.toString()) || 20, 100),
+                offset: parseInt(offsetParam.toString()) || 0,
+                filters: filtersParam ? filtersParam.toString().split(',') : undefined,
+                highlight: highlightParam
             })
 
             ctx.body = {
                 data: searchResult,
                 meta: {
-                    query,
+                    query: decodedQuery, // 使用解码后的查询
                     limit: searchResult.limit,
                     offset: searchResult.offset,
-                    totalHits: searchResult.totalHits,
-                    processingTime: searchResult.processingTime
+                    totalHits: searchResult.estimatedTotalHits, // 修正字段名
+                    processingTime: searchResult.processingTimeMs // 修正字段名
                 }
             }
         } catch (error) {

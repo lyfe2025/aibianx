@@ -190,26 +190,35 @@ class MeiliSearchClient {
 
         const endpoint = `/articles?${searchParams.toString()}`
         const response = await this.request<{
-            data: MeiliSearchArticle[]
+            data: {
+                hits: MeiliSearchArticle[]
+                query: string
+                limit: number
+                offset: number
+                estimatedTotalHits: number
+                totalPages: number
+                currentPage: number
+                processingTimeMs: number
+            }
             meta: {
-                pagination: {
-                    page: number
-                    pageSize: number
-                    pageCount: number
-                    total: number
-                }
-                search: {
-                    query: string
-                    processingTimeMs: number
-                    facetDistribution?: Record<string, Record<string, number>>
-                }
+                query: string
+                limit: number
+                offset: number
             }
         }>(endpoint)
 
         return {
-            articles: response.data,
-            pagination: response.meta.pagination,
-            meta: response.meta.search
+            articles: response.data.hits, // 修复：使用hits数组
+            pagination: {
+                page: response.data.currentPage,
+                pageSize: response.data.limit,
+                pageCount: response.data.totalPages,
+                total: response.data.estimatedTotalHits
+            },
+            meta: {
+                query: response.data.query,
+                processingTimeMs: response.data.processingTimeMs
+            }
         }
     }
 
