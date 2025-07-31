@@ -48,6 +48,95 @@ div.hero-subtitle {
     -webkit-text-fill-color: #D1D5DB !important;
 }
 
+/* ===== 文章标识样式 - 最高优先级 ===== */
+
+/* 🔥 终极优先级 - 文字颜色强制覆盖 */
+html body article div.featured-badge,
+html body div.featured-badge,
+body div.featured-badge,
+div.featured-badge,
+.featured-badge,
+html body article div.premium-badge,
+html body div.premium-badge,
+body div.premium-badge,
+div.premium-badge,
+.premium-badge {
+    color: #F59E0B !important;
+    -webkit-text-fill-color: #F59E0B !important;
+}
+
+/* 🔥 终极优先级 - 图标颜色强制覆盖 */
+html body article div.featured-badge svg,
+html body div.featured-badge svg,
+body div.featured-badge svg,
+div.featured-badge svg,
+.featured-badge svg,
+html body article div.featured-badge .star-icon,
+html body div.featured-badge .star-icon,
+body div.featured-badge .star-icon,
+div.featured-badge .star-icon,
+.featured-badge .star-icon,
+html body article div.featured-badge .star-icon svg,
+html body div.featured-badge .star-icon svg,
+body div.featured-badge .star-icon svg,
+div.featured-badge .star-icon svg,
+.featured-badge .star-icon svg,
+html body article div.premium-badge svg,
+html body div.premium-badge svg,
+body div.premium-badge svg,
+div.premium-badge svg,
+.premium-badge svg,
+html body article div.premium-badge .crown-icon,
+html body div.premium-badge .crown-icon,
+body div.premium-badge .crown-icon,
+div.premium-badge .crown-icon,
+.premium-badge .crown-icon,
+html body article div.premium-badge .crown-icon svg,
+html body div.premium-badge .crown-icon svg,
+body div.premium-badge .crown-icon svg,
+div.premium-badge .crown-icon svg,
+.premium-badge .crown-icon svg {
+    color: #F59E0B !important;
+    fill: #F59E0B !important;
+    -webkit-text-fill-color: #F59E0B !important;
+}
+
+/* 🔥 终极优先级 - SVG路径强制覆盖 */
+html body article div.featured-badge .star-icon svg path,
+html body div.featured-badge .star-icon svg path,
+body div.featured-badge .star-icon svg path,
+div.featured-badge .star-icon svg path,
+.featured-badge .star-icon svg path,
+html body article div.premium-badge .crown-icon svg path,
+html body div.premium-badge .crown-icon svg path,
+body div.premium-badge .crown-icon svg path,
+div.premium-badge .crown-icon svg path,
+.premium-badge .crown-icon svg path {
+    fill: #F59E0B !important;
+    color: #F59E0B !important;
+}
+
+/* 🔥 亮色和暗色主题下都强制金橙色 */
+:root .featured-badge,
+:root .premium-badge,
+:root[data-theme="dark"] .featured-badge,
+:root[data-theme="dark"] .premium-badge,
+:root[data-theme="light"] .featured-badge,
+:root[data-theme="light"] .premium-badge {
+    color: #F59E0B !important;
+    -webkit-text-fill-color: #F59E0B !important;
+}
+
+:root .featured-badge svg,
+:root .premium-badge svg,
+:root[data-theme="dark"] .featured-badge svg,
+:root[data-theme="dark"] .premium-badge svg,
+:root[data-theme="light"] .featured-badge svg,
+:root[data-theme="light"] .premium-badge svg {
+    color: #F59E0B !important;
+    fill: #F59E0B !important;
+}
+
 /* 🔧 防止任何可能的继承覆盖 */
 div.hero-subtitle,
 div.hero-subtitle *,

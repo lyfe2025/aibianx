@@ -168,6 +168,7 @@ export const Icon = ({
                     'var(--color-text-muted)': 'brightness(0) saturate(100%) invert(45%) sepia(13%) saturate(692%) hue-rotate(202deg) brightness(91%) contrast(87%)', // #64748B
                     'var(--color-text-disabled)': 'brightness(0) saturate(100%) invert(46%) sepia(7%) saturate(442%) hue-rotate(202deg) brightness(91%) contrast(84%)', // #6B7280
                     'var(--color-primary-blue)': 'brightness(0) saturate(100%) invert(44%) sepia(78%) saturate(2601%) hue-rotate(214deg) brightness(97%) contrast(94%)', // #3B82F6
+                    'var(--color-warning)': 'brightness(0) saturate(100%) invert(70%) sepia(98%) saturate(1159%) hue-rotate(8deg) brightness(98%) contrast(93%)', // #F59E0B
                     'var(--color-bg-primary)': '', // 特殊处理
                 }
             } else {
@@ -178,6 +179,7 @@ export const Icon = ({
                     'var(--color-text-muted)': 'brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(645%) hue-rotate(202deg) brightness(92%) contrast(84%)', // #9CA3AF
                     'var(--color-text-disabled)': 'brightness(0) saturate(100%) invert(46%) sepia(7%) saturate(442%) hue-rotate(202deg) brightness(91%) contrast(84%)', // #6B7280
                     'var(--color-primary-blue)': 'brightness(0) saturate(100%) invert(44%) sepia(78%) saturate(2601%) hue-rotate(214deg) brightness(97%) contrast(94%)', // #3B82F6
+                    'var(--color-warning)': 'brightness(0) saturate(100%) invert(70%) sepia(98%) saturate(1159%) hue-rotate(8deg) brightness(98%) contrast(93%)', // #F59E0B
                     'var(--color-bg-primary)': '', // 特殊处理
                 }
             }

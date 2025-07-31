@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Avatar, Icon, TagList, CrownIcon } from '@/components/ui'
+import { Avatar, Icon, TagList, CrownIcon, StarIcon } from '@/components/ui'
 
 export interface ArticleCardData {
     id: string
@@ -89,10 +89,10 @@ export function ArticleCard({
                         </span>
                     )}
 
-                    {/* 会员专属标识 */}
-                    {article.isPremium && (
+                    {/* 置顶推荐标识 - 放在最上面 */}
+                    {article.featured && (
                         <div
-                            className="premium-badge"
+                            className="featured-badge"
                             style={{
                                 position: 'absolute',
                                 top: 'var(--spacing-2)',
@@ -103,7 +103,42 @@ export function ArticleCard({
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '8px',
-                                zIndex: 999,
+                                zIndex: 999, // 最高优先级
+                                minWidth: 'auto',
+                                whiteSpace: 'nowrap',
+                                backdropFilter: 'blur(8px)',
+                                WebkitBackdropFilter: 'blur(8px)',
+                                WebkitFontSmoothing: 'antialiased',
+                                MozOsxFontSmoothing: 'grayscale',
+                                border: '1px solid var(--color-warning-border)', // 统一的警告色边框
+                                background: 'var(--color-warning-bg)', // 统一的警告色背景
+                                color: '#F59E0B !important', // 最强制的金橙色设置
+                                WebkitTextFillColor: '#F59E0B !important', // Webkit强制颜色
+                                fontWeight: '700',
+                                boxShadow: '0 2px 8px rgba(245, 158, 11, 0.2)' // 警告色阴影
+                            }}>
+                            <StarIcon size="xs" style={{ color: '#F59E0B !important' }} />
+                            <span style={{ color: '#F59E0B !important', WebkitTextFillColor: '#F59E0B !important' }}>
+                                置顶推荐
+                            </span>
+                        </div>
+                    )}
+
+                    {/* 会员专属标识 - 如果有置顶标识则往下偏移 */}
+                    {article.isPremium && (
+                        <div
+                            className="premium-badge"
+                            style={{
+                                position: 'absolute',
+                                top: article.featured ? 'calc(var(--spacing-2) + 40px)' : 'var(--spacing-2)', // 如果有置顶标识，则往下偏移
+                                right: 'var(--spacing-2)',
+                                fontSize: 'var(--font-size-xs)',
+                                padding: '8px 12px',
+                                borderRadius: 'var(--radius-sm)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                zIndex: 998, // 比置顶标识稍低
                                 minWidth: 'auto',
                                 whiteSpace: 'nowrap',
                                 backdropFilter: 'blur(8px)',
@@ -112,12 +147,15 @@ export function ArticleCard({
                                 MozOsxFontSmoothing: 'grayscale',
                                 border: '1px solid var(--color-warning-border)', // 添加缺失的边框
                                 background: 'var(--color-warning-bg)', // 确保背景色
-                                color: 'var(--color-warning)', // 确保文字颜色
+                                color: '#F59E0B !important', // 最强制的金橙色设置
+                                WebkitTextFillColor: '#F59E0B !important', // Webkit强制颜色
                                 fontWeight: '700', // 确保字重一致
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' // 添加阴影
                             }}>
-                            <CrownIcon size="sm" />
-                            会员专享
+                            <CrownIcon size="xs" style={{ color: '#F59E0B !important' }} />
+                            <span style={{ color: '#F59E0B !important', WebkitTextFillColor: '#F59E0B !important' }}>
+                                会员专享
+                            </span>
                         </div>
                     )}
                 </div>
