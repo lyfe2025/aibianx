@@ -44,7 +44,7 @@ show_usage() {
     echo "  check        - 检查搜索引擎状态"
     echo "  restart      - 重启MeiliSearch服务"
     echo "  logs         - 查看MeiliSearch日志"
-    echo "  reindex      - 重建搜索索引"
+    echo "  reindex      - 智能重建搜索索引 (自动创建+数据同步)"
     echo "  manage       - 搜索管理工具"
     echo ""
     echo -e "${GREEN}💾 备份管理 (backup)${NC}"
@@ -65,7 +65,7 @@ show_usage() {
     echo "  ./scripts.sh db check        # 检查数据库"
     echo "  ./scripts.sh search deploy   # 部署搜索引擎"
     echo "  ./scripts.sh search restart  # 重启搜索服务"
-    echo "  ./scripts.sh search reindex  # 重建搜索索引"
+    echo "  ./scripts.sh search reindex  # 智能重建搜索索引"
     echo "  ./scripts.sh backup full     # 完整备份"
     echo "  ./scripts.sh tools status    # 查看系统状态"
     echo "  ./scripts.sh tools fix-fields # 修复字段描述配置（Article）"
@@ -101,7 +101,7 @@ show_menu() {
     echo -e "  ${CYAN}9${NC}) 搜索管理工具        (完整管理界面)"
     echo -e " ${CYAN}10${NC}) 重启MeiliSearch     (重启搜索服务)"
     echo -e " ${CYAN}11${NC}) 查看搜索日志        (实时日志查看)"
-    echo -e " ${CYAN}12${NC}) 重建搜索索引        (重新同步数据)"
+    echo -e " ${CYAN}12${NC}) 智能重建索引        (自动创建+同步数据)"
     echo ""
     echo -e "${GREEN} 💾 数据管理${NC}"
     echo -e " ${CYAN}13${NC}) 数据库备份          (仅数据库)"
@@ -177,13 +177,10 @@ execute_choice() {
             return 1
             ;;
         12)
-            echo -e "${GREEN}🔄 重建搜索索引...${NC}"
-            echo "正在重新同步搜索数据..."
-            if curl -s -X POST "${BACKEND_API_URL}/search/reindex" > /dev/null 2>&1; then
-                echo -e "${GREEN}✅ 搜索索引重建成功${NC}"
-            else
-                echo -e "${RED}❌ 重建失败，请确保后端服务正在运行${NC}"
-            fi
+            echo -e "${GREEN}🔄 快速重建搜索索引...${NC}"
+            echo "启用智能索引重建流程..."
+            echo ""
+            "$SCRIPT_DIR/scripts/search/quick-reindex.sh"
             echo ""
             read -p "按回车键返回主菜单..."
             return 1
@@ -307,12 +304,9 @@ handle_command_line() {
                     docker logs meilisearch -f 2>/dev/null || echo -e "${RED}❌ MeiliSearch容器未运行${NC}"
                     ;;
                 "reindex")
-                    echo -e "${GREEN}🔄 重建搜索索引...${NC}"
-                    if curl -s -X POST "${BACKEND_API_URL}/search/reindex" > /dev/null 2>&1; then
-                        echo -e "${GREEN}✅ 搜索索引重建成功${NC}"
-                    else
-                        echo -e "${RED}❌ 重建失败，请确保后端服务正在运行${NC}"
-                    fi
+                    echo -e "${GREEN}🔄 启动快速重建索引流程...${NC}"
+                    echo ""
+                    exec "$SCRIPT_DIR/scripts/search/quick-reindex.sh"
                     ;;
                 "manage")
                     echo -e "${BLUE}🔧 启动搜索管理工具...${NC}"

@@ -22,7 +22,7 @@ export interface MeiliSearchArticle {
         width: number
         height: number
         alternativeText?: string | null
-    } | null
+    } | string | null
     author?: {
         id: number
         documentId: string

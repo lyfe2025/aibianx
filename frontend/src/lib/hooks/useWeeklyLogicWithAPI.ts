@@ -79,8 +79,10 @@ export function useWeeklyLogicWithAPI(): UseWeeklyLogicReturn {
             title: article.title,
             slug: article.slug,
             excerpt: article.excerpt || '',
-            coverImage: article.featuredImage?.url
-                ? `${config.backend.url}${article.featuredImage.url}`
+            coverImage: article.featuredImage
+                ? (typeof article.featuredImage === 'string' 
+                    ? `${config.backend.url}${article.featuredImage}`
+                    : `${config.backend.url}${article.featuredImage.url}`)
                 : undefined,
             author: {
                 name: article.author?.name || '匿名作者',

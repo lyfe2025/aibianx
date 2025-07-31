@@ -8,15 +8,62 @@ import { useState } from 'react'
 import { Container } from '@/components/ui'
 import { SmartSearch } from '@/components/ui/SmartSearch/SmartSearch'
 import { SearchAnalyticsPanel } from '@/components/molecules/SearchAnalyticsPanel/SearchAnalyticsPanel'
+import { ArticleCard, type ArticleCardData } from '@/components/molecules/ArticleCard/ArticleCard'
 import { searchArticles, getSearchStats } from '@/lib/meilisearch'
 import type { MeiliSearchArticle } from '@/lib/meilisearch'
+import { config } from '@/lib/config'
 
 export default function SearchDemoPage() {
-    const [searchResults, setSearchResults] = useState<MeiliSearchArticle[]>([])
+    const [searchResults, setSearchResults] = useState<ArticleCardData[]>([])
     const [isLoading, setIsLoading] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [error, setError] = useState<string | null>(null)
     const [searchStats, setSearchStats] = useState<any>(null)
+
+    // 转换MeiliSearch文章为ArticleCard所需格式
+    const transformMeiliSearchArticle = (article: MeiliSearchArticle): ArticleCardData => {
+        // 格式化日期函数
+        const formatDate = (dateString: string): string => {
+            try {
+                const date = new Date(dateString)
+                if (isNaN(date.getTime())) {
+                    return '日期未知'
+                }
+                return date.toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                })
+            } catch {
+                return '日期未知'
+            }
+        }
+
+        return {
+            id: article.documentId,
+            title: article.title,
+            slug: article.slug,
+            excerpt: article.excerpt || '',
+            coverImage: article.featuredImage
+                ? (typeof article.featuredImage === 'string' 
+                    ? `${config.backend.url}${article.featuredImage}`
+                    : `${config.backend.url}${article.featuredImage.url}`)
+                : undefined,
+            author: {
+                name: article.author?.name || '匿名作者',
+                avatar: article.author?.avatar?.url
+                    ? `${config.backend.url}${article.author.avatar.url}`
+                    : undefined
+            },
+            publishedAt: formatDate(article.publishedAt),
+            readingTime: `${article.readingTime}分钟`,
+            viewCount: String(article.viewCount),
+            tags: article.tags?.map(tag => tag.name) || [],
+            isPremium: article.isPremium || false,
+            // 可选字段
+            likeCount: '0'
+        }
+    }
 
     const handleSearch = async (query: string) => {
         setSearchQuery(query)
@@ -35,7 +82,9 @@ export default function SearchDemoPage() {
                 highlight: true
             })
 
-            setSearchResults(response.articles)
+            // 转换搜索结果为ArticleCard格式
+            const transformedResults = response.articles.map(transformMeiliSearchArticle)
+            setSearchResults(transformedResults)
             console.log('🔍 搜索结果:', response)
 
         } catch (err) {
@@ -157,71 +206,18 @@ export default function SearchDemoPage() {
                             搜索结果 ({searchResults.length} 篇文章)
                         </h2>
 
-                        <div style={{ space: '16px' }}>
+                        <div style={{ 
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '16px'
+                        }}>
                             {searchResults.map((article) => (
-                                <div
-                                    key={article.documentId}
-                                    style={{
-                                        padding: '20px',
-                                        background: 'var(--color-bg-glass)',
-                                        borderRadius: '12px',
-                                        border: '1px solid var(--color-border-primary)',
-                                        marginBottom: '16px'
-                                    }}
-                                >
-                                    <h3 style={{
-                                        fontSize: '18px',
-                                        fontWeight: 600,
-                                        color: 'var(--color-text-primary)',
-                                        marginBottom: '8px'
-                                    }}>
-                                        {/* 显示高亮的标题 */}
-                                        <span dangerouslySetInnerHTML={{
-                                            __html: article._formatted?.title || article.title
-                                        }} />
-                                    </h3>
-
-                                    {article.excerpt && (
-                                        <p style={{
-                                            color: 'var(--color-text-muted)',
-                                            fontSize: '14px',
-                                            lineHeight: 1.6,
-                                            marginBottom: '12px'
-                                        }}>
-                                            {/* 显示高亮的摘要 */}
-                                            <span dangerouslySetInnerHTML={{
-                                                __html: article._formatted?.excerpt || article.excerpt
-                                            }} />
-                                        </p>
-                                    )}
-
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '16px',
-                                        fontSize: '12px',
-                                        color: 'var(--color-text-muted)'
-                                    }}>
-                                        {article.author && (
-                                            <span>作者: {article.author.name}</span>
-                                        )}
-                                        {article.category && (
-                                            <span>分类: {article.category.name}</span>
-                                        )}
-                                        <span>阅读时间: {article.readingTime} 分钟</span>
-                                        <span>浏览量: {article.viewCount}</span>
-                                        {article.featured && (
-                                            <span style={{
-                                                background: 'var(--color-primary-blue)',
-                                                color: 'white',
-                                                padding: '2px 6px',
-                                                borderRadius: '4px'
-                                            }}>
-                                                精选
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
+                                <ArticleCard
+                                    key={article.id}
+                                    article={article}
+                                    variant="horizontal"
+                                    showExcerpt={true}
+                                />
                             ))}
                         </div>
                     </div>
