@@ -52,6 +52,8 @@ show_usage() {
     echo -e "${GREEN}🔧 工具 (tools)${NC}"
     echo "  status       - 查看系统状态"
     echo "  env          - 加载环境变量"
+    echo "  fix-fields   - 修复字段描述配置问题（Article专用）"
+    echo "  fix-fields-any - 修复任意内容类型的字段描述问题"
     echo ""
     echo -e "${YELLOW}📖 命令行使用示例:${NC}"
     echo "  ./scripts.sh deploy start    # 启动开发环境"
@@ -61,6 +63,8 @@ show_usage() {
     echo "  ./scripts.sh search reindex  # 重建搜索索引"
     echo "  ./scripts.sh backup full     # 完整备份"
     echo "  ./scripts.sh tools status    # 查看系统状态"
+    echo "  ./scripts.sh tools fix-fields # 修复字段描述配置（Article）"
+    echo "  ./scripts.sh tools fix-fields-any author # 配置作者字段描述"
     echo ""
 }
 
@@ -97,6 +101,9 @@ show_menu() {
     echo -e " ${CYAN}13${NC}) 数据库备份          (仅数据库)"
     echo -e " ${CYAN}14${NC}) 完整系统备份        (数据库+文件)"
     echo -e " ${CYAN}15${NC}) 清理备份临时文件"
+    echo ""
+    echo -e "${GREEN} 🔧 系统维护${NC}"
+    echo -e " ${CYAN}16${NC}) 修复字段描述配置      (解决描述不显示问题)"
     echo ""
     echo -e "${PURPLE} h${NC}) 显示命令行帮助"
     echo -e "${RED} 0${NC}) 退出"
@@ -186,6 +193,10 @@ execute_choice() {
             echo -e "${YELLOW}🧹 清理备份临时文件...${NC}"
             exec "$SCRIPT_DIR/scripts/backup/cleanup-backup-temp.sh"
             ;;
+        16)
+            echo -e "${BLUE}🔧 修复字段描述配置...${NC}"
+            exec "$SCRIPT_DIR/scripts/tools/configure-field-descriptions.sh"
+            ;;
         h|H)
             show_usage
             echo ""
@@ -198,7 +209,7 @@ execute_choice() {
             ;;
         *)
             echo -e "${RED}❌ 无效选择: $choice${NC}"
-            echo "请输入 0-15 之间的数字，或 'h' 查看帮助"
+            echo "请输入 0-16 之间的数字，或 'h' 查看帮助"
             echo ""
             read -p "按回车键继续..." 
             return 1
@@ -342,9 +353,17 @@ handle_command_line() {
                 "env")
                     echo "加载环境变量工具，请在其他脚本中使用 source scripts/tools/load-env.sh"
                     ;;
+                "fix-fields")
+                    echo -e "${BLUE}🔧 启动字段描述配置修复工具 (Article专用)...${NC}"
+                    exec "$SCRIPT_DIR/scripts/tools/configure-field-descriptions.sh" "$@"
+                    ;;
+                "fix-fields-any")
+                    echo -e "${BLUE}🔧 启动通用字段描述配置工具...${NC}"
+                    exec "$SCRIPT_DIR/scripts/tools/configure-any-field-descriptions.sh" "$@"
+                    ;;
                 *)
                     echo -e "${RED}❌ 未知的工具操作: $action${NC}"
-                    echo "可用操作: status, env"
+                    echo "可用操作: status, env, fix-fields, fix-fields-any"
                     exit 1
                     ;;
             esac

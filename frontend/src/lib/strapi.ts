@@ -188,6 +188,7 @@ interface StrapiArticle {
     seoTitle?: string | null
     seoDescription?: string | null
     featured: boolean
+    isPremium: boolean
     createdAt: string
     updatedAt: string
     featuredImage?: {
@@ -451,7 +452,8 @@ function transformStrapiArticle(strapiArticle: StrapiArticle): ArticleCardData {
         publishedAt: formatDate(strapiArticle.publishedAt),
         readingTime: `${strapiArticle.readingTime || 5}分钟`,
         viewCount: String(strapiArticle.viewCount || 0),
-        isPremium: false, // 暂时设为false，后续可根据需要调整
+        isPremium: strapiArticle.isPremium || false, // 使用专门的isPremium字段设置会员专享标识
+        featured: strapiArticle.featured || false, // 是否置顶推荐
         coverImage: strapiArticle.featuredImage?.url
             ? `${STRAPI_URL}${strapiArticle.featuredImage.url}`
             : undefined,

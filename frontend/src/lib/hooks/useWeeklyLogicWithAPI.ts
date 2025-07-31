@@ -93,7 +93,7 @@ export function useWeeklyLogicWithAPI(): UseWeeklyLogicReturn {
             viewCount: String(article.viewCount),
             // 修复：标签应该是字符串数组，不是对象数组
             tags: article.tags?.map(tag => tag.name) || [],
-            isPremium: article.featured || false,
+            isPremium: article.isPremium || false, // 使用专门的isPremium字段而非featured
             // 可选字段
             content: undefined,
             likeCount: '0'

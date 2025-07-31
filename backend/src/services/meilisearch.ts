@@ -84,7 +84,8 @@ class MeiliSearchService {
             }
         }
 
-        strapi.log.info('🔧 MeiliSearch配置:', {
+        // 安全日志记录 - 避免strapi未初始化的问题
+        this.safeLog('🔧 MeiliSearch配置:', {
             host: this.config.host,
             hasApiKey: !!this.config.apiKey,
             mode: this.config.apiKey ? 'production' : 'development'
@@ -96,7 +97,37 @@ class MeiliSearchService {
             apiKey: this.config.apiKey || undefined  // null转为undefined
         })
 
-        strapi.log.info('📊 MeiliSearch服务已初始化')
+        this.safeLog('📊 MeiliSearch服务已初始化')
+    }
+
+    /**
+     * 安全日志记录 - 避免strapi未初始化的问题
+     */
+    private safeLog(message: string, data?: any) {
+        try {
+            if (typeof strapi !== 'undefined' && strapi.log) {
+                strapi.log.info(message, data)
+            } else {
+                console.log(`[MeiliSearch] ${message}`, data || '')
+            }
+        } catch (error) {
+            console.log(`[MeiliSearch] ${message}`, data || '')
+        }
+    }
+
+    /**
+     * 安全错误日志记录
+     */
+    private safeLogError(message: string, error?: any) {
+        try {
+            if (typeof strapi !== 'undefined' && strapi.log) {
+                strapi.log.error(message, error)
+            } else {
+                console.error(`[MeiliSearch] ${message}`, error || '')
+            }
+        } catch (e) {
+            console.error(`[MeiliSearch] ${message}`, error || '')
+        }
     }
 
     /**
@@ -123,9 +154,9 @@ class MeiliSearchService {
                 await this.createOrUpdateIndex(indexConfig.indexName, indexConfig.settings, indexConfig.primaryKey)
             }
 
-            strapi.log.info('✅ 所有MeiliSearch索引初始化完成')
+            this.safeLog('✅ 所有MeiliSearch索引初始化完成')
         } catch (error) {
-            strapi.log.error('❌ MeiliSearch索引初始化失败:', error)
+            this.safeLogError('❌ MeiliSearch索引初始化失败:', error)
             throw error
         }
     }
@@ -140,7 +171,7 @@ class MeiliSearchService {
             try {
                 index = this.client.index(indexName)
                 await index.getStats() // 测试索引是否存在
-                strapi.log.info(`📊 索引 ${indexName} 已存在，更新设置`)
+                this.safeLog(`📊 索引 ${indexName} 已存在，更新设置`)
             } catch {
                 // 索引不存在，创建新索引
                 const task = await this.client.createIndex(indexName, { primaryKey })
@@ -156,7 +187,7 @@ class MeiliSearchService {
                         attempts++
                     }
                 }
-                strapi.log.info(`🆕 创建新索引: ${indexName}`)
+                this.safeLog(`🆕 创建新索引: ${indexName}`)
             }
 
             // 更新索引设置
@@ -164,12 +195,12 @@ class MeiliSearchService {
                 const updateTask = await index.updateSettings(settings)
                 // 等待设置更新完成，最多等待5秒
                 await new Promise(resolve => setTimeout(resolve, 2000))
-                strapi.log.info(`⚙️  索引 ${indexName} 设置已更新`)
+                this.safeLog(`⚙️  索引 ${indexName} 设置已更新`)
             }
 
             return index
         } catch (error) {
-            strapi.log.error(`❌ 索引 ${indexName} 创建/更新失败:`, error)
+            this.safeLogError(`❌ 索引 ${indexName} 创建/更新失败:`, error)
             throw error
         }
     }
@@ -226,6 +257,7 @@ class MeiliSearchService {
                     viewCount: article.viewCount || 0,
                     readingTime: article.readingTime || 5,
                     featured: article.featured || false,
+                    isPremium: article.isPremium || false,
                     featuredImage: article.featuredImage?.url || null
                 }))
 
@@ -234,12 +266,12 @@ class MeiliSearchService {
                 const task = await index.addDocuments(searchDocuments)
                 // 等待文档索引完成
                 await new Promise(resolve => setTimeout(resolve, 1000))
-                strapi.log.info(`📝 同步了 ${searchDocuments.length} 篇文章到搜索索引`)
+                this.safeLog(`📝 同步了 ${searchDocuments.length} 篇文章到搜索索引`)
             }
 
             return searchDocuments.length
         } catch (error) {
-            strapi.log.error('❌ 文章搜索索引同步失败:', error)
+            this.safeLogError('❌ 文章搜索索引同步失败:', error)
             throw error
         }
     }
@@ -260,10 +292,10 @@ class MeiliSearchService {
 
             if (article) {
                 await this.syncArticles([article])
-                strapi.log.info(`📝 单篇文章同步完成: ${article.title}`)
+                this.safeLog(`📝 单篇文章同步完成: ${article.title}`)
             }
         } catch (error) {
-            strapi.log.error('❌ 单篇文章同步失败:', error)
+            this.safeLogError('❌ 单篇文章同步失败:', error)
             throw error
         }
     }
@@ -277,9 +309,9 @@ class MeiliSearchService {
             const task = await index.deleteDocument(documentId)
             // 等待删除操作完成
             await new Promise(resolve => setTimeout(resolve, 500))
-            strapi.log.info(`🗑️  删除文章索引: ${documentId}`)
+            this.safeLog(`🗑️  删除文章索引: ${documentId}`)
         } catch (error) {
-            strapi.log.error('❌ 删除文章索引失败:', error)
+            this.safeLogError('❌ 删除文章索引失败:', error)
             throw error
         }
     }
@@ -334,7 +366,7 @@ class MeiliSearchService {
             const totalPages = Math.ceil(results.estimatedTotalHits / searchParams.limit)
             const currentPage = Math.floor(searchParams.offset / searchParams.limit) + 1
 
-            strapi.log.info(`🔍 搜索查询: "${query}" - 找到 ${results.estimatedTotalHits} 条结果`)
+            this.safeLog(`🔍 搜索查询: "${query}" - 找到 ${results.estimatedTotalHits} 条结果`)
 
             return {
                 hits: results.hits as SearchResult[],
@@ -348,7 +380,7 @@ class MeiliSearchService {
                 facetDistribution: results.facetDistribution
             }
         } catch (error) {
-            strapi.log.error('❌ 搜索查询失败:', error)
+            this.safeLogError('❌ 搜索查询失败:', error)
             throw error
         }
     }
@@ -371,7 +403,7 @@ class MeiliSearchService {
                 type: 'article' as const
             }))
         } catch (error) {
-            strapi.log.error('❌ 获取搜索建议失败:', error)
+            this.safeLogError('❌ 获取搜索建议失败:', error)
             return []
         }
     }
@@ -390,7 +422,7 @@ class MeiliSearchService {
                 fieldDistribution: stats.fieldDistribution
             }
         } catch (error) {
-            strapi.log.error('❌ 获取索引统计失败:', error)
+            this.safeLogError('❌ 获取索引统计失败:', error)
             throw error
         }
     }
@@ -463,7 +495,7 @@ class MeiliSearchService {
                 }
             }
         } catch (error) {
-            strapi.log.error('❌ 获取API密钥失败:', error)
+            this.safeLogError('❌ 获取API密钥失败:', error)
             return {
                 mode: 'error',
                 message: 'API密钥获取失败',
@@ -497,7 +529,7 @@ class MeiliSearchService {
 
             const newKey = await this.client.createKey(keyOptions)
 
-            strapi.log.info(`✅ 成功创建API密钥: ${name}`)
+            this.safeLog(`✅ 成功创建API密钥: ${name}`)
 
             return {
                 success: true,
@@ -514,7 +546,7 @@ class MeiliSearchService {
                 note: 'API密钥创建和使用完全免费，无任何隐藏费用'
             }
         } catch (error) {
-            strapi.log.error('❌ 创建API密钥失败:', error)
+            this.safeLogError('❌ 创建API密钥失败:', error)
             throw error
         }
     }

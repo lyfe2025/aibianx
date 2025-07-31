@@ -162,9 +162,19 @@ echo "🔍 检查端口占用..."
 check_port 1337 "strapi"
 check_port 80 "next"
 
+# 清除缓存
+echo "🧹 清除Strapi缓存..."
+cd backend
+if [ -d ".tmp" ] || [ -d ".cache" ] || [ -d "build" ] || [ -d "dist" ]; then
+    echo "   🔄 删除缓存目录..."
+    rm -rf .tmp .cache build dist 2>/dev/null || true
+    echo "   ✅ 缓存清除完成"
+else
+    echo "   ✅ 无需清除缓存（目录不存在）"
+fi
+
 # 启动后端服务
 echo "🔄 启动Strapi后端服务..."
-cd backend
 npm run develop > ../logs/backend.log 2>&1 &
 BACKEND_PID=$!
 echo $BACKEND_PID > ../logs/backend.pid

@@ -47,6 +47,7 @@ export interface MeiliSearchArticle {
     viewCount: number
     readingTime: number
     featured: boolean
+    isPremium: boolean
     // MeiliSearch特有的高亮字段
     _formatted?: {
         title?: string

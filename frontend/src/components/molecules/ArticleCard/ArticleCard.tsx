@@ -21,6 +21,7 @@ export interface ArticleCardData {
     tags: string[]
     slug: string
     isPremium?: boolean
+    featured?: boolean // 是否置顶推荐
     // SEO优化字段
     seoTitle?: string
     seoDescription?: string

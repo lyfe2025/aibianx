@@ -73,7 +73,18 @@
         "featured": {
             "type": "boolean",
             "default": false,
-            "description": "是否为精选文章（用于首页推荐）"
+            "description": "是否置顶推荐（用于首页精选推荐，置顶显示）",
+            "configurable": true,
+            "visible": true,
+            "private": false
+        },
+        "isPremium": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否为会员专享内容（需要会员权限才能查看完整内容）",
+            "configurable": true,
+            "visible": true,
+            "private": false
         },
         "tags": {
             "type": "relation",
