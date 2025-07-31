@@ -108,10 +108,10 @@ class MeiliSearchService {
             const indexConfigs = {
                 articles: {
                     indexName: 'articles',
-                    primaryKey: 'id',
+                    primaryKey: 'documentId',
                     settings: {
                         searchableAttributes: ['title', 'excerpt', 'content', 'author.name', 'category.name', 'tags.name'],
-                        displayedAttributes: ['id', 'documentId', 'title', 'slug', 'excerpt', 'author', 'category', 'tags', 'publishedAt', 'viewCount', 'readingTime', 'featured'],
+                        displayedAttributes: ['documentId', 'title', 'slug', 'excerpt', 'author', 'category', 'tags', 'publishedAt', 'viewCount', 'readingTime', 'featured'],
                         filterableAttributes: ['category.slug', 'tags.slug', 'author.slug', 'featured', 'publishedAt'],
                         sortableAttributes: ['publishedAt', 'viewCount', 'readingTime', 'title']
                     }
@@ -205,7 +205,6 @@ class MeiliSearchService {
             const searchDocuments = articles
                 .filter(article => article.publishedAt) // 只索引已发布的文章
                 .map(article => ({
-                    id: article.documentId,
                     documentId: article.documentId,
                     title: article.title,
                     slug: article.slug,
@@ -366,7 +365,7 @@ class MeiliSearchService {
             })
 
             return searchResults.hits.map(hit => ({
-                id: hit.id,
+                id: hit.documentId,
                 title: hit.title,
                 category: hit.category.name,
                 type: 'article' as const
