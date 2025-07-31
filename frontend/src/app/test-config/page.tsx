@@ -33,7 +33,7 @@ export default function TestConfigPage() {
                     <li>注册功能：{config?.registrationEnabled ? '✅ 启用' : '❌ 禁用'}</li>
                     <li>邮箱验证：{config?.emailVerificationEnabled ? '✅ 启用' : '❌ 禁用'}</li>
                     <li>密码重置：{config?.passwordResetEnabled ? '✅ 启用' : '❌ 禁用'}</li>
-                    <li>邮件服务：{config?.emailServiceEnabled ? '✅ 启用' : '❌ 禁用'}</li>
+                    <li>验证码长度：{config?.verificationCodeLength || 6}位</li>
                     <li>维护模式：{config?.maintenanceMode ? '⚠️ 开启' : '✅ 正常'}</li>
                 </ul>
             </div>

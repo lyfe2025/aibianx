@@ -80,17 +80,9 @@ interface SeoMetricsData {
 interface StrapiSystemConfig {
     id: number
     documentId: string
-    emailServiceEnabled: boolean
-    emailServiceProvider: 'gmail' | 'sendgrid' | 'aliyun' | 'tencent' | 'mailgun' | 'custom_smtp'
-    emailSmtpHost: string
-    emailSmtpPort: number
-    emailFromAddress: string
-    emailFromName: string
-    emailUseTLS: boolean
-    emailSubjectPrefix: string
     registrationEnabled: boolean
     emailVerificationEnabled: boolean
-    emailVerificationCodeLength: number
+    verificationCodeLength: number
     emailVerificationCodeExpiry: number
     passwordResetEnabled: boolean
     passwordResetTokenExpiry: number
@@ -140,22 +132,6 @@ interface PublicSystemConfig {
     maintenanceMessage: string
     enableUserProfileEdit: boolean
     enableAccountDeletion: boolean
-    emailServiceEnabled: boolean
-}
-
-// 邮件配置类型（服务端使用）
-interface EmailConfig {
-    emailServiceEnabled: boolean
-    emailServiceProvider: string
-    emailSmtpHost: string
-    emailSmtpPort: number
-    emailFromAddress: string
-    emailFromName: string
-    emailUseTLS: boolean
-    emailSubjectPrefix: string
-    emailVerificationCodeLength: number
-    emailVerificationCodeExpiry: number
-    passwordResetTokenExpiry: number
 }
 
 // Strapi API配置
@@ -884,26 +860,7 @@ export async function updateSystemConfig(configData: Partial<StrapiSystemConfig>
     }
 }
 
-/**
- * 获取邮件服务配置（服务端使用）
- */
-export async function getEmailServiceConfig(): Promise<EmailConfig | null> {
-    try {
-        const response = await fetch(`${STRAPI_URL}/api/system-config/email`, {
-            headers: getHeaders(),
-        })
 
-        if (!response.ok) {
-            throw new Error(`获取邮件配置失败: ${response.status}`)
-        }
-
-        const data = await response.json()
-        return data as EmailConfig
-    } catch (error) {
-        console.error('获取邮件配置失败:', error)
-        return null
-    }
-}
 
 /**
  * 检查系统是否处于维护模式

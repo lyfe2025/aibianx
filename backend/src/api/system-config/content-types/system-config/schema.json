@@ -19,65 +19,7 @@
             "maxLength": 100,
             "description": "配置名称：用于标识此配置实例，便于管理界面显示"
         },
-        "emailServiceEnabled": {
-            "type": "boolean",
-            "default": true,
-            "description": "邮件服务总开关：是否启用邮件发送功能（注册验证、密码重置等）"
-        },
-        "emailServiceProvider": {
-            "type": "enumeration",
-            "enum": [
-                "gmail",
-                "sendgrid",
-                "aliyun",
-                "tencent",
-                "mailgun",
-                "custom_smtp"
-            ],
-            "default": "gmail",
-            "description": "邮件服务商：选择使用的邮件服务提供商。gmail=Gmail，sendgrid=SendGrid，aliyun=阿里云邮件推送，tencent=腾讯企业邮箱，mailgun=Mailgun，custom_smtp=自定义SMTP"
-        },
-        "emailSmtpHost": {
-            "type": "string",
-            "maxLength": 255,
-            "default": "smtp.gmail.com",
-            "description": "SMTP服务器地址：邮件服务器主机名，如smtp.gmail.com、smtp.sendgrid.net等"
-        },
-        "emailSmtpPort": {
-            "type": "integer",
-            "default": 587,
-            "min": 1,
-            "max": 65535,
-            "description": "SMTP端口：邮件服务器端口号。常用：587(TLS)、465(SSL)、25(明文)"
-        },
-        "emailFromAddress": {
-            "type": "email",
-            "maxLength": 255,
-            "default": "noreply@aibianx.com",
-            "description": "发送邮箱地址：系统发送邮件时使用的发件人邮箱地址"
-        },
-        "emailFromName": {
-            "type": "string",
-            "maxLength": 100,
-            "default": "AI变现之路",
-            "description": "发送邮箱名称：系统发送邮件时显示的发件人名称"
-        },
-        "emailUsername": {
-            "type": "string",
-            "maxLength": 255,
-            "description": "邮箱用户名：SMTP认证用户名，通常是完整邮箱地址"
-        },
-        "emailPassword": {
-            "type": "password",
-            "maxLength": 255,
-            "private": true,
-            "description": "邮箱密码：SMTP认证密码或应用专用密码（Gmail需要使用应用密码）"
-        },
-        "emailUseTLS": {
-            "type": "boolean",
-            "default": true,
-            "description": "启用TLS加密：是否使用TLS加密连接（推荐启用）"
-        },
+
         "registrationEnabled": {
             "type": "boolean",
             "default": true,
@@ -92,6 +34,13 @@
             "type": "boolean",
             "default": true,
             "description": "密码重置开关：是否允许用户通过邮件重置密码"
+        },
+        "verificationCodeLength": {
+            "type": "integer",
+            "default": 6,
+            "min": 4,
+            "max": 8,
+            "description": "验证码长度：邮箱验证码的位数，默认6位数字"
         },
         "verificationCodeExpiry": {
             "type": "integer",

@@ -1,0 +1,482 @@
+# 工作流和验证规范 (Workflow & Verification Rules)
+
+## 📋 **代码提交前强制自检清单（防止99%的错误）**
+```bash
+# 🔥 每次代码提交前必须100%完成以下检查清单
+
+echo "🚀 开始代码提交前检查..."
+
+# ✅ 第1步：基础代码质量检查
+echo "1️⃣ 基础代码质量检查"
+echo "   检查TypeScript类型错误..."
+npx tsc --noEmit && echo "   ✅ 类型检查通过" || { echo "   ❌ 类型检查失败"; exit 1; }
+
+echo "   检查ESLint规则..."
+npm run lint && echo "   ✅ ESLint检查通过" || { echo "   ❌ ESLint检查失败"; exit 1; }
+
+echo "   检查Prettier格式..."
+npx prettier --check . && echo "   ✅ 代码格式正确" || { echo "   ❌ 代码格式需要修复"; exit 1; }
+
+# ✅ 第2步：文件命名和路径检查
+echo "2️⃣ 文件命名规范检查"
+echo "   检查组件文件命名..."
+find frontend/src/components -name "*.tsx" | grep -v "^[A-Z]" && echo "   ❌ 组件文件命名错误" || echo "   ✅ 组件命名正确"
+
+echo "   检查API路由命名..."
+find frontend/src/app/api -name "route.ts" | grep -E "[A-Z]" && echo "   ❌ API路由应使用kebab-case" || echo "   ✅ API路由命名正确"
+
+# ✅ 第3步：导入导出检查
+echo "3️⃣ 导入导出规范检查"
+echo "   检查相对路径深度..."
+grep -r "\.\./\.\./\.\." frontend/src/ && echo "   ❌ 发现超过3层的相对路径" || echo "   ✅ 相对路径使用正确"
+
+echo "   检查循环依赖..."
+npx madge --circular frontend/src/ && echo "   ❌ 发现循环依赖" || echo "   ✅ 无循环依赖"
+
+# ✅ 第4步：API和数据库检查
+echo "4️⃣ API和数据库检查"
+echo "   检查API端点可访问性..."
+curl -s "http://localhost:1337/api/articles" > /dev/null && echo "   ✅ 核心API正常" || echo "   ❌ API访问失败"
+
+echo "   检查数据库连接..."
+psql -U aibianx_dev -d aibianx_dev -c "SELECT 1;" > /dev/null 2>&1 && echo "   ✅ 数据库连接正常" || echo "   ❌ 数据库连接失败"
+
+# ✅ 第5步：环境变量和配置检查
+echo "5️⃣ 环境变量检查"
+echo "   检查必需的环境变量..."
+test -f backend/.env && test -f frontend/.env.local && echo "   ✅ 环境变量文件存在" || echo "   ❌ 环境变量文件缺失"
+
+echo "   检查硬编码URL..."
+grep -r "localhost:1337\|localhost:3000" frontend/src/ backend/src/ && echo "   ❌ 发现硬编码URL" || echo "   ✅ 无硬编码URL"
+
+# ✅ 第6步：样式和UI检查
+echo "6️⃣ 样式和UI检查"
+echo "   检查CSS变量使用..."
+grep -r "color: #[0-9a-fA-F]" frontend/src/styles/ && echo "   ❌ 发现硬编码颜色" || echo "   ✅ CSS变量使用正确"
+
+echo "   检查响应式设计..."
+grep -r "@media" frontend/src/styles/ | wc -l | xargs echo "   媒体查询数量:"
+
+# ✅ 第7步：安全检查
+echo "7️⃣ 安全检查"
+echo "   检查敏感信息泄露..."
+grep -r "password\|secret\|key" --include="*.ts" --include="*.tsx" frontend/src/ | grep -v "\.env" && echo "   ❌ 可能存在敏感信息" || echo "   ✅ 无敏感信息泄露"
+
+echo "   检查console.log清理..."
+grep -r "console\.log\|console\.error" frontend/src/ | grep -v "debugLog" && echo "   ⚠️  存在console输出，建议清理" || echo "   ✅ console输出已清理"
+
+# ✅ 第8步：性能检查
+echo "8️⃣ 性能检查"
+echo "   检查Bundle大小..."
+cd frontend && npm run build > /tmp/build.log 2>&1
+grep "First Load JS" /tmp/build.log | awk '{print $4}' | sed 's/kB//' | awk '$1 > 500 {print "   ❌ Bundle过大: " $1 "kB"; exit 1}' || echo "   ✅ Bundle大小合理"
+
+echo "   检查图片优化..."
+find frontend/public/images -type f \( -name "*.jpg" -o -name "*.png" \) -size +500k | head -3 | while read file; do echo "   ⚠️  图片较大: $file"; done
+
+# ✅ 第9步：测试覆盖检查
+echo "9️⃣ 测试检查"
+echo "   运行前端测试..."
+cd frontend && npm run test 2>/dev/null && echo "   ✅ 前端测试通过" || echo "   ⚠️  前端测试需要完善"
+
+echo "   检查关键功能..."
+curl -s "http://localhost:1337/api/articles?pagination[pageSize]=1" | jq '.data | length' > /dev/null && echo "   ✅ 关键功能正常" || echo "   ❌ 关键功能异常"
+
+# ✅ 第10步：文档和注释检查
+echo "🔟 文档检查"
+echo "   检查API文档更新..."
+git diff --name-only | grep -q "API-ENDPOINTS.md" && echo "   ✅ API文档已更新" || echo "   ⚠️  检查是否需要更新API文档"
+
+echo "   检查代码注释..."
+find frontend/src/components -name "*.tsx" -exec grep -L "\/\*\*\|\/\/" {} \; | head -3 | while read file; do echo "   ⚠️  缺少注释: $file"; done
+
+echo ""
+echo "🎉 所有检查完成！"
+echo ""
+echo "📋 最终确认清单（手动确认）："
+echo "   - [ ] 功能符合需求"
+echo "   - [ ] 代码逻辑清晰"
+echo "   - [ ] 错误处理完整"
+echo "   - [ ] 用户体验良好"
+echo "   - [ ] 性能满足要求"
+echo "   - [ ] 安全措施到位"
+echo "   - [ ] 测试覆盖充分"
+echo "   - [ ] 文档更新及时"
+echo ""
+echo "✅ 确认无误后方可提交代码！"
+```
+
+## 🎯 **强制性开发工作流检查清单（防止遗漏）**
+
+### **🔥 新建内容类型工作流（7步验证法）**
+
+每创建一个新的内容类型，必须按以下顺序执行并验证（与上面的铁律保持一致）：
+
+```bash
+# 📋 第1步：创建内容类型
+echo "✅ 步骤1: Admin界面创建内容类型"
+echo "🔍 验证命令:"
+curl -s "http://localhost:1337/api/[content-types]" | jq '.error.status'
+echo "期望结果: 403 (需要权限) 或 200 (成功)"
+echo ""
+
+# 📋 第2步：自动添加字段描述
+echo "✅ 步骤2: 自动添加字段描述"
+echo "🔍 执行命令:"
+./scripts.sh tools fix-fields-any [content-type]
+echo "🔍 验证: 脚本自动添加，Admin界面检查中文描述已生效"
+echo ""
+
+# 📋 第3步：添加数据库注释  
+echo "✅ 步骤3: 添加数据库注释"
+echo "🔍 验证命令:"
+psql -U aibianx_dev -d aibianx_dev -c "
+SELECT column_name, col_description(pgc.oid, cols.ordinal_position) as comment
+FROM information_schema.columns cols
+INNER JOIN pg_class pgc ON pgc.relname = cols.table_name
+WHERE table_name = '[table_name]' AND table_schema = 'public';"
+echo "期望结果: 每个字段都有中文注释"
+echo ""
+
+# 📋 第4步：配置API权限
+echo "✅ 步骤4: 配置API权限"
+echo "🔍 验证命令:"
+curl -s "http://localhost:1337/api/[content-types]?pagination[pageSize]=1" | jq '.data | length'
+echo "期望结果: 返回数字（成功）"
+echo ""
+
+# 📋 第5步：测试API端点
+echo "✅ 步骤5: 测试API端点"
+echo "🔍 测试命令:"
+curl -s "http://localhost:1337/api/[content-types]" | jq '.data'
+curl -s "http://localhost:1337/api/[content-types]?populate=*" | jq '.data[0].attributes'
+echo "期望结果: 返回数据结构正确"
+echo ""
+
+# 📋 第6步：前端集成测试
+echo "✅ 步骤6: 前端集成测试"
+echo "🔍 测试命令:"
+curl -s "http://localhost/api/test-[content-type]" | jq '.status'
+echo "期望结果: success"
+echo ""
+
+# 📋 第7步：最终验证
+echo "✅ 步骤7: 最终验证清单"
+echo "🔍 检查清单:"
+echo "  - [ ] 数据库注释完整"
+echo "  - [ ] 字段描述显示中文"
+echo "  - [ ] API权限配置正确"
+echo "  - [ ] API端点正常访问"
+echo "  - [ ] 前端集成成功"
+echo "  - [ ] 测试数据创建成功"
+```
+
+### **🔥 API开发工作流（5步验证法）**
+
+每开发一个新的API端点，必须执行以下验证：
+
+```bash
+# 📋 API开发验证脚本
+echo "🔥 API开发验证清单"
+echo ""
+
+# 第1步：代码质量检查
+echo "✅ 步骤1: 代码质量检查"
+echo "🔍 检查项目:"
+echo "  - [ ] 使用ES6语法 (import/export)"
+echo "  - [ ] 包含错误处理 (try/catch)"
+echo "  - [ ] 参数验证完整"
+echo "  - [ ] 返回格式标准"
+echo ""
+
+# 第2步：API端点测试
+echo "✅ 步骤2: API端点测试"
+echo "🔍 测试命令:"
+echo "# 基础功能测试"
+curl -s "http://localhost:1337/api/[endpoint]" | jq '.'
+echo "# 分页测试"
+curl -s "http://localhost:1337/api/[endpoint]?pagination[pageSize]=5" | jq '.meta.pagination'
+echo "# 错误情况测试"
+curl -s "http://localhost:1337/api/[endpoint]/invalid-id" | jq '.error'
+echo ""
+
+# 第3步：权限验证
+echo "✅ 步骤3: 权限验证"
+echo "🔍 验证命令:"
+curl -s "http://localhost:1337/api/[endpoint]" | jq '.error.status'
+echo "期望结果: 200 (成功) 或 正确的错误状态码"
+echo ""
+
+# 第4步：前端集成
+echo "✅ 步骤4: 前端集成"
+echo "🔍 检查项目:"
+echo "  - [ ] API客户端函数已创建"
+echo "  - [ ] TypeScript类型已定义"
+echo "  - [ ] 错误处理已实现"
+echo "  - [ ] 加载状态已处理"
+echo ""
+
+# 第5步：文档更新
+echo "✅ 步骤5: 文档更新"
+echo "🔍 检查项目:"
+echo "  - [ ] API-ENDPOINTS.md 已更新"
+echo "  - [ ] 代码注释完整"
+echo "  - [ ] 示例代码已添加"
+```
+
+### **🔥 前端组件开发工作流（6步验证法）**
+
+每开发一个新组件，必须执行以下验证：
+
+```bash
+# 📋 前端组件开发验证脚本
+echo "🔥 前端组件开发验证清单"
+echo ""
+
+# 第1步：组件架构检查
+echo "✅ 步骤1: 组件架构检查"
+echo "🔍 检查项目:"
+echo "  - [ ] 文件结构符合原子设计"
+echo "  - [ ] Props接口定义完整"
+echo "  - [ ] TypeScript类型安全"
+echo "  - [ ] 组件职责单一"
+echo ""
+
+# 第2步：样式实现检查
+echo "✅ 步骤2: 样式实现检查"
+echo "🔍 检查项目:"
+echo "  - [ ] 使用CSS变量 (非硬编码)"
+echo "  - [ ] 响应式设计完整"
+echo "  - [ ] 主题兼容性测试"
+echo "  - [ ] 浏览器兼容性验证"
+echo ""
+
+# 第3步：交互状态检查
+echo "✅ 步骤3: 交互状态检查"
+echo "🔍 检查项目:"
+echo "  - [ ] Loading状态处理"
+echo "  - [ ] Error状态处理"
+echo "  - [ ] 空数据状态处理"
+echo "  - [ ] 交互反馈完整"
+echo ""
+
+# 第4步：数据集成检查
+echo "✅ 步骤4: 数据集成检查"
+echo "🔍 检查项目:"
+echo "  - [ ] API调用错误处理"
+echo "  - [ ] 数据格式验证"
+echo "  - [ ] 缓存策略实现"
+echo "  - [ ] 性能优化考虑"
+echo ""
+
+# 第5步：可访问性检查
+echo "✅ 步骤5: 可访问性检查"
+echo "🔍 检查项目:"
+echo "  - [ ] aria-label 属性"
+echo "  - [ ] 键盘导航支持"
+echo "  - [ ] 屏幕阅读器友好"
+echo "  - [ ] 颜色对比度符合标准"
+echo ""
+
+# 第6步：测试验证
+echo "✅ 步骤6: 测试验证"
+echo "🔍 检查项目:"
+echo "  - [ ] 单元测试覆盖"
+echo "  - [ ] 集成测试通过"
+echo "  - [ ] 视觉回归测试"
+echo "  - [ ] 性能测试达标"
+```
+
+### **🔥 部署前最终检查清单（一键验证）**
+
+```bash
+#!/bin/bash
+# 📋 部署前最终检查脚本
+
+echo "🚀 部署前最终检查清单"
+echo "========================"
+
+# 环境配置检查
+echo "🔍 1. 环境配置检查"
+if [ -f "backend/.env" ] && [ -f "frontend/.env.local" ]; then
+    echo "✅ 环境变量文件存在"
+else
+    echo "❌ 环境变量文件缺失"
+    exit 1
+fi
+
+# 数据库连接检查
+echo "🔍 2. 数据库连接检查"
+psql -U aibianx_dev -d aibianx_dev -c "SELECT 1;" > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    echo "✅ 数据库连接正常"
+else
+    echo "❌ 数据库连接失败"
+    exit 1
+fi
+
+# API端点检查
+echo "🔍 3. 核心API端点检查"
+api_status=$(curl -s "http://localhost:1337/api/articles" | jq -r '.data | length // "error"')
+if [ "$api_status" != "error" ]; then
+    echo "✅ API端点正常"
+else
+    echo "❌ API端点异常"
+    exit 1
+fi
+
+# 邮件服务检查
+echo "🔍 4. 邮件服务检查"
+email_status=$(curl -s "http://localhost:1337/api/email-service/health" | jq -r '.status // "error"')
+if [ "$email_status" = "healthy" ]; then
+    echo "✅ 邮件服务正常"
+else
+    echo "⚠️  邮件服务需要检查"
+fi
+
+# 搜索服务检查
+echo "🔍 5. 搜索服务检查"
+search_status=$(curl -s "http://localhost:7700/health" | jq -r '.status // "error"')
+if [ "$search_status" = "available" ]; then
+    echo "✅ 搜索服务正常"
+else
+    echo "⚠️  搜索服务需要检查"
+fi
+
+# 前端编译检查
+echo "🔍 6. 前端编译检查"
+cd frontend
+npm run build > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    echo "✅ 前端编译成功"
+    cd ..
+else
+    echo "❌ 前端编译失败"
+    cd ..
+    exit 1
+fi
+
+# 安全配置检查
+echo "🔍 7. 安全配置检查"
+echo "🔍 检查项目:"
+echo "  - [ ] HTTPS配置 (生产环境)"
+echo "  - [ ] 安全头配置"
+echo "  - [ ] API速率限制"
+echo "  - [ ] 输入验证完整"
+echo "  - [ ] 日志记录完整"
+
+echo ""
+echo "🎉 所有检查完成！"
+echo "📋 手动确认清单:"
+echo "  - [ ] 数据库备份已完成"
+echo "  - [ ] 版本号已更新"
+echo "  - [ ] 更新日志已记录"
+echo "  - [ ] 测试环境验证通过"
+echo "  - [ ] 回滚方案已准备"
+```
+
+## **⚡ 快速验证命令集合（集成上述所有检查）**
+
+```bash
+# 🔥 一键验证所有核心功能（升级版）
+alias verify-all='
+echo "🚀 开始全面验证..." &&
+echo "验证后端API..." && curl -s "http://localhost:1337/api/articles?pagination[pageSize]=1" | jq ".data | length" &&
+echo "验证前端页面..." && curl -s "http://localhost" | grep -o "<title>" &&
+echo "验证数据库..." && psql -U aibianx_dev -d aibianx_dev -c "SELECT COUNT(*) FROM articles;" &&
+echo "验证邮件服务..." && curl -s "http://localhost:1337/api/email-service/health" | jq ".status" &&
+echo "验证搜索服务..." && curl -s "http://localhost:7700/health" | jq ".status" &&
+echo "验证环境变量..." && test -f backend/.env && test -f frontend/.env.local && echo "✅ 环境变量存在" &&
+echo "验证缓存状态..." && ! test -d frontend/.next && ! test -d backend/.tmp && echo "✅ 缓存已清理" &&
+echo "✅ 所有验证完成!"
+'
+
+# 🔥 快速开发质量检查（集成TypeScript + ESLint）
+alias dev-check='
+echo "🔍 开发质量检查..." &&
+cd frontend && npx tsc --noEmit && echo "✅ 前端类型检查通过" &&
+cd ../backend && npx tsc --noEmit && echo "✅ 后端类型检查通过" &&
+cd ../frontend && npm run lint && echo "✅ 前端代码规范通过" &&
+echo "✅ 开发质量检查完成!"
+'
+
+# 🔥 快速问题诊断（升级版）
+alias diagnose='
+echo "🔍 全面问题诊断开始..." &&
+./scripts.sh tools status &&
+echo "🔍 检查服务状态..." &&
+ps aux | grep -E "(node|postgres|meilisearch)" | grep -v grep &&
+echo "🔍 检查端口占用..." &&
+lsof -i :80 -i :1337 -i :5432 -i :7700 2>/dev/null || echo "端口检查需要sudo权限" &&
+echo "🔍 检查最新错误日志..." &&
+test -f logs/backend.log && tail -n 10 logs/backend.log | grep -i error &&
+test -f logs/frontend.log && tail -n 10 logs/frontend.log | grep -i error &&
+echo "🔍 检查磁盘空间..." &&
+df -h . | tail -1 | awk "{print \"磁盘使用率: \" \$5}" &&
+echo "🔍 诊断完成!"
+'
+
+# 🔥 快速缓存和重启（升级版）
+alias fresh-start='
+echo "🧹 清理所有缓存..." &&
+cd frontend && rm -rf .next node_modules/.cache &&
+cd ../backend && rm -rf .tmp .cache build dist &&
+echo "🔄 重启开发环境..." &&
+./scripts.sh deploy stop &&
+sleep 2 &&
+./scripts.sh deploy start &&
+echo "✅ 环境重启完成!"
+'
+
+# 🔥 代码提交前快速检查（整合版）
+alias pre-commit-quick='
+echo "⚡ 快速提交前检查..." &&
+cd frontend && npx tsc --noEmit && npm run lint &&
+cd ../backend && npx tsc --noEmit &&
+curl -s "http://localhost:1337/api/articles" > /dev/null && echo "✅ API正常" &&
+git status --porcelain | grep -q "\.md$" && echo "⚠️  文档文件有变更，请检查" || echo "✅ 文档状态正常" &&
+echo "✅ 快速检查完成，可以提交！"
+'
+```
+
+### 脚本分类使用示例
+```bash
+# 交互式菜单模式
+./scripts.sh
+
+# 命令行模式 - 服务管理
+./scripts.sh deploy start     # 启动开发环境
+./scripts.sh deploy backend   # 启动后端服务
+./scripts.sh deploy frontend  # 启动前端服务
+./scripts.sh deploy stop      # 停止所有服务
+
+# 命令行模式 - 搜索引擎
+./scripts.sh search deploy    # 部署MeiliSearch
+./scripts.sh search manage    # 搜索管理工具
+./scripts.sh search restart   # 重启搜索服务
+./scripts.sh search reindex   # 重建搜索索引
+./scripts.sh search check     # 检查搜索状态
+./scripts.sh search logs      # 查看搜索日志
+
+# 命令行模式 - 系统监控
+./scripts.sh tools status     # 查看系统状态
+./scripts.sh db check         # 检查数据库
+./scripts.sh backup full      # 完整备份
+
+# 命令行模式 - 性能监控
+./scripts.sh tools monitor    # 系统性能监控
+./scripts.sh tools logs       # 查看系统日志
+./scripts.sh tools health     # 健康检查报告
+
+# 命令行模式 - 验证检查 (新增)
+./scripts.sh tools verify-content-type [name]  # 验证内容类型配置
+./scripts.sh tools verify-api [endpoint]       # 验证API端点
+./scripts.sh tools verify-deployment          # 验证部署准备情况
+
+# 快速检查别名（配合使用）
+verify-all              # 全面系统验证
+dev-check               # 开发质量检查
+diagnose                # 问题诊断
+fresh-start             # 清理缓存重启
+pre-commit-quick        # 快速提交前检查
+```

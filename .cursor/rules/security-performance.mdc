@@ -1,0 +1,635 @@
+# 安全和性能规范 (Security & Performance Rules)
+
+## 🛡️ **安全规范和最佳实践（新增）**
+
+### **🔐 认证和授权安全**
+```typescript
+// ✅ JWT令牌安全处理
+const authService = {
+  // 安全的令牌存储（仅httpOnly cookie）
+  setTokens: (accessToken: string, refreshToken: string) => {
+    // 访问令牌存储在内存中（更安全）
+    sessionStorage.setItem('access_token', accessToken)
+    // 刷新令牌使用httpOnly cookie（防XSS）
+    document.cookie = `refresh_token=${refreshToken}; httpOnly; secure; sameSite=strict`
+  },
+  
+  // 令牌验证和刷新
+  validateAndRefreshToken: async () => {
+    try {
+      const token = sessionStorage.getItem('access_token')
+      if (!token) throw new Error('No token')
+      
+      // 验证令牌有效性
+      const decoded = jwt.decode(token)
+      if (decoded.exp * 1000 < Date.now()) {
+        return await refreshAccessToken()
+      }
+      return token
+    } catch (error) {
+      redirectToLogin()
+    }
+  }
+}
+
+// ❌ 危险的做法
+localStorage.setItem('jwt_token', token)  // 容易被XSS攻击
+const token = 'hardcoded-token'          // 硬编码敏感信息
+```
+
+### **🛡️ 输入验证和数据清理**
+```typescript
+// ✅ 前端输入验证（Zod）
+import { z } from 'zod'
+
+const registrationSchema = z.object({
+  email: z.string().email('请输入有效的邮箱地址'),
+  password: z.string()
+    .min(8, '密码至少8位')
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, 
+           '密码必须包含大小写字母、数字和特殊字符'),
+  username: z.string()
+    .min(3, '用户名至少3位')
+    .max(20, '用户名最多20位')
+    .regex(/^[a-zA-Z0-9_-]+$/, '用户名只能包含字母、数字、下划线和短横线')
+})
+
+// ✅ 后端数据清理（Strapi）
+import validator from 'validator'
+import xss from 'xss'
+
+export default factories.createCoreController('api::article.article', ({ strapi }) => ({
+  async create(ctx) {
+    const { data } = ctx.request.body
+    
+    // 输入验证和清理
+    const cleanData = {
+      title: xss(validator.escape(data.title)),
+      content: xss(data.content, {
+        whiteList: {
+          p: [], strong: [], em: [], u: [], 
+          h1: [], h2: [], h3: [], 
+          ul: [], ol: [], li: [],
+          a: ['href', 'title'], img: ['src', 'alt']
+        }
+      }),
+      slug: validator.isSlug(data.slug) ? data.slug : null
+    }
+    
+    return await strapi.entityService.create('api::article.article', {
+      data: cleanData
+    })
+  }
+}))
+```
+
+### **🔒 HTTPS和安全头配置**
+```typescript
+// ✅ Next.js 安全头配置
+const nextConfig = {
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY'
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block'
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains'
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### **📧 邮件安全规范**
+```typescript
+// ✅ 邮件发送安全检查
+const emailSecurityService = {
+  // 邮箱格式验证
+  validateEmail: (email: string): boolean => {
+    return validator.isEmail(email) && !validator.isIn(email, blacklistedDomains)
+  },
+  
+  // 发送频率限制
+  checkRateLimit: async (email: string, type: 'verification' | 'marketing'): Promise<boolean> => {
+    const key = `email_rate_${type}_${email}`
+    const count = await redis.get(key) || 0
+    
+    const limits = {
+      verification: 3,  // 验证邮件：每小时最多3封
+      marketing: 1      // 营销邮件：每天最多1封
+    }
+    
+    if (count >= limits[type]) {
+      throw new Error('发送频率超限，请稍后再试')
+    }
+    
+    await redis.setex(key, type === 'verification' ? 3600 : 86400, count + 1)
+    return true
+  },
+  
+  // 邮件内容安全检查
+  sanitizeEmailContent: (content: string): string => {
+    return xss(content, {
+      whiteList: {
+        p: [], strong: [], em: [], br: [],
+        a: ['href', 'style'], 
+        img: ['src', 'alt', 'style'],
+        div: ['style'], span: ['style']
+      },
+      stripIgnoreTag: true,
+      stripIgnoreTagBody: ['script', 'style']
+    })
+  }
+}
+```
+
+## ⚡ **性能优化规范（新增）**
+
+### **🚀 前端性能优化标准**
+```typescript
+// ✅ 组件懒加载和代码分割
+import { lazy, Suspense } from 'react'
+import dynamic from 'next/dynamic'
+
+// 路由级别的懒加载
+const ArticleDetail = lazy(() => import('@/components/organisms/ArticleDetail'))
+
+// Next.js 动态导入（SSR友好）
+const SearchModal = dynamic(() => import('@/components/molecules/SearchModal'), {
+  ssr: false,
+  loading: () => <div>Loading...</div>
+})
+
+// ✅ 图片优化
+import Image from 'next/image'
+
+const ArticleCard = ({ article }) => (
+  <div className="article-card">
+    <Image
+      src={article.featuredImage}
+      alt={article.title}
+      width={400}
+      height={300}
+      priority={article.featured} // 重要图片优先加载
+      placeholder="blur"
+      blurDataURL="data:image/jpeg;base64,..." // 占位符
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+    />
+  </div>
+)
+
+// ✅ 数据获取优化
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query'
+
+export const useArticles = (filters: ArticleFilters) => {
+  return useQuery({
+    queryKey: ['articles', filters],
+    queryFn: () => strapiClient.getArticles(filters),
+    staleTime: 5 * 60 * 1000, // 5分钟缓存
+    gcTime: 10 * 60 * 1000,   // 10分钟垃圾回收
+    retry: 3,
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
+  })
+}
+
+// ✅ 虚拟滚动（大量数据）
+import { FixedSizeList as List } from 'react-window'
+
+const ArticleVirtualList = ({ articles }) => (
+  <List
+    height={600}
+    itemCount={articles.length}
+    itemSize={120}
+    itemData={articles}
+  >
+    {({ index, style, data }) => (
+      <div style={style}>
+        <ArticleCard article={data[index]} />
+      </div>
+    )}
+  </List>
+)
+```
+
+### **🗄️ 后端性能优化标准**
+```typescript
+// ✅ 数据库查询优化
+export default factories.createCoreController('api::article.article', ({ strapi }) => ({
+  async find(ctx) {
+    const { page = 1, pageSize = 25 } = ctx.query
+    
+    // 精确指定需要的字段，避免over-fetching
+    const populate = {
+      author: {
+        fields: ['name', 'avatar']
+      },
+      category: {
+        fields: ['name', 'slug', 'color']
+      },
+      tags: {
+        fields: ['name', 'color']
+      },
+      featuredImage: {
+        fields: ['url', 'alternativeText', 'width', 'height']
+      }
+    }
+    
+    // 使用索引优化的查询
+    const result = await strapi.entityService.findMany('api::article.article', {
+      fields: ['title', 'slug', 'excerpt', 'publishedAt', 'viewCount'],
+      populate,
+      pagination: { page, pageSize },
+      sort: { publishedAt: 'desc' },
+      // 缓存查询结果
+      cache: {
+        key: `articles_${page}_${pageSize}`,
+        ttl: 5 * 60 * 1000 // 5分钟
+      }
+    })
+    
+    return result
+  },
+  
+  // ✅ 批量操作优化
+  async updateViewCount(ctx) {
+    const { id } = ctx.params
+    
+    // 使用原生SQL进行高效更新
+    await strapi.db.query('api::article.article').update({
+      where: { id },
+      data: {
+        viewCount: strapi.db.connection.raw('view_count + 1')
+      }
+    })
+    
+    return { success: true }
+  }
+}))
+
+// ✅ 缓存策略
+import NodeCache from 'node-cache'
+
+const cache = new NodeCache({
+  stdTTL: 300,      // 5分钟默认TTL
+  checkperiod: 60,  // 每分钟检查过期
+  useClones: false  // 性能优化
+})
+
+export const cacheMiddleware = async (ctx, next) => {
+  const cacheKey = `${ctx.method}:${ctx.url}`
+  
+  if (ctx.method === 'GET') {
+    const cached = cache.get(cacheKey)
+    if (cached) {
+      ctx.body = cached
+      return
+    }
+  }
+  
+  await next()
+  
+  if (ctx.method === 'GET' && ctx.status === 200) {
+    cache.set(cacheKey, ctx.body)
+  }
+}
+```
+
+### **📊 搜索性能优化**
+```typescript
+// ✅ MeiliSearch优化配置
+export const optimizeMeiliSearch = async () => {
+  const client = new MeiliSearch({ host: config.search.url })
+  
+  // 配置搜索设置
+  await client.index('articles').updateSettings({
+    // 搜索字段权重
+    searchableAttributes: [
+      'title',      // 权重最高
+      'content',    // 权重中等
+      'excerpt',    // 权重较低
+      'tags.name'   // 权重最低
+    ],
+    
+    // 显示字段
+    displayedAttributes: [
+      'id', 'title', 'excerpt', 'slug', 'publishedAt',
+      'author.name', 'category.name', 'tags.name'
+    ],
+    
+    // 过滤字段
+    filterableAttributes: [
+      'category.slug', 'tags.name', 'author.slug', 
+      'featured', 'publishedAt'
+    ],
+    
+    // 排序字段
+    sortableAttributes: [
+      'publishedAt', 'viewCount', 'title'
+    ],
+    
+    // 中文分词优化
+    stopWords: ['的', '是', '在', '有', '和', '就', '不', '了', '以'],
+    synonyms: {
+      'AI': ['人工智能', '机器学习'],
+      '变现': ['赚钱', '盈利', '收益']
+    }
+  })
+}
+```
+
+### **⚡ 性能检查强制清单**
+```bash
+# 🔥 每次开发完成后必须执行的性能检查
+
+# ✅ 第1步：前端性能检查
+echo "检查前端Bundle大小..."
+cd frontend && npm run build 2>&1 | grep -E "(First Load JS|Route.*chunks)"
+
+echo "检查图片优化..."
+find public/images -type f \( -name "*.jpg" -o -name "*.png" \) -size +500k -exec echo "⚠️ 图片过大: {}" \;
+
+echo "检查CSS变量使用..."
+grep -r "color: #" src/styles/ && echo "❌ 发现硬编码颜色" || echo "✅ CSS变量使用正确"
+
+# ✅ 第2步：API性能检查
+echo "检查API响应时间..."
+time curl -s "http://localhost:1337/api/articles?pagination[pageSize]=25" > /dev/null
+
+echo "检查数据库查询优化..."
+cd backend && grep -r "findMany" src/ | wc -l | xargs echo "数据库查询数量:"
+
+# ✅ 第3步：内存使用检查
+echo "检查Node.js内存使用..."
+ps aux | grep node | grep -v grep | awk '{print $4"%", $11}' | head -5
+
+# ✅ 第4步：网络请求检查
+echo "检查是否有多余的API调用..."
+grep -r "fetch\|axios\|useQuery" frontend/src/ | wc -l | xargs echo "API调用总数:"
+
+# 🔥 性能阈值标准
+# - Bundle大小 < 500KB (First Load JS)
+# - API响应时间 < 500ms
+# - 图片大小 < 500KB
+# - 内存使用 < 20%
+```
+
+## 📊 **监控和日志规范（新增）**
+
+### **🔍 系统监控标准**
+```typescript
+// ✅ 健康检查端点
+export const healthCheck = {
+  // 应用健康状态
+  async checkApplication(): Promise<HealthStatus> {
+    return {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      memory: process.memoryUsage(),
+      version: process.env.npm_package_version
+    }
+  },
+  
+  // 数据库连接检查
+  async checkDatabase(): Promise<HealthStatus> {
+    try {
+      await strapi.db.connection.raw('SELECT 1')
+      return { status: 'healthy', service: 'database' }
+    } catch (error) {
+      return { status: 'unhealthy', service: 'database', error: error.message }
+    }
+  },
+  
+  // 外部服务检查
+  async checkExternalServices(): Promise<HealthStatus[]> {
+    const services = [
+      { name: 'meilisearch', url: `${config.search.url}/health` },
+      { name: 'smtp', check: () => testSMTPConnection() }
+    ]
+    
+    return Promise.all(services.map(async service => {
+      try {
+        if (service.url) {
+          const response = await fetch(service.url, { timeout: 5000 })
+          return { 
+            service: service.name, 
+            status: response.ok ? 'healthy' : 'unhealthy' 
+          }
+        } else {
+          await service.check()
+          return { service: service.name, status: 'healthy' }
+        }
+      } catch (error) {
+        return { 
+          service: service.name, 
+          status: 'unhealthy', 
+          error: error.message 
+        }
+      }
+    }))
+  }
+}
+```
+
+### **📝 日志管理标准**
+```typescript
+// ✅ 结构化日志系统
+import winston from 'winston'
+
+export const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: {
+    service: 'aibianx-backend',
+    version: process.env.npm_package_version
+  },
+  transports: [
+    // 控制台输出
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+      )
+    }),
+    
+    // 文件日志
+    new winston.transports.File({
+      filename: 'logs/error.log',
+      level: 'error',
+      maxsize: 10485760, // 10MB
+      maxFiles: 5
+    }),
+    new winston.transports.File({
+      filename: 'logs/combined.log',
+      maxsize: 10485760,
+      maxFiles: 10
+    })
+  ]
+})
+
+// ✅ API请求日志中间件
+export const requestLogger = (ctx, next) => {
+  const start = Date.now()
+  
+  logger.info('Request started', {
+    method: ctx.method,
+    url: ctx.url,
+    userAgent: ctx.get('User-Agent'),
+    ip: ctx.ip,
+    requestId: ctx.state.requestId
+  })
+  
+  return next().then(() => {
+    const duration = Date.now() - start
+    
+    logger.info('Request completed', {
+      method: ctx.method,
+      url: ctx.url,
+      status: ctx.status,
+      duration,
+      requestId: ctx.state.requestId
+    })
+  }).catch(error => {
+    const duration = Date.now() - start
+    
+    logger.error('Request failed', {
+      method: ctx.method,
+      url: ctx.url,
+      error: error.message,
+      stack: error.stack,
+      duration,
+      requestId: ctx.state.requestId
+    })
+    
+    throw error
+  })
+}
+```
+
+### **🚨 错误监控和告警**
+```typescript
+// ✅ 错误捕获和报告
+export const errorHandler = async (ctx, next) => {
+  try {
+    await next()
+  } catch (error) {
+    // 记录错误详情
+    logger.error('Application error', {
+      error: error.message,
+      stack: error.stack,
+      method: ctx.method,
+      url: ctx.url,
+      body: ctx.request.body,
+      query: ctx.query,
+      headers: ctx.headers,
+      requestId: ctx.state.requestId
+    })
+    
+    // 发送告警（生产环境）
+    if (process.env.NODE_ENV === 'production') {
+      await sendAlert({
+        type: 'application_error',
+        severity: error.status >= 500 ? 'high' : 'medium',
+        message: error.message,
+        context: {
+          service: 'aibianx-backend',
+          endpoint: `${ctx.method} ${ctx.url}`,
+          timestamp: new Date().toISOString()
+        }
+      })
+    }
+    
+    // 返回标准错误响应
+    ctx.status = error.status || 500
+    ctx.body = {
+      error: {
+        status: ctx.status,
+        name: error.name || 'InternalServerError',
+        message: process.env.NODE_ENV === 'production' 
+          ? '服务器内部错误' 
+          : error.message
+      }
+    }
+  }
+}
+```
+
+## 📈 **代码质量规范（新增）**
+
+### **🔧 TypeScript配置标准**
+```json
+// ✅ 严格的tsconfig.json配置
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", ".tmp"]
+}
+```
+
+### **📏 ESLint和Prettier配置**
+```javascript
+// ✅ .eslintrc.js 标准配置
+module.exports = {
+  extends: [
+    'next/core-web-vitals',
+    '@typescript-eslint/recommended',
+    'prettier'
+  ],
+  rules: {
+    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/explicit-function-return-type': 'warn',
+    'react-hooks/exhaustive-deps': 'error',
+    'prefer-const': 'error',
+    'no-var': 'error'
+  }
+}
+```
+
+### **📋 安全和性能检查清单**
+- [ ] 输入验证和数据清理实现
+- [ ] JWT令牌安全处理
+- [ ] HTTPS和安全头配置
+- [ ] API速率限制设置
+- [ ] 敏感信息防泄露
+- [ ] XSS和CSRF防护
+- [ ] 数据库查询优化
+- [ ] 缓存策略实现
+- [ ] 图片和资源优化
+- [ ] Bundle大小控制
+- [ ] 虚拟滚动实现（大数据量）
+- [ ] 懒加载和代码分割
+- [ ] 性能监控设置
+- [ ] 错误监控和告警
+- [ ] 日志系统完善

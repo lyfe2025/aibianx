@@ -1,0 +1,308 @@
+# Cursor 开发规范 (Development Rules)
+
+## 🚨 **Cursor 开发时必须遵循的铁律（防止重复犯错）**
+
+### **📁 文件和路径命名铁律**
+```typescript
+// ✅ 正确的文件命名规范（严格遵循）
+// 组件文件：PascalCase + .tsx
+components/ui/GradientButton/GradientButton.tsx
+components/molecules/ArticleCard/ArticleCard.tsx
+
+// API路由：kebab-case + route.ts
+app/api/test-articles/route.ts
+app/api/email-service/route.ts
+
+// 样式文件：kebab-case + .css
+styles/components.css
+styles/theme-variables.css
+
+// 工具函数：camelCase + .ts
+lib/strapiClient.ts
+lib/emailService.ts
+
+// ❌ 绝对禁止的命名（Cursor容易犯错）
+components/ui/gradient-button.tsx        // 组件应该用PascalCase
+app/api/testArticles/route.ts           // API路由应该用kebab-case
+lib/strapi_client.ts                    // 工具函数应该用camelCase
+styles/Components.css                   // 样式文件应该用kebab-case
+```
+
+### **📦 导入导出规范（防止循环依赖）**
+```typescript
+// ✅ 正确的导入顺序（必须严格遵循）
+// 1. React相关导入
+import React, { useState, useEffect } from 'react'
+import type { FC } from 'react'
+
+// 2. 第三方库导入
+import { z } from 'zod'
+import clsx from 'clsx'
+
+// 3. 内部库导入（按路径深度排序）
+import { config } from '@/lib/config'
+import { strapiClient } from '@/lib/strapi'
+
+// 4. 类型导入（放在最后，使用type关键字）
+import type { Article, Author, Category } from '@/types/api'
+import type { ComponentProps } from '@/types/components'
+
+// ✅ 正确的导出格式
+export { GradientButton } from './GradientButton'
+export type { GradientButtonProps } from './GradientButton'
+export default GradientButton
+
+// ❌ 绝对禁止的导入方式（容易导致循环依赖）
+import '../../../lib/config'                    // 相对路径超过2层
+import { GradientButton, strapiClient } from '.'  // 混合导入不同类型
+export * from './components'                   // 避免使用export *
+```
+
+### **🔧 TypeScript类型定义强制更新规范**
+```typescript
+// 🔥 每次新建内容类型后，必须立即更新TypeScript类型
+
+// ✅ 第1步：更新API类型定义 (types/api.ts)
+export interface NewContentType {
+  id: number
+  name: string
+  slug: string
+  description?: string
+  createdAt: string
+  updatedAt: string
+  publishedAt?: string
+}
+
+export interface NewContentTypeResponse {
+  data: NewContentType[]
+  meta: {
+    pagination: Pagination
+  }
+}
+
+// ✅ 第2步：更新Strapi客户端类型 (lib/strapi.ts)
+export const strapiClient = {
+  async getNewContentTypes(): Promise<NewContentType[]> {
+    // 实现逻辑
+  }
+}
+
+// ✅ 第3步：验证类型定义正确性
+// 运行TypeScript检查
+npm run type-check
+
+// ❌ 绝对禁止的类型定义错误
+interface BadType {
+  data: any                    // 禁止使用any
+  items: object[]             // 禁止使用object
+  callback: Function          // 禁止使用Function
+}
+```
+
+### **🌍 环境变量强制验证规范**
+```bash
+# 🔥 每次修改环境变量后，必须立即验证
+
+# ✅ 第1步：检查环境变量文件存在
+test -f backend/.env && echo "✅ 后端环境变量存在" || echo "❌ 后端环境变量缺失"
+test -f frontend/.env.local && echo "✅ 前端环境变量存在" || echo "❌ 前端环境变量缺失"
+
+# ✅ 第2步：验证关键环境变量
+echo "验证后端环境变量..."
+cd backend && node -e "
+const env = require('dotenv').config();
+const required = ['DATABASE_HOST', 'DATABASE_NAME', 'DATABASE_USERNAME', 'JWT_SECRET'];
+const missing = required.filter(key => !process.env[key]);
+if (missing.length > 0) {
+  console.log('❌ 缺失环境变量:', missing.join(', '));
+  process.exit(1);
+} else {
+  console.log('✅ 后端环境变量完整');
+}
+"
+
+echo "验证前端环境变量..."
+cd frontend && node -e "
+const required = ['NEXT_PUBLIC_STRAPI_URL', 'NEXTAUTH_SECRET'];
+const missing = required.filter(key => !process.env[key]);
+if (missing.length > 0) {
+  console.log('❌ 缺失环境变量:', missing.join(', '));
+  process.exit(1);
+} else {
+  console.log('✅ 前端环境变量完整');
+}
+"
+
+# ✅ 第3步：验证URL连通性
+curl -s "${NEXT_PUBLIC_STRAPI_URL}/api/articles" > /dev/null && echo "✅ API连接正常" || echo "❌ API连接失败"
+```
+
+### **🧹 缓存清理强制时机**
+```bash
+# 🔥 以下情况必须立即清理缓存，不可遗漏！
+
+# ✅ 情况1：修改Strapi schema后
+echo "Schema修改后清理缓存..."
+cd backend && rm -rf .tmp .cache build dist
+
+# ✅ 情况2：修改环境变量后  
+echo "环境变量修改后清理缓存..."
+cd frontend && rm -rf .next
+cd backend && rm -rf .tmp
+
+# ✅ 情况3：安装/更新依赖后
+echo "依赖更新后清理缓存..."
+cd frontend && rm -rf .next node_modules/.cache
+cd backend && rm -rf .tmp node_modules/.cache
+
+# ✅ 情况4：Git切换分支后
+echo "分支切换后清理缓存..."
+rm -rf frontend/.next backend/.tmp
+
+# ✅ 情况5：样式或组件大幅修改后
+echo "样式修改后清理缓存..."
+cd frontend && rm -rf .next
+
+# 🔥 缓存清理验证命令
+echo "验证缓存已清理..."
+! test -d frontend/.next && echo "✅ 前端缓存已清理" || echo "❌ 前端缓存未清理"
+! test -d backend/.tmp && echo "✅ 后端缓存已清理" || echo "❌ 后端缓存未清理"
+```
+
+### **📋 Git工作流强制规范**
+```bash
+# 🔥 每次代码提交前必须执行的检查清单
+
+# ✅ 第1步：代码质量检查
+npm run lint                     # ESLint检查
+npm run type-check              # TypeScript检查  
+npm run test                    # 单元测试
+
+# ✅ 第2步：构建验证
+cd frontend && npm run build    # 前端构建测试
+cd backend && npm run build     # 后端构建测试
+
+# ✅ 第3步：API功能验证
+curl -s "http://localhost:1337/api/articles" | jq '.data | length'
+
+# ✅ 第4步：提交信息规范
+# 格式：<type>(<scope>): <description>
+# 示例：
+git commit -m "feat(auth): add email verification system"
+git commit -m "fix(api): resolve pagination bug in articles endpoint"  
+git commit -m "docs: update API documentation for email system"
+
+# 类型说明：
+# feat: 新功能
+# fix: 修复bug
+# docs: 文档更新
+# style: 代码格式修改
+# refactor: 代码重构
+# test: 测试代码
+# chore: 构建过程或辅助工具的变动
+```
+
+### **📦 依赖管理强制规范**
+```bash
+# 🔥 安装依赖时必须遵循的规范，避免版本冲突
+
+# ✅ 第1步：检查依赖兼容性
+echo "检查Node.js版本..."
+node --version | grep -q "v18\|v20" && echo "✅ Node.js版本兼容" || echo "❌ 需要Node.js 18+或20+"
+
+echo "检查npm版本..."
+npm --version | grep -q "^[9-10]" && echo "✅ npm版本兼容" || echo "❌ 需要npm 9+或10+"
+
+# ✅ 第2步：安装依赖的正确方式
+# 生产依赖
+npm install package-name                # 生产依赖
+npm install -D package-name            # 开发依赖
+npm install -E package-name            # 锁定确切版本
+
+# ✅ 第3步：验证依赖安装
+npm ls                                 # 检查依赖树
+npm audit                             # 安全审计
+npm outdated                          # 检查过期依赖
+
+# ❌ 绝对禁止的依赖管理操作
+npm install --force                    # 强制安装可能导致冲突
+rm -rf node_modules && npm install    # 除非必要不要删除node_modules
+npm install --save-exact              # 除非特殊需求不要锁定所有版本
+
+# 🔥 package.json版本规范
+{
+  "dependencies": {
+    "next": "^14.0.0",              // 允许小版本更新
+    "react": "^18.0.0",             // 允许小版本更新
+    "strapi": "5.20.0"              // 锁定确切版本（关键依赖）
+  }
+}
+```
+
+### **🔍 调试和日志强制规范**
+```typescript
+// 🔥 调试信息必须使用标准格式，便于问题定位
+
+// ✅ 前端调试标准格式
+const debugLog = (context: string, data: any) => {
+  if (process.env.NODE_ENV === 'development') {
+    console.group(`🔍 [${context}] ${new Date().toISOString()}`)
+    console.log('数据:', data)
+    console.log('调用栈:', new Error().stack)
+    console.groupEnd()
+  }
+}
+
+// 使用示例
+debugLog('API调用', { url, params, response })
+debugLog('状态更新', { oldState, newState, action })
+
+// ✅ 后端日志标准格式
+export const logger = {
+  info: (message: string, meta?: any) => {
+    console.log(JSON.stringify({
+      level: 'info',
+      timestamp: new Date().toISOString(),
+      message,
+      meta,
+      service: 'aibianx-backend'
+    }))
+  },
+  
+  error: (message: string, error?: Error, meta?: any) => {
+    console.error(JSON.stringify({
+      level: 'error',
+      timestamp: new Date().toISOString(),
+      message,
+      error: error ? {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      } : undefined,
+      meta,
+      service: 'aibianx-backend'
+    }))
+  }
+}
+
+// ❌ 绝对禁止的调试方式
+console.log('debug')                    // 无上下文信息
+console.log(largeObject)               // 可能导致内存问题
+alert('debug')                         // 影响用户体验
+debugger                               // 可能被提交到生产环境
+```
+
+### **💡 效率提升技巧**
+```bash
+# 🔥 将检查命令设置为别名，提高效率
+alias pre-commit='./scripts.sh tools verify-deployment'
+alias quick-check='npm run lint && npm run type-check && npm run test'
+alias cache-clean='rm -rf frontend/.next backend/.tmp'
+alias api-test='curl -s "http://localhost:1337/api/articles" | jq ".data | length"'
+
+# 使用方式
+pre-commit           # 完整的提交前检查
+quick-check         # 快速代码质量检查
+cache-clean         # 快速清理缓存
+api-test           # 快速API测试
+```

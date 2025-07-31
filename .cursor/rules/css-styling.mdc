@@ -1,0 +1,294 @@
+# CSS 样式开发规范 (CSS Styling Rules)
+
+## 🔥 **CSS样式冲突解决标准（终极优先级策略）**
+
+### **⚠️ 核心原则**
+当遇到CSS样式不生效、主题切换颜色不一致、组件样式被覆盖等问题时，**优先使用最高优先级CSS选择器强制解决**，而非反复调试CSS变量或组件逻辑。
+
+### **🛡️ 终极优先级四重保障机制**
+
+#### **1. CSS终极选择器组合**
+```css
+/* 🔥 所有可能的DOM层级 + 主题覆盖 + 浏览器兼容 */
+html body article div.target-class,
+html body div.target-class,
+body div.target-class,
+div.target-class,
+.target-class,
+:root .target-class,
+:root[data-theme="dark"] .target-class,
+:root[data-theme="light"] .target-class {
+    color: #目标颜色 !important;
+    -webkit-text-fill-color: #目标颜色 !important;
+    /* 其他需要强制的样式 */
+}
+```
+
+#### **2. SVG图标强制颜色覆盖**
+```css
+/* 🔥 多层级SVG选择器覆盖 */
+html body .target-class svg,
+body .target-class svg,
+.target-class svg,
+.target-class .icon-wrapper,
+.target-class .icon-wrapper svg,
+.target-class svg path {
+    color: #目标颜色 !important;
+    fill: #目标颜色 !important;
+    -webkit-text-fill-color: #目标颜色 !important;
+}
+```
+
+#### **3. JSX内联样式四层强制**
+```tsx
+// 容器级强制
+<div 
+  className="target-class"
+  style={{
+    color: '#目标颜色 !important',
+    WebkitTextFillColor: '#目标颜色 !important',
+    // ...其他样式
+  }}
+>
+  {/* 图标级强制 */}
+  <IconComponent 
+    style={{ color: '#目标颜色 !important' }} 
+  />
+  
+  {/* 文字级强制（双重保障） */}
+  <span style={{ 
+    color: '#目标颜色 !important', 
+    WebkitTextFillColor: '#目标颜色 !important' 
+  }}>
+    目标文字
+  </span>
+</div>
+```
+
+#### **4. 图标组件内部强制**
+```tsx
+// 图标组件内直接硬编码
+<svg
+  style={{
+    display: 'block',
+    color: '#目标颜色',
+    fill: '#目标颜色'
+  }}
+  fill="#目标颜色" // SVG属性级强制
+>
+  <path fill="#目标颜色" /> {/* 路径级强制 */}
+</svg>
+```
+
+### **🎯 标准问题处理流程**
+
+#### **问题识别清单**
+- [ ] CSS变量在某些主题下不生效？
+- [ ] 组件样式被其他CSS规则覆盖？
+- [ ] SVG图标颜色与文字颜色不一致？
+- [ ] 主题切换时样式不更新？
+- [ ] 浏览器兼容性问题（Safari/Chrome差异）？
+
+#### **立即执行方案（无需调试）**
+1. **创建终极CSS规则**：在 `frontend/src/styles/components.css` 添加最高优先级选择器
+2. **JSX四层强制**：容器、图标、文字、SVG属性层层强制
+3. **硬编码关键颜色**：对于关键UI元素，直接使用十六进制颜色值
+4. **跨浏览器兼容**：同时使用 `color` 和 `-webkit-text-fill-color`
+
+#### **预防性措施**
+- **关键组件优先**：对于Logo、按钮、标识等关键UI组件，预先使用终极优先级策略
+- **主题测试**：每次样式修改后必须测试亮色/暗色主题
+- **浏览器测试**：在Safari、Chrome、Firefox中验证样式效果
+
+### **🔧 实战案例模板**
+
+#### **文章标识组件样式冲突**
+```css
+/* 问题：置顶/会员标识在主题切换时颜色不一致 */
+/* 解决：终极优先级选择器 */
+
+html body article div.featured-badge,
+html body div.featured-badge,
+body div.featured-badge,
+div.featured-badge,
+.featured-badge,
+:root .featured-badge,
+:root[data-theme="dark"] .featured-badge,
+:root[data-theme="light"] .featured-badge {
+    color: #F59E0B !important;
+    -webkit-text-fill-color: #F59E0B !important;
+}
+
+html body .featured-badge svg,
+body .featured-badge svg,
+.featured-badge svg,
+.featured-badge .star-icon svg,
+.featured-badge svg path {
+    color: #F59E0B !important;
+    fill: #F59E0B !important;
+}
+```
+
+#### **按钮组件状态样式**
+```css
+/* 问题：按钮hover/active状态被覆盖 */
+/* 解决：状态选择器 + 终极优先级 */
+
+html body .gradient-button:hover,
+body .gradient-button:hover,
+.gradient-button:hover,
+html body .gradient-button:active,
+body .gradient-button:active,
+.gradient-button:active {
+    background: var(--gradient-primary-hover) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3) !important;
+}
+```
+
+### **🎨 CSS变量系统标准**
+
+#### **颜色变量规范**
+```css
+:root {
+  /* 主色调 */
+  --color-primary-blue: #3B82F6;
+  --color-primary-purple: #8B5CF6;
+  --color-secondary-green: #10B981;
+  
+  /* 背景色 */
+  --color-bg-primary: rgba(255, 255, 255, 0.95);
+  --color-bg-secondary: rgba(248, 250, 252, 0.9);
+  --color-bg-glass: rgba(255, 255, 255, 0.1);
+  
+  /* 文字颜色 */
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #9CA3AF;
+  
+  /* 边框颜色 */
+  --color-border-light: rgba(229, 231, 235, 0.5);
+  --color-border-medium: rgba(209, 213, 219, 0.8);
+}
+
+[data-theme="dark"] {
+  /* 深色主题覆盖 */
+  --color-bg-primary: rgba(17, 24, 39, 0.95);
+  --color-bg-secondary: rgba(31, 41, 55, 0.9);
+  --color-bg-glass: rgba(17, 24, 39, 0.1);
+  
+  --color-text-primary: #F9FAFB;
+  --color-text-secondary: #D1D5DB;
+  --color-text-muted: #9CA3AF;
+}
+```
+
+#### **毛玻璃效果标准**
+```css
+.glass-effect {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border-light);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* 毛玻璃卡片变体 */
+.glass-card {
+  @apply glass-effect;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(var(--color-bg-glass-rgb), 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.15);
+}
+```
+
+#### **字体大小变量系统**
+```css
+:root {
+  /* 字体大小等级 */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  --font-size-5xl: 3rem;      /* 48px */
+  --font-size-6xl: 3.75rem;   /* 60px */
+  --font-size-7xl: 4.5rem;    /* 72px */
+  --font-size-8xl: 6rem;      /* 96px */
+  
+  /* 行高 */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+}
+```
+
+### **📱 响应式设计标准**
+
+#### **断点系统**
+```css
+/* 标准断点定义 */
+:root {
+  --screen-sm: 640px;
+  --screen-md: 768px;
+  --screen-lg: 1024px;
+  --screen-xl: 1280px;
+  --screen-2xl: 1536px;
+}
+
+/* 媒体查询混合器 */
+@media (min-width: 640px) { /* sm */ }
+@media (min-width: 768px) { /* md */ }
+@media (min-width: 1024px) { /* lg */ }
+@media (min-width: 1280px) { /* xl */ }
+@media (min-width: 1536px) { /* 2xl */ }
+```
+
+#### **容器尺寸系统**
+```css
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container { max-width: 640px; }
+}
+
+@media (min-width: 768px) {
+  .container { max-width: 768px; }
+}
+
+@media (min-width: 1024px) {
+  .container { max-width: 1024px; }
+}
+
+@media (min-width: 1280px) {
+  .container { max-width: 1280px; }
+}
+
+@media (min-width: 1536px) {
+  .container { max-width: 1536px; }
+}
+```
+
+### **🚨 关键提醒**
+- **立即解决原则**：发现样式问题时，优先使用终极优先级策略立即解决，避免反复调试
+- **硬编码合理性**：对于关键UI颜色（品牌色、警告色），硬编码比CSS变量更可靠
+- **选择器冗余性**：宁可选择器冗余，也要确保在所有场景下都能正确应用样式
+- **文档记录**：每次使用终极策略后，在代码中添加注释说明原因和解决的问题

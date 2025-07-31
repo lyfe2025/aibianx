@@ -1,0 +1,511 @@
+# API开发规范 (API Development Rules)
+
+## 🔌 **API开发标准（详细）**
+
+### **📡 RESTful API设计原则**
+```typescript
+// ✅ 标准API路由设计
+// GET    /api/articles           # 获取文章列表
+// GET    /api/articles/123       # 获取特定文章
+// POST   /api/articles           # 创建新文章
+// PUT    /api/articles/123       # 更新整个文章
+// PATCH  /api/articles/123       # 部分更新文章
+// DELETE /api/articles/123       # 删除文章
+
+// GET    /api/articles/123/comments  # 获取文章评论
+// POST   /api/articles/123/like      # 点赞文章
+
+// ❌ 不规范的路由设计
+// GET    /api/getArticles            # 动词不应该在URL中
+// POST   /api/articles/delete        # 应该使用DELETE方法
+// GET    /api/article-comment-list   # 关系应该用嵌套表示
+```
+
+### **📊 标准API响应格式**
+```typescript
+// ✅ 成功响应格式
+interface APIResponse<T> {
+  data: T
+  meta?: {
+    pagination?: {
+      page: number
+      pageSize: number
+      pageCount: number
+      total: number
+    }
+    [key: string]: any
+  }
+}
+
+// ✅ 错误响应格式
+interface APIError {
+  error: {
+    status: number
+    name: string
+    message: string
+    details?: Record<string, any>
+  }
+}
+
+// ✅ 实际API控制器实现
+export default factories.createCoreController('api::article.article', ({ strapi }) => ({
+  async find(ctx) {
+    try {
+      // 参数验证
+      const { page = 1, pageSize = 25, populate = 'author,category,tags' } = ctx.query
+      
+      // 业务逻辑
+      const result = await strapi.entityService.findMany('api::article.article', {
+        populate: populate.split(','),
+        pagination: {
+          page: Math.max(1, parseInt(page)),
+          pageSize: Math.min(100, Math.max(1, parseInt(pageSize)))
+        },
+        sort: { publishedAt: 'desc' }
+      })
+      
+      return {
+        data: result.results,
+        meta: {
+          pagination: result.pagination
+        }
+      }
+    } catch (error) {
+      ctx.status = 500
+      return {
+        error: {
+          status: 500,
+          name: 'InternalServerError',
+          message: '服务器内部错误',
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        }
+      }
+    }
+  }
+}))
+```
+
+### **🔍 API查询和过滤标准**
+```typescript
+// ✅ 查询参数标准化
+interface ArticleQuery {
+  // 基础分页
+  page?: number
+  pageSize?: number
+  
+  // 关联数据
+  populate?: string
+  
+  // 过滤条件
+  category?: string
+  tags?: string[]
+  author?: string
+  featured?: boolean
+  
+  // 搜索
+  search?: string
+  
+  // 排序
+  sort?: 'publishedAt:desc' | 'publishedAt:asc' | 'title:asc' | 'viewCount:desc'
+  
+  // 日期范围
+  publishedAfter?: string
+  publishedBefore?: string
+}
+
+// ✅ API客户端标准实现
+export const strapiClient = {
+  async getArticles(params: ArticleQuery): Promise<Article[]> {
+    const searchParams = new URLSearchParams()
+    
+    // 构建查询参数
+    if (params.page) searchParams.set('pagination[page]', String(params.page))
+    if (params.pageSize) searchParams.set('pagination[pageSize]', String(params.pageSize))
+    if (params.populate) searchParams.set('populate', params.populate)
+    if (params.category) searchParams.set('filters[category][slug][$eq]', params.category)
+    if (params.featured !== undefined) searchParams.set('filters[featured][$eq]', String(params.featured))
+    
+    const response = await fetch(`${config.backend.apiUrl}/articles?${searchParams}`)
+    
+    if (!response.ok) {
+      throw new Error(`API请求失败: ${response.status}`)
+    }
+    
+    const result = await response.json()
+    return result.data
+  }
+}
+```
+
+### **🚨 错误处理标准模板（必须使用）**
+```typescript
+// 🔥 所有API调用必须使用这个错误处理模板
+
+// ✅ 前端API调用标准模板
+export const apiCall = async <T>(
+  url: string, 
+  options?: RequestInit
+): Promise<{ data: T | null; error: string | null }> => {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+      ...options,
+    })
+
+    if (!response.ok) {
+      // 处理HTTP错误
+      const errorData = await response.json().catch(() => ({}))
+      const errorMessage = errorData.error?.message || `HTTP Error: ${response.status}`
+      
+      console.error('API调用失败:', {
+        url,
+        status: response.status,
+        statusText: response.statusText,
+        error: errorMessage
+      })
+      
+      return { data: null, error: errorMessage }
+    }
+
+    const data = await response.json()
+    return { data, error: null }
+    
+  } catch (error) {
+    // 处理网络错误或其他异常
+    const errorMessage = error instanceof Error ? error.message : '未知错误'
+    
+    console.error('网络错误:', {
+      url,
+      error: errorMessage
+    })
+    
+    return { data: null, error: errorMessage }
+  }
+}
+```
+
+### **📧 邮件系统开发规范（新增）**
+
+#### **⚠️ 核心架构原则**
+邮件系统采用**分离架构设计**，技术配置与业务配置分离管理：
+
+- **SMTP技术配置** → `smtp-configs` 内容类型（支持多服务器、负载均衡、故障转移）
+- **业务逻辑配置** → `system-config` 内容类型（开关控制、功能配置）
+- **统一发送服务** → `email-service` API（所有邮件发送的唯一入口）
+
+#### **🛡️ 邮件服务标准规范**
+
+```typescript
+// ✅ 正确：使用统一邮件服务
+import { emailService } from '@/lib/email-service'
+
+await emailService.sendVerificationCode({
+  email: user.email,
+  code: verificationCode,
+  type: 'register'
+})
+
+// ❌ 错误：直接使用SMTP配置
+import nodemailer from 'nodemailer'
+const transporter = nodemailer.createTransporter(...)
+```
+
+#### **🔐 邮件发送安全规范**
+- ✅ **必须验证邮箱格式**：使用 `email-validator` 库
+- ✅ **必须限制发送频率**：每个邮箱每分钟最多1封验证码邮件
+- ✅ **必须记录发送日志**：成功/失败状态、错误原因、SMTP服务器
+- ✅ **必须支持故障转移**：自动切换到备用SMTP服务器
+- ❌ **禁止硬编码SMTP配置**：所有配置必须来自数据库
+
+#### **📝 邮件模板标准**
+```typescript
+// ✅ 标准邮件模板结构
+interface EmailTemplate {
+  name: string           // 模板名称（如：verification-code）
+  subject: string        // 邮件主题（支持变量替换）
+  htmlContent: string    // HTML内容（响应式设计）
+  textContent: string    // 纯文本备选
+  variables: string[]    // 支持的变量列表
+  category: 'auth' | 'marketing' | 'notification'
+}
+
+// ✅ 变量替换安全处理
+const processTemplate = (template: string, variables: Record<string, string>) => {
+  return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+    return escapeHtml(variables[key] || match)
+  })
+}
+```
+
+#### **📈 邮件发送状态管理**
+- **实时状态检查**：发送前检查SMTP服务器健康状态
+- **重试机制**：失败后自动重试3次，间隔递增（1s, 3s, 9s）
+- **日志记录**：记录每次发送的详细信息和结果
+- **监控告警**：连续失败率超过20%时触发告警
+
+### **🔧 API调试升级版（系统化）**
+```bash
+# 🔍 1. API健康检查
+curl -s "${BACKEND_API_URL}/health" | jq '.status'
+
+# 📊 2. 测试核心API端点
+curl -s "${BACKEND_API_URL}/articles?pagination[pageSize]=1" | jq '.data[0].title'
+
+# 🔐 3. 测试认证端点
+curl -s -X POST "${BACKEND_API_URL}/auth/local" \
+  -H "Content-Type: application/json" \
+  -d '{"identifier":"test@example.com","password":"testpass"}' | jq '.jwt'
+
+# 📧 4. 测试邮件服务
+curl -s "${BACKEND_API_URL}/email-service/send-test" | jq '.status'
+
+# 🔍 5. 测试搜索服务
+curl -s "${SEARCH_URL}/health" | jq '.status'
+
+# 🎯 6. 前端API集成测试
+curl -s "http://localhost/api/test-articles" | jq '.data | length'
+
+# 📱 7. 前端页面可用性检查
+curl -s "http://localhost/api-debug" | grep -o "API Debug"
+```
+
+### **🏗️ API架构设计模式**
+
+#### **控制器层设计**
+```typescript
+// ✅ 标准控制器结构
+export default factories.createCoreController('api::article.article', ({ strapi }) => ({
+  // 获取列表（带搜索和过滤）
+  async find(ctx) {
+    try {
+      const { search, ...query } = ctx.query
+      
+      // 搜索逻辑
+      if (search) {
+        return await this.searchArticles(ctx, search)
+      }
+      
+      // 标准查询逻辑
+      return await super.find(ctx)
+    } catch (error) {
+      return this.handleError(ctx, error)
+    }
+  },
+  
+  // 自定义搜索方法
+  async searchArticles(ctx, searchTerm) {
+    const results = await strapi.entityService.findMany('api::article.article', {
+      filters: {
+        $or: [
+          { title: { $containsi: searchTerm } },
+          { content: { $containsi: searchTerm } },
+          { excerpt: { $containsi: searchTerm } }
+        ]
+      },
+      populate: ['author', 'category', 'tags'],
+      pagination: ctx.query.pagination
+    })
+    
+    return { data: results.results, meta: { pagination: results.pagination } }
+  },
+  
+  // 统一错误处理
+  handleError(ctx, error) {
+    strapi.log.error('API Error:', error)
+    
+    ctx.status = error.status || 500
+    return {
+      error: {
+        status: ctx.status,
+        name: error.name || 'InternalServerError',
+        message: process.env.NODE_ENV === 'production' 
+          ? '服务器内部错误' 
+          : error.message
+      }
+    }
+  }
+}))
+```
+
+#### **服务层设计**
+```typescript
+// ✅ 业务逻辑服务层
+export default factories.createCoreService('api::article.article', ({ strapi }) => ({
+  // 业务逻辑方法
+  async findArticlesWithStats(params = {}) {
+    const articles = await strapi.entityService.findMany('api::article.article', {
+      ...params,
+      populate: ['author', 'category', 'tags']
+    })
+    
+    // 添加统计信息
+    const articlesWithStats = await Promise.all(
+      articles.results.map(async (article) => ({
+        ...article,
+        stats: {
+          commentCount: await this.getCommentCount(article.id),
+          likeCount: await this.getLikeCount(article.id),
+          shareCount: await this.getShareCount(article.id)
+        }
+      }))
+    )
+    
+    return {
+      results: articlesWithStats,
+      pagination: articles.pagination
+    }
+  },
+  
+  // 缓存机制
+  async findWithCache(params, cacheKey, ttl = 300) {
+    const cached = await strapi.cache.get(cacheKey)
+    if (cached) return cached
+    
+    const result = await strapi.entityService.findMany('api::article.article', params)
+    await strapi.cache.set(cacheKey, result, ttl)
+    
+    return result
+  }
+}))
+```
+
+### **📊 API性能优化**
+
+#### **数据库查询优化**
+```typescript
+// ✅ 优化的查询实现
+export default factories.createCoreController('api::article.article', ({ strapi }) => ({
+  async find(ctx) {
+    const { page = 1, pageSize = 25 } = ctx.query
+    
+    // 精确指定需要的字段，避免over-fetching
+    const populate = {
+      author: {
+        fields: ['name', 'avatar']
+      },
+      category: {
+        fields: ['name', 'slug', 'color']
+      },
+      tags: {
+        fields: ['name', 'color']
+      },
+      featuredImage: {
+        fields: ['url', 'alternativeText', 'width', 'height']
+      }
+    }
+    
+    // 使用索引优化的查询
+    const result = await strapi.entityService.findMany('api::article.article', {
+      fields: ['title', 'slug', 'excerpt', 'publishedAt', 'viewCount'],
+      populate,
+      pagination: { page, pageSize },
+      sort: { publishedAt: 'desc' },
+      // 缓存查询结果
+      cache: {
+        key: `articles_${page}_${pageSize}`,
+        ttl: 5 * 60 * 1000 // 5分钟
+      }
+    })
+    
+    return result
+  },
+  
+  // ✅ 批量操作优化
+  async updateViewCount(ctx) {
+    const { id } = ctx.params
+    
+    // 使用原生SQL进行高效更新
+    await strapi.db.query('api::article.article').update({
+      where: { id },
+      data: {
+        viewCount: strapi.db.connection.raw('view_count + 1')
+      }
+    })
+    
+    return { success: true }
+  }
+}))
+```
+
+### **🔒 API安全规范**
+
+#### **输入验证和清理**
+```typescript
+// ✅ 输入验证中间件
+export const validateInput = (schema) => {
+  return async (ctx, next) => {
+    try {
+      const validatedData = await schema.parseAsync(ctx.request.body)
+      ctx.request.body = validatedData
+      await next()
+    } catch (error) {
+      ctx.status = 400
+      ctx.body = {
+        error: {
+          status: 400,
+          name: 'ValidationError',
+          message: '输入数据验证失败',
+          details: error.errors
+        }
+      }
+    }
+  }
+}
+
+// 使用示例
+import { z } from 'zod'
+
+const articleSchema = z.object({
+  title: z.string().min(1).max(255),
+  content: z.string().min(1),
+  excerpt: z.string().max(500).optional(),
+  featured: z.boolean().optional()
+})
+
+// 在路由中使用
+router.post('/articles', validateInput(articleSchema), controller.create)
+```
+
+#### **API速率限制**
+```typescript
+// ✅ 速率限制配置
+export const rateLimitConfig = {
+  // 通用API限制
+  general: {
+    max: 100,           // 每小时最多100个请求
+    windowMs: 60 * 60 * 1000,
+    message: '请求过于频繁，请稍后再试'
+  },
+  
+  // 认证API限制
+  auth: {
+    max: 10,            // 每小时最多10次登录尝试
+    windowMs: 60 * 60 * 1000,
+    message: '登录尝试过于频繁，请稍后再试'
+  },
+  
+  // 邮件发送限制
+  email: {
+    max: 5,             // 每小时最多5封邮件
+    windowMs: 60 * 60 * 1000,
+    message: '邮件发送过于频繁，请稍后再试'
+  }
+}
+```
+
+### **📋 API开发检查清单**
+- [ ] RESTful设计原则遵循
+- [ ] 标准响应格式实现
+- [ ] 完整的错误处理机制
+- [ ] 输入验证和数据清理
+- [ ] 分页和查询优化
+- [ ] 缓存策略实现
+- [ ] 速率限制配置
+- [ ] API文档生成
+- [ ] 单元测试覆盖
+- [ ] 集成测试验证
+- [ ] 性能监控设置
+- [ ] 安全审计通过

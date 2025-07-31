@@ -25,13 +25,50 @@ export function EmailSubscriptionCard({ className }: EmailSubscriptionCardProps)
     const [isEmailFocused, setIsEmailFocused] = useState(false)
     const { theme } = useThemeStore()
 
-    const handleSubscribe = () => {
+    const handleSubscribe = async () => {
         if (!subscribeEmail.trim()) {
             alert('请输入您的邮箱')
             return
         }
-        alert(`感谢订阅！我们将向 ${subscribeEmail} 发送最新的AI变现机会`)
-        setSubscribeEmail('')
+
+        // 简单的邮箱格式验证
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(subscribeEmail)) {
+            alert('请输入有效的邮箱地址')
+            return
+        }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/email-subscription/subscribe`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: subscribeEmail.trim(),
+                    source: 'sidebar',
+                    tags: ['newsletter', 'updates'] // 侧边栏订阅包含更新标签
+                })
+            })
+
+            const result = await response.json()
+
+            if (response.ok) {
+                if (result.status === 'success') {
+                    alert('订阅成功！感谢加入AI变现之路社区，欢迎邮件已发送至您的邮箱')
+                } else if (result.status === 'existing') {
+                    alert('您已经订阅过了，感谢支持！')
+                } else if (result.status === 'resubscribed') {
+                    alert('欢迎回来！您已重新订阅我们的邮件列表')
+                }
+                setSubscribeEmail('')
+            } else {
+                alert(result.message || '订阅失败，请稍后重试')
+            }
+        } catch (error) {
+            console.error('订阅失败:', error)
+            alert('订阅失败，请稍后重试')
+        }
     }
 
     return (

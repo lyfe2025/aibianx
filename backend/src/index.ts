@@ -19,7 +19,10 @@ export default {
             // 3. 初始化MeiliSearch搜索引擎
             await initializeMeiliSearch(strapi)
 
-            // 4. 显示API端点信息
+    // 4. 初始化邮件系统 (esbuild问题已解决，暂时跳过等待重新创建)
+    // await initializeEmailSystem(strapi)
+
+            // 5. 显示API端点信息
             displayAPIEndpoints()
 
             console.log('✅ Strapi应用启动完成！')
@@ -80,7 +83,7 @@ async function configurePublicPermissions(strapi: Core.Strapi) {
             'api::system-config.system-config.findOne',
             'api::system-config.system-config.getPublicConfig',
             'api::system-config.system-config.getOAuthConfig',
-            'api::system-config.system-config.getEmailConfig',
+      
             'api::system-config.system-config.getRegistrationConfig',
             'api::system-config.system-config.getMaintenanceStatus',
 
@@ -161,7 +164,7 @@ async function initializeSystemConfig(strapi: Core.Strapi) {
         const config = await systemConfigService.getSystemConfig()
         if (config) {
             console.log('📊 当前系统配置状态:')
-            console.log(`  📧 邮件服务: ${config.emailServiceEnabled ? '✅ 已启用' : '❌ 已禁用'} (${config.emailServiceProvider})`)
+            console.log(`  📧 邮件服务: 已迁移至SMTP配置表管理 (检查SMTP配置状态)`)
             console.log(`  🔐 用户注册: ${config.registrationEnabled ? '✅ 已启用' : '❌ 已禁用'}`)
             console.log(`  📨 邮箱验证: ${config.emailVerificationEnabled ? '✅ 已启用' : '❌ 已禁用'}`)
             console.log(`  🔄 密码重置: ${config.passwordResetEnabled ? '✅ 已启用' : '❌ 已禁用'}`)
@@ -256,7 +259,7 @@ function displayAPIEndpoints() {
     console.log('  ⚙️  系统配置 (新增OAuth配置支持):')
     console.log('    GET  /api/system-config/public - 获取公开配置')
     console.log('    GET  /api/system-config/oauth - 获取OAuth配置 (内部API)')
-    console.log('    GET  /api/system-config/email - 获取邮件配置 (内部API)')
+
     console.log('    GET  /api/system-config/registration - 获取注册配置')
     console.log('    GET  /api/system-config/maintenance - 获取维护状态')
     console.log('    GET  /api/system-config - 获取完整配置 (仅管理员)')
@@ -430,3 +433,11 @@ function registerSearchRoutes(strapi: any, meilisearchService: any) {
 
     console.log('✅ 搜索API路由已注册')
 }
+
+/**
+ * 初始化邮件系统 (暂时禁用以调试esbuild问题)
+ */
+// async function initializeEmailSystem(strapi: Core.Strapi) {
+//     console.log('📧 初始化邮件系统...')
+//     // 邮件系统初始化代码暂时注释
+// }

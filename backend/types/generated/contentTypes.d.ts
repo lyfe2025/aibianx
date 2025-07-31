@@ -558,6 +558,230 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiEmailCampaignEmailCampaign
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'email_campaigns';
+  info: {
+    description: '\u90AE\u4EF6\u8425\u9500\u6D3B\u52A8\u7BA1\u7406 - \u7528\u4E8E\u521B\u5EFA\u548C\u7BA1\u7406\u90AE\u4EF6\u8425\u9500\u6D3B\u52A8';
+    displayName: '\u90AE\u4EF6\u8425\u9500\u6D3B\u52A8';
+    pluralName: 'email-campaigns';
+    singularName: 'email-campaign';
+  };
+  options: {
+    comment: '\u90AE\u4EF6\u8425\u9500\u6D3B\u52A8\u7BA1\u7406';
+    draftAndPublish: false;
+  };
+  attributes: {
+    campaignType: Schema.Attribute.Enumeration<
+      ['newsletter', 'promotion', 'notification', 'welcome', 'follow_up']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'newsletter'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::email-campaign.email-campaign'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    scheduledDate: Schema.Attribute.DateTime;
+    sentDate: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    status: Schema.Attribute.Enumeration<
+      ['draft', 'scheduled', 'sending', 'sent', 'paused', 'cancelled', 'failed']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'draft'>;
+    targetTags: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::email-tag.email-tag'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiEmailSubscriptionEmailSubscription
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'email_subscriptions';
+  info: {
+    description: '\u90AE\u4EF6\u8BA2\u9605\u8005\u96C6\u5408 - \u5B58\u50A8\u6240\u6709\u90AE\u4EF6\u8BA2\u9605\u8005\u4FE1\u606F\uFF0C\u652F\u6301\u8425\u9500\u90AE\u4EF6\u5206\u53D1\u548C\u7528\u6237\u7BA1\u7406';
+    displayName: '\u90AE\u4EF6\u8BA2\u9605';
+    pluralName: 'email-subscriptions';
+    singularName: 'email-subscription';
+  };
+  options: {
+    comment: '\u90AE\u4EF6\u8BA2\u9605\u8005\u96C6\u5408 - \u5B58\u50A8\u6240\u6709\u90AE\u4EF6\u8BA2\u9605\u8005\u4FE1\u606F\uFF0C\u652F\u6301\u8425\u9500\u90AE\u4EF6\u5206\u53D1\u548C\u7528\u6237\u7BA1\u7406';
+    draftAndPublish: false;
+  };
+  attributes: {
+    bounceCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    clickCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    confirmDate: Schema.Attribute.DateTime;
+    confirmed: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    confirmToken: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    emailCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    ipAddress: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 45;
+      }>;
+    lastClickDate: Schema.Attribute.DateTime;
+    lastEmailDate: Schema.Attribute.DateTime;
+    lastOpenDate: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::email-subscription.email-subscription'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    name: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    notes: Schema.Attribute.Text;
+    openCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    preferences: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<
+      ['active', 'unsubscribed', 'bounced', 'pending']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'pending'>;
+    subscribeDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    subscribeSource: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 50;
+      }>;
+    tags: Schema.Attribute.Relation<'manyToMany', 'api::email-tag.email-tag'>;
+    unsubscribeDate: Schema.Attribute.DateTime;
+    unsubscribeToken: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    userAgent: Schema.Attribute.Text;
+  };
+}
+
+export interface ApiEmailTagEmailTag extends Struct.CollectionTypeSchema {
+  collectionName: 'email_tags';
+  info: {
+    description: '\u90AE\u4EF6\u6807\u7B7E\u7CFB\u7EDF - \u7528\u4E8E\u5BF9\u90AE\u4EF6\u8BA2\u9605\u8005\u8FDB\u884C\u5206\u7EC4\u7BA1\u7406\uFF0C\u652F\u6301\u7CBE\u51C6\u8425\u9500\u548C\u4E2A\u6027\u5316\u90AE\u4EF6\u53D1\u9001';
+    displayName: '\u90AE\u4EF6\u6807\u7B7E';
+    pluralName: 'email-tags';
+    singularName: 'email-tag';
+  };
+  options: {
+    comment: '\u90AE\u4EF6\u6807\u7B7E\u7CFB\u7EDF - \u7528\u4E8E\u5BF9\u90AE\u4EF6\u8BA2\u9605\u8005\u8FDB\u884C\u5206\u7EC4\u7BA1\u7406\uFF0C\u652F\u6301\u7CBE\u51C6\u8425\u9500\u548C\u4E2A\u6027\u5316\u90AE\u4EF6\u53D1\u9001';
+    draftAndPublish: false;
+  };
+  attributes: {
+    autoAssign: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    autoAssignRules: Schema.Attribute.JSON;
+    campaigns: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::email-campaign.email-campaign'
+    >;
+    color: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 7;
+      }> &
+      Schema.Attribute.DefaultTo<'#007bff'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text;
+    isActive: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
+    lastUsed: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::email-tag.email-tag'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 50;
+      }>;
+    notes: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    sortOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    subscriberCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    subscribers: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::email-subscription.email-subscription'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSeoMetricsSeoMetrics extends Struct.CollectionTypeSchema {
   collectionName: 'seo_metrics';
   info: {
@@ -851,6 +1075,198 @@ export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiSmtpConfigSmtpConfig extends Struct.CollectionTypeSchema {
+  collectionName: 'smtp_configs';
+  info: {
+    description: 'SMTP\u90AE\u4EF6\u670D\u52A1\u5668\u914D\u7F6E\u7BA1\u7406 - \u652F\u6301\u591A\u4E2ASMTP\u63D0\u4F9B\u5546\u3001\u8D1F\u8F7D\u5747\u8861\u548C\u6545\u969C\u8F6C\u79FB';
+    displayName: 'SMTP\u914D\u7F6E';
+    pluralName: 'smtp-configs';
+    singularName: 'smtp-config';
+  };
+  options: {
+    comment: 'SMTP\u90AE\u4EF6\u670D\u52A1\u5668\u914D\u7F6E\u7BA1\u7406 - \u652F\u6301\u591A\u4E2ASMTP\u63D0\u4F9B\u5546\u3001\u8D1F\u8F7D\u5747\u8861\u548C\u6545\u969C\u8F6C\u79FB';
+    draftAndPublish: false;
+  };
+  attributes: {
+    allowedDomains: Schema.Attribute.JSON;
+    blockedDomains: Schema.Attribute.JSON;
+    connectionTimeout: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 120000;
+          min: 5000;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<30000>;
+    cost: Schema.Attribute.Decimal;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    customHeaders: Schema.Attribute.JSON;
+    dailyLimit: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<1000>;
+    dailySent: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    errorCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    fromEmail: Schema.Attribute.Email & Schema.Attribute.Required;
+    fromName: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    healthCheckInterval: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 3600;
+          min: 60;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<300>;
+    healthStatus: Schema.Attribute.Enumeration<
+      ['healthy', 'warning', 'error', 'unknown']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'unknown'>;
+    host: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    isActive: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
+    lastHealthCheck: Schema.Attribute.DateTime;
+    lastUsed: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::smtp-config.smtp-config'
+    > &
+      Schema.Attribute.Private;
+    maxErrorCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 10;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<3>;
+    monthlyLimit: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<30000>;
+    monthlySent: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    notes: Schema.Attribute.Text;
+    password: Schema.Attribute.Password & Schema.Attribute.Required;
+    poolSize: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 20;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<5>;
+    port: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 65535;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<587>;
+    priority: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 10;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<1>;
+    provider: Schema.Attribute.Enumeration<
+      [
+        'aliyun',
+        'tencent',
+        'qq',
+        'netease163',
+        'gmail',
+        'outlook',
+        'sendgrid',
+        'mailgun',
+        'custom',
+      ]
+    > &
+      Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    rateLimitPerHour: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<100>;
+    region: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 50;
+      }>;
+    secure: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
+    tags: Schema.Attribute.JSON;
+    testRecipient: Schema.Attribute.Email;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    username: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+  };
+}
+
 export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
   collectionName: 'system_configs';
   info: {
@@ -883,46 +1299,6 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    emailFromAddress: Schema.Attribute.Email &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }> &
-      Schema.Attribute.DefaultTo<'noreply@aibianx.com'>;
-    emailFromName: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }> &
-      Schema.Attribute.DefaultTo<'AI\u53D8\u73B0\u4E4B\u8DEF'>;
-    emailPassword: Schema.Attribute.Password &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    emailServiceEnabled: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    emailServiceProvider: Schema.Attribute.Enumeration<
-      ['gmail', 'sendgrid', 'aliyun', 'tencent', 'mailgun', 'custom_smtp']
-    > &
-      Schema.Attribute.DefaultTo<'gmail'>;
-    emailSmtpHost: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }> &
-      Schema.Attribute.DefaultTo<'smtp.gmail.com'>;
-    emailSmtpPort: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 65535;
-          min: 1;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<587>;
-    emailUsername: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    emailUseTLS: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     emailVerificationEnabled: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
     enableAccountDeletion: Schema.Attribute.Boolean &
@@ -1066,6 +1442,15 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<600>;
+    verificationCodeLength: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 8;
+          min: 4;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<6>;
     wechatAppId: Schema.Attribute.String &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -1642,8 +2027,12 @@ declare module '@strapi/strapi' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
+      'api::email-campaign.email-campaign': ApiEmailCampaignEmailCampaign;
+      'api::email-subscription.email-subscription': ApiEmailSubscriptionEmailSubscription;
+      'api::email-tag.email-tag': ApiEmailTagEmailTag;
       'api::seo-metrics.seo-metrics': ApiSeoMetricsSeoMetrics;
       'api::site-config.site-config': ApiSiteConfigSiteConfig;
+      'api::smtp-config.smtp-config': ApiSmtpConfigSmtpConfig;
       'api::system-config.system-config': ApiSystemConfigSystemConfig;
       'api::tag.tag': ApiTagTag;
       'plugin::content-releases.release': PluginContentReleasesRelease;

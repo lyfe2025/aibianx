@@ -71,13 +71,7 @@ export default factories.createCoreController('api::system-config.system-config'
             enableUserProfileEdit: entity.enableUserProfileEdit,
             enableAccountDeletion: entity.enableAccountDeletion,
             enableUserListPublic: entity.enableUserListPublic,
-            maxAvatarSize: entity.maxAvatarSize,
-
-            // 邮件服务（仅状态，不包含敏感配置）
-            emailServiceEnabled: entity.emailServiceEnabled,
-            emailServiceProvider: entity.emailServiceProvider,
-            emailFromAddress: entity.emailFromAddress,
-            emailFromName: entity.emailFromName
+            maxAvatarSize: entity.maxAvatarSize
         }
 
         return publicConfig
@@ -147,31 +141,7 @@ export default factories.createCoreController('api::system-config.system-config'
         return oauthConfig
     },
 
-    /**
-     * 获取邮件配置（用于服务端发送邮件）
-     * GET /api/system-config/email
-     */
-    async getEmailConfig(ctx) {
-        const entity = await strapi.entityService.findMany('api::system-config.system-config')
 
-        if (!entity || !entity.emailServiceEnabled) {
-            return {
-                enabled: false
-            }
-        }
-
-        return {
-            enabled: true,
-            provider: entity.emailServiceProvider,
-            host: entity.emailSmtpHost,
-            port: entity.emailSmtpPort,
-            username: entity.emailUsername,
-            password: entity.emailPassword,
-            useTLS: entity.emailUseTLS,
-            fromAddress: entity.emailFromAddress,
-            fromName: entity.emailFromName
-        }
-    },
 
     /**
      * 获取用户注册配置

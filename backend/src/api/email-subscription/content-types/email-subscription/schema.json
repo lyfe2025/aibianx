@@ -1,0 +1,134 @@
+{
+  "kind": "collectionType",
+  "collectionName": "email_subscriptions",
+  "info": {
+    "singularName": "email-subscription",
+    "pluralName": "email-subscriptions",
+    "displayName": "邮件订阅",
+    "description": "邮件订阅者集合 - 存储所有邮件订阅者信息，支持营销邮件分发和用户管理"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "comment": "邮件订阅者集合 - 存储所有邮件订阅者信息，支持营销邮件分发和用户管理"
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": true,
+      "description": "订阅者邮箱地址 - 用于发送营销邮件和验证身份"
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "订阅者姓名 - 用于个性化邮件称呼"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["active", "unsubscribed", "bounced", "pending"],
+      "default": "pending",
+      "required": true,
+      "description": "订阅状态：active=活跃，unsubscribed=已取消，bounced=退信，pending=待确认"
+    },
+    "subscribeSource": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "订阅来源 - 记录用户从哪个页面或渠道订阅（如：homepage, sidebar, popup等）"
+    },
+    "subscribeDate": {
+      "type": "datetime",
+      "required": true,
+      "description": "订阅时间 - 记录用户首次订阅的时间"
+    },
+    "unsubscribeDate": {
+      "type": "datetime",
+      "description": "取消订阅时间 - 用户取消订阅的时间"
+    },
+    "lastEmailDate": {
+      "type": "datetime",
+      "description": "最后邮件发送时间 - 记录最后一次向该用户发送邮件的时间"
+    },
+    "preferences": {
+      "type": "json",
+      "description": "邮件偏好设置 - 存储用户的邮件接收偏好（如频率、类型等）"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::email-tag.email-tag",
+      "mappedBy": "subscribers",
+      "description": "邮件标签 - 用于用户分组和精准营销"
+    },
+    "metadata": {
+      "type": "json",
+      "description": "元数据 - 存储用户的额外信息（如IP地址、用户代理、推荐来源等）"
+    },
+    "unsubscribeToken": {
+      "type": "string",
+      "maxLength": 255,
+      "unique": true,
+      "description": "取消订阅令牌 - 用于生成取消订阅链接的安全令牌"
+    },
+    "confirmed": {
+      "type": "boolean",
+      "default": false,
+      "required": true,
+      "description": "邮箱确认状态 - 是否已通过邮箱验证确认订阅"
+    },
+    "confirmDate": {
+      "type": "datetime",
+      "description": "确认时间 - 用户确认订阅的时间"
+    },
+    "confirmToken": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "确认令牌 - 用于邮箱验证的安全令牌"
+    },
+    "emailCount": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "description": "接收邮件数量 - 该用户总共接收的邮件数量"
+    },
+    "openCount": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "description": "邮件打开次数 - 用户打开邮件的总次数"
+    },
+    "clickCount": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "description": "链接点击次数 - 用户点击邮件中链接的总次数"
+    },
+    "bounceCount": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "description": "退信次数 - 该邮箱地址退信的次数"
+    },
+    "lastOpenDate": {
+      "type": "datetime",
+      "description": "最后打开时间 - 用户最后一次打开邮件的时间"
+    },
+    "lastClickDate": {
+      "type": "datetime",
+      "description": "最后点击时间 - 用户最后一次点击邮件链接的时间"
+    },
+    "ipAddress": {
+      "type": "string",
+      "maxLength": 45,
+      "description": "IP地址 - 用户订阅时的IP地址（支持IPv4和IPv6）"
+    },
+    "userAgent": {
+      "type": "text",
+      "description": "用户代理 - 用户订阅时的浏览器信息"
+    },
+    "notes": {
+      "type": "text",
+      "description": "备注信息 - 管理员对该订阅者的备注或特殊说明"
+    }
+  }
+}

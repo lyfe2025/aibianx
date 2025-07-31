@@ -1,0 +1,409 @@
+# 错误预防机制 (Error Prevention Rules)
+
+## 🚨 **重点错误预防机制（基于实战经验）**
+
+### **🔥 内容类型开发必须避免的错误**
+
+#### **❌ 数据库层面常见错误**
+```sql
+-- ❌ 错误：忘记添加数据库字段注释
+CREATE TABLE articles (...);  -- 没有注释
+
+-- ✅ 正确：每个表和字段都必须有注释
+CREATE TABLE articles (...);
+COMMENT ON TABLE articles IS '文章管理：存储网站所有文章内容和元数据';
+COMMENT ON COLUMN articles.title IS '文章标题：必填，1-255字符，用于显示和SEO';
+```
+
+#### **❌ Strapi配置层面常见错误**
+```javascript
+// ❌ 错误：使用CommonJS语法（导致404错误）
+const { createCoreController } = require('@strapi/strapi').factories;
+module.exports = createCoreController('api::article.article');
+
+// ✅ 正确：必须使用ES6语法
+import { factories } from '@strapi/strapi'
+export default factories.createCoreController('api::article.article');
+```
+
+#### **❌ 权限配置常见错误**
+```bash
+# ❌ 错误：忘记配置Public权限，导致前端无法访问API
+curl -s "http://localhost:1337/api/articles" 
+# 返回: {"error":{"status":403,"name":"ForbiddenError"}}
+
+# ✅ 正确：必须配置Public权限
+# Admin → Settings → Roles → Public → 勾选 find, findOne
+curl -s "http://localhost:1337/api/articles" 
+# 返回: {"data":[...]}
+```
+
+### **🔥 API开发必须避免的错误**
+
+#### **❌ 控制器开发常见错误**
+```typescript
+// ❌ 错误：直接返回数据库查询结果，没有错误处理
+export default factories.createCoreController('api::article.article', ({ strapi }) => ({
+  async find(ctx) {
+    return await strapi.entityService.findMany('api::article.article', ctx.query)
+  }
+}))
+
+// ✅ 正确：必须包含错误处理和参数验证
+export default factories.createCoreController('api::article.article', ({ strapi }) => ({
+  async find(ctx) {
+    try {
+      const { page = 1, pageSize = 25 } = ctx.query
+      
+      // 参数验证
+      const validatedPageSize = Math.min(100, Math.max(1, parseInt(pageSize)))
+      
+      const result = await strapi.entityService.findMany('api::article.article', {
+        ...ctx.query,
+        pagination: {
+          page: Math.max(1, parseInt(page)),
+          pageSize: validatedPageSize
+        }
+      })
+      
+      return result
+    } catch (error) {
+      ctx.status = 500
+      return { error: { message: '获取文章列表失败', status: 500 } }
+    }
+  }
+}))
+```
+
+#### **❌ API测试常见遗漏**
+```bash
+# ❌ 错误：创建API后不测试，导致线上问题
+# 没有验证步骤
+
+# ✅ 正确：必须测试所有API端点
+# 1. 测试基础API
+curl -s "http://localhost:1337/api/articles" | jq '.data | length'
+
+# 2. 测试分页
+curl -s "http://localhost:1337/api/articles?pagination[pageSize]=5" | jq '.meta.pagination'
+
+# 3. 测试populate
+curl -s "http://localhost:1337/api/articles?populate=author,category" | jq '.data[0].attributes.author'
+
+# 4. 测试错误情况
+curl -s "http://localhost:1337/api/articles/999999" | jq '.error.status'
+```
+
+### **🔥 前端开发必须避免的错误**
+
+#### **❌ 组件开发常见错误**
+```typescript
+// ❌ 错误：组件没有错误边界和加载状态
+const ArticleList = () => {
+  const [articles, setArticles] = useState([])
+  
+  useEffect(() => {
+    fetch('/api/articles').then(res => res.json()).then(setArticles)
+  }, [])
+  
+  return (
+    <div>
+      {articles.map(article => <div key={article.id}>{article.title}</div>)}
+    </div>
+  )
+}
+
+// ✅ 正确：必须包含错误处理、加载状态、类型安全
+const ArticleList: React.FC = () => {
+  const [articles, setArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const response = await fetch('/api/articles')
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const data = await response.json()
+        setArticles(data.data || [])
+      } catch (err) {
+        setError(err instanceof Error ? err.message : '获取文章失败')
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchArticles()
+  }, [])
+  
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>Error: {error}</div>
+  
+  return (
+    <div>
+      {articles.map(article => (
+        <div key={article.id}>{article.title}</div>
+      ))}
+    </div>
+  )
+}
+```
+
+#### **❌ 样式开发常见错误**
+```css
+/* ❌ 错误：硬编码颜色值，主题切换时不生效 */
+.button {
+  color: #3B82F6;
+  background: #ffffff;
+}
+
+/* ✅ 正确：必须使用CSS变量，支持主题切换 */
+.button {
+  color: var(--color-primary-blue);
+  background: var(--color-bg-primary);
+}
+
+/* 🔥 如果CSS变量不生效，使用终极优先级策略 */
+html body .button,
+body .button,
+.button,
+:root .button,
+:root[data-theme="dark"] .button,
+:root[data-theme="light"] .button {
+  color: var(--color-primary-blue) !important;
+  background: var(--color-bg-primary) !important;
+}
+```
+
+### **🔥 环境配置必须避免的错误**
+
+#### **❌ 环境变量常见错误**
+```bash
+# ❌ 错误：硬编码URL，无法适应不同环境
+const API_URL = 'http://localhost:1337/api'
+
+# ✅ 正确：必须使用环境变量
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL + '/api'
+```
+
+#### **❌ 数据库配置常见错误**
+```javascript
+// ❌ 错误：数据库连接配置错误，导致连接失败
+module.exports = {
+  host: 'localhost',
+  port: 5432,
+  database: 'strapi',
+  username: 'root',
+  password: ''
+}
+
+// ✅ 正确：必须使用环境变量和正确的配置
+module.exports = {
+  host: env('DATABASE_HOST', 'localhost'),
+  port: env.int('DATABASE_PORT', 5432),
+  database: env('DATABASE_NAME', 'aibianx_dev'),
+  username: env('DATABASE_USERNAME', 'aibianx_dev'),
+  password: env('DATABASE_PASSWORD'),
+  ssl: env.bool('DATABASE_SSL', false)
+}
+```
+
+### **🔥 邮件系统必须避免的错误**
+
+#### **❌ SMTP配置常见错误**
+```typescript
+// ❌ 错误：直接硬编码SMTP配置
+const transporter = nodemailer.createTransporter({
+  host: 'smtp.gmail.com',
+  port: 587,
+  auth: {
+    user: 'your-email@gmail.com',
+    pass: 'your-password'
+  }
+})
+
+// ✅ 正确：必须使用统一邮件服务
+import { emailService } from '@/lib/email-service'
+
+await emailService.sendVerificationCode({
+  email: user.email,
+  code: verificationCode,
+  type: 'register'
+})
+```
+
+#### **❌ 邮件发送常见错误**
+```typescript
+// ❌ 错误：没有错误处理和频率限制
+await sendEmail(email, subject, content)
+
+// ✅ 正确：必须包含完整的错误处理
+try {
+  // 检查发送频率
+  await checkEmailRateLimit(email, 'verification')
+  
+  // 验证邮箱格式
+  if (!validator.isEmail(email)) {
+    throw new Error('邮箱格式无效')
+  }
+  
+  // 发送邮件
+  const result = await emailService.send({
+    to: email,
+    subject,
+    content,
+    type: 'verification'
+  })
+  
+  // 记录发送日志
+  logger.info('邮件发送成功', { email, type: 'verification', messageId: result.messageId })
+  
+} catch (error) {
+  logger.error('邮件发送失败', { email, error: error.message })
+  throw error
+}
+```
+
+## **🚨 最容易被遗漏的关键检查点**
+
+### **🔴 每次创建内容类型后必须检查：**
+1. **数据库注释是否完整** ⭐⭐⭐
+2. **字段描述自动化脚本是否执行成功** ⭐⭐⭐  
+3. **API权限是否配置** ⭐⭐⭐
+4. **API端点是否可访问** ⭐⭐⭐
+5. **前端类型定义是否更新** ⭐⭐
+
+### **🔴 每次开发新API后必须检查：**
+1. **错误处理是否完整** ⭐⭐⭐
+2. **参数验证是否充分** ⭐⭐⭐
+3. **API测试是否通过** ⭐⭐⭐
+4. **响应格式是否标准** ⭐⭐
+5. **日志记录是否完整** ⭐⭐
+
+### **🔴 每次部署前必须检查：**
+1. **环境变量是否正确** ⭐⭐⭐
+2. **数据库连接是否正常** ⭐⭐⭐
+3. **邮件服务是否配置** ⭐⭐⭐
+4. **搜索服务是否运行** ⭐⭐
+5. **静态资源是否正确** ⭐⭐
+
+## **🔧 常见问题快速诊断和解决**
+
+### **问题1：API返回404错误**
+```bash
+# 🔍 诊断步骤
+echo "1. 检查文件是否使用ES6语法"
+grep -r "module.exports\|require(" backend/src/api/
+
+echo "2. 检查是否有多余的index.js文件"
+find backend/src/api -name "index.js"
+
+echo "3. 清除缓存重启"
+cd backend && rm -rf .tmp && npm run develop
+
+# 🛠️ 解决方案
+# 1. 将所有.js文件改为.ts
+# 2. 使用import/export语法
+# 3. 删除多余的index.js文件
+```
+
+### **问题2：字段描述不显示中文**
+```bash
+# 🔍 诊断步骤
+echo "1. 检查是否执行了字段描述脚本"
+./scripts.sh tools fix-fields-any [content-type]
+
+echo "2. 清除所有缓存"
+cd backend && rm -rf .tmp .cache
+cd ../frontend && rm -rf .next
+
+echo "3. 重启服务"
+./scripts.sh deploy stop && ./scripts.sh deploy start
+
+# 🛠️ 解决方案
+# 1. 立即执行自动化脚本
+# 2. 清除缓存重启
+# 3. 强制刷新浏览器 (Ctrl+Shift+R)
+```
+
+### **问题3：前端样式不生效**
+```bash
+# 🔍 诊断步骤
+echo "1. 检查是否使用了CSS变量"
+grep -r "color: #[0-9a-fA-F]" frontend/src/styles/
+
+echo "2. 检查主题切换逻辑"
+grep -r "data-theme" frontend/src/
+
+echo "3. 使用终极优先级策略"
+# 在CSS中添加最高优先级选择器
+
+# 🛠️ 解决方案
+# 1. 替换硬编码颜色为CSS变量
+# 2. 使用终极优先级选择器组合
+# 3. 测试所有主题模式
+```
+
+### **问题4：TypeScript类型错误**
+```bash
+# 🔍 诊断步骤
+echo "1. 检查类型定义是否更新"
+npx tsc --noEmit
+
+echo "2. 检查API响应类型"
+curl -s "http://localhost:1337/api/articles" | jq '.data[0]'
+
+echo "3. 更新类型定义"
+# 在types/api.ts中添加新的接口定义
+
+# 🛠️ 解决方案
+# 1. 立即更新TypeScript类型
+# 2. 验证API响应格式
+# 3. 运行类型检查确认无误
+```
+
+### **问题5：环境变量配置错误**
+```bash
+# 🔍 诊断步骤
+echo "1. 检查环境变量文件是否存在"
+test -f backend/.env && echo "后端环境变量存在" || echo "后端环境变量缺失"
+test -f frontend/.env.local && echo "前端环境变量存在" || echo "前端环境变量缺失"
+
+echo "2. 验证关键环境变量"
+cd backend && node -e "console.log('DATABASE_HOST:', process.env.DATABASE_HOST)"
+
+echo "3. 测试连接"
+curl -s "${NEXT_PUBLIC_STRAPI_URL}/api/articles"
+
+# 🛠️ 解决方案
+# 1. 创建缺失的环境变量文件
+# 2. 复制环境变量模板
+# 3. 验证所有连接正常
+```
+
+## **💡 预防性措施和最佳实践**
+
+### **🛡️ 开发前预检清单**
+- [ ] 环境变量文件完整
+- [ ] 数据库连接正常
+- [ ] 依赖版本兼容
+- [ ] 开发工具配置正确
+- [ ] 缓存已清理
+
+### **🔄 开发中检查频率**
+- **每次修改schema** → 清理缓存 + 重启服务
+- **每次添加API** → 测试端点 + 更新类型
+- **每次修改样式** → 测试主题切换
+- **每次提交代码** → 执行完整检查清单
+
+### **📋 问题追踪机制**
+- **记录常见问题** → 更新错误预防规则
+- **分析根本原因** → 改进开发流程  
+- **分享解决方案** → 团队知识积累
+- **持续改进** → 定期更新规范文档

@@ -228,6 +228,6 @@ export function useSystemStatus() {
         isMaintenanceMode: maintenanceMode,
         maintenanceMessage: config?.maintenanceMessage || '网站正在维护中，请稍后访问。',
         isLoading: configLoading || maintenanceLoading,
-        emailServiceEnabled: config?.emailServiceEnabled || false
+        emailVerificationEnabled: config?.emailVerificationEnabled || false
     }
 }

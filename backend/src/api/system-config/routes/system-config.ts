@@ -53,19 +53,7 @@ export default {
             }
         },
 
-        // 邮件配置API（服务端发送邮件使用）
-        {
-            method: 'GET',
-            path: '/system-config/email',
-            handler: 'system-config.getEmailConfig',
-            config: {
-                auth: false,
-                policies: [],
-                middlewares: [],
-                description: '获取邮件配置（服务端发送邮件使用）',
-                tags: ['System-Config'],
-            }
-        },
+
 
         // 用户注册配置API
         {

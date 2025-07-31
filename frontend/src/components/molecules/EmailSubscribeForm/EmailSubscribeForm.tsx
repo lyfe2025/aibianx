@@ -42,11 +42,33 @@ export function EmailSubscribeForm({ className }: EmailSubscribeFormProps) {
         setIsSubmitting(true)
 
         try {
-            // 模拟API调用
-            await new Promise(resolve => setTimeout(resolve, 2000))
+            // 调用新的邮件订阅API
+            const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/email-subscription/subscribe`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email.trim(),
+                    source: 'homepage',
+                    tags: ['newsletter'] // 默认订阅新闻简报
+                })
+            })
 
-            showSuccess(HERO_CONTENT.successMessage)
-            setEmail('') // 清空输入框
+            const result = await response.json()
+
+            if (response.ok) {
+                if (result.status === 'success') {
+                    showSuccess('订阅成功！欢迎加入AI变现之路社区，欢迎邮件已发送至您的邮箱')
+                } else if (result.status === 'existing') {
+                    showSuccess('您已经订阅过了，感谢支持！')
+                } else if (result.status === 'resubscribed') {
+                    showSuccess('欢迎回来！您已重新订阅我们的邮件列表')
+                }
+                setEmail('') // 清空输入框
+            } else {
+                showError(result.message || HERO_CONTENT.errorMessage)
+            }
         } catch (error) {
             console.error('订阅失败:', error)
             showError(HERO_CONTENT.errorMessage)

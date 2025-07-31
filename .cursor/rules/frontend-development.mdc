@@ -1,0 +1,387 @@
+# 前端开发规范 (Frontend Development Rules)
+
+## 🏗️ **前端组件开发规范（详细）**
+
+### **🔧 组件架构原则**
+- **原子设计**: atoms → molecules → organisms → templates
+- **组合优于继承**: 使用组合模式构建复杂组件
+- **单一职责**: 每个组件只负责一个明确的功能
+- **数据流向下**: props向下传递，events向上冒泡
+
+### **📝 组件命名和文件结构标准**
+```typescript
+// ✅ 正确的组件文件结构
+src/components/
+├── ui/                    # 原子组件
+│   ├── Button/
+│   │   ├── Button.tsx     # 主组件文件
+│   │   ├── Button.css     # 样式文件
+│   │   ├── Button.test.tsx # 测试文件
+│   │   └── index.ts       # 导出文件
+├── molecules/             # 分子组件
+│   ├── SearchBar/
+│   ├── ArticleCard/
+├── organisms/             # 有机组件
+│   ├── Header/
+│   ├── ArticleList/
+
+// ✅ 标准组件导出格式
+export { Button } from './Button'
+export type { ButtonProps } from './Button'
+```
+
+### **🎯 组件Props设计规范**
+```typescript
+// ✅ 标准Props接口设计
+interface ButtonProps {
+  // 基础属性
+  children: React.ReactNode
+  className?: string
+  
+  // 功能属性（明确类型）
+  variant?: 'primary' | 'secondary' | 'ghost'
+  size?: 'sm' | 'md' | 'lg'
+  disabled?: boolean
+  loading?: boolean
+  
+  // 事件处理（使用标准命名）
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
+  onFocus?: (event: React.FocusEvent<HTMLButtonElement>) => void
+  
+  // HTML属性（有选择地暴露）
+  type?: 'button' | 'submit' | 'reset'
+  'aria-label'?: string
+  'data-testid'?: string
+}
+
+// ❌ 避免的Props设计
+interface BadButtonProps {
+  color: string           // 太灵活，应该使用枚举
+  style: CSSProperties    // 破坏组件封装
+  customClass: string     // 命名不标准
+}
+```
+
+### **🎨 样式管理标准**
+```css
+/* ✅ 组件样式标准格式 */
+.button {
+  /* 1. CSS变量使用 */
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  
+  /* 2. 响应式设计 */
+  padding: var(--spacing-sm) var(--spacing-md);
+  
+  /* 3. 状态管理 */
+  transition: all var(--transition-normal);
+  
+  /* 4. 交互状态 */
+  &:hover {
+    background: var(--color-bg-primary-hover);
+    transform: translateY(-1px);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* 5. 变体样式 */
+  &.button--primary {
+    background: var(--gradient-primary);
+  }
+  
+  &.button--loading {
+    position: relative;
+    color: transparent;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      /* 加载动画样式 */
+    }
+  }
+}
+```
+
+### **🔗 状态管理和API集成**
+```typescript
+// ✅ 自定义Hook标准格式
+export const useArticles = (params?: ArticleParams) => {
+  const [data, setData] = useState<Article[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  
+  const fetchArticles = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const articles = await strapiClient.getArticles(params)
+      setData(articles)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setLoading(false)
+    }
+  }, [params])
+  
+  useEffect(() => {
+    fetchArticles()
+  }, [fetchArticles])
+  
+  return { data, loading, error, refetch: fetchArticles }
+}
+
+// ✅ Zustand Store标准格式
+interface UserStore {
+  // 状态定义
+  user: User | null
+  isAuthenticated: boolean
+  loading: boolean
+  
+  // 动作定义
+  login: (credentials: LoginCredentials) => Promise<void>
+  logout: () => void
+  updateProfile: (profile: Partial<User>) => Promise<void>
+}
+
+export const useUserStore = create<UserStore>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      isAuthenticated: false,
+      loading: false,
+      
+      login: async (credentials) => {
+        set({ loading: true })
+        try {
+          const user = await authService.login(credentials)
+          set({ user, isAuthenticated: true, loading: false })
+        } catch (error) {
+          set({ loading: false })
+          throw error
+        }
+      },
+      
+      logout: () => {
+        set({ user: null, isAuthenticated: false })
+      },
+    }),
+    { name: 'user-store' }
+  )
+)
+```
+
+### **📱 响应式设计标准**
+```typescript
+// ✅ 响应式组件设计
+const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
+  return (
+    <div className="article-card">
+      {/* 移动端优先设计 */}
+      <div className="article-card__image">
+        <Image
+          src={article.featuredImage}
+          alt={article.title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover"
+        />
+      </div>
+      
+      <div className="article-card__content">
+        <h3 className="article-card__title">{article.title}</h3>
+        <p className="article-card__excerpt">{article.excerpt}</p>
+        
+        {/* 条件渲染 */}
+        {article.featured && (
+          <Badge variant="featured">置顶</Badge>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ✅ 对应的响应式样式
+.article-card {
+  /* 移动端基础样式 */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  
+  /* 平板端适配 */
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: var(--spacing-md);
+  }
+  
+  /* 桌面端适配 */
+  @media (min-width: 1024px) {
+    gap: var(--spacing-lg);
+  }
+}
+```
+
+### **🧪 组件测试标准**
+```typescript
+// ✅ 组件测试标准格式
+describe('Button Component', () => {
+  it('renders with correct text', () => {
+    render(<Button>Click me</Button>)
+    expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument()
+  })
+  
+  it('handles click events', () => {
+    const handleClick = jest.fn()
+    render(<Button onClick={handleClick}>Click me</Button>)
+    
+    fireEvent.click(screen.getByRole('button'))
+    expect(handleClick).toHaveBeenCalledTimes(1)
+  })
+  
+  it('shows loading state', () => {
+    render(<Button loading>Loading</Button>)
+    expect(screen.getByRole('button')).toHaveAttribute('aria-busy', 'true')
+  })
+  
+  it('respects disabled state', () => {
+    const handleClick = jest.fn()
+    render(<Button disabled onClick={handleClick}>Disabled</Button>)
+    
+    const button = screen.getByRole('button')
+    expect(button).toBeDisabled()
+    
+    fireEvent.click(button)
+    expect(handleClick).not.toHaveBeenCalled()
+  })
+})
+```
+
+### **⚛️ React Hooks使用规范**
+```typescript
+// ✅ 自定义Hook最佳实践
+export const useDebounce = <T>(value: T, delay: number): T => {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+
+  return debouncedValue
+}
+
+// ✅ useEffect依赖数组最佳实践
+const ComponentWithAPI: React.FC<Props> = ({ userId }) => {
+  const [user, setUser] = useState<User | null>(null)
+  
+  // 使用useCallback包装函数，避免不必要的重新渲染
+  const fetchUser = useCallback(async () => {
+    if (!userId) return
+    
+    try {
+      const userData = await api.getUser(userId)
+      setUser(userData)
+    } catch (error) {
+      console.error('Failed to fetch user:', error)
+    }
+  }, [userId]) // 正确的依赖数组
+  
+  useEffect(() => {
+    fetchUser()
+  }, [fetchUser])
+  
+  return user ? <UserProfile user={user} /> : <Loading />
+}
+```
+
+### **🔄 状态更新和生命周期管理**
+```typescript
+// ✅ 状态更新最佳实践
+const TodoList: React.FC = () => {
+  const [todos, setTodos] = useState<Todo[]>([])
+  
+  // 使用函数式更新避免状态竞争
+  const addTodo = useCallback((text: string) => {
+    const newTodo: Todo = {
+      id: Date.now(),
+      text,
+      completed: false
+    }
+    
+    setTodos(prevTodos => [...prevTodos, newTodo])
+  }, [])
+  
+  // 批量状态更新
+  const toggleTodo = useCallback((id: number) => {
+    setTodos(prevTodos =>
+      prevTodos.map(todo =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    )
+  }, [])
+  
+  return (
+    <div>
+      {todos.map(todo => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          onToggle={toggleTodo}
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+### **📦 组件优化和性能**
+```typescript
+// ✅ 组件性能优化
+const ExpensiveComponent: React.FC<Props> = React.memo(({ data, onSelect }) => {
+  // 使用useMemo缓存计算结果
+  const processedData = useMemo(() => {
+    return data.map(item => ({
+      ...item,
+      displayName: `${item.firstName} ${item.lastName}`
+    }))
+  }, [data])
+  
+  // 使用useCallback缓存事件处理函数
+  const handleItemClick = useCallback((item: Item) => {
+    onSelect(item.id)
+  }, [onSelect])
+  
+  return (
+    <div>
+      {processedData.map(item => (
+        <ItemComponent
+          key={item.id}
+          item={item}
+          onClick={handleItemClick}
+        />
+      ))}
+    </div>
+  )
+}, (prevProps, nextProps) => {
+  // 自定义比较函数
+  return prevProps.data === nextProps.data && prevProps.onSelect === nextProps.onSelect
+})
+```
+
+### **📋 前端开发检查清单**
+- [ ] 组件文件结构符合原子设计原则
+- [ ] Props接口定义完整且类型安全
+- [ ] 样式使用CSS变量而非硬编码
+- [ ] 响应式设计覆盖所有断点
+- [ ] 错误状态和加载状态处理完整
+- [ ] 组件具有适当的测试覆盖
+- [ ] 性能优化措施到位 (memo, callback, useMemo)
+- [ ] 可访问性要求满足 (aria-label, 键盘导航)
+- [ ] 代码注释清晰，便于维护

@@ -1,0 +1,89 @@
+{
+  "kind": "collectionType",
+  "collectionName": "email_tags",
+  "info": {
+    "singularName": "email-tag",
+    "pluralName": "email-tags",
+    "displayName": "邮件标签",
+    "description": "邮件标签系统 - 用于对邮件订阅者进行分组管理，支持精准营销和个性化邮件发送"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "comment": "邮件标签系统 - 用于对邮件订阅者进行分组管理，支持精准营销和个性化邮件发送"
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 50,
+      "description": "标签名称 - 用于标识标签的唯一名称（如：newsletter, promotion, vip等）"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true,
+      "description": "标签别名 - 用于URL和API调用的友好别名"
+    },
+    "description": {
+      "type": "text",
+      "description": "标签描述 - 详细说明该标签的用途和包含的用户类型"
+    },
+    "color": {
+      "type": "string",
+      "maxLength": 7,
+      "default": "#007bff",
+      "regex": "^#[0-9A-Fa-f]{6}$",
+      "description": "标签颜色 - 十六进制颜色代码，用于在管理界面中区分不同标签"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true,
+      "required": true,
+      "description": "激活状态 - 是否启用该标签，禁用的标签不会出现在前端选择列表中"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": 0,
+      "description": "排序顺序 - 用于控制标签在列表中的显示顺序（数字越小越靠前）"
+    },
+    "subscriberCount": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "description": "订阅者数量 - 拥有该标签的活跃订阅者数量（自动计算）"
+    },
+    "lastUsed": {
+      "type": "datetime",
+      "description": "最后使用时间 - 该标签最后一次被使用的时间"
+    },
+    "autoAssign": {
+      "type": "boolean",
+      "default": false,
+      "description": "自动分配 - 是否根据规则自动为新订阅者分配该标签"
+    },
+    "autoAssignRules": {
+      "type": "json",
+      "description": "自动分配规则 - JSON格式的规则配置，用于自动标签分配"
+    },
+    "subscribers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::email-subscription.email-subscription",
+      "inversedBy": "tags",
+      "description": "关联订阅者 - 拥有该标签的所有邮件订阅者"
+    },
+    "campaigns": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::email-campaign.email-campaign",
+      "mappedBy": "targetTags",
+      "description": "关联营销活动 - 使用该标签作为目标受众的邮件营销活动"
+    },
+    "notes": {
+      "type": "text",
+      "description": "备注信息 - 管理员对该标签的备注或使用说明"
+    }
+  }
+}

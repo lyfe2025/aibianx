@@ -16,698 +16,6 @@ alwaysApply: true
 - **颜色**: 严格使用CSS变量 (--color-primary-blue: #3B82F6, --color-bg-glass等)
 - **毛玻璃**: `backdrop-filter: blur(12px)` + 对应边框和背景
 
-## 🔥 **CSS样式冲突解决标准（终极优先级策略）**
-
-### **⚠️ 核心原则**
-当遇到CSS样式不生效、主题切换颜色不一致、组件样式被覆盖等问题时，**优先使用最高优先级CSS选择器强制解决**，而非反复调试CSS变量或组件逻辑。
-
-### **🛡️ 终极优先级四重保障机制**
-
-#### **1. CSS终极选择器组合**
-```css
-/* 🔥 所有可能的DOM层级 + 主题覆盖 + 浏览器兼容 */
-html body article div.target-class,
-html body div.target-class,
-body div.target-class,
-div.target-class,
-.target-class,
-:root .target-class,
-:root[data-theme="dark"] .target-class,
-:root[data-theme="light"] .target-class {
-    color: #目标颜色 !important;
-    -webkit-text-fill-color: #目标颜色 !important;
-    /* 其他需要强制的样式 */
-}
-```
-
-#### **2. SVG图标强制颜色覆盖**
-```css
-/* 🔥 多层级SVG选择器覆盖 */
-html body .target-class svg,
-body .target-class svg,
-.target-class svg,
-.target-class .icon-wrapper,
-.target-class .icon-wrapper svg,
-.target-class svg path {
-    color: #目标颜色 !important;
-    fill: #目标颜色 !important;
-    -webkit-text-fill-color: #目标颜色 !important;
-}
-```
-
-#### **3. JSX内联样式四层强制**
-```tsx
-// 容器级强制
-<div 
-  className="target-class"
-  style={{
-    color: '#目标颜色 !important',
-    WebkitTextFillColor: '#目标颜色 !important',
-    // ...其他样式
-  }}
->
-  {/* 图标级强制 */}
-  <IconComponent 
-    style={{ color: '#目标颜色 !important' }} 
-  />
-  
-  {/* 文字级强制（双重保障） */}
-  <span style={{ 
-    color: '#目标颜色 !important', 
-    WebkitTextFillColor: '#目标颜色 !important' 
-  }}>
-    目标文字
-  </span>
-</div>
-```
-
-#### **4. 图标组件内部强制**
-```tsx
-// 图标组件内直接硬编码
-<svg
-  style={{
-    display: 'block',
-    color: '#目标颜色',
-    fill: '#目标颜色'
-  }}
-  fill="#目标颜色" // SVG属性级强制
->
-  <path fill="#目标颜色" /> {/* 路径级强制 */}
-</svg>
-```
-
-### **🎯 标准问题处理流程**
-
-#### **问题识别清单**
-- [ ] CSS变量在某些主题下不生效？
-- [ ] 组件样式被其他CSS规则覆盖？
-- [ ] SVG图标颜色与文字颜色不一致？
-- [ ] 主题切换时样式不更新？
-- [ ] 浏览器兼容性问题（Safari/Chrome差异）？
-
-#### **立即执行方案（无需调试）**
-1. **创建终极CSS规则**：在 `frontend/src/styles/components.css` 添加最高优先级选择器
-2. **JSX四层强制**：容器、图标、文字、SVG属性层层强制
-3. **硬编码关键颜色**：对于关键UI元素，直接使用十六进制颜色值
-4. **跨浏览器兼容**：同时使用 `color` 和 `-webkit-text-fill-color`
-
-#### **预防性措施**
-- **关键组件优先**：对于Logo、按钮、标识等关键UI组件，预先使用终极优先级策略
-- **主题测试**：每次样式修改后必须测试亮色/暗色主题
-- **浏览器测试**：在Safari、Chrome、Firefox中验证样式效果
-
-### **🔧 实战案例模板**
-
-#### **文章标识组件样式冲突**
-```css
-/* 问题：置顶/会员标识在主题切换时颜色不一致 */
-/* 解决：终极优先级选择器 */
-
-html body article div.featured-badge,
-html body div.featured-badge,
-body div.featured-badge,
-div.featured-badge,
-.featured-badge,
-:root .featured-badge,
-:root[data-theme="dark"] .featured-badge,
-:root[data-theme="light"] .featured-badge {
-    color: #F59E0B !important;
-    -webkit-text-fill-color: #F59E0B !important;
-}
-
-html body .featured-badge svg,
-body .featured-badge svg,
-.featured-badge svg,
-.featured-badge .star-icon svg,
-.featured-badge svg path {
-    color: #F59E0B !important;
-    fill: #F59E0B !important;
-}
-```
-
-#### **按钮组件状态样式**
-```css
-/* 问题：按钮hover/active状态被覆盖 */
-/* 解决：状态选择器 + 终极优先级 */
-
-html body .gradient-button:hover,
-body .gradient-button:hover,
-.gradient-button:hover,
-html body .gradient-button:active,
-body .gradient-button:active,
-.gradient-button:active {
-    background: var(--gradient-primary-hover) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3) !important;
-}
-```
-
-### **🚨 关键提醒**
-- **立即解决原则**：发现样式问题时，优先使用终极优先级策略立即解决，避免反复调试
-- **硬编码合理性**：对于关键UI颜色（品牌色、警告色），硬编码比CSS变量更可靠
-- **选择器冗余性**：宁可选择器冗余，也要确保在所有场景下都能正确应用样式
-- **文档记录**：每次使用终极策略后，在代码中添加注释说明原因和解决的问题
-
-## 🚨 Strapi 5.x 关键错误预防
-
-### **必须使用TypeScript + ES6语法**
-```typescript
-// ✅ 正确格式
-import { factories } from '@strapi/strapi'
-export default factories.createCoreController('api::article.article');
-
-// ❌ 错误格式 - 会导致404
-const { createCoreController } = require('@strapi/strapi').factories;
-module.exports = createCoreController('api::article.article');
-```
-
-### **关键注意事项**
-- ❌ 删除 `content-types/{name}/index.js` 文件 (导致冲突)
-- ✅ 必须使用 `.ts` 扩展名
-- ✅ 优先使用Admin界面创建内容类型
-- ✅ 创建后立即配置Public角色权限
-
-### **快速问题诊断**
-```bash
-# 1. 测试API状态
-curl -s "http://localhost:1337/api/articles" | jq '.error.status'
-# 404 = 未识别格式 | 403 = 需要权限 | 200 = 正常
-
-# 2. 检查文件格式
-find src/api -name "*.js" -o -name "*.ts" | sort
-# 应该只有.ts文件
-
-# 3. 修复重启
-rm -rf .tmp && npm run develop
-```
-
-### **权限自动化配置 (推荐)**
-在 `backend/src/index.ts` 添加bootstrap函数自动配置权限：
-```typescript
-export default {
-  async bootstrap({ strapi }) {
-    const publicRole = await strapi.entityService.findMany('plugin::users-permissions.role', {
-      filters: { type: 'public' }
-    });
-    
-    const permissions = [
-      'api::article.article.find', 'api::article.article.findOne',
-      'api::author.author.find', 'api::category.category.find',
-      'api::tag.tag.find', 'api::site-config.site-config.find',
-      'api::seo-metrics.seo-metrics.find'
-    ];
-    
-    // 自动创建/启用权限逻辑...
-  }
-};
-```
-
-### **新建内容类型标准流程**
-1. **Admin界面创建** → Content-Type Builder → 配置字段 → 保存重启
-2. **立即配置字段描述** → 每个字段添加中文描述和业务规则说明
-3. **自动添加数据库注释** → 执行`COMMENT ON TABLE/COLUMN`SQL语句添加中文注释
-4. **配置API权限** → Settings → Roles → Public → 勾选find/findOne权限
-5. **验证测试** → 测试API端点、Admin界面、前端集成
-
-#### **一次性完成清单**
-- ✅ 内容类型创建时立即配置所有字段描述
-- ✅ 同步执行数据库表和字段注释SQL
-- ✅ API权限配置 + 前端API集成测试
-- ❌ **禁止**：创建额外的配置指南文档 - 所有配置应直接完成
-
-## 🌐 **域名配置标准（统一管理）**
-
-### **⚠️ 重要原则**
-所有URL和域名配置必须使用环境变量，禁止硬编码！确保开发环境、生产环境配置统一管理。
-
-### **🔧 环境变量标准配置**
-
-#### **前端环境变量 (frontend/.env.local)**
-```bash
-# 前端服务配置（域名和端口分离）
-NEXT_PUBLIC_FRONTEND_DOMAIN=localhost
-NEXT_PUBLIC_FRONTEND_PORT=80
-NEXT_PUBLIC_FRONTEND_PROTOCOL=http
-
-# 后端服务配置（域名和端口分离）
-NEXT_PUBLIC_BACKEND_DOMAIN=localhost
-NEXT_PUBLIC_BACKEND_PORT=1337
-NEXT_PUBLIC_BACKEND_PROTOCOL=http
-
-# 搜索服务配置（域名和端口分离）
-NEXT_PUBLIC_SEARCH_DOMAIN=localhost
-NEXT_PUBLIC_SEARCH_PORT=7700
-NEXT_PUBLIC_SEARCH_PROTOCOL=http
-
-# NextAuth配置
-NEXTAUTH_SECRET=your-secret-key
-```
-
-#### **后端环境变量 (backend/.env)**
-```bash
-# 后端服务配置（域名和端口分离）
-BACKEND_DOMAIN=localhost
-BACKEND_PORT=1337
-BACKEND_PROTOCOL=http
-HOST=0.0.0.0
-PORT=1337
-
-# 前端服务配置（域名和端口分离）
-FRONTEND_DOMAIN=localhost
-FRONTEND_PORT=80
-FRONTEND_PROTOCOL=http
-
-# 数据库服务配置（域名和端口分离）
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_NAME=aibianx_dev
-DATABASE_USERNAME=aibianx_dev
-DATABASE_PASSWORD=aibianx_password
-
-# 搜索服务配置（域名和端口分离）
-MEILISEARCH_DOMAIN=localhost
-MEILISEARCH_PORT=7700
-MEILISEARCH_PROTOCOL=http
-MEILISEARCH_API_KEY=
-
-# 安全配置
-APP_KEYS=key1,key2,key3,key4
-API_TOKEN_SALT=api-token-salt
-ADMIN_JWT_SECRET=admin-jwt-secret
-JWT_SECRET=jwt-secret
-```
-
-### **🚨 禁止硬编码的场景**
-
-#### **❌ 错误做法（硬编码）**
-```typescript
-// 前端 - 错误
-const url = 'http://localhost:1337/api/articles'
-const siteUrl = 'http://localhost:3000'
-
-// 后端 - 错误
-githubCallbackUrl: 'http://localhost:3000/api/auth/callback/github'
-console.log('访问 http://localhost:1337/admin')
-```
-
-#### **✅ 正确做法（统一配置系统）**
-```typescript
-// 前端 - 正确（使用统一配置）
-import { config } from '@/lib/config'
-
-const BACKEND_URL = config.backend.url
-const FRONTEND_URL = config.frontend.url
-
-// 后端 - 正确（使用统一配置）
-import { config, oauthConfig } from './lib/config'
-
-githubCallbackUrl: oauthConfig.github
-console.log(`访问 ${config.backend.adminUrl}`)
-
-// 脚本文件 - 正确（域名端口分离）
-const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN || 'localhost'
-const BACKEND_PORT = process.env.BACKEND_PORT || '1337'
-const BACKEND_PROTOCOL = process.env.BACKEND_PROTOCOL || 'http'
-const BASE_URL = `${BACKEND_PROTOCOL}://${BACKEND_DOMAIN}${BACKEND_PORT === '80' || BACKEND_PORT === '443' ? '' : `:${BACKEND_PORT}`}`
-```
-
-### **🔧 快速配置工具**
-
-#### **自动创建环境变量文件**
-```bash
-# 命令行模式
-./scripts.sh tools setup-env
-
-# 交互式菜单
-./scripts.sh
-# 选择 "17) 自动配置环境变量"
-```
-
-#### **手动验证配置**
-```bash
-# 检查前端环境变量
-cd frontend && cat .env.local
-
-# 检查后端环境变量  
-cd backend && cat .env
-
-# 验证配置生效
-./scripts.sh tools status
-```
-
-### **🎯 配置检查清单**
-- [ ] 前端使用统一配置系统 `import { config } from '@/lib/config'`
-- [ ] 后端使用统一配置系统 `import { config } from './lib/config'`
-- [ ] 所有域名使用 `*_DOMAIN` 环境变量
-- [ ] 所有端口使用 `*_PORT` 环境变量
-- [ ] 所有协议使用 `*_PROTOCOL` 环境变量
-- [ ] OAuth回调使用 `oauthConfig` 对象
-- [ ] 脚本文件使用域名端口分离的构建逻辑
-- [ ] 无任何硬编码 `localhost:1337`、`localhost:3000`、`localhost:7700`
-- [ ] 开发环境端口：前端80，后端1337，搜索7700，数据库5432
-
-### **🚀 生产环境配置示例**
-```bash
-# 前端生产环境（域名端口分离）
-NEXT_PUBLIC_FRONTEND_DOMAIN=aibianx.com
-NEXT_PUBLIC_FRONTEND_PORT=443
-NEXT_PUBLIC_FRONTEND_PROTOCOL=https
-NEXT_PUBLIC_BACKEND_DOMAIN=api.aibianx.com
-NEXT_PUBLIC_BACKEND_PORT=443
-NEXT_PUBLIC_BACKEND_PROTOCOL=https
-NEXT_PUBLIC_SEARCH_DOMAIN=search.aibianx.com
-NEXT_PUBLIC_SEARCH_PORT=443
-NEXT_PUBLIC_SEARCH_PROTOCOL=https
-
-# 后端生产环境（域名端口分离）
-BACKEND_DOMAIN=api.aibianx.com
-BACKEND_PORT=443
-BACKEND_PROTOCOL=https
-FRONTEND_DOMAIN=aibianx.com
-FRONTEND_PORT=443
-FRONTEND_PROTOCOL=https
-MEILISEARCH_DOMAIN=search.aibianx.com
-MEILISEARCH_PORT=443
-MEILISEARCH_PROTOCOL=https
-DATABASE_HOST=prod-db.aibianx.com
-DATABASE_PORT=5432
-```
-
-## 🛠️ **脚本配置管理标准（统一入口）**
-
-### **⚠️ 核心原则**
-所有脚本必须使用统一配置加载系统，禁止硬编码URL！确保 `scripts.sh` 作为唯一入口正常工作。
-
-### **🔧 统一配置系统架构**
-
-#### **配置加载核心** - `scripts/tools/load-config.sh`
-```bash
-# 所有脚本必须首先加载配置
-source "$(dirname "$0")/../tools/load-config.sh"
-load_config
-
-# 自动可用的配置变量
-$FRONTEND_URL        # http://localhost
-$BACKEND_URL         # http://localhost:1337  
-$SEARCH_URL          # http://localhost:7700
-$BACKEND_ADMIN_URL   # http://localhost:1337/admin
-$BACKEND_API_URL     # http://localhost:1337/api
-$BACKEND_DOCS_URL    # http://localhost:1337/documentation
-$SEARCH_HEALTH_URL   # http://localhost:7700/health
-```
-
-#### **智能URL构建规则**
-```bash
-# 标准端口自动隐藏
-localhost:80  → localhost       # HTTP默认端口
-localhost:443 → localhost       # HTTPS默认端口  
-localhost:1337 → localhost:1337 # 非标准端口保留
-
-# 域名端口协议分离构建
-build_url() {
-    local protocol=$1 domain=$2 port=$3
-    if [ "$port" = "80" ] && [ "$protocol" = "http" ]; then
-        echo "${protocol}://${domain}"
-    elif [ "$port" = "443" ] && [ "$protocol" = "https" ]; then
-        echo "${protocol}://${domain}"
-    else
-        echo "${protocol}://${domain}:${port}"
-    fi
-}
-```
-
-### **✅ 脚本标准化要求**
-
-#### **必须遵循的脚本格式**
-```bash
-#!/bin/bash
-
-# 1. 必须加载统一配置
-source "$(dirname "$0")/../tools/load-config.sh"
-load_config
-
-# 2. 使用配置变量，禁止硬编码
-curl -s "${BACKEND_API_URL}/articles"           # ✅ 正确
-curl -s "http://localhost:1337/api/articles"    # ❌ 错误
-
-# 3. 输出信息使用配置变量
-echo "• 后端管理: ${BACKEND_ADMIN_URL}"          # ✅ 正确
-echo "• 后端管理: http://localhost:1337/admin"   # ❌ 错误
-```
-
-#### **已标准化的核心脚本** ✅
-- ✅ `scripts.sh` - 主入口脚本
-- ✅ `scripts/deployment/start-dev.sh` - 开发环境启动
-- ✅ `scripts/deployment/start-backend.sh` - 后端启动
-- ✅ `scripts/deployment/start-frontend.sh` - 前端启动
-- ✅ `scripts/search/deploy-meilisearch.sh` - 搜索引擎部署
-- ✅ `scripts/search/check-meilisearch.sh` - 搜索状态检查
-- ✅ `scripts/search/manage-meilisearch.sh` - 搜索管理工具
-- ✅ `scripts/tools/status.sh` - 系统状态检查
-
-### **🎯 配置验证清单**
-
-#### **新建脚本检查清单**
-- [ ] 脚本开头加载了 `load-config.sh`
-- [ ] 所有URL使用配置变量（无硬编码）
-- [ ] curl命令使用 `${BACKEND_API_URL}` 等变量
-- [ ] echo输出使用 `${BACKEND_ADMIN_URL}` 等变量
-- [ ] 通过 `scripts.sh` 调用测试正常
-
-#### **配置修改影响测试**
-```bash
-# 1. 修改环境变量
-vi backend/.env frontend/.env.local
-
-# 2. 测试主入口脚本
-./scripts.sh tools status
-
-# 3. 测试子脚本功能
-./scripts.sh deploy start
-./scripts.sh search manage
-
-# 4. 验证URL构建正确性
-source scripts/tools/load-config.sh && load_config
-echo $FRONTEND_URL $BACKEND_URL $SEARCH_URL
-```
-
-### **🚀 开发生产环境切换**
-
-#### **开发环境** (默认配置)
-```bash
-# backend/.env
-BACKEND_DOMAIN=localhost
-BACKEND_PORT=1337
-FRONTEND_DOMAIN=localhost  
-FRONTEND_PORT=80
-
-# 所有脚本自动使用开发配置
-./scripts.sh deploy start
-```
-
-#### **生产环境** (修改域名即可)
-```bash
-# backend/.env
-BACKEND_DOMAIN=api.yourdomain.com
-BACKEND_PORT=443
-BACKEND_PROTOCOL=https
-FRONTEND_DOMAIN=yourdomain.com
-FRONTEND_PORT=443
-FRONTEND_PROTOCOL=https
-
-# 所有脚本自动使用生产配置，无需修改代码
-./scripts.sh deploy start
-```
-
-### **🔧 故障排除指南**
-
-#### **常见问题诊断**
-```bash
-# 1. 检查配置加载
-source scripts/tools/load-config.sh
-load_config --verbose
-
-# 2. 验证配置变量
-echo "前端: $FRONTEND_URL"
-echo "后端: $BACKEND_URL" 
-echo "搜索: $SEARCH_URL"
-
-# 3. 测试URL构建
-curl -s "${BACKEND_API_URL}/articles" || echo "后端连接失败"
-curl -s "${SEARCH_HEALTH_URL}" || echo "搜索引擎连接失败"
-```
-
-#### **硬编码URL检查**
-```bash
-# 检查是否还有硬编码URL
-grep -r "localhost:1337\|localhost:3000\|localhost:7700" scripts/ --include="*.sh"
-
-# 应该返回空结果或仅限低优先级脚本
-```
-
----
-
-### **🔧 字段描述配置标准流程（关键）**
-
-**⚠️ 重要提醒**：字段描述配置失败是反复出现的问题，必须严格按照以下流程执行！
-
-#### **问题症状识别**
-- Admin界面字段没有中文描述显示
-- 描述显示为空或显示英文字段名
-- 配置后刷新页面描述消失
-
-#### **强制解决方案（100%有效）**
-
-**第一步：彻底清除所有缓存**
-```bash
-# 停止所有服务
-./scripts.sh deploy stop
-
-# 清除后端所有缓存（关键步骤）
-cd backend && rm -rf .tmp .cache build dist node_modules/.cache
-
-# 清除前端缓存
-cd ../frontend && rm -rf .next node_modules/.cache
-```
-
-**第二步：直接更新数据库配置**
-```bash
-# 创建字段描述更新脚本
-cat > backend/update-field-descriptions.sql << 'EOF'
--- 更新Article字段描述（示例）
-UPDATE strapi_core_store_settings 
-SET value = jsonb_set(
-    value::jsonb, 
-    '{metadatas,featured,edit,description}', 
-    '"是否置顶推荐：用于首页精选推荐，置顶显示优质内容，提升文章曝光度"'
-) 
-WHERE key = 'plugin_content_manager_configuration_content_types::api::article.article';
-
-UPDATE strapi_core_store_settings 
-SET value = jsonb_set(
-    value::jsonb, 
-    '{metadatas,isPremium,edit,description}', 
-    '"是否会员专享：标记为会员专享的文章需要会员权限才能查看完整内容，用于付费内容管理"'
-) 
-WHERE key = 'plugin_content_manager_configuration_content_types::api::article.article';
-EOF
-
-# 执行数据库更新
-cd backend && psql -U aibianx_dev -d aibianx_dev -f update-field-descriptions.sql
-```
-
-**第三步：重启服务并强制刷新**
-```bash
-# 重启开发环境（会自动清除缓存）
-./scripts.sh deploy start
-
-# 等待服务完全启动后，强制刷新浏览器
-# 按 Ctrl+Shift+R (Windows) 或 Cmd+Shift+R (Mac)
-```
-
-#### **标准字段描述模板**
-
-```javascript
-// Article字段描述配置
-const articleFieldDescriptions = {
-  title: "文章标题：必填字段，1-255字符，用于显示和SEO优化",
-  slug: "URL友好标识符：基于标题自动生成的唯一标识，用于友好URL",
-  content: "文章正文内容：富文本格式，必填字段，支持HTML标记",
-  excerpt: "文章摘要简介：最长500字符，用于列表页面和搜索结果展示",
-  featuredImage: "文章特色图片：封面图，仅支持图片格式，用于文章展示",
-  publishedAt: "文章发布时间：为空表示草稿状态，有值表示已发布",
-  viewCount: "文章浏览次数：默认为0，系统自动统计的文章访问量",
-  readingTime: "预估阅读时长：单位为分钟，默认5分钟，用于用户体验优化",
-  seoTitle: "SEO标题：最长60字符，用于搜索引擎结果页面显示",
-  seoDescription: "SEO描述：最长160字符，用于搜索引擎结果页面的摘要显示",
-  featured: "是否置顶推荐：用于首页精选推荐，置顶显示优质内容，提升文章曝光度",
-  isPremium: "是否会员专享：标记为会员专享的文章需要会员权限才能查看完整内容，用于付费内容管理",
-  tags: "文章标签：多对多关系，可选择多个标签进行文章分类",
-  category: "文章分类：多对一关系，每篇文章属于一个分类",
-  author: "文章作者：多对一关系，每篇文章有一个作者"
-};
-```
-
-#### **预防性措施**
-1. **启动脚本已优化**：`./scripts.sh deploy start` 会自动清除缓存
-2. **强制验证**：配置完成后必须验证Admin界面显示效果
-3. **标准模板**：使用上述标准描述模板，确保描述质量
-4. **一次性完成**：避免分批次配置，容易出现缓存冲突
-
-#### **故障排除清单**
-- [ ] 是否彻底清除了所有缓存？
-- [ ] 是否直接更新了数据库配置？
-- [ ] 是否完全重启了服务？
-- [ ] 是否强制刷新了浏览器？
-- [ ] 字段描述是否显示中文？
-
-**⚠️ 重要**：如果仍有问题，重复执行"强制解决方案"三个步骤，100%可解决！
-
-#### **新建内容类型字段描述配置**
-
-**适用场景**：新建Author、Category、Tag等内容类型时
-
-**通用配置工具**：
-```bash
-# 使用方法（支持所有内容类型）
-./scripts.sh tools fix-fields-any [content-type]
-
-# 具体示例
-./scripts.sh tools fix-fields-any author      # 配置作者字段描述
-./scripts.sh tools fix-fields-any category    # 配置分类字段描述  
-./scripts.sh tools fix-fields-any tag         # 配置标签字段描述
-```
-
-**支持的内容类型**：
-- `article` - 文章管理（完整的14个字段描述）
-- `author` - 作者管理（姓名、简介、头像、社交链接等）
-- `category` - 分类管理（名称、描述、图标、颜色等）
-- `tag` - 标签管理（名称、描述、颜色、图标等）
-
-**预设字段描述模板**：
-
-```javascript
-// Author字段描述
-const authorFieldDescriptions = {
-  name: "作者姓名：必填，最长100字符，显示在文章署名处",
-  slug: "作者URL标识符：基于姓名自动生成，用于作者页面URL", 
-  bio: "作者个人简介：最长500字符，介绍作者背景和专业领域",
-  avatar: "作者头像图片：仅支持图片格式，用于作者身份展示",
-  email: "作者邮箱地址：用于联系和通知，可选字段",
-  website: "作者个人网站：可选，外部链接，展示作者更多信息",
-  featured: "是否特色作者：用于作者推荐和重点展示",
-  articles: "作者文章列表：一对多关系，显示该作者的所有文章"
-};
-
-// Category字段描述
-const categoryFieldDescriptions = {
-  name: "分类名称：必填，唯一，最长50字符，用于文章分类",
-  slug: "分类URL标识符：基于分类名自动生成，用于分类页面URL",
-  description: "分类描述说明：最长200字符，SEO友好，说明分类用途",
-  icon: "分类图标：图标名称或路径，用于界面展示",
-  color: "分类主题颜色：十六进制格式（如#8B5CF6），用于UI区分",
-  featured: "是否特色分类：用于首页分类推荐和重点展示",
-  articles: "分类文章列表：一对多关系，显示该分类下的所有文章"
-};
-
-// Tag字段描述
-const tagFieldDescriptions = {
-  name: "标签名称：必填，唯一，最长50字符，用于文章标记", 
-  slug: "标签URL标识符：基于标签名自动生成，用于标签页面URL",
-  description: "标签描述说明：最长200字符，说明标签的具体用途",
-  color: "标签颜色：十六进制格式（如#3B82F6），用于界面标签显示",
-  icon: "标签图标：图标名称或路径，增强标签的视觉识别",
-  featured: "是否特色标签：用于推荐标签显示和热门标签推荐",
-  articles: "标签文章列表：多对多关系，显示使用该标签的所有文章"
-};
-```
-
-**🔥 关键提醒**：
-1. **新建任何内容类型后**，立即运行字段描述配置工具
-2. **所有字段描述都已预设**，无需手动编写
-3. **一次性解决**，避免反复配置的缓存问题
-4. **通用工具支持未来所有新的内容类型**
-
 ## 📊 内容类型架构
 - **Article** (文章): title, content, excerpt, featuredImage, author, category, tags
 - **Author** (作者): name, avatar, bio
@@ -718,12 +26,19 @@ const tagFieldDescriptions = {
 - **Search** (搜索配置): MeiliSearch引擎配置, 同义词, 停用词, 中文分词设置
 - **SearchAnalytics** (搜索分析): 搜索历史, 热门查询, 搜索趋势, 点击率统计
 - **SystemConfig** (系统配置): OAuth配置(GitHub/Google/微信/QQ), 邮件服务, 支付配置
+- **SmtpConfig** (SMTP配置): 邮件服务器配置, 认证信息, 发送限制, 健康检查
+- **EmailTemplate** (邮件模板): 模板内容, 变量系统, 分类管理
+- **EmailSubscription** (邮件订阅): 订阅管理, 标签系统, 取消订阅
+- **EmailCampaign** (邮件活动): 营销邮件, 发送统计, 效果分析
+- **EmailList** (邮件列表): 邮件分组管理, 用户细分, 列表维护
+- **EmailAnalytics** (邮件分析): 打开率, 点击率, 转化率, 用户行为分析
 
 ## ⚙️ 核心配置
 - **数据库**: PostgreSQL + 连接池(min:2, max:10) + JSONB支持
 - **API**: 分页(默认25, 最大100) + 自动计数 + OpenAPI文档
 - **控制器**: `factories.createCoreController` + ES6语法
 - **API文档**: http://localhost:1337/documentation
+- **邮件营销**: 轻量级集成方案 + 现有SMTP统一管理 (非BillionMail完整部署)
 
 ## 🔗 API集成要点
 - **客户端**: `lib/strapi.ts` 统一API客户端 + TypeScript类型安全
@@ -731,155 +46,11 @@ const tagFieldDescriptions = {
 - **环境变量**: 前端(`NEXT_PUBLIC_STRAPI_URL`, `NEXTAUTH_URL=http://localhost`) + 后端(数据库+运行环境)
 - **错误处理**: 统一fetch包装 + 状态码检查
 
-## 🏗️ 组件规范
+## 🏗️ 组件规范总结
 - **原子组件**: GradientButton, GradientText, Input, GlassCard, Icon, Avatar, Container
 - **状态管理**: useModalStore, useUserStore (Zustand + persist)
 - **API Hooks**: useArticles, useFeaturedArticles, useArticleBySlug
 - **原则**: 组合>继承, 一致性优先, API集成优先, 移动端优先
-
-## 📁 项目结构约定
-
-### 完整目录结构
-```
-aibianx/
-├── frontend/                   # Next.js前台应用
-│   ├── src/
-│   │   ├── app/                # Next.js App Router页面
-│   │   │   ├── about/         # 关于页面
-│   │   │   ├── api/           # API路由 (调试端点)
-│   │   │   ├── api-debug/     # API调试页面
-│   │   │   ├── profile/       # 个人中心页面 (独立布局)
-│   │   │   └── weekly/        # 周刊页面 (文章详情)
-│   │   ├── components/         # 组件目录
-│   │   │   ├── ui/            # 原子组件 (已完成)
-│   │   │   ├── molecules/     # 分子组件 (组合组件)
-│   │   │   ├── organisms/     # 有机组件 (布局组件)
-│   │   │   └── templates/     # 模板组件 (页面模板)
-│   │   ├── constants/         # 常量配置
-│   │   ├── lib/               # 工具函数
-│   │   │   ├── strapi.ts     # Strapi API客户端
-│   │   │   ├── hooks/        # 自定义React Hooks
-│   │   │   ├── i18n.ts       # 国际化配置
-│   │   │   └── utils.ts      # 通用工具函数
-│   │   ├── stores/            # Zustand状态管理
-│   │   ├── types/             # TypeScript类型定义
-│   │   │   ├── api.ts        # API响应类型
-│   │   │   └── components.ts # 组件Props类型
-│   │   └── styles/            # 全局样式
-│   ├── public/                # 静态资源
-│   │   ├── icons/            # SVG图标 (159个)
-│   │   │   ├── modals/       # 弹窗相关图标
-│   │   │   ├── payments/     # 支付相关图标
-│   │   │   └── subscription/ # 订阅相关图标
-│   │   ├── images/           # 图片资源
-│   │   │   ├── articles/     # 文章配图
-│   │   │   ├── avatars/      # 头像资源
-│   │   │   ├── design/       # 设计元素
-│   │   │   ├── hero/         # 首页Hero图
-│   │   │   └── illustrations/ # 插图资源
-│   │   ├── fonts/            # 字体文件
-│   │   │   └── alibaba-puhuiti/ # 阿里巴巴普惠体
-│   │   ├── privacy.html      # 隐私政策
-│   │   └── terms.html        # 用户协议
-│   └── .env.local            # 前端环境变量
-│
-├── backend/                    # Strapi 5.x 后端
-│   ├── config/                # Strapi配置
-│   │   ├── database.ts       # 数据库配置
-│   │   ├── api.ts           # API配置 (含文档配置)
-│   │   ├── admin.ts         # 管理面板配置
-│   │   └── middlewares.ts   # 中间件配置
-│   ├── src/
-│   │   ├── api/             # 内容类型API
-│   │   │   ├── article/     # 文章管理
-│   │   │   ├── author/      # 作者管理
-│   │   │   ├── category/    # 分类管理
-│   │   │   ├── tag/         # 标签管理
-│   │   │   ├── site-config/ # 网站配置 (SEO系统)
-│   │   │   ├── seo-metrics/ # SEO监控数据 (SEO系统)
-│   │   │   ├── search/      # 搜索引擎API (MeiliSearch集成)
-│   │   │   ├── search-analytics/ # 搜索分析API
-│   │   │   └── system-config/ # 系统配置API (OAuth/邮件等)
-│   │   ├── extensions/      # Strapi扩展
-│   │   ├── plugins/         # 自定义插件
-│   │   └── index.ts         # 应用入口 (含Bootstrap权限配置)
-│   ├── types/               # TypeScript类型定义
-│   │   └── generated/       # Strapi自动生成类型
-│   ├── database/            # 数据库文件
-│   ├── public/              # 上传文件存储
-│   │   └── uploads/         # 媒体文件
-│   └── .env                 # 后端环境变量
-│
-├── .cursor/                    # Cursor AI配置
-│   └── rules/                 # 项目规范文件
-│       └── projectrules.mdc  # 主规范文档
-│
-├── docs/                       # 项目文档
-│   ├── 当前开发/              # 当前开发文档
-│   │   ├── 前端系统/          # 前端开发文档
-│   │   ├── 后台系统/          # 后端开发文档
-│   │   └── 基础设施/          # 基础设施文档
-│   └── 历史档案/              # 历史开发记录
-│
-├── backups/                    # 数据库备份
-├── logs/                       # 日志文件
-├── scripts/                    # 分类管理脚本
-│   ├── deployment/           # 部署启动脚本
-│   │   ├── start-dev.sh     # 开发环境启动脚本
-│   │   ├── start-backend.sh # 后端启动脚本
-│   │   ├── start-frontend.sh# 前端启动脚本
-│   │   └── stop-dev.sh      # 停止所有服务脚本
-│   ├── database/            # 数据库管理脚本
-│   │   ├── backup-database-only.sh # 数据库备份
-│   │   ├── check-database.sh # 数据库检查
-│   │   └── restore-database-only.sh # 数据库恢复
-│   ├── backup/              # 完整备份脚本
-│   │   ├── backup-strapi.sh # Strapi完整备份
-│   │   ├── cleanup-backup-temp.sh # 清理备份临时文件
-│   │   ├── restore-strapi.sh # Strapi恢复
-│   │   └── verify-backup.sh # 备份验证
-│   ├── search/              # 搜索引擎管理脚本
-│   │   ├── deploy-meilisearch.sh # MeiliSearch部署
-│   │   ├── check-meilisearch.sh # MeiliSearch检查
-│   │   └── manage-meilisearch.sh # MeiliSearch管理工具
-│   └── tools/               # 工具脚本
-│       ├── status.sh        # 系统状态检查
-│       └── load-env.sh      # 环境变量加载
-│
-├── scripts.sh                 # 统一脚本入口 (交互式+命令行)
-├── API-ENDPOINTS.md           # API端点文档
-└── README.md                  # 项目说明文档
-```
-
-## 🚨 常见错误预防
-
-### **内容类型创建规范**
-- ❌ 创建字段描述配置指南文档 → ✅ 创建时立即配置所有字段描述
-- ❌ 后续补充数据库注释 → ✅ 同步执行数据库注释SQL
-- ❌ 延后配置权限 → ✅ 创建完成立即配置API权限
-- ❌ 分散的配置步骤 → ✅ 一次性完成所有配置
-
-### **Strapi 5.x 核心错误**
-- ❌ CommonJS语法 → ✅ 必须ES6语法
-- ❌ 多余index.js → ✅ 只保留schema.json  
-- ❌ 忘记权限配置 → ✅ 创建后立即配置Public权限
-
-### **前端设计还原错误**
-- ❌ 硬编码颜色 → ✅ 使用CSS变量
-- ❌ 框架限制 → ✅ 纯CSS精确还原
-- ❌ 图片未优化 → ✅ Next.js Image组件
-
-## 🔧 API调试3步法
-```bash
-# 1. 测试Strapi原始API
-curl 'http://localhost:1337/api/articles?populate[0]=author&pagination[pageSize]=1'
-
-# 2. 测试前端API函数
-curl 'http://localhost/api/test-articles'
-
-# 3. 检查前端显示
-# http://localhost/api-debug
-```
 
 ## 🚀 开发工作流
 - **统一入口**: `./scripts.sh` (交互式菜单) 或 `./scripts.sh [category] [action]` (命令行)
@@ -898,27 +69,96 @@ curl 'http://localhost/api/test-articles'
 - **状态检查**: `./scripts.sh search check` - 检查搜索引擎状态
 - **日志监控**: `./scripts.sh search logs` - 实时查看搜索日志
 
-### 脚本分类使用示例
+## 📋 **专门规则文件引用（按需加载）**
+
+当进行以下开发活动时，请参考对应的专门规则文件：
+
+### **🔧 Cursor开发规范** 
+> 参考: `.cursor/rules/cursor-development.mdc`
+- 文件命名铁律 (组件PascalCase, API kebab-case, 工具camelCase)
+- 导入导出规范 (防止循环依赖)
+- TypeScript类型定义强制更新
+- 环境变量强制验证
+- 缓存清理强制时机
+- Git工作流强制规范
+- 依赖管理强制规范
+
+### **🎨 CSS样式开发**
+> 参考: `.cursor/rules/css-styling.mdc`
+- CSS样式冲突解决标准 (终极优先级策略)
+- SVG图标强制颜色覆盖
+- JSX内联样式四层强制
+- 主题切换颜色处理
+- 毛玻璃效果实现
+
+### **🏢 Strapi后端开发**
+> 参考: `.cursor/rules/strapi-backend.mdc`
+- Strapi 5.x关键错误预防
+- 新建内容类型标准流程 (7步验证法)
+- 字段描述自动化配置
+- 数据库注释添加
+- API权限配置
+- 控制器和路由开发
+
+### **⚛️ 前端组件开发**
+> 参考: `.cursor/rules/frontend-development.mdc`
+- 前端组件开发规范 (原子设计)
+- Props设计规范
+- 状态管理和API集成
+- 响应式设计标准
+- 组件测试标准
+
+### **🔌 API开发**
+> 参考: `.cursor/rules/api-development.mdc`
+- RESTful API设计原则
+- 标准API响应格式
+- API查询和过滤标准
+- 邮件系统开发规范
+- API调试升级版
+
+### **🛡️ 安全和性能**
+> 参考: `.cursor/rules/security-performance.mdc`
+- 安全规范和最佳实践
+- 性能优化规范
+- 监控和日志规范
+- 代码质量规范
+
+### **⚡ 工作流和验证**
+> 参考: `.cursor/rules/workflow-verification.mdc`
+- 强制性开发工作流检查清单
+- 代码提交前强制自检清单 (10步验证)
+- 快速验证命令集合
+- 部署前最终检查清单
+
+### **🚨 错误预防机制**
+> 参考: `.cursor/rules/error-prevention.mdc`
+- 重点错误预防机制 (基于实战经验)
+- 常见开发错误和修正方法
+- 最容易被遗漏的关键检查点
+- 问题排查和解决方案
+
+
+
+## 🎯 **核心开发原则（始终遵循）**
+
+### **⚠️ 绝对不能跳过的关键步骤：**
+- ❌ **跳过数据库注释** → 维护困难
+- ❌ **不执行字段描述自动化脚本** → Admin界面体验差
+- ❌ **忘记更新TypeScript类型** → 类型安全缺失
+- ❌ **不清理缓存** → 开发环境混乱
+- ❌ **硬编码URL和颜色** → 环境切换困难
+- ❌ **不执行提交前检查** → 代码质量问题
+
+### **💡 效率提升技巧**
 ```bash
-# 交互式菜单模式
-./scripts.sh
+# 快速检查命令（配置后可使用）
+verify-all              # 全面系统验证
+dev-check               # 开发质量检查
+diagnose                # 问题诊断
+fresh-start             # 清理缓存重启
+pre-commit-quick        # 快速提交前检查
+```
 
-# 命令行模式 - 服务管理
-./scripts.sh deploy start     # 启动开发环境
-./scripts.sh deploy backend   # 启动后端服务
-./scripts.sh deploy frontend  # 启动前端服务
-./scripts.sh deploy stop      # 停止所有服务
+---
 
-# 命令行模式 - 搜索引擎
-./scripts.sh search deploy    # 部署MeiliSearch
-./scripts.sh search manage    # 搜索管理工具
-./scripts.sh search restart   # 重启搜索服务
-./scripts.sh search reindex   # 重建搜索索引
-./scripts.sh search check     # 检查搜索状态
-./scripts.sh search logs      # 查看搜索日志
-
-# 命令行模式 - 系统监控
-./scripts.sh tools status     # 查看系统状态
-./scripts.sh db check         # 检查数据库
-./scripts.sh backup full      # 完整备份
-``` 
+**使用说明**: 这是主规则文件，包含项目核心信息。开发时请根据具体需求引用相应的专门规则文件，每个专门规则文件都有明确的使用场景和详细的操作指南。

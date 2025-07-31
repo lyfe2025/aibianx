@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "email_campaigns",
+  "info": {
+    "singularName": "email-campaign",
+    "pluralName": "email-campaigns",
+    "displayName": "邮件营销活动",
+    "description": "邮件营销活动管理 - 用于创建和管理邮件营销活动"
+  },
+  "options": {
+    "draftAndPublish": false,
+    "comment": "邮件营销活动管理"
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100,
+      "description": "活动名称"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true,
+      "description": "活动别名"
+    },
+    "description": {
+      "type": "text",
+      "description": "活动描述"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["draft", "scheduled", "sending", "sent", "paused", "cancelled", "failed"],
+      "default": "draft",
+      "required": true,
+      "description": "活动状态"
+    },
+    "campaignType": {
+      "type": "enumeration",
+      "enum": ["newsletter", "promotion", "notification", "welcome", "follow_up"],
+      "default": "newsletter",
+      "required": true,
+      "description": "活动类型"
+    },
+    "scheduledDate": {
+      "type": "datetime",
+      "description": "计划发送时间"
+    },
+    "sentDate": {
+      "type": "datetime",
+      "description": "实际发送时间"
+    },
+    "targetTags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::email-tag.email-tag",
+      "inversedBy": "campaigns",
+      "description": "目标标签"
+    }
+  }
+}

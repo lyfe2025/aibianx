@@ -179,6 +179,355 @@ GET /api/tags/{id}
 
 ---
 
+## 📧 **邮件营销系统 (新增)**
+
+### 📥 **邮件订阅**
+
+#### 邮件订阅
+```http
+POST /api/email-subscription/subscribe
+```
+
+**请求体:**
+```json
+{
+  "email": "user@example.com",
+  "name": "用户名",
+  "source": "homepage",
+  "tags": ["newsletter"]
+}
+```
+
+**响应格式:**
+```json
+{
+  "status": "success",
+  "message": "订阅成功",
+  "data": {
+    "id": 1,
+    "email": "user@example.com",
+    "status": "active",
+    "tags": ["newsletter"]
+  }
+}
+```
+
+#### 邮件取消订阅
+```http
+POST /api/email-subscription/unsubscribe
+```
+
+#### 获取订阅状态
+```http
+GET /api/email-subscription/status?email=user@example.com
+```
+
+### 📨 **邮件服务**
+
+#### 发送邮件
+```http
+POST /api/email-service/send
+```
+
+#### 发送批量邮件
+```http
+POST /api/email-service/send-bulk
+```
+
+#### 邮件发送统计
+```http
+GET /api/email-service/stats
+```
+
+### ⚙️ **SMTP配置管理**
+
+#### 获取SMTP配置
+```http
+GET /api/smtp-config
+```
+
+#### 测试SMTP连接
+```http
+POST /api/smtp-config/test
+```
+
+---
+
+## 🔐 **用户认证系统 (新增)**
+
+### 📝 **用户注册**
+
+#### 用户注册
+```http
+POST /api/auth/register
+```
+
+**请求体:**
+```json
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "username": "username",
+  "name": "用户姓名"
+}
+```
+
+**响应格式:**
+```json
+{
+  "success": true,
+  "message": "注册成功",
+  "user": {
+    "id": 1,
+    "username": "username",
+    "email": "user@example.com",
+    "name": "用户姓名"
+  },
+  "jwt": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+}
+```
+
+### 🔑 **密码管理**
+
+#### 发送密码重置邮件
+```http
+POST /api/auth/forgot-password
+```
+
+**请求体:**
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+#### 发送邮箱验证码
+```http
+POST /api/auth/send-verification
+```
+
+#### 验证邮箱验证码
+```http
+POST /api/auth/verify-code
+```
+
+**请求体:**
+```json
+{
+  "email": "user@example.com",
+  "code": "123456"
+}
+```
+
+---
+
+## 📧 **邮件系统 (重构后)**
+
+### 📨 **SMTP配置管理**
+
+#### 获取SMTP配置列表
+```http
+GET /api/smtp-configs
+```
+
+#### 创建SMTP配置
+```http
+POST /api/smtp-configs
+```
+
+**请求体:**
+```json
+{
+  "data": {
+    "name": "Gmail SMTP",
+    "provider": "gmail",
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "username": "your-email@gmail.com",
+    "password": "your-app-password",
+    "from_address": "noreply@yourdomain.com",
+    "from_name": "AI变现之路",
+    "use_tls": true,
+    "usage_type": "verification",
+    "daily_limit": 1000,
+    "is_active": true
+  }
+}
+```
+
+### 📤 **统一邮件发送服务**
+
+#### 发送验证码邮件
+```http
+POST /api/email-service/send-verification-code
+```
+
+**请求体:**
+```json
+{
+  "email": "user@example.com",
+  "code": "123456",
+  "type": "register"
+}
+```
+
+#### 发送测试邮件
+```http
+POST /api/email-service/send-test
+```
+
+#### 发送营销邮件
+```http
+POST /api/email-service/send-marketing
+```
+
+### 📬 **邮件订阅管理**
+
+#### 订阅邮件
+```http
+POST /api/email-subscription/subscribe
+```
+
+**请求体:**
+```json
+{
+  "email": "user@example.com",
+  "source": "homepage",
+  "tags": ["newsletter"]
+}
+```
+
+#### 取消订阅
+```http
+POST /api/email-subscription/unsubscribe
+```
+
+### 📊 **邮件营销活动**
+
+#### 创建邮件活动
+```http
+POST /api/email-campaigns
+```
+
+#### 发送邮件活动
+```http
+POST /api/email-campaign/send/:id
+```
+
+---
+
+## 🔍 **搜索引擎 (MeiliSearch集成)**
+
+### 🔍 **文章搜索**
+
+#### 搜索文章
+```http
+GET /api/search/articles?q=搜索关键词&limit=20&offset=0
+```
+
+**查询参数:**
+- `q` - 搜索关键词 (支持中文)
+- `limit` - 返回数量 (默认20，最大100)
+- `offset` - 偏移量 (默认0)
+- `filters` - 过滤条件 (逗号分隔)
+- `highlight` - 是否高亮显示 (默认true)
+
+**响应格式:**
+```json
+{
+  "data": {
+    "hits": [
+      {
+        "id": 1,
+        "title": "文章标题",
+        "content": "文章内容...",
+        "_formatted": {
+          "title": "<mark>搜索关键词</mark>匹配的标题",
+          "content": "包含<mark>搜索关键词</mark>的内容..."
+        }
+      }
+    ],
+    "estimatedTotalHits": 25,
+    "limit": 20,
+    "offset": 0,
+    "processingTimeMs": 12
+  },
+  "meta": {
+    "query": "搜索关键词",
+    "totalHits": 25,
+    "processingTime": 12
+  }
+}
+```
+
+#### 搜索建议
+```http
+GET /api/search/suggestions?query=关键词&limit=5
+```
+
+#### 搜索统计
+```http
+GET /api/search/stats
+```
+
+#### 搜索健康检查
+```http
+GET /api/search/health
+```
+
+#### 重建搜索索引
+```http
+POST /api/search/reindex
+```
+
+---
+
+## ⚙️ **系统配置 (扩展)**
+
+### 🔧 **系统配置管理**
+
+#### 获取公开配置
+```http
+GET /api/system-config/public
+```
+
+#### 获取注册配置
+```http
+GET /api/system-config/registration
+```
+
+#### 获取维护状态
+```http
+GET /api/system-config/maintenance
+```
+
+#### 获取OAuth配置 (内部API)
+```http
+GET /api/system-config/oauth
+```
+
+#### 📧 邮件系统架构说明
+
+**邮件功能已重构为分离架构：**
+
+- **SMTP技术配置** → 使用 `smtp-configs` 内容类型管理
+- **业务逻辑配置** → 保留在 `system-config` 中管理
+
+**新架构优势：**
+- ✅ 支持多SMTP配置和负载均衡
+- ✅ 支持故障转移和健康检查
+- ✅ 分离技术配置和业务配置
+- ✅ 统一邮件发送服务
+
+**相关API端点：**
+```http
+GET /api/smtp-configs          # SMTP配置管理
+POST /api/email-service/send   # 统一邮件发送
+GET /api/system-config/public  # 业务配置查询
+```
+
+---
+
 ## 🔍 **高级查询示例**
 
 ### 搜索文章
@@ -272,10 +621,14 @@ const articleCards = transformArticleList(apiResponse.data)
 
 ## 📝 **更新日志**
 
+- **2025-01-23**: 新增邮件营销系统完整API，包含订阅管理、SMTP配置、模板系统
+- **2025-01-23**: 新增用户认证系统前端API路由，支持注册、密码重置、邮箱验证
+- **2025-01-23**: 集成MeiliSearch搜索引擎，提供高性能文章搜索功能
+- **2025-01-23**: 扩展系统配置API，支持OAuth、邮件服务等配置管理
 - **2025-07-31**: 更新Strapi版本到5.20.0，同步所有相关文档
 - **2025-07-29**: 创建API文档，替代不可用的documentation插件
-- **当前版本**: Strapi 5.20.0，API稳定运行
-- **数据状态**: 8篇文章，43个数据库表
+- **当前版本**: Strapi 5.20.0，邮件营销系统 v1.0，搜索引擎 v1.0
+- **数据状态**: 8篇文章，60+个数据库表，完整邮件营销系统
 
 ---
 

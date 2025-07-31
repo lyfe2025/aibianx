@@ -38,30 +38,7 @@ export default factories.createCoreService('api::system-config.system-config', (
         this._cacheTime = 0
     },
 
-    /**
-     * 获取邮件服务配置
-     */
-    async getEmailServiceConfig() {
-        const config = await this.getSystemConfig()
 
-        if (!config || !config.emailServiceEnabled) {
-            return {
-                enabled: false
-            }
-        }
-
-        return {
-            enabled: true,
-            provider: config.emailServiceProvider,
-            host: config.emailSmtpHost,
-            port: config.emailSmtpPort,
-            username: config.emailUsername,
-            password: config.emailPassword,
-            useTLS: config.emailUseTLS,
-            fromAddress: config.emailFromAddress,
-            fromName: config.emailFromName
-        }
-    },
 
     /**
      * 获取OAuth配置
