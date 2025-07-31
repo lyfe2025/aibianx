@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 加载统一配置
+source "$(dirname "$0")/../tools/load-config.sh"
+load_config
 # AI变现之路 - 后端单独启动脚本
 
 echo "⚙️  启动Strapi后端服务..."
@@ -110,7 +113,7 @@ echo "📝 日志文件: logs/backend.log"
 # 等待服务启动
 echo "⏳ 等待后端服务启动完成..."
 for i in {1..30}; do
-    if curl -s http://localhost:1337/admin > /dev/null 2>&1; then
+    if curl -s "${BACKEND_ADMIN_URL}" > /dev/null 2>&1; then
         echo "✅ 后端服务启动完成"
         break
     fi
@@ -126,7 +129,7 @@ done
 echo ""
 echo "🎉 后端服务启动完成！"
 echo "========================="
-echo "⚙️  后端管理: http://localhost:1337/admin"
-echo "📡 API测试: http://localhost:1337/api/articles"
+echo "⚙️  后端管理: ${BACKEND_ADMIN_URL}"
+echo "📡 API测试: ${BACKEND_API_URL}/articles"
 echo "📝 实时日志: tail -f logs/backend.log"
 echo "🛑 停止服务: ./stop-dev.sh 或 kill $BACKEND_PID" 

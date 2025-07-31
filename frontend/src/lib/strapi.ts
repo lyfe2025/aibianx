@@ -4,6 +4,7 @@
  */
 
 import { ArticleCardData } from '@/components/molecules/ArticleCard/ArticleCard'
+import { config } from './config'
 
 // SiteConfig相关类型定义
 interface StrapiSiteConfig {
@@ -158,7 +159,7 @@ interface EmailConfig {
 }
 
 // Strapi API配置
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
+const STRAPI_URL = config.backend.url
 const API_TOKEN = process.env.STRAPI_API_TOKEN
 
 // Strapi响应类型定义

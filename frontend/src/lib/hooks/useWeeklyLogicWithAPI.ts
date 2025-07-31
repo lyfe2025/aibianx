@@ -12,6 +12,7 @@ import type { MeiliSearchArticle } from '@/lib/meilisearch'
 import { scrollToTop } from '@/lib/weeklyUtils'
 import { PAGE_CONFIG } from '@/constants/weeklyConfig'
 import type { ArticleCardData } from '@/components/molecules/ArticleCard/ArticleCard'
+import { config } from '@/lib/config'
 
 interface UseWeeklyLogicReturn {
     // 状态
@@ -79,12 +80,12 @@ export function useWeeklyLogicWithAPI(): UseWeeklyLogicReturn {
             slug: article.slug,
             excerpt: article.excerpt || '',
             coverImage: article.featuredImage?.url
-                ? `http://localhost:1337${article.featuredImage.url}`
+                ? `${config.backend.url}${article.featuredImage.url}`
                 : undefined,
             author: {
                 name: article.author?.name || '匿名作者',
                 avatar: article.author?.avatar?.url
-                    ? `http://localhost:1337${article.author.avatar.url}`
+                    ? `${config.backend.url}${article.author.avatar.url}`
                     : undefined
             },
             // 修复：使用正确的字段名和格式

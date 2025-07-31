@@ -250,7 +250,7 @@ async function seedDatabase() {
         console.log(`   - 分类: ${categories.length} 个`);
         console.log(`   - 标签: ${tags.length} 个`);
         console.log(`   - 文章: 1 篇`);
-        console.log('\n🌐 现在可以访问 http://localhost:1337/admin 查看内容');
+        console.log(`\n🌐 现在可以访问 ${process.env.STRAPI_URL || 'http://localhost:1337'}/admin 查看内容`);
 
     } catch (error) {
         console.error('💥 数据库初始化失败:', error);

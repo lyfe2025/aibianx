@@ -5,6 +5,8 @@
  * 包括搜索、建议、统计等功能
  */
 
+import { config } from './config'
+
 // MeiliSearch搜索结果类型定义
 export interface MeiliSearchArticle {
     id: number
@@ -118,7 +120,7 @@ export interface SearchStatsResponse {
 }
 
 // API配置
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
+const STRAPI_URL = config.backend.url
 
 /**
  * MeiliSearch API客户端类

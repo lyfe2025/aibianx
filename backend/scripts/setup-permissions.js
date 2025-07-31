@@ -5,7 +5,11 @@
 async function setupPermissions() {
     const axios = require('axios');
     
-    const BASE_URL = 'http://localhost:1337';
+    // 域名和端口配置
+const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN || 'localhost'
+const BACKEND_PORT = process.env.BACKEND_PORT || '1337'
+const BACKEND_PROTOCOL = process.env.BACKEND_PROTOCOL || 'http'
+const BASE_URL = `${BACKEND_PROTOCOL}://${BACKEND_DOMAIN}${BACKEND_PORT === '80' || BACKEND_PORT === '443' ? '' : `:${BACKEND_PORT}`}`;
     
     // 1. 注册管理员用户（如果不存在）
     let token;

@@ -2,20 +2,28 @@
 
 import { useState, useEffect } from 'react'
 import { Container } from '@/components/ui'
+import { config } from '@/lib/config'
 
 export default function ApiDebugPage() {
     const [apiStatus, setApiStatus] = useState<'loading' | 'success' | 'error'>('loading')
     const [apiData, setApiData] = useState<any>(null)
     const [authorData, setAuthorData] = useState<any>(null)
     const [error, setError] = useState<string>('')
+    const [currentOrigin, setCurrentOrigin] = useState<string>('服务端渲染中...')
+    
+    // 使用环境变量或默认值
+    const STRAPI_URL = config.backend.url
 
     useEffect(() => {
+        // 设置客户端域名
+        setCurrentOrigin(window.location.origin)
+
         const testApi = async () => {
             try {
                 setApiStatus('loading')
 
                 // 测试基础API调用 - 获取文章和作者信息
-                const articlesResponse = await fetch('http://localhost:1337/api/articles?populate[author][populate]=avatar&populate[featuredImage]=*&pagination[pageSize]=3')
+                const articlesResponse = await fetch(`${STRAPI_URL}/api/articles?populate[author][populate]=avatar&populate[featuredImage]=*&pagination[pageSize]=3`)
 
                 if (!articlesResponse.ok) {
                     throw new Error(`HTTP ${articlesResponse.status}: ${articlesResponse.statusText}`)
@@ -25,7 +33,7 @@ export default function ApiDebugPage() {
                 setApiData(articlesData)
 
                 // 单独获取作者数据
-                const authorsResponse = await fetch('http://localhost:1337/api/authors?populate=avatar')
+                const authorsResponse = await fetch(`${STRAPI_URL}/api/authors?populate=avatar`)
                 if (authorsResponse.ok) {
                     const authorsData = await authorsResponse.json()
                     setAuthorData(authorsData)
@@ -132,7 +140,7 @@ export default function ApiDebugPage() {
                                                     borderRadius: '4px',
                                                     fontSize: '12px'
                                                 }}>
-                                                    http://localhost:1337{author.avatar.url}
+                                                    {STRAPI_URL}{author.avatar.url}
                                                 </code>
                                             </div>
 
@@ -141,7 +149,7 @@ export default function ApiDebugPage() {
                                                 <strong>头像预览:</strong>
                                                 <div style={{ marginTop: '8px' }}>
                                                     <img
-                                                        src={`http://localhost:1337${author.avatar.url}`}
+                                                        src={`${STRAPI_URL}${author.avatar.url}`}
                                                         alt={author.name}
                                                         style={{
                                                             width: '64px',
@@ -236,7 +244,7 @@ export default function ApiDebugPage() {
                         <h3 style={{ marginBottom: '16px' }}>🔧 环境信息</h3>
 
                         <div style={{ marginBottom: '8px' }}>
-                            <strong>STRAPI_URL:</strong> {process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'}
+                            <strong>STRAPI_URL:</strong> {STRAPI_URL}
                         </div>
 
                         <div style={{ marginBottom: '8px' }}>
@@ -244,7 +252,7 @@ export default function ApiDebugPage() {
                         </div>
 
                         <div style={{ marginBottom: '8px' }}>
-                            <strong>当前域名:</strong> {typeof window !== 'undefined' ? window.location.origin : 'SSR'}
+                            <strong>当前域名:</strong> {currentOrigin}
                         </div>
                     </div>
 
@@ -271,7 +279,7 @@ export default function ApiDebugPage() {
                         </button>
 
                         <button
-                            onClick={() => window.open('http://localhost:1337/api/authors?populate=avatar', '_blank')}
+                            onClick={() => window.open(`${STRAPI_URL}/api/authors?populate=avatar`, '_blank')}
                             style={{
                                 background: 'transparent',
                                 border: '1px solid var(--color-border-primary)',
@@ -288,7 +296,7 @@ export default function ApiDebugPage() {
                         </button>
 
                         <button
-                            onClick={() => window.open('http://localhost:1337/admin', '_blank')}
+                            onClick={() => window.open(`${STRAPI_URL}/admin`, '_blank')}
                             style={{
                                 background: 'transparent',
                                 border: '1px solid var(--color-border-primary)',

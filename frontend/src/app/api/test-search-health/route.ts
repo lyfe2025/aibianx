@@ -5,8 +5,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { config } from '@/lib/config'
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
+const STRAPI_URL = config.backend.url
 
 export async function GET(request: NextRequest) {
     try {

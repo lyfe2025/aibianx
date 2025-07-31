@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 加载统一配置
+source "$(dirname "$0")/../tools/load-config.sh"
+load_config
 # MeiliSearch 管理工具
 # AI变现之路项目 - 搜索引擎管理脚本
 
@@ -72,7 +75,7 @@ show_config_info() {
         # 获取API密钥列表
         echo ""
         echo -e "${BLUE}📊 API密钥管理:${NC}"
-        KEY_RESPONSE=$(curl -s -H "Authorization: Bearer $MEILI_MASTER_KEY" http://localhost:7700/keys 2>/dev/null)
+        KEY_RESPONSE=$(curl -s -H "Authorization: Bearer $MEILI_MASTER_KEY" "${SEARCH_URL}/keys" 2>/dev/null)
         if [[ $KEY_RESPONSE == *"results"* ]]; then
             KEY_COUNT=$(echo "$KEY_RESPONSE" | grep -o '"uid"' | wc -l)
             echo "• 已创建密钥数量: $KEY_COUNT"
@@ -90,11 +93,11 @@ show_config_info() {
     # 显示连接信息
     echo ""
     echo -e "${BLUE}🌐 连接信息:${NC}"
-    echo "• 服务地址: http://localhost:7700"
-    echo "• 健康检查: http://localhost:7700/health"
+    echo "• 服务地址: ${SEARCH_URL}"
+echo "• 健康检查: ${SEARCH_HEALTH_URL}"
     
     # 检查服务健康状态
-    HEALTH=$(curl -s http://localhost:7700/health 2>/dev/null)
+    HEALTH=$(curl -s "${SEARCH_HEALTH_URL}" 2>/dev/null)
     if [[ $HEALTH == *"available"* ]]; then
         echo -e "• 服务状态: ${GREEN}正常运行${NC}"
     else
@@ -104,10 +107,10 @@ show_config_info() {
     # 显示后端集成状态
     echo ""
     echo -e "${BLUE}⚙️  后端集成:${NC}"
-    BACKEND_HEALTH=$(curl -s http://localhost:1337/api/search/health 2>/dev/null)
+    BACKEND_HEALTH=$(curl -s "${BACKEND_API_URL}/search/health" 2>/dev/null)
     if [[ $BACKEND_HEALTH == *"available"* ]]; then
         echo -e "• Strapi集成: ${GREEN}已连接${NC}"
-        echo "• API端点: http://localhost:1337/api/search/*"
+        echo "• API端点: ${BACKEND_API_URL}/search/*"
     else
         echo -e "• Strapi集成: ${YELLOW}未连接${NC}"
         echo "• 请确保后端服务正在运行"
@@ -200,7 +203,7 @@ regenerate_api_key() {
     sleep 5
     
     # 验证服务状态
-    HEALTH=$(curl -s http://localhost:7700/health 2>/dev/null)
+    HEALTH=$(curl -s "${SEARCH_HEALTH_URL}" 2>/dev/null)
     if [[ $HEALTH == *"available"* ]]; then
         echo "✅ 服务启动成功"
     else
@@ -286,7 +289,7 @@ regenerate_api_key() {
     # 等待后端服务启动
     echo "等待后端服务就绪..."
     for i in {1..30}; do
-        if curl -s http://localhost:1337/api/search/health > /dev/null 2>&1; then
+        if curl -s "${BACKEND_API_URL}/search/health" > /dev/null 2>&1; then
             echo "✅ 后端服务已就绪"
             break
         fi
@@ -295,7 +298,7 @@ regenerate_api_key() {
     done
     
     # 验证后端服务
-    BACKEND_HEALTH=$(curl -s http://localhost:1337/api/search/health 2>/dev/null)
+    BACKEND_HEALTH=$(curl -s "${BACKEND_API_URL}/search/health" 2>/dev/null)
     if [[ $BACKEND_HEALTH == *"available"* ]]; then
         echo "✅ 后端服务验证成功"
         BACKEND_RESTART_SUCCESS=true
@@ -317,7 +320,7 @@ regenerate_api_key() {
     # 等待前端服务启动
     echo "等待前端服务就绪..."
     for i in {1..20}; do
-        if curl -s http://localhost > /dev/null 2>&1; then
+        if curl -s "${FRONTEND_URL}" > /dev/null 2>&1; then
             echo "✅ 前端服务已就绪"
             break
         fi
@@ -326,7 +329,7 @@ regenerate_api_key() {
     done
     
     # 验证前端服务
-    if curl -s http://localhost > /dev/null 2>&1; then
+    if curl -s "${FRONTEND_URL}" > /dev/null 2>&1; then
         echo "✅ 前端服务验证成功"
         FRONTEND_RESTART_SUCCESS=true
     else
@@ -343,7 +346,7 @@ regenerate_api_key() {
         echo "第7步: 自动重建搜索索引..."
         sleep 2
         
-        REINDEX_RESULT=$(curl -s -X POST http://localhost:1337/api/search/reindex 2>/dev/null)
+        REINDEX_RESULT=$(curl -s -X POST "${BACKEND_API_URL}/search/reindex" 2>/dev/null)
         if [[ $REINDEX_RESULT == *"syncedArticles"* ]]; then
             SYNCED_COUNT=$(echo $REINDEX_RESULT | grep -o '"syncedArticles":[0-9]*' | cut -d':' -f2 2>/dev/null || echo "未知")
             echo "✅ 搜索索引重建成功，同步了 $SYNCED_COUNT 篇文章"
@@ -390,9 +393,9 @@ regenerate_api_key() {
     
     echo ""
     echo -e "${BLUE}🌐 访问地址:${NC}"
-    echo "• 前端页面: http://localhost"
-    echo "• 后端管理: http://localhost:1337/admin"
-    echo "• 搜索引擎: http://localhost:7700"
+    echo "• 前端页面: ${FRONTEND_URL}"
+echo "• 后端管理: ${BACKEND_ADMIN_URL}"
+echo "• 搜索引擎: ${SEARCH_URL}"
     
     echo ""
     if [ "$BACKEND_RESTART_SUCCESS" = true ] && [ "$FRONTEND_RESTART_SUCCESS" = true ] && [ "$INDEX_REBUILD_SUCCESS" = true ]; then
@@ -455,10 +458,10 @@ execute_action() {
             echo "第1步: 清除现有索引..."
             # 先清除MeiliSearch中的索引
             if [ -n "$MEILI_MASTER_KEY" ]; then
-                DELETE_RESULT=$(curl -s -X DELETE -H "Authorization: Bearer $MEILI_MASTER_KEY" "http://localhost:7700/indexes/articles" 2>/dev/null)
+                DELETE_RESULT=$(curl -s -X DELETE -H "Authorization: Bearer $MEILI_MASTER_KEY" "${SEARCH_URL}/indexes/articles" 2>/dev/null)
                 echo "🔐 使用认证模式清除索引"
             else
-                DELETE_RESULT=$(curl -s -X DELETE "http://localhost:7700/indexes/articles" 2>/dev/null)
+                DELETE_RESULT=$(curl -s -X DELETE "${SEARCH_URL}/indexes/articles" 2>/dev/null)
                 echo "🔓 使用开发模式清除索引"
             fi
             
@@ -473,7 +476,7 @@ execute_action() {
             sleep 3
             
             echo "第3步: 通过后端API重新同步数据..."
-            REINDEX_RESULT=$(curl -s -X POST http://localhost:1337/api/search/reindex 2>/dev/null)
+            REINDEX_RESULT=$(curl -s -X POST "${BACKEND_API_URL}/search/reindex" 2>/dev/null)
             
             if [[ $REINDEX_RESULT == *"syncedArticles"* ]]; then
                 SYNCED_COUNT=$(echo $REINDEX_RESULT | grep -o '"syncedArticles":[0-9]*' | cut -d':' -f2 2>/dev/null || echo "未知")
@@ -487,7 +490,7 @@ execute_action() {
                 echo "返回内容: $REINDEX_RESULT"
                 echo ""
                 echo "💡 请确保:"
-                echo "• 后端服务正在运行 (http://localhost:1337)"
+                echo "• 后端服务正在运行 (${BACKEND_URL})"
                 echo "• 搜索API端点可访问 (/api/search/reindex)"
             fi
             ;;
@@ -500,10 +503,10 @@ execute_action() {
                 
                 echo "正在清理搜索数据..."
                 if [ -n "$MEILI_MASTER_KEY" ]; then
-                    DELETE_RESULT=$(curl -s -X DELETE -H "Authorization: Bearer $MEILI_MASTER_KEY" "http://localhost:7700/indexes/articles" 2>/dev/null)
+                    DELETE_RESULT=$(curl -s -X DELETE -H "Authorization: Bearer $MEILI_MASTER_KEY" "${SEARCH_URL}/indexes/articles" 2>/dev/null)
                     echo "🔐 使用认证模式清理"
                 else
-                    DELETE_RESULT=$(curl -s -X DELETE "http://localhost:7700/indexes/articles" 2>/dev/null)
+                    DELETE_RESULT=$(curl -s -X DELETE "${SEARCH_URL}/indexes/articles" 2>/dev/null)
                     echo "🔓 使用开发模式清理"
                 fi
                 
@@ -537,9 +540,9 @@ execute_action() {
             
             # 先检查索引是否存在
             if [ -n "$MEILI_MASTER_KEY" ]; then
-                INDEXES=$(curl -s -H "Authorization: Bearer $MEILI_MASTER_KEY" http://localhost:7700/indexes 2>/dev/null)
+                INDEXES=$(curl -s -H "Authorization: Bearer $MEILI_MASTER_KEY" "${SEARCH_URL}/indexes" 2>/dev/null)
             else
-                INDEXES=$(curl -s http://localhost:7700/indexes 2>/dev/null)
+                INDEXES=$(curl -s "${FRONTEND_URL}":7700/indexes 2>/dev/null)
             fi
             
             if [[ $INDEXES == *"articles"* ]]; then
@@ -547,9 +550,9 @@ execute_action() {
                 
                 # 获取统计信息
                 if [ -n "$MEILI_MASTER_KEY" ]; then
-                    STATS=$(curl -s -H "Authorization: Bearer $MEILI_MASTER_KEY" http://localhost:7700/indexes/articles/stats 2>/dev/null)
+                    STATS=$(curl -s -H "Authorization: Bearer $MEILI_MASTER_KEY" "${SEARCH_URL}/indexes/articles/stats" 2>/dev/null)
                 else
-                    STATS=$(curl -s http://localhost:7700/indexes/articles/stats 2>/dev/null)
+                    STATS=$(curl -s "${SEARCH_URL}/indexes/articles/stats" 2>/dev/null)
                 fi
                 
                 if [[ $STATS == *"numberOfDocuments"* ]]; then
@@ -595,10 +598,10 @@ execute_action() {
             echo "正在创建数据导出任务..."
             # 创建dump任务
             if [ -n "$MEILI_MASTER_KEY" ]; then
-                DUMP_RESULT=$(curl -s -X POST -H "Authorization: Bearer $MEILI_MASTER_KEY" "http://localhost:7700/dumps" 2>/dev/null)
+                DUMP_RESULT=$(curl -s -X POST -H "Authorization: Bearer $MEILI_MASTER_KEY" "${SEARCH_URL}/dumps" 2>/dev/null)
                 echo "🔐 使用认证模式创建备份"
             else
-                DUMP_RESULT=$(curl -s -X POST "http://localhost:7700/dumps" 2>/dev/null)
+                DUMP_RESULT=$(curl -s -X POST "${SEARCH_URL}/dumps" 2>/dev/null)
                 echo "🔓 使用开发模式创建备份"
             fi
             
@@ -609,9 +612,9 @@ execute_action() {
                 
                 # 检查dump状态
                 if [ -n "$MEILI_MASTER_KEY" ]; then
-                    DUMP_STATUS=$(curl -s -H "Authorization: Bearer $MEILI_MASTER_KEY" "http://localhost:7700/dumps" 2>/dev/null)
+                    DUMP_STATUS=$(curl -s -H "Authorization: Bearer $MEILI_MASTER_KEY" "${SEARCH_URL}/dumps" 2>/dev/null)
                 else
-                    DUMP_STATUS=$(curl -s "http://localhost:7700/dumps" 2>/dev/null)
+                    DUMP_STATUS=$(curl -s "${SEARCH_URL}/dumps" 2>/dev/null)
                 fi
                 
                 if [[ $DUMP_STATUS == *"succeeded"* ]]; then

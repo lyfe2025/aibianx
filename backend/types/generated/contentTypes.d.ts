@@ -557,40 +557,6 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiSearchSearch extends Struct.SingleTypeSchema {
-  collectionName: 'searches';
-  info: {
-    description: '\u641C\u7D22\u5F15\u64CE\u914D\u7F6E\u548C\u7BA1\u7406';
-    displayName: '\u641C\u7D22\u914D\u7F6E';
-    pluralName: 'searches';
-    singularName: 'search';
-  };
-  options: {
-    comment: '\u641C\u7D22\u5F15\u64CE\u7684\u914D\u7F6E\u548C\u72B6\u6001\u7BA1\u7406\uFF0C\u7528\u4E8E\u652F\u6301MeiliSearch\u641C\u7D22\u529F\u80FD';
-    draftAndPublish: false;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    enabled: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
-    indexStatus: Schema.Attribute.String & Schema.Attribute.DefaultTo<'ready'>;
-    lastIndexUpdate: Schema.Attribute.DateTime;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::search.search'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    searchApiKey: Schema.Attribute.String & Schema.Attribute.Private;
-    totalDocuments: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiSeoMetricsSeoMetrics extends Struct.CollectionTypeSchema {
   collectionName: 'seo_metrics';
   info: {
@@ -908,6 +874,11 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
       Schema.Attribute.DefaultTo<900>;
     allowedEmailDomains: Schema.Attribute.Text;
     blockedEmailDomains: Schema.Attribute.Text;
+    configName: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }> &
+      Schema.Attribute.DefaultTo<'\u7CFB\u7EDF\u914D\u7F6E'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -963,7 +934,7 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 255;
       }> &
-      Schema.Attribute.DefaultTo<'http://localhost:3000/api/auth/callback/github'>;
+      Schema.Attribute.DefaultTo<'http://localhost/api/auth/callback/github'>;
     githubClientId: Schema.Attribute.String &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -980,7 +951,7 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 255;
       }> &
-      Schema.Attribute.DefaultTo<'http://localhost:3000/api/auth/callback/google'>;
+      Schema.Attribute.DefaultTo<'http://localhost/api/auth/callback/google'>;
     googleClientId: Schema.Attribute.String &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -1068,7 +1039,7 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 255;
       }> &
-      Schema.Attribute.DefaultTo<'http://localhost:3000/api/auth/callback/qq'>;
+      Schema.Attribute.DefaultTo<'http://localhost/api/auth/callback/qq'>;
     qqOauthEnabled: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<false>;
     registrationEnabled: Schema.Attribute.Boolean &
@@ -1108,7 +1079,7 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 255;
       }> &
-      Schema.Attribute.DefaultTo<'http://localhost:3000/api/auth/callback/wechat'>;
+      Schema.Attribute.DefaultTo<'http://localhost/api/auth/callback/wechat'>;
     wechatOauthEnabled: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<false>;
   };
@@ -1670,7 +1641,6 @@ declare module '@strapi/strapi' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
-      'api::search.search': ApiSearchSearch;
       'api::seo-metrics.seo-metrics': ApiSeoMetricsSeoMetrics;
       'api::site-config.site-config': ApiSiteConfigSiteConfig;
       'api::system-config.system-config': ApiSystemConfigSystemConfig;

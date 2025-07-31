@@ -7,7 +7,11 @@
 
 const axios = require('axios');
 
-const STRAPI_URL = 'http://localhost:1337';
+// 域名和端口配置
+const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN || 'localhost'
+const BACKEND_PORT = process.env.BACKEND_PORT || '1337'
+const BACKEND_PROTOCOL = process.env.BACKEND_PROTOCOL || 'http'
+const STRAPI_URL = `${BACKEND_PROTOCOL}://${BACKEND_DOMAIN}${BACKEND_PORT === '80' || BACKEND_PORT === '443' ? '' : `:${BACKEND_PORT}`}`;
 const ADMIN_URL = `${STRAPI_URL}/admin`;
 
 // 网站配置字段描述
@@ -316,7 +320,7 @@ async function importConfiguration() {
     importProcess.on('close', (code) => {
         if (code === 0) {
             console.log('✅ 字段描述配置导入成功！');
-            console.log('\n🎯 下一步：访问 http://localhost:1337/admin 查看效果');
+            console.log(`\n🎯 下一步：访问 ${ADMIN_URL} 查看效果`);
             console.log('进入 Content Manager → Site Config 或 Seo Metrics 即可看到中文字段描述');
         } else {
             console.log('❌ 配置导入失败，请手动执行导入命令');

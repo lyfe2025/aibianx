@@ -5,6 +5,10 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# 加载统一配置
+source "$SCRIPT_DIR/scripts/tools/load-config.sh"
+load_config
+
 # 颜色定义
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -54,6 +58,7 @@ show_usage() {
     echo "  env          - 加载环境变量"
     echo "  fix-fields   - 修复字段描述配置问题（Article专用）"
     echo "  fix-fields-any - 修复任意内容类型的字段描述问题"
+    echo "  setup-env    - 自动配置环境变量（域名端口分离）"
     echo ""
     echo -e "${YELLOW}📖 命令行使用示例:${NC}"
     echo "  ./scripts.sh deploy start    # 启动开发环境"
@@ -65,6 +70,7 @@ show_usage() {
     echo "  ./scripts.sh tools status    # 查看系统状态"
     echo "  ./scripts.sh tools fix-fields # 修复字段描述配置（Article）"
     echo "  ./scripts.sh tools fix-fields-any author # 配置作者字段描述"
+    echo "  ./scripts.sh tools setup-env # 自动配置环境变量"
     echo ""
 }
 
@@ -104,6 +110,7 @@ show_menu() {
     echo ""
     echo -e "${GREEN} 🔧 系统维护${NC}"
     echo -e " ${CYAN}16${NC}) 修复字段描述配置      (解决描述不显示问题)"
+    echo -e " ${CYAN}17${NC}) 自动配置环境变量      (创建开发环境配置)"
     echo ""
     echo -e "${PURPLE} h${NC}) 显示命令行帮助"
     echo -e "${RED} 0${NC}) 退出"
@@ -172,7 +179,7 @@ execute_choice() {
         12)
             echo -e "${GREEN}🔄 重建搜索索引...${NC}"
             echo "正在重新同步搜索数据..."
-            if curl -s -X POST http://localhost:1337/api/search/reindex > /dev/null 2>&1; then
+            if curl -s -X POST "${BACKEND_API_URL}/search/reindex" > /dev/null 2>&1; then
                 echo -e "${GREEN}✅ 搜索索引重建成功${NC}"
             else
                 echo -e "${RED}❌ 重建失败，请确保后端服务正在运行${NC}"
@@ -197,6 +204,10 @@ execute_choice() {
             echo -e "${BLUE}🔧 修复字段描述配置...${NC}"
             exec "$SCRIPT_DIR/scripts/tools/configure-field-descriptions.sh"
             ;;
+        17)
+            echo -e "${BLUE}🔧 自动配置环境变量...${NC}"
+            exec "$SCRIPT_DIR/scripts/tools/setup-env.sh"
+            ;;
         h|H)
             show_usage
             echo ""
@@ -209,7 +220,7 @@ execute_choice() {
             ;;
         *)
             echo -e "${RED}❌ 无效选择: $choice${NC}"
-            echo "请输入 0-16 之间的数字，或 'h' 查看帮助"
+            echo "请输入 0-17 之间的数字，或 'h' 查看帮助"
             echo ""
             read -p "按回车键继续..." 
             return 1
@@ -297,7 +308,7 @@ handle_command_line() {
                     ;;
                 "reindex")
                     echo -e "${GREEN}🔄 重建搜索索引...${NC}"
-                    if curl -s -X POST http://localhost:1337/api/search/reindex > /dev/null 2>&1; then
+                    if curl -s -X POST "${BACKEND_API_URL}/search/reindex" > /dev/null 2>&1; then
                         echo -e "${GREEN}✅ 搜索索引重建成功${NC}"
                     else
                         echo -e "${RED}❌ 重建失败，请确保后端服务正在运行${NC}"
@@ -361,9 +372,13 @@ handle_command_line() {
                     echo -e "${BLUE}🔧 启动通用字段描述配置工具...${NC}"
                     exec "$SCRIPT_DIR/scripts/tools/configure-any-field-descriptions.sh" "$@"
                     ;;
+                "setup-env")
+                    echo -e "${BLUE}🔧 启动环境变量自动配置工具...${NC}"
+                    exec "$SCRIPT_DIR/scripts/tools/setup-env.sh" "$@"
+                    ;;
                 *)
                     echo -e "${RED}❌ 未知的工具操作: $action${NC}"
-                    echo "可用操作: status, env, fix-fields, fix-fields-any"
+                    echo "可用操作: status, env, fix-fields, fix-fields-any, setup-env"
                     exit 1
                     ;;
             esac

@@ -1,5 +1,8 @@
 #!/bin/bash
 # AI变现之路项目 - 仅数据库还原脚本（简化版）
+# 加载统一配置
+source "$(dirname "$0")/../tools/load-config.sh"
+load_config
 # 用法: ./scripts/restore-database-only.sh <database_backup.sql>
 
 set -e

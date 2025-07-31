@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 加载统一配置
+source "$(dirname "$0")/../tools/load-config.sh"
+load_config
 # AI变现之路 - 前端单独启动脚本
 
 echo "🌐 启动Next.js前端服务..."
@@ -29,9 +32,9 @@ if [ ! -f "frontend/.env.local" ]; then
     echo "⚠️  创建前端环境变量文件..."
     cat > frontend/.env.local << 'EOF'
 # AI变现之路 - 前端环境变量配置
-NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
+NEXT_PUBLIC_STRAPI_API_URL=${BACKEND_URL}
 STRAPI_API_TOKEN=
-NEXT_PUBLIC_SITE_URL=http://localhost
+NEXT_PUBLIC_SITE_URL=${FRONTEND_URL}
 NEXT_PUBLIC_SITE_NAME=AI变现之路
 EOF
     echo "✅ 已创建 frontend/.env.local"

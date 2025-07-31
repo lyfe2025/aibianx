@@ -679,7 +679,7 @@ async function initializeData() {
         console.log(`   📂 分类: ${Object.keys(categoryIds).length} 个`);
         console.log(`   🏷️ 标签: ${Object.keys(tagIds).length} 个`);
         console.log(`   📰 文章: ${SEED_DATA.articles.length} 篇`);
-        console.log('\n🌐 现在可以访问 http://localhost:1337/admin 查看内容');
+        console.log(`\n🌐 现在可以访问 ${process.env.STRAPI_URL || 'http://localhost:1337'}/admin 查看内容`);
 
     } catch (error) {
         console.error('💥 数据迁移失败:', error);

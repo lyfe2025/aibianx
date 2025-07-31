@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 加载统一配置
+source "$(dirname "$0")/../tools/load-config.sh"
+load_config
 # MeiliSearch 状态检查脚本
 # AI变现之路项目 - 搜索引擎状态验证
 
@@ -43,7 +46,7 @@ check_status "Docker容器运行正常"
 # 2. 检查服务健康
 echo ""
 echo "2. 检查服务健康状态..."
-HEALTH=$(curl -s http://localhost:7700/health 2>/dev/null)
+HEALTH=$(curl -s "${SEARCH_HEALTH_URL}" 2>/dev/null)
 if [[ $HEALTH == *"available"* ]]; then
     echo -e "${GREEN}✅ 服务健康状态: 正常${NC}"
 else
@@ -55,9 +58,9 @@ fi
 echo ""
 echo "3. 检查索引配置..."
 if [ ! -z "$API_KEY" ]; then
-    INDEXES=$(curl -s -H "Authorization: Bearer $API_KEY" http://localhost:7700/indexes 2>/dev/null)
+    INDEXES=$(curl -s -H "Authorization: Bearer $API_KEY" "${SEARCH_URL}/indexes" 2>/dev/null)
 else
-    INDEXES=$(curl -s http://localhost:7700/indexes 2>/dev/null)
+    INDEXES=$(curl -s "${SEARCH_URL}/indexes" 2>/dev/null)
 fi
 
 if [[ $INDEXES == *"articles"* ]]; then
@@ -70,9 +73,9 @@ fi
 echo ""
 echo "4. 检查索引文档..."
 if [ ! -z "$API_KEY" ]; then
-    STATS=$(curl -s -H "Authorization: Bearer $API_KEY" http://localhost:7700/indexes/articles/stats 2>/dev/null)
+    STATS=$(curl -s -H "Authorization: Bearer $API_KEY" "${SEARCH_URL}/indexes/articles/stats" 2>/dev/null)
 else
-    STATS=$(curl -s http://localhost:7700/indexes/articles/stats 2>/dev/null)
+    STATS=$(curl -s "${SEARCH_URL}/indexes/articles/stats" 2>/dev/null)
 fi
 
 DOC_COUNT=$(echo "$STATS" | grep -o '"numberOfDocuments":[0-9]*' | cut -d':' -f2)
@@ -84,7 +87,7 @@ else
     echo -e "${YELLOW}⚠️  索引文档: 0篇文章（需要同步数据）${NC}"
     echo ""
     echo "🔄 数据同步建议:"
-    echo "   curl -X POST http://localhost:1337/api/search/reindex"
+    echo "   curl -X POST ${BACKEND_API_URL}/search/reindex"
     DOC_COUNT=0
 fi
 
@@ -92,9 +95,9 @@ fi
 echo ""
 echo "5. 测试搜索功能..."
 if [ ! -z "$API_KEY" ]; then
-    SEARCH_RESULT=$(curl -s -H "Authorization: Bearer $API_KEY" "http://localhost:7700/indexes/articles/search?q=AI&limit=1" 2>/dev/null)
+    SEARCH_RESULT=$(curl -s -H "Authorization: Bearer $API_KEY" "${SEARCH_URL}/indexes/articles/search?q=AI&limit=1" 2>/dev/null)
 else
-    SEARCH_RESULT=$(curl -s "http://localhost:7700/indexes/articles/search?q=AI&limit=1" 2>/dev/null)
+    SEARCH_RESULT=$(curl -s "${SEARCH_URL}/indexes/articles/search?q=AI&limit=1" 2>/dev/null)
 fi
 
 if [[ $SEARCH_RESULT == *"hits"* ]]; then
@@ -112,7 +115,7 @@ fi
 # 6. 检查Strapi集成
 echo ""
 echo "6. 检查Strapi集成..."
-STRAPI_HEALTH=$(curl -s http://localhost:1337/api/search/health 2>/dev/null)
+STRAPI_HEALTH=$(curl -s "${BACKEND_API_URL}/search/health" 2>/dev/null)
 if [[ $STRAPI_HEALTH == *"available"* ]]; then
     echo -e "${GREEN}✅ Strapi集成: 正常${NC}"
 else
@@ -123,11 +126,11 @@ fi
 # 7. 显示访问信息
 echo ""
 echo "🌐 === 访问信息 ==="
-echo "• MeiliSearch服务: http://localhost:7700"
-echo "• 健康检查: http://localhost:7700/health"
-echo "• 搜索测试: http://localhost:7700/indexes/articles/search?q=AI"
-echo "• 前端搜索: http://localhost/weekly"
-echo "• API文档: http://localhost:1337/documentation"
+echo "• MeiliSearch服务: ${SEARCH_URL}"
+echo "• 健康检查: ${SEARCH_HEALTH_URL}"
+echo "• 搜索测试: ${SEARCH_URL}/indexes/articles/search?q=AI"
+echo "• 前端搜索: ${FRONTEND_URL}/weekly"
+echo "• API文档: ${BACKEND_DOCS_URL}"
 
 # 8. 显示部署模式
 echo ""
@@ -158,7 +161,7 @@ if [[ $STRAPI_HEALTH != *"available"* ]]; then
 fi
 
 echo -e "${GREEN}3. 测试前端搜索:${NC}"
-echo "   访问 http://localhost/weekly 并进行搜索测试"
+echo "   访问 ${FRONTEND_URL}/weekly 并进行搜索测试"
 
 echo ""
 echo -e "${BLUE}🔧 更多管理操作:${NC}"

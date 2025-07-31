@@ -13,6 +13,12 @@
     },
     "pluginOptions": {},
     "attributes": {
+        "configName": {
+            "type": "string",
+            "default": "系统配置",
+            "maxLength": 100,
+            "description": "配置名称：用于标识此配置实例，便于管理界面显示"
+        },
         "emailServiceEnabled": {
             "type": "boolean",
             "default": true,
@@ -148,7 +154,7 @@
         "githubCallbackUrl": {
             "type": "string",
             "maxLength": 255,
-            "default": "http://localhost:3000/api/auth/callback/github",
+            "default": "http://localhost/api/auth/callback/github",
             "description": "GitHub回调地址：OAuth授权成功后的回调URL，生产环境需修改为实际域名"
         },
         "googleOauthEnabled": {
@@ -171,7 +177,7 @@
         "googleCallbackUrl": {
             "type": "string",
             "maxLength": 255,
-            "default": "http://localhost:3000/api/auth/callback/google",
+            "default": "http://localhost/api/auth/callback/google",
             "description": "Google回调地址：OAuth授权成功后的回调URL，生产环境需修改为实际域名"
         },
         "wechatOauthEnabled": {
@@ -194,7 +200,7 @@
         "wechatCallbackUrl": {
             "type": "string",
             "maxLength": 255,
-            "default": "http://localhost:3000/api/auth/callback/wechat",
+            "default": "http://localhost/api/auth/callback/wechat",
             "description": "微信回调地址：OAuth授权成功后的回调URL，需在微信开放平台配置"
         },
         "qqOauthEnabled": {
@@ -217,7 +223,7 @@
         "qqCallbackUrl": {
             "type": "string",
             "maxLength": 255,
-            "default": "http://localhost:3000/api/auth/callback/qq",
+            "default": "http://localhost/api/auth/callback/qq",
             "description": "QQ回调地址：OAuth授权成功后的回调URL，需在QQ互联平台配置"
         },
         "oauthAutoRegister": {

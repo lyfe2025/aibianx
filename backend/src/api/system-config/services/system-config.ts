@@ -1,4 +1,5 @@
 import { factories } from '@strapi/strapi'
+import { oauthConfig } from '../../../lib/config'
 
 export default factories.createCoreService('api::system-config.system-config', ({ strapi }) => ({
     /**
@@ -275,11 +276,11 @@ export default factories.createCoreService('api::system-config.system-config', (
                 qqOauthEnabled: false,
                 oauthAutoRegister: true,
 
-                // OAuth回调地址（开发环境默认值）
-                githubCallbackUrl: 'http://localhost:3000/api/auth/callback/github',
-                googleCallbackUrl: 'http://localhost:3000/api/auth/callback/google',
-                wechatCallbackUrl: 'http://localhost:3000/api/auth/callback/wechat',
-                qqCallbackUrl: 'http://localhost:3000/api/auth/callback/qq',
+                // OAuth回调地址（使用统一配置系统）
+                githubCallbackUrl: oauthConfig.github,
+                googleCallbackUrl: oauthConfig.google,
+                wechatCallbackUrl: oauthConfig.wechat,
+                qqCallbackUrl: oauthConfig.qq,
 
                 // 安全配置
                 sessionTimeout: 2592000,

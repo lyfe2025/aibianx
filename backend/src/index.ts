@@ -1,4 +1,5 @@
 import type { Core } from '@strapi/strapi'
+import { config } from './lib/config'
 
 export default {
     /**
@@ -83,12 +84,7 @@ async function configurePublicPermissions(strapi: Core.Strapi) {
             'api::system-config.system-config.getRegistrationConfig',
             'api::system-config.system-config.getMaintenanceStatus',
 
-            // Search相关权限（MeiliSearch搜索引擎）
-            'api::search.search.articles',
-            'api::search.search.suggestions',
-            'api::search.search.stats',
-            'api::search.search.health',
-            'api::search.search.reindex'
+            // 注意：搜索API端点通过自定义路由实现，不需要内容类型权限
         ]
 
         let permissionsUpdated = 0
@@ -220,13 +216,19 @@ async function initializeMeiliSearch(strapi: Core.Strapi) {
 
         } else {
             console.warn('⚠️  MeiliSearch服务连接失败，搜索功能将不可用')
-            console.warn('   请确保MeiliSearch服务正在运行在 http://localhost:7700')
+            console.warn(`   请确保MeiliSearch服务正在运行在 ${config.search.url}`)
             console.warn('   启动命令: ./meilisearch')
         }
+
+        // 注册搜索API路由
+        registerSearchRoutes(strapi, meilisearchService)
 
     } catch (error) {
         console.warn('⚠️  MeiliSearch初始化失败，搜索功能将不可用:', error.message)
         console.warn('   这不会影响应用的其他功能，但搜索功能需要MeiliSearch服务')
+
+        // 即使MeiliSearch失败，也注册路由（返回错误响应）
+        registerSearchRoutes(strapi, null)
 
         // 不抛出错误，允许应用继续启动
     }
@@ -264,6 +266,157 @@ function displayAPIEndpoints() {
     console.log('    GET  /api/site-config - 获取网站配置')
     console.log('    GET  /api/seo-metrics - 获取SEO数据')
 
-    console.log('  📚 API文档: http://localhost:1337/documentation')
-    console.log('  🔧 管理面板: http://localhost:1337/admin')
+    console.log(`  📚 API文档: ${config.backend.docsUrl}`)
+    console.log(`  🔧 管理面板: ${config.backend.adminUrl}`)
+}
+
+/**
+ * 注册搜索API路由
+ */
+function registerSearchRoutes(strapi: any, meilisearchService: any) {
+    const router = strapi.server.router
+
+    // 文章搜索
+    router.get('/api/search/articles', async (ctx: any) => {
+        try {
+            if (!meilisearchService) {
+                ctx.throw(503, 'MeiliSearch服务不可用')
+            }
+
+            const { query = '', limit = 20, offset = 0, filters = '', highlight = true } = ctx.query
+
+            const searchResult = await meilisearchService.search({
+                query: query as string,
+                limit: Math.min(parseInt(limit as string) || 20, 100),
+                offset: parseInt(offset as string) || 0,
+                filters: filters ? (filters as string).split(',') : undefined,
+                highlight: highlight === 'true'
+            })
+
+            ctx.body = {
+                data: searchResult,
+                meta: {
+                    query,
+                    limit: searchResult.limit,
+                    offset: searchResult.offset,
+                    totalHits: searchResult.totalHits,
+                    processingTime: searchResult.processingTime
+                }
+            }
+        } catch (error) {
+            strapi.log.error('搜索文章失败:', error)
+            ctx.throw(500, 'MeiliSearch搜索失败', { details: error.message })
+        }
+    })
+
+    // 搜索建议
+    router.get('/api/search/suggestions', async (ctx: any) => {
+        try {
+            if (!meilisearchService) {
+                ctx.throw(503, 'MeiliSearch服务不可用')
+            }
+
+            const { query = '', limit = 5 } = ctx.query
+
+            const suggestions = await meilisearchService.getSuggestions(
+                query as string,
+                Math.min(parseInt(limit as string) || 5, 20)
+            )
+
+            ctx.body = {
+                data: suggestions,
+                meta: {
+                    query,
+                    count: suggestions.length
+                }
+            }
+        } catch (error) {
+            strapi.log.error('获取搜索建议失败:', error)
+            ctx.throw(500, '获取搜索建议失败', { details: error.message })
+        }
+    })
+
+    // 搜索统计
+    router.get('/api/search/stats', async (ctx: any) => {
+        try {
+            if (!meilisearchService) {
+                ctx.throw(503, 'MeiliSearch服务不可用')
+            }
+
+            const stats = await meilisearchService.getIndexStats()
+
+            ctx.body = {
+                data: stats,
+                meta: {
+                    timestamp: new Date().toISOString()
+                }
+            }
+        } catch (error) {
+            strapi.log.error('获取搜索统计失败:', error)
+            ctx.throw(500, '获取搜索统计失败', { details: error.message })
+        }
+    })
+
+    // 健康检查
+    router.get('/api/search/health', async (ctx: any) => {
+        try {
+            if (!meilisearchService) {
+                ctx.body = {
+                    data: {
+                        status: 'unhealthy',
+                        message: 'MeiliSearch服务未初始化',
+                        timestamp: new Date().toISOString()
+                    }
+                }
+                return
+            }
+
+            const health = await meilisearchService.healthCheck()
+
+            ctx.body = {
+                data: health,
+                meta: {
+                    timestamp: new Date().toISOString()
+                }
+            }
+        } catch (error) {
+            strapi.log.error('搜索服务健康检查失败:', error)
+            ctx.body = {
+                data: {
+                    status: 'unhealthy',
+                    message: '搜索服务不可用',
+                    details: error.message,
+                    timestamp: new Date().toISOString()
+                }
+            }
+        }
+    })
+
+    // 重建索引
+    router.post('/api/search/reindex', async (ctx: any) => {
+        try {
+            if (!meilisearchService) {
+                ctx.throw(503, 'MeiliSearch服务不可用')
+            }
+
+            const result = await meilisearchService.syncArticles()
+
+            ctx.body = {
+                data: {
+                    message: '搜索索引重建完成',
+                    syncedCount: result,
+                    timestamp: new Date().toISOString()
+                },
+                meta: {
+                    operation: 'reindex',
+                    success: true
+                }
+            }
+        } catch (error) {
+            strapi.log.error('重建搜索索引失败:', error)
+            ctx.throw(500, '重建搜索索引失败', { details: error.message })
+        }
+    })
+
+    console.log('✅ 搜索API路由已注册')
 }

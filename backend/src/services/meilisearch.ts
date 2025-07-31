@@ -6,6 +6,7 @@
  */
 
 import { MeiliSearch, Index, TaskStatus } from 'meilisearch'
+import { config } from '../lib/config'
 
 interface SearchResult {
     id: string
@@ -61,9 +62,9 @@ class MeiliSearchService {
     private config: any
 
     constructor() {
-        // 获取配置 - 使用Strapi内置配置系统
+        // 获取配置 - 使用统一配置系统
         this.config = {
-            host: process.env.MEILISEARCH_HOST || 'http://localhost:7700',
+            host: config.search.url,
             apiKey: process.env.MEILISEARCH_API_KEY || null,
             // 搜索配置
             search: {

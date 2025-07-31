@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
+import { config } from '@/lib/config'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+const SITE_URL = config.frontend.url
 
 export default function robots(): MetadataRoute.Robots {
     return {

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 加载统一配置
+source "$(dirname "$0")/./load-config.sh"
+load_config
 # Strapi 5.x 字段描述配置工具
 # 用于解决字段描述配置失败的问题
 # 使用方法: ./configure-field-descriptions.sh [content-type] [force]

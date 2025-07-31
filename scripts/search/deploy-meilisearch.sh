@@ -3,6 +3,10 @@
 # MeiliSearch 一键部署脚本
 # AI变现之路项目 - 搜索引擎快速部署
 
+# 加载统一配置
+source "$(dirname "$0")/../tools/load-config.sh"
+load_config
+
 # 颜色定义
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -124,7 +128,7 @@ sleep 5
 echo ""
 echo "🔍 验证部署状态..."
 
-HEALTH_CHECK=$(curl -s http://localhost:7700/health 2>/dev/null)
+HEALTH_CHECK=$(curl -s "${SEARCH_HEALTH_URL}" 2>/dev/null)
 if [[ $HEALTH_CHECK == *"available"* ]]; then
     echo -e "${GREEN}✅ 服务启动成功${NC}"
 else
@@ -138,10 +142,10 @@ echo ""
 echo "🔄 初始化搜索索引..."
 
 # 检查后端是否运行
-BACKEND_CHECK=$(curl -s http://localhost:1337/api/search/health 2>/dev/null)
+BACKEND_CHECK=$(curl -s "${BACKEND_API_URL}/search/health" 2>/dev/null)
 if [[ $BACKEND_CHECK == *"available"* ]]; then
     # 重建索引
-    REINDEX_RESULT=$(curl -s -X POST http://localhost:1337/api/search/reindex 2>/dev/null)
+    REINDEX_RESULT=$(curl -s -X POST "${BACKEND_API_URL}/search/reindex" 2>/dev/null)
     if [[ $REINDEX_RESULT == *"syncedArticles"* ]]; then
         SYNCED_COUNT=$(echo $REINDEX_RESULT | grep -o '"syncedArticles":[0-9]*' | cut -d':' -f2)
         echo -e "${GREEN}✅ 索引初始化成功，同步了${SYNCED_COUNT}篇文章${NC}"
@@ -151,18 +155,18 @@ if [[ $BACKEND_CHECK == *"available"* ]]; then
 else
     echo -e "${YELLOW}⚠️  后端服务未运行，请启动后手动同步:${NC}"
     echo "   cd backend && npm run develop"
-    echo "   curl -X POST http://localhost:1337/api/search/reindex"
+    echo "   curl -X POST ${BACKEND_API_URL}/search/reindex"
 fi
 
 # 显示访问信息
 echo ""
 echo -e "${BLUE}🌐 === 访问信息 ===${NC}"
-echo "• MeiliSearch服务: http://localhost:7700"
-echo "• 健康检查: http://localhost:7700/health"
-echo "• 前端搜索测试: http://localhost/weekly"
+echo "• MeiliSearch服务: ${SEARCH_URL}"
+echo "• 健康检查: ${SEARCH_HEALTH_URL}"
+echo "• 前端搜索测试: ${FRONTEND_URL}/weekly"
 
 if [ "$DEPLOY_MODE" = "2" ]; then
-    echo "• API密钥管理: curl -H 'Authorization: Bearer $MASTER_KEY' http://localhost:7700/keys"
+    echo "• API密钥管理: curl -H 'Authorization: Bearer $MASTER_KEY' ${SEARCH_URL}/keys"
 fi
 
 # 显示后续步骤
@@ -170,7 +174,7 @@ echo ""
 echo -e "${BLUE}📋 === 后续步骤 ===${NC}"
 echo "1. 启动后端服务: ./scripts.sh deploy backend"
 echo "2. 启动前端服务: ./scripts.sh deploy frontend"
-echo "3. 访问前端页面: http://localhost/weekly"
+echo "3. 访问前端页面: ${FRONTEND_URL}/weekly"
 echo "4. 进行搜索测试: 在搜索框输入关键词"
 
 # 显示管理命令

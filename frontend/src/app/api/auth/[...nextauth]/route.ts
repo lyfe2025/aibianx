@@ -6,6 +6,7 @@
 import NextAuth from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import { config } from '@/lib/config'
 
 const authOptions: NextAuthOptions = {
     providers: [
@@ -23,7 +24,7 @@ const authOptions: NextAuthOptions = {
                 }
 
                 try {
-                    const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+                    const strapiUrl = config.backend.url
 
                     // 调用Strapi登录API
                     const response = await fetch(`${strapiUrl}/api/auth/local`, {

@@ -7,7 +7,12 @@
 
 const axios = require('axios');
 
-const STRAPI_URL = 'http://localhost:1337/api';
+// 域名和端口配置
+const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN || 'localhost'
+const BACKEND_PORT = process.env.BACKEND_PORT || '1337'
+const BACKEND_PROTOCOL = process.env.BACKEND_PROTOCOL || 'http'
+const BASE_URL = `${BACKEND_PROTOCOL}://${BACKEND_DOMAIN}${BACKEND_PORT === '80' || BACKEND_PORT === '443' ? '' : `:${BACKEND_PORT}`}`
+const STRAPI_URL = `${BASE_URL}/api`;
 
 // 种子数据
 const SEED_DATA = {
@@ -447,7 +452,7 @@ async function seedData() {
         console.log(`   - 分类: ${categories.length} 个`);
         console.log(`   - 标签: ${tags.length} 个`);
         console.log(`   - 文章: ${articles.length} 篇`);
-        console.log('\n🌐 现在可以访问 http://localhost:1337/admin 查看内容');
+        console.log(`\n🌐 现在可以访问 ${BASE_URL}/admin 查看内容`);
 
     } catch (error) {
         console.error('💥 数据初始化失败:', error.message);

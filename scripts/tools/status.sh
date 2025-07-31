@@ -2,6 +2,10 @@
 
 # AI变现之路 - 服务状态检查脚本
 
+# 加载统一配置
+source "$(dirname "$0")/load-config.sh"
+load_config
+
 # 颜色定义
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -20,8 +24,8 @@ if [ -f "logs/backend.pid" ]; then
     BACKEND_PID=$(cat logs/backend.pid)
     if kill -0 $BACKEND_PID 2>/dev/null; then
         echo -e "   ${GREEN}✅ 运行中 (PID: $BACKEND_PID)${NC}"
-        if curl -s http://localhost:1337/admin > /dev/null 2>&1; then
-            echo -e "   ${GREEN}✅ HTTP服务正常 (http://localhost:1337)${NC}"
+        if curl -s "${BACKEND_ADMIN_URL}" > /dev/null 2>&1; then
+            echo -e "   ${GREEN}✅ HTTP服务正常 (${BACKEND_URL})${NC}"
         else
             echo -e "   ${YELLOW}⚠️  HTTP服务异常${NC}"
         fi
@@ -45,7 +49,7 @@ if [ -f "logs/frontend.pid" ]; then
     FRONTEND_PID=$(cat logs/frontend.pid)
     if kill -0 $FRONTEND_PID 2>/dev/null; then
         echo -e "   ${GREEN}✅ 运行中 (PID: $FRONTEND_PID)${NC}"
-        if curl -s http://localhost > /dev/null 2>&1; then
+        if curl -s "${FRONTEND_URL}" > /dev/null 2>&1; then
             echo -e "   ${GREEN}✅ HTTP服务正常 (http://localhost)${NC}"
         else
             echo -e "   ${YELLOW}⚠️  HTTP服务异常${NC}"
@@ -68,15 +72,15 @@ echo ""
 echo -e "${CYAN}🔍 MeiliSearch搜索引擎:${NC}"
 if docker ps | grep meilisearch > /dev/null 2>&1; then
     echo -e "   ${GREEN}✅ Docker容器运行中${NC}"
-    HEALTH=$(curl -s http://localhost:7700/health 2>/dev/null)
+    HEALTH=$(curl -s "${FRONTEND_URL}":7700/health 2>/dev/null)
     if [[ $HEALTH == *"available"* ]]; then
         echo -e "   ${GREEN}✅ 服务健康正常${NC}"
         # 检查索引
-        INDEXES=$(curl -s http://localhost:7700/indexes 2>/dev/null)
+        INDEXES=$(curl -s "${FRONTEND_URL}":7700/indexes 2>/dev/null)
         if [[ $INDEXES == *"articles"* ]]; then
             echo -e "   ${GREEN}✅ articles索引已创建${NC}"
             # 检查文档数量
-            STATS=$(curl -s http://localhost:7700/indexes/articles/stats 2>/dev/null)
+            STATS=$(curl -s "${FRONTEND_URL}":7700/indexes/articles/stats 2>/dev/null)
             DOC_COUNT=$(echo $STATS | grep -o '"numberOfDocuments":[0-9]*' | cut -d':' -f2)
             if [ ! -z "$DOC_COUNT" ] && [ "$DOC_COUNT" -gt 0 ]; then
                 echo -e "   ${GREEN}✅ 索引文档: ${DOC_COUNT}篇文章${NC}"
@@ -173,22 +177,22 @@ echo ""
 # API连接测试
 echo ""
 echo -e "${CYAN}🔗 API连接测试:${NC}"
-if curl -s http://localhost:1337/api/articles > /dev/null 2>&1; then
-    article_count=$(curl -s 'http://localhost:1337/api/articles' | grep -o '"total":[0-9]*' | cut -d: -f2)
+if curl -s "${BACKEND_API_URL}/articles" > /dev/null 2>&1; then
+    article_count=$(curl -s "${BACKEND_API_URL}/articles" | grep -o '"total":[0-9]*' | cut -d: -f2)
     echo -e "   ${GREEN}✅ 后端API连接正常，共有 $article_count 篇文章${NC}"
 else
     echo -e "   ${RED}❌ 后端API连接失败${NC}"
 fi
 
 # 前端API测试
-if curl -s http://localhost > /dev/null 2>&1; then
+if curl -s "${FRONTEND_URL}" > /dev/null 2>&1; then
     echo -e "   ${GREEN}✅ 前端页面连接正常${NC}"
 else
     echo -e "   ${RED}❌ 前端页面连接失败${NC}"
 fi
 
 # 搜索API测试
-if curl -s http://localhost:1337/api/search/health > /dev/null 2>&1; then
+if curl -s "${FRONTEND_URL}":1337/api/search/health > /dev/null 2>&1; then
     echo -e "   ${GREEN}✅ 搜索API连接正常${NC}"
 else
     echo -e "   ${YELLOW}⚠️  搜索API连接异常${NC}"
@@ -243,7 +247,7 @@ echo -e "   ${CYAN}数据库备份:${NC} ./scripts.sh db backup"
 echo -e "   ${CYAN}完整备份:${NC} ./scripts.sh backup full"
 echo ""
 echo -e "${YELLOW}🌐 访问地址:${NC}"
-echo -e "   ${CYAN}前端页面:${NC} http://localhost"
-echo -e "   ${CYAN}后端管理:${NC} http://localhost:1337/admin"
-echo -e "   ${CYAN}API文档:${NC} http://localhost:1337/documentation"
-echo -e "   ${CYAN}搜索引擎:${NC} http://localhost:7700" 
+echo -e "   ${CYAN}前端页面:${NC} ${FRONTEND_URL}"
+echo -e "   ${CYAN}后端管理:${NC} ${BACKEND_ADMIN_URL}"
+echo -e "   ${CYAN}API文档:${NC} ${BACKEND_DOCS_URL}"
+echo -e "   ${CYAN}搜索引擎:${NC} ${SEARCH_URL}" 

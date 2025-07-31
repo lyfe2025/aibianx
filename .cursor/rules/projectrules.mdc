@@ -83,6 +83,318 @@ export default {
 - ✅ API权限配置 + 前端API集成测试
 - ❌ **禁止**：创建额外的配置指南文档 - 所有配置应直接完成
 
+## 🌐 **域名配置标准（统一管理）**
+
+### **⚠️ 重要原则**
+所有URL和域名配置必须使用环境变量，禁止硬编码！确保开发环境、生产环境配置统一管理。
+
+### **🔧 环境变量标准配置**
+
+#### **前端环境变量 (frontend/.env.local)**
+```bash
+# 前端服务配置（域名和端口分离）
+NEXT_PUBLIC_FRONTEND_DOMAIN=localhost
+NEXT_PUBLIC_FRONTEND_PORT=80
+NEXT_PUBLIC_FRONTEND_PROTOCOL=http
+
+# 后端服务配置（域名和端口分离）
+NEXT_PUBLIC_BACKEND_DOMAIN=localhost
+NEXT_PUBLIC_BACKEND_PORT=1337
+NEXT_PUBLIC_BACKEND_PROTOCOL=http
+
+# 搜索服务配置（域名和端口分离）
+NEXT_PUBLIC_SEARCH_DOMAIN=localhost
+NEXT_PUBLIC_SEARCH_PORT=7700
+NEXT_PUBLIC_SEARCH_PROTOCOL=http
+
+# NextAuth配置
+NEXTAUTH_SECRET=your-secret-key
+```
+
+#### **后端环境变量 (backend/.env)**
+```bash
+# 后端服务配置（域名和端口分离）
+BACKEND_DOMAIN=localhost
+BACKEND_PORT=1337
+BACKEND_PROTOCOL=http
+HOST=0.0.0.0
+PORT=1337
+
+# 前端服务配置（域名和端口分离）
+FRONTEND_DOMAIN=localhost
+FRONTEND_PORT=80
+FRONTEND_PROTOCOL=http
+
+# 数据库服务配置（域名和端口分离）
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=aibianx_dev
+DATABASE_USERNAME=aibianx_dev
+DATABASE_PASSWORD=aibianx_password
+
+# 搜索服务配置（域名和端口分离）
+MEILISEARCH_DOMAIN=localhost
+MEILISEARCH_PORT=7700
+MEILISEARCH_PROTOCOL=http
+MEILISEARCH_API_KEY=
+
+# 安全配置
+APP_KEYS=key1,key2,key3,key4
+API_TOKEN_SALT=api-token-salt
+ADMIN_JWT_SECRET=admin-jwt-secret
+JWT_SECRET=jwt-secret
+```
+
+### **🚨 禁止硬编码的场景**
+
+#### **❌ 错误做法（硬编码）**
+```typescript
+// 前端 - 错误
+const url = 'http://localhost:1337/api/articles'
+const siteUrl = 'http://localhost:3000'
+
+// 后端 - 错误
+githubCallbackUrl: 'http://localhost:3000/api/auth/callback/github'
+console.log('访问 http://localhost:1337/admin')
+```
+
+#### **✅ 正确做法（统一配置系统）**
+```typescript
+// 前端 - 正确（使用统一配置）
+import { config } from '@/lib/config'
+
+const BACKEND_URL = config.backend.url
+const FRONTEND_URL = config.frontend.url
+
+// 后端 - 正确（使用统一配置）
+import { config, oauthConfig } from './lib/config'
+
+githubCallbackUrl: oauthConfig.github
+console.log(`访问 ${config.backend.adminUrl}`)
+
+// 脚本文件 - 正确（域名端口分离）
+const BACKEND_DOMAIN = process.env.BACKEND_DOMAIN || 'localhost'
+const BACKEND_PORT = process.env.BACKEND_PORT || '1337'
+const BACKEND_PROTOCOL = process.env.BACKEND_PROTOCOL || 'http'
+const BASE_URL = `${BACKEND_PROTOCOL}://${BACKEND_DOMAIN}${BACKEND_PORT === '80' || BACKEND_PORT === '443' ? '' : `:${BACKEND_PORT}`}`
+```
+
+### **🔧 快速配置工具**
+
+#### **自动创建环境变量文件**
+```bash
+# 命令行模式
+./scripts.sh tools setup-env
+
+# 交互式菜单
+./scripts.sh
+# 选择 "17) 自动配置环境变量"
+```
+
+#### **手动验证配置**
+```bash
+# 检查前端环境变量
+cd frontend && cat .env.local
+
+# 检查后端环境变量  
+cd backend && cat .env
+
+# 验证配置生效
+./scripts.sh tools status
+```
+
+### **🎯 配置检查清单**
+- [ ] 前端使用统一配置系统 `import { config } from '@/lib/config'`
+- [ ] 后端使用统一配置系统 `import { config } from './lib/config'`
+- [ ] 所有域名使用 `*_DOMAIN` 环境变量
+- [ ] 所有端口使用 `*_PORT` 环境变量
+- [ ] 所有协议使用 `*_PROTOCOL` 环境变量
+- [ ] OAuth回调使用 `oauthConfig` 对象
+- [ ] 脚本文件使用域名端口分离的构建逻辑
+- [ ] 无任何硬编码 `localhost:1337`、`localhost:3000`、`localhost:7700`
+- [ ] 开发环境端口：前端80，后端1337，搜索7700，数据库5432
+
+### **🚀 生产环境配置示例**
+```bash
+# 前端生产环境（域名端口分离）
+NEXT_PUBLIC_FRONTEND_DOMAIN=aibianx.com
+NEXT_PUBLIC_FRONTEND_PORT=443
+NEXT_PUBLIC_FRONTEND_PROTOCOL=https
+NEXT_PUBLIC_BACKEND_DOMAIN=api.aibianx.com
+NEXT_PUBLIC_BACKEND_PORT=443
+NEXT_PUBLIC_BACKEND_PROTOCOL=https
+NEXT_PUBLIC_SEARCH_DOMAIN=search.aibianx.com
+NEXT_PUBLIC_SEARCH_PORT=443
+NEXT_PUBLIC_SEARCH_PROTOCOL=https
+
+# 后端生产环境（域名端口分离）
+BACKEND_DOMAIN=api.aibianx.com
+BACKEND_PORT=443
+BACKEND_PROTOCOL=https
+FRONTEND_DOMAIN=aibianx.com
+FRONTEND_PORT=443
+FRONTEND_PROTOCOL=https
+MEILISEARCH_DOMAIN=search.aibianx.com
+MEILISEARCH_PORT=443
+MEILISEARCH_PROTOCOL=https
+DATABASE_HOST=prod-db.aibianx.com
+DATABASE_PORT=5432
+```
+
+## 🛠️ **脚本配置管理标准（统一入口）**
+
+### **⚠️ 核心原则**
+所有脚本必须使用统一配置加载系统，禁止硬编码URL！确保 `scripts.sh` 作为唯一入口正常工作。
+
+### **🔧 统一配置系统架构**
+
+#### **配置加载核心** - `scripts/tools/load-config.sh`
+```bash
+# 所有脚本必须首先加载配置
+source "$(dirname "$0")/../tools/load-config.sh"
+load_config
+
+# 自动可用的配置变量
+$FRONTEND_URL        # http://localhost
+$BACKEND_URL         # http://localhost:1337  
+$SEARCH_URL          # http://localhost:7700
+$BACKEND_ADMIN_URL   # http://localhost:1337/admin
+$BACKEND_API_URL     # http://localhost:1337/api
+$BACKEND_DOCS_URL    # http://localhost:1337/documentation
+$SEARCH_HEALTH_URL   # http://localhost:7700/health
+```
+
+#### **智能URL构建规则**
+```bash
+# 标准端口自动隐藏
+localhost:80  → localhost       # HTTP默认端口
+localhost:443 → localhost       # HTTPS默认端口  
+localhost:1337 → localhost:1337 # 非标准端口保留
+
+# 域名端口协议分离构建
+build_url() {
+    local protocol=$1 domain=$2 port=$3
+    if [ "$port" = "80" ] && [ "$protocol" = "http" ]; then
+        echo "${protocol}://${domain}"
+    elif [ "$port" = "443" ] && [ "$protocol" = "https" ]; then
+        echo "${protocol}://${domain}"
+    else
+        echo "${protocol}://${domain}:${port}"
+    fi
+}
+```
+
+### **✅ 脚本标准化要求**
+
+#### **必须遵循的脚本格式**
+```bash
+#!/bin/bash
+
+# 1. 必须加载统一配置
+source "$(dirname "$0")/../tools/load-config.sh"
+load_config
+
+# 2. 使用配置变量，禁止硬编码
+curl -s "${BACKEND_API_URL}/articles"           # ✅ 正确
+curl -s "http://localhost:1337/api/articles"    # ❌ 错误
+
+# 3. 输出信息使用配置变量
+echo "• 后端管理: ${BACKEND_ADMIN_URL}"          # ✅ 正确
+echo "• 后端管理: http://localhost:1337/admin"   # ❌ 错误
+```
+
+#### **已标准化的核心脚本** ✅
+- ✅ `scripts.sh` - 主入口脚本
+- ✅ `scripts/deployment/start-dev.sh` - 开发环境启动
+- ✅ `scripts/deployment/start-backend.sh` - 后端启动
+- ✅ `scripts/deployment/start-frontend.sh` - 前端启动
+- ✅ `scripts/search/deploy-meilisearch.sh` - 搜索引擎部署
+- ✅ `scripts/search/check-meilisearch.sh` - 搜索状态检查
+- ✅ `scripts/search/manage-meilisearch.sh` - 搜索管理工具
+- ✅ `scripts/tools/status.sh` - 系统状态检查
+
+### **🎯 配置验证清单**
+
+#### **新建脚本检查清单**
+- [ ] 脚本开头加载了 `load-config.sh`
+- [ ] 所有URL使用配置变量（无硬编码）
+- [ ] curl命令使用 `${BACKEND_API_URL}` 等变量
+- [ ] echo输出使用 `${BACKEND_ADMIN_URL}` 等变量
+- [ ] 通过 `scripts.sh` 调用测试正常
+
+#### **配置修改影响测试**
+```bash
+# 1. 修改环境变量
+vi backend/.env frontend/.env.local
+
+# 2. 测试主入口脚本
+./scripts.sh tools status
+
+# 3. 测试子脚本功能
+./scripts.sh deploy start
+./scripts.sh search manage
+
+# 4. 验证URL构建正确性
+source scripts/tools/load-config.sh && load_config
+echo $FRONTEND_URL $BACKEND_URL $SEARCH_URL
+```
+
+### **🚀 开发生产环境切换**
+
+#### **开发环境** (默认配置)
+```bash
+# backend/.env
+BACKEND_DOMAIN=localhost
+BACKEND_PORT=1337
+FRONTEND_DOMAIN=localhost  
+FRONTEND_PORT=80
+
+# 所有脚本自动使用开发配置
+./scripts.sh deploy start
+```
+
+#### **生产环境** (修改域名即可)
+```bash
+# backend/.env
+BACKEND_DOMAIN=api.yourdomain.com
+BACKEND_PORT=443
+BACKEND_PROTOCOL=https
+FRONTEND_DOMAIN=yourdomain.com
+FRONTEND_PORT=443
+FRONTEND_PROTOCOL=https
+
+# 所有脚本自动使用生产配置，无需修改代码
+./scripts.sh deploy start
+```
+
+### **🔧 故障排除指南**
+
+#### **常见问题诊断**
+```bash
+# 1. 检查配置加载
+source scripts/tools/load-config.sh
+load_config --verbose
+
+# 2. 验证配置变量
+echo "前端: $FRONTEND_URL"
+echo "后端: $BACKEND_URL" 
+echo "搜索: $SEARCH_URL"
+
+# 3. 测试URL构建
+curl -s "${BACKEND_API_URL}/articles" || echo "后端连接失败"
+curl -s "${SEARCH_HEALTH_URL}" || echo "搜索引擎连接失败"
+```
+
+#### **硬编码URL检查**
+```bash
+# 检查是否还有硬编码URL
+grep -r "localhost:1337\|localhost:3000\|localhost:7700" scripts/ --include="*.sh"
+
+# 应该返回空结果或仅限低优先级脚本
+```
+
+---
+
 ### **🔧 字段描述配置标准流程（关键）**
 
 **⚠️ 重要提醒**：字段描述配置失败是反复出现的问题，必须严格按照以下流程执行！

@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next'
+import { config } from '@/lib/config'
 
-const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+const STRAPI_API_URL = config.backend.apiUrl
+const SITE_URL = config.frontend.url
 
 // 获取所有文章
 async function getArticles() {

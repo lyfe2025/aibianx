@@ -61,11 +61,15 @@ export function ArticleCard({
                     height: isHorizontal ? '120px' : '200px',
                     flexShrink: 0,
                     borderRadius: 'var(--radius-lg)',
-                    background: article.coverImage
+                    backgroundImage: article.coverImage
                         ? `url(${article.coverImage})`
+                        : 'none',
+                    background: article.coverImage
+                        ? 'transparent'
                         : 'var(--gradient-primary)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',

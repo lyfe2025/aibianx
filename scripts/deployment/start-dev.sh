@@ -17,19 +17,13 @@ fi
 
 echo "✅ Node.js 版本: $(node --version)"
 
-# 加载配置文件
-source "$(dirname "$0")/../tools/load-env.sh"
-if ! load_backend_env; then
-    echo "❌ 无法加载配置文件"
-    exit 1
-fi
+# 加载统一配置
+source "$(dirname "$0")/../tools/load-config.sh"
+load_config
 
-if ! validate_database_config; then
-    echo "❌ 数据库配置不完整"
-    exit 1
-fi
-
-show_database_config
+# 显示数据库配置
+echo "🗄️ 数据库配置:"
+echo "   主机: $DB_HOST:$DB_PORT"
 
 # 检查PostgreSQL服务
 check_postgresql() {
@@ -101,47 +95,17 @@ else
 fi
 
 # 检查环境变量文件
-if [ ! -f "frontend/.env.local" ]; then
-    echo "⚠️  前端环境变量文件不存在，正在创建..."
-    cat > frontend/.env.local << 'EOF'
-# AI变现之路 - 前端环境变量配置
-NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
-STRAPI_API_TOKEN=
-NEXT_PUBLIC_SITE_URL=http://localhost
-NEXT_PUBLIC_SITE_NAME=AI变现之路
-EOF
-    echo "✅ 已创建 frontend/.env.local"
+if [ ! -f "frontend/.env.local" ] || [ ! -f "backend/.env" ]; then
+    echo "⚠️  环境变量文件不完整，正在自动配置..."
+    source "$(dirname "$0")/../tools/setup-env.sh" || {
+        echo "❌ 自动配置环境变量失败"
+        exit 1
+    }
 else
-    echo "✅ 前端环境变量文件已存在"
+    echo "✅ 环境变量文件已存在"
 fi
 
-if [ ! -f "backend/.env" ]; then
-    echo "⚠️  后端环境变量文件不存在，正在创建..."
-    cat > backend/.env << 'EOF'
-# Server
-HOST=0.0.0.0
-PORT=1337
-
-# Database
-DATABASE_CLIENT=postgres
-DATABASE_HOST=127.0.0.1
-DATABASE_PORT=5432
-DATABASE_NAME=aibianx_dev
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_SSL=false
-
-# Secrets
-APP_KEYS=your-app-keys-here
-API_TOKEN_SALT=your-api-token-salt-here
-ADMIN_JWT_SECRET=your-admin-jwt-secret-here
-TRANSFER_TOKEN_SALT=your-transfer-token-salt-here
-JWT_SECRET=your-jwt-secret-here
-EOF
-    echo "✅ 已创建 backend/.env (请根据实际情况修改数据库配置)"
-else
-    echo "✅ 后端环境变量文件已存在"
-fi
+# 环境变量文件已通过上面的逻辑处理
 
 # 检查端口占用
 check_port() {
@@ -195,9 +159,9 @@ for i in {1..60}; do
     fi
     
     # 检查多个端点，更准确判断启动状态
-    if curl -s http://localhost:1337/_health > /dev/null 2>&1 || \
-       curl -s http://localhost:1337/admin > /dev/null 2>&1 || \
-       curl -s http://localhost:1337/api/articles > /dev/null 2>&1; then
+    if curl -s "${BACKEND_URL}/_health" > /dev/null 2>&1 || \
+       curl -s "${BACKEND_ADMIN_URL}" > /dev/null 2>&1 || \
+       curl -s "${BACKEND_API_URL}/articles" > /dev/null 2>&1; then
         echo ""
         echo "✅ 后端服务启动完成"
         BACKEND_READY=true
@@ -249,7 +213,7 @@ for i in {1..30}; do
     fi
     
     # 检查前端是否可访问
-    if curl -s http://localhost > /dev/null 2>&1; then
+    if curl -s "${FRONTEND_URL}" > /dev/null 2>&1; then
         echo ""
         echo "✅ 前端服务启动完成"
         FRONTEND_READY=true
@@ -271,10 +235,10 @@ echo ""
 echo "🎉 开发环境启动完成！"
 echo "========================================="
 echo "📍 访问地址："
-echo "   🌐 前端网站: http://localhost"
-echo "   ⚙️  后端管理: http://localhost:1337/admin"
-echo "   📡 API测试: http://localhost:1337/api/articles"
-echo "   📊 API文档: http://localhost:1337/documentation"
+echo "   🌐 前端网站: ${FRONTEND_URL}"
+echo "   ⚙️  后端管理: ${BACKEND_ADMIN_URL}"
+echo "   📡 API测试: ${BACKEND_API_URL}/articles"
+echo "   📊 API文档: ${BACKEND_DOCS_URL}"
 echo ""
 echo "🗄️  数据库状态："
 if command -v psql &> /dev/null && test_postgresql_connection; then
