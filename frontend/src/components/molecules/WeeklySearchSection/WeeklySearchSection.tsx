@@ -108,7 +108,7 @@ export function WeeklySearchSection({
                                         style={{
                                             fontSize: '12px',
                                             fontWeight: '400',
-                                            color: theme === 'dark' ? '#000000' : '#FFFFFF',
+                                            color: theme === 'dark' ? '#FFFFFF' : '#000000',
                                             opacity: 0.2,
                                             whiteSpace: 'nowrap'
                                         }}
@@ -127,7 +127,7 @@ export function WeeklySearchSection({
                                         style={{
                                             fontSize: '12px',
                                             fontWeight: '400',
-                                            color: theme === 'dark' ? '#000000' : '#FFFFFF',
+                                            color: theme === 'dark' ? '#FFFFFF' : '#000000',
                                             opacity: 0.2,
                                             whiteSpace: 'nowrap'
                                         }}
@@ -169,11 +169,11 @@ export function WeeklySearchSection({
             {/* 强制覆盖样式的CSS */}
             <style jsx>{`
                 .search-mode-indicator {
-                    color: ${theme === 'dark' ? '#000000' : '#FFFFFF'} !important;
+                    color: ${theme === 'dark' ? '#FFFFFF' : '#000000'} !important;
                     opacity: 0.2 !important;
                 }
                 .browse-mode-indicator {
-                    color: ${theme === 'dark' ? '#000000' : '#FFFFFF'} !important;
+                    color: ${theme === 'dark' ? '#FFFFFF' : '#000000'} !important;
                     opacity: 0.2 !important;
                 }
             `}</style>

@@ -18,40 +18,34 @@ export function ThemeInit() {
     const pathname = usePathname()
 
     useEffect(() => {
-        // 强制重新应用主题到document - 添加小延迟确保DOM准备就绪
+        // 检查主题是否已经正确应用（由阻塞式脚本设置）
+        const currentDataTheme = document.documentElement.getAttribute('data-theme')
+        const needsUpdate = currentDataTheme !== theme
+
         const applyTheme = () => {
             document.documentElement.setAttribute('data-theme', theme)
             
-            // 强制重新计算CSS变量 - 触发重新渲染
-            document.body.style.display = 'none'
-            document.body.offsetHeight // 触发重排
-            document.body.style.display = ''
+            // 只有在主题实际发生变化时才触发重排
+            if (needsUpdate) {
+                // 使用更轻量的方式触发CSS重新计算
+                const rootElement = document.documentElement
+                rootElement.style.setProperty('--theme-update', Date.now().toString())
+            }
         }
 
-        // 立即应用主题
-        applyTheme()
+        // 如果需要更新主题，立即应用
+        if (needsUpdate) {
+            applyTheme()
+        }
         
-        // 添加小延迟再次应用，确保路由切换完成
-        const timer = setTimeout(applyTheme, 50)
+        // 添加小延迟确保路由切换完成后再检查一次
+        const timer = setTimeout(() => {
+            if (document.documentElement.getAttribute('data-theme') !== theme) {
+                applyTheme()
+            }
+        }, 50)
 
-        // 轻量级修复：仅在主题切换时确保渐变按钮颜色正确
-        const ensureGradientButtonColors = () => {
-            // 延迟执行，确保主题已完全应用
-            setTimeout(() => {
-                const gradientButtons = document.querySelectorAll('div[style*="background: linear-gradient(90deg, #3B82F6 0%, #A855F7 100%)"]')
-                gradientButtons.forEach((button) => {
-                    const textElements = button.querySelectorAll('*')
-                    textElements.forEach((el) => {
-                        if (el instanceof HTMLElement && el.style.color !== 'rgb(255, 255, 255)') {
-                            el.style.setProperty('color', '#FFFFFF', 'important')
-                        }
-                    })
-                })
-            }, 100)
-        }
-
-        // 主题切换后确保颜色正确
-        ensureGradientButtonColors()
+        // 主题切换后的优化已通过阻塞式脚本和CSS处理，这里不再需要额外处理
 
         // 监听系统主题变化（可选功能）
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
@@ -69,21 +63,21 @@ export function ThemeInit() {
         }
     }, [theme, pathname]) // 监听主题和路径变化
 
-    // 额外的路径变化监听 - 确保路由切换时强制重新应用主题
+    // 额外的路径变化监听 - 确保路由切换时主题保持一致
     useEffect(() => {
-        // 路径变化时强制重新应用当前主题
-        const forceApplyTheme = () => {
-            document.documentElement.setAttribute('data-theme', theme)
-            // 强制触发CSS重新计算
-            const rootElement = document.documentElement
-            rootElement.style.setProperty('--force-reflow', Math.random().toString())
+        // 路径变化时检查并确保主题正确
+        const ensureThemeConsistency = () => {
+            const currentDataTheme = document.documentElement.getAttribute('data-theme')
+            if (currentDataTheme !== theme) {
+                document.documentElement.setAttribute('data-theme', theme)
+            }
         }
 
-        // 添加延迟确保路由切换完成
-        const timer = setTimeout(forceApplyTheme, 100)
+        // 添加小延迟确保路由切换完成
+        const timer = setTimeout(ensureThemeConsistency, 100)
         
         return () => clearTimeout(timer)
-    }, [pathname, theme]) // 路径变化时重新应用主题
+    }, [pathname, theme]) // 路径变化时重新检查主题
 
     // 不渲染任何内容，纯功能组件
     return null

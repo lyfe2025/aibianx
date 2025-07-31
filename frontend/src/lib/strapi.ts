@@ -162,6 +162,11 @@ interface EmailConfig {
 const STRAPI_URL = config.backend.url
 const API_TOKEN = process.env.STRAPI_API_TOKEN
 
+// 调试：输出实际使用的STRAPI_URL
+if (process.env.NODE_ENV === 'development') {
+    console.log('🔍 [DEBUG] STRAPI_URL:', STRAPI_URL)
+}
+
 // Strapi响应类型定义
 interface StrapiResponse<T> {
     data: T
@@ -458,6 +463,11 @@ function transformStrapiArticle(strapiArticle: StrapiArticle): ArticleCardData {
         coverImage: strapiArticle.featuredImage?.url
             ? `${STRAPI_URL}${strapiArticle.featuredImage.url}`
             : undefined,
+        // 调试：输出图片URL构建过程
+        ...(process.env.NODE_ENV === 'development' && {
+            _debug_imageUrl: strapiArticle.featuredImage?.url,
+            _debug_finalUrl: strapiArticle.featuredImage?.url ? `${STRAPI_URL}${strapiArticle.featuredImage.url}` : undefined
+        }),
         author: {
             name: strapiArticle.author?.name || '匿名作者',
             // 🔥 修复：Strapi 5.x扁平化结构 + 多格式支持 + Fallback + 调试信息

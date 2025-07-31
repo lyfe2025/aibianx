@@ -280,9 +280,11 @@ class MeiliSearchService {
     /**
      * 同步单篇文章
      */
-    async syncSingleArticle(articleId: string) {
+    async syncSingleArticle(documentId: string) {
         try {
-            const article = await strapi.entityService.findOne('api::article.article', articleId, {
+            // 🔧 修复：使用Strapi 5.x新的documents API
+            const article = await strapi.documents('api::article.article').findOne({
+                documentId,
                 populate: {
                     author: { fields: ['name', 'slug'] },
                     category: { fields: ['name', 'slug'] },
@@ -294,6 +296,8 @@ class MeiliSearchService {
             if (article) {
                 await this.syncArticles([article])
                 this.safeLog(`📝 单篇文章同步完成: ${article.title}`)
+            } else {
+                this.safeLog(`⚠️  未找到documentId为 ${documentId} 的文章`)
             }
         } catch (error) {
             this.safeLogError('❌ 单篇文章同步失败:', error)

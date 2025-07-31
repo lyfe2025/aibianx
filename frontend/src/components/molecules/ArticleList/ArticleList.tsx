@@ -33,6 +33,8 @@ export function ArticleList({ className }: ArticleListProps) {
         refetch
     } = useHomeArticles()
 
+
+
     return (
         <div className={`main-content-articles ${className || ''}`} style={{
             background: 'var(--color-bg-secondary)',
@@ -145,7 +147,8 @@ export function ArticleList({ className }: ArticleListProps) {
                 margin: '0 36px',
                 gap: '22px'
             }}>
-                    {articles.map((article) => (
+                    {articles.map((article) => {
+                        return (
                     <Link
                         key={article.id}
                             href={`/weekly/${article.slug}`}
@@ -170,19 +173,35 @@ export function ArticleList({ className }: ArticleListProps) {
                                     width: '180px',
                                     height: '120px',
                                     borderRadius: '8px',
-                                background: article.coverImage 
-                                    ? `url(${article.coverImage}) center/cover`
-                                    : 'var(--gradient-primary)',
                                     marginRight: '24px',
                                 flexShrink: 0,
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                color: 'var(--color-text-primary)',
-                                fontSize: '14px',
-                                fontWeight: 600
+                                overflow: 'hidden',
+                                background: !article.coverImage ? 'var(--gradient-primary)' : 'transparent'
                             }}>
-                                {!article.coverImage && '封面图'}
+                                {article.coverImage ? (
+                                    <img 
+                                        src={article.coverImage}
+                                        alt={article.title}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            borderRadius: '8px'
+                                        }}
+
+                                    />
+                                ) : (
+                                    <span style={{
+                                        color: 'var(--color-text-primary)',
+                                        fontSize: '14px',
+                                        fontWeight: 600
+                                    }}>
+                                        封面图
+                                    </span>
+                                )}
                             </div>
                             <div style={{
                                 display: 'flex',
@@ -265,7 +284,8 @@ export function ArticleList({ className }: ArticleListProps) {
                             </div>
                         </div>
                     </Link>
-                ))}
+                        )
+                    })}
             </div>
             )}
 

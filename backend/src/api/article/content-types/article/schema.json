@@ -42,7 +42,10 @@
             "allowedTypes": [
                 "images"
             ],
-            "description": "文章特色图片（封面图，仅支持图片格式）"
+            "description": "文章特色图片（封面图，仅支持图片格式）",
+            "configurable": true,
+            "visible": true,
+            "private": false
         },
         "publishedAt": {
             "type": "datetime",

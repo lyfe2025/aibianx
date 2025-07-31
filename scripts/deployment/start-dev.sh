@@ -239,6 +239,7 @@ echo "   🌐 前端网站: ${FRONTEND_URL}"
 echo "   ⚙️  后端管理: ${BACKEND_ADMIN_URL}"
 echo "   📡 API测试: ${BACKEND_API_URL}/articles"
 echo "   📊 API文档: ${BACKEND_DOCS_URL}"
+echo "   🔍 搜索引擎: ${SEARCH_URL}"
 echo ""
 echo "🗄️  数据库状态："
 if command -v psql &> /dev/null && test_postgresql_connection; then

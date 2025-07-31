@@ -398,7 +398,8 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
     featured: Schema.Attribute.Boolean &
       Schema.Attribute.Configurable &
       Schema.Attribute.DefaultTo<false>;
-    featuredImage: Schema.Attribute.Media<'images'>;
+    featuredImage: Schema.Attribute.Media<'images'> &
+      Schema.Attribute.Configurable;
     isPremium: Schema.Attribute.Boolean &
       Schema.Attribute.Configurable &
       Schema.Attribute.DefaultTo<false>;

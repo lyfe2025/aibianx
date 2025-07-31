@@ -1,7 +1,3 @@
-/**
- * article controller
- */
-
 import { factories } from '@strapi/strapi'
 
 export default factories.createCoreController('api::article.article', ({ strapi }) => ({
@@ -10,6 +6,27 @@ export default factories.createCoreController('api::article.article', ({ strapi 
     // 调用默认服务
     const { data, meta } = await super.find(ctx);
     return { data, meta };
+  },
+
+  // 🔧 临时调试：重写update方法
+  async update(ctx) {
+    const { id } = ctx.params;
+    console.log('🔍 [DEBUG] Article update called for ID:', id);
+    console.log('🔍 [DEBUG] Request body:', JSON.stringify(ctx.request.body, null, 2));
+    
+    // 调用默认的update方法
+    const result = await super.update(ctx);
+    
+    console.log('🔍 [DEBUG] Update result:', JSON.stringify(result, null, 2));
+    
+    // 检查featuredImage是否在结果中
+    if (result.data && result.data.featuredImage) {
+      console.log('🖼️ [DEBUG] Featured image after update:', result.data.featuredImage);
+    } else {
+      console.log('⚠️ [DEBUG] No featured image in result');
+    }
+    
+    return result;
   },
 
   // 自定义方法：增加浏览量
@@ -42,4 +59,4 @@ export default factories.createCoreController('api::article.article', ({ strapi 
       return ctx.badRequest('更新浏览量失败', { error: error.message });
     }
   }
-})); 
+}));

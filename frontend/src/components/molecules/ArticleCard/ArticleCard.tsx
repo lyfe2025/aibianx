@@ -61,24 +61,33 @@ export function ArticleCard({
                     height: isHorizontal ? '120px' : '200px',
                     flexShrink: 0,
                     borderRadius: 'var(--radius-lg)',
-                    backgroundImage: article.coverImage
-                        ? `url(${article.coverImage})`
-                        : 'none',
-                    background: article.coverImage
-                        ? 'transparent'
-                        : 'var(--gradient-primary)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
+                    overflow: 'hidden',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'var(--color-text-primary)',
-                    fontSize: 'var(--font-size-sm)',
-                    fontWeight: '600',
-                    position: 'relative'
+                    position: 'relative',
+                    background: article.coverImage ? 'transparent' : 'var(--gradient-primary)'
                 }}>
-                    {!article.coverImage && '封面图'}
+                    {article.coverImage ? (
+                        <img 
+                            src={article.coverImage}
+                            alt={article.title}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                borderRadius: 'var(--radius-lg)'
+                            }}
+                        />
+                    ) : (
+                        <span style={{
+                            color: 'var(--color-text-primary)',
+                            fontSize: 'var(--font-size-sm)',
+                            fontWeight: '600'
+                        }}>
+                            封面图
+                        </span>
+                    )}
 
                     {/* 会员专属标识 */}
                     {article.isPremium && (

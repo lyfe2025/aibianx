@@ -69,7 +69,23 @@ export function useHomeArticles(): UseHomeArticlesReturn {
             }
 
             // 调用API
+            console.log('🔍 [useHomeArticles] Calling getArticles with params:', apiParams)
             const result = await getArticles(apiParams)
+            console.log('🔍 [useHomeArticles] Raw API result:', result)
+
+            // 🔍 调试：输出获取的文章数据
+            if (process.env.NODE_ENV === 'development') {
+                console.log('🔍 [useHomeArticles] Fetched articles:', result.articles.length)
+                console.log('🔍 [useHomeArticles] Full result object:', result)
+                result.articles.forEach((article, index) => {
+                    console.log(`🔍 [useHomeArticles] Article ${index + 1}:`, {
+                        title: article.title,
+                        coverImage: article.coverImage,
+                        hasImage: !!article.coverImage,
+                        fullArticle: article
+                    })
+                })
+            }
 
             setArticles(result.articles)
             setTotalCount(result.pagination.total)

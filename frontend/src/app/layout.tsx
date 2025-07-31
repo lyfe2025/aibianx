@@ -122,6 +122,29 @@ export default async function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
+        {/* 阻塞式主题初始化脚本 - 防止主题颜色闪烁 */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
+                const storedTheme = localStorage.getItem('theme-storage');
+                if (storedTheme) {
+                  const { state } = JSON.parse(storedTheme);
+                  if (state && state.theme) {
+                    document.documentElement.setAttribute('data-theme', state.theme);
+                  } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                  }
+                } else {
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                }
+              } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+              }
+            })();
+          `
+        }} />
+        
         {/* 防止SSR水合时样式闪烁 */}
         <style dangerouslySetInnerHTML={{
           __html: `
