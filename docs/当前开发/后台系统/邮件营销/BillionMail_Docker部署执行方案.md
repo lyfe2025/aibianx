@@ -2,7 +2,7 @@
 
 ## 🎯 **项目目标**
 
-完全替换现有邮件营销系统，采用 BillionMail 专业邮件营销平台，通过 Docker 容器化部署集成到现有开发环境。
+完全替换现有邮件营销系统，采用 BillionMail 专业邮件营销平台，通过 Docker 容器化部署，前端直接对接 BillionMail API，无需中间层。
 
 ---
 
@@ -12,7 +12,7 @@
 |------|------|----------|------|
 | 1-3 | 环境准备 | 15分钟 | 清理现有邮件API，准备部署环境 |
 | 4-7 | BillionMail部署 | 1-2小时 | Docker容器部署和初始化 |
-| 8-10 | 集成配置 | 45分钟 | API集成和环境变量配置 |
+| 8-10 | 集成配置 | 30分钟 | API集成和环境变量配置 |
 | 11-13 | 前端改造 | 1小时 | 前端邮件功能对接BillionMail |
 | 14-15 | 脚本集成 | 30分钟 | 将BillionMail管理集成到scripts.sh |
 | 16 | 测试验证 | 30分钟 | 功能完整性测试 |
@@ -249,7 +249,7 @@ echo "  - newsletter: 营销邮件模板"
 
 ---
 
-### **阶段3：系统集成配置 (45分钟)**
+### **阶段3：系统集成配置 (30分钟)**
 
 #### **步骤8：创建BillionMail集成配置**
 
@@ -381,58 +381,22 @@ EOF
 echo "⚠️  请在BillionMail管理界面获取API密钥并更新BILLIONMAIL_API_KEY"
 ```
 
-#### **步骤10：创建可选的同步状态追踪API**
+#### **步骤10：验证集成配置**
 
 ```bash
-# 创建最小化同步状态API
-mkdir -p backend/src/api/billionmail-sync/content-types/billionmail-sync
-mkdir -p backend/src/api/billionmail-sync/controllers
-mkdir -p backend/src/api/billionmail-sync/routes
-mkdir -p backend/src/api/billionmail-sync/services
+# 验证BillionMail集成配置文件
+echo "📋 验证集成配置文件创建："
+ls -la backend/src/lib/billionmail-config.ts
 
-# 创建schema
-cat > backend/src/api/billionmail-sync/content-types/billionmail-sync/schema.json << 'EOF'
-{
-  "kind": "collectionType",
-  "collectionName": "billionmail_syncs",
-  "info": {
-    "singularName": "billionmail-sync",
-    "pluralName": "billionmail-syncs",
-    "displayName": "BillionMail同步状态",
-    "description": "BillionMail数据同步状态追踪"
-  },
-  "options": {
-    "draftAndPublish": false
-  },
-  "attributes": {
-    "email": {
-      "type": "email",
-      "required": true,
-      "unique": true,
-      "description": "邮箱地址"
-    },
-    "billionMailId": {
-      "type": "string",
-      "description": "BillionMail中的用户ID"
-    },
-    "syncStatus": {
-      "type": "enumeration",
-      "enum": ["synced", "pending", "failed"],
-      "default": "pending",
-      "required": true,
-      "description": "同步状态"
-    },
-    "lastSync": {
-      "type": "datetime",
-      "description": "最后同步时间"
-    },
-    "errorMessage": {
-      "type": "text",
-      "description": "同步失败时的错误信息"
-    }
-  }
-}
-EOF
+# 检查环境变量配置
+echo ""
+echo "📋 检查环境变量配置："
+grep -E "BILLIONMAIL_" backend/.env || echo "请确保已添加BillionMail环境变量"
+grep -E "BILLIONMAIL_" frontend/.env.local || echo "请确保已添加前端BillionMail配置"
+
+echo ""
+echo "✅ 集成配置验证完成"
+echo "⚠️  记得在BillionMail管理界面获取API密钥后更新环境变量"
 ```
 
 ---
@@ -750,9 +714,9 @@ echo "⚠️  如果API密钥未设置，请在BillionMail管理界面获取并�
 │   (端口80)      │    │   (端口1337)    │    │   (端口8080)    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
-         ├─ 邮件订阅表单 ────────┼─ API集成调用 ─────────┤
+         ├─ 邮件订阅表单 ─────────────────────────────┤
          ├─ 用户交互界面         ├─ 内容API              ├─ 邮件发送
-         └─ 订阅状态显示         └─ 用户认证              └─ 营销自动化
+         └─ 系统邮件发送         └─ 用户认证              └─ 营销自动化
 ```
 
 ---
