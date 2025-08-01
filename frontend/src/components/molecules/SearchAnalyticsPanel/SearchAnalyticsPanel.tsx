@@ -703,5 +703,3 @@ function SuggestionAnalyticsCard({
         </div>
     )
 }
-
-export { SearchAnalyticsPanel }

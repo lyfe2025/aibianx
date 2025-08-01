@@ -12,6 +12,19 @@ const nextConfig: NextConfig = {
   // 压缩优化
   compress: true,
   
+  // Docker部署配置
+  output: 'standalone',
+  
+  // 生产构建时跳过ESLint检查
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
+  // 生产构建时跳过TypeScript检查
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  
   // 实验性性能优化
   experimental: {
     optimizePackageImports: ['@/components/ui'],

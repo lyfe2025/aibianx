@@ -6,7 +6,7 @@ WORKDIR /app
 # 复制依赖文件
 COPY package*.json ./
 
-# 安装依赖
+# 强制使用npm并安装依赖
 RUN npm ci --only=production
 
 FROM node:18-alpine AS builder
@@ -19,6 +19,10 @@ COPY --from=deps /app/node_modules ./node_modules
 
 # 复制源代码
 COPY . .
+
+# 设置npm配置
+RUN npm config set fund false && \
+    npm config set audit false
 
 # 构建时环境变量
 ARG NEXT_PUBLIC_FRONTEND_DOMAIN
@@ -47,8 +51,8 @@ ENV NEXTAUTH_URL=$NEXTAUTH_URL
 ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 ENV NODE_ENV=production
 
-# 构建应用
-RUN npm run build
+# 构建应用 - 设置环境禁用pnpm
+RUN COREPACK_ENABLE_STRICT=0 NODE_OPTIONS="" npm run build
 
 FROM node:18-alpine AS production
 

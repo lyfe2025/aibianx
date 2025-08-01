@@ -128,6 +128,14 @@ install_environment() {
 clone_project() {
     echo -e "${BLUE}📥 第二步：克隆项目...${NC}"
     
+    # 检查当前目录是否已经是部署目录
+    if [ -f "docker-compose.yml" ] && [ -f "generate-keys.sh" ] && [ -f "nginx.conf" ]; then
+        echo -e "${GREEN}🎯 检测到当前已在部署目录，跳过克隆步骤${NC}"
+        PROJECT_DIR="."
+        DEPLOY_DIR="."
+        return 0
+    fi
+    
     # 检查项目目录是否已存在
     if [ -d "$PROJECT_DIR" ]; then
         echo -e "${YELLOW}⚠️  项目目录已存在，是否删除重新克隆？(y/n)${NC}"
@@ -153,6 +161,12 @@ clone_project() {
 # 第三步：进入部署目录
 enter_deploy_directory() {
     echo -e "${BLUE}📂 第三步：进入部署目录...${NC}"
+    
+    # 如果已经在部署目录，则无需切换
+    if [ "$DEPLOY_DIR" = "." ]; then
+        echo -e "${GREEN}✅ 当前已在部署目录: $(pwd)${NC}"
+        return 0
+    fi
     
     if [ ! -d "$DEPLOY_DIR" ]; then
         echo -e "${RED}❌ 部署目录不存在: $DEPLOY_DIR${NC}"
