@@ -2,7 +2,7 @@
 
 ## 🎯 **项目目标**
 
-完全替换现有邮件营销系统，采用 BillionMail 专业邮件营销平台，通过 Docker 容器化部署，前端直接对接 BillionMail API，无需中间层。
+完全替换现有邮件营销系统，采用 BillionMail 专业邮件营销平台，通过 Docker 容器化部署，前端直接对接 BillionMail API，包含用户注册邮箱验证码功能。
 
 ---
 
@@ -15,7 +15,8 @@
 | 8-10 | 集成配置 | 30分钟 | API集成和环境变量配置 |
 | 11-13 | 前端改造 | 1小时 | 前端邮件功能对接BillionMail |
 | 14-15 | 脚本集成 | 30分钟 | 将BillionMail管理集成到scripts.sh |
-| 16 | 测试验证 | 30分钟 | 功能完整性测试 |
+| 16-17 | 验证码集成 | 45分钟 | 用户注册邮箱验证码功能 |
+| 18 | 测试验证 | 30分钟 | 功能完整性测试 |
 
 ---
 
@@ -242,9 +243,16 @@ echo "  4. 生成API密钥"
 ```bash
 echo "📧 在BillionMail管理界面创建以下邮件模板："
 echo "  - welcome_email: 用户注册欢迎邮件"
+echo "  - email_verification: 邮箱验证码邮件 ⭐"
 echo "  - password_reset: 密码重置邮件"
-echo "  - email_verification: 邮箱验证邮件"
+echo "  - login_verification: 登录验证码邮件"
 echo "  - newsletter: 营销邮件模板"
+echo ""
+echo "⚠️  特别重要：邮箱验证码邮件模板必须包含以下变量："
+echo "  - {{verification_code}} - 6位数验证码"
+echo "  - {{user_name}} - 用户名称"
+echo "  - {{expiry_time}} - 验证码过期时间"
+echo "  - {{site_name}} - 网站名称"
 ```
 
 ---
@@ -291,7 +299,6 @@ export class BillionMailClient {
     const response = await fetch(`${this.config.apiUrl}/subscribers`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${this.config.apiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -316,7 +323,6 @@ export class BillionMailClient {
     const response = await fetch(`${this.config.apiUrl}/emails/send`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${this.config.apiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -334,13 +340,40 @@ export class BillionMailClient {
   }
 
   /**
+   * 发送邮箱验证码
+   */
+  async sendVerificationCode(email: string, userName: string, verificationCode: string) {
+    const response = await fetch(`${this.config.apiUrl}/emails/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        to: email,
+        template_id: 'email_verification',
+        variables: {
+          user_name: userName,
+          verification_code: verificationCode,
+          expiry_time: '10分钟',
+          site_name: 'AI变现之路'
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`BillionMail发送验证码失败: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  /**
    * 取消订阅
    */
   async unsubscribe(email: string) {
     const response = await fetch(`${this.config.apiUrl}/subscribers/unsubscribe`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${this.config.apiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ email })
@@ -376,6 +409,7 @@ cat >> frontend/.env.local << 'EOF'
 
 # BillionMail前端配置
 NEXT_PUBLIC_BILLIONMAIL_API_URL=http://localhost:8080/api
+NEXT_PUBLIC_BILLIONMAIL_DEFAULT_LIST_ID=1
 EOF
 
 echo "⚠️  请在BillionMail管理界面获取API密钥并更新BILLIONMAIL_API_KEY"
@@ -450,6 +484,42 @@ export async function subscribeEmail(data: SubscribeData) {
 }
 
 /**
+ * 发送邮箱验证码
+ */
+export async function sendVerificationCode(email: string, userName: string) {
+  try {
+    // 生成6位数验证码
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    const response = await fetch(`${BILLIONMAIL_API_URL}/emails/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        to: email,
+        template_id: 'email_verification',
+        variables: {
+          user_name: userName,
+          verification_code: verificationCode,
+          expiry_time: '10分钟',
+          site_name: 'AI变现之路'
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('验证码发送失败');
+    }
+
+    return { verificationCode, response: await response.json() };
+  } catch (error) {
+    console.error('验证码发送错误:', error);
+    throw error;
+  }
+}
+
+/**
  * 取消订阅
  */
 export async function unsubscribeEmail(email: string) {
@@ -484,7 +554,7 @@ cat > frontend/src/lib/hooks/useEmailSubscription.ts << 'EOF'
  * 邮件订阅Hook - BillionMail版本
  */
 import { useState } from 'react';
-import { subscribeEmail, unsubscribeEmail, SubscribeData } from '@/lib/billionmail';
+import { subscribeEmail, unsubscribeEmail, sendVerificationCode, SubscribeData } from '@/lib/billionmail';
 
 export function useEmailSubscription() {
   const [isLoading, setIsLoading] = useState(false);
@@ -522,9 +592,26 @@ export function useEmailSubscription() {
     }
   };
 
+  const sendVerification = async (email: string, userName: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await sendVerificationCode(email, userName);
+      return { success: true, verificationCode: result.verificationCode };
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '验证码发送失败';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     subscribe,
     unsubscribe,
+    sendVerification, // 新增验证码发送功能
     isLoading,
     error
   };
@@ -655,9 +742,356 @@ echo "  - BillionMail日志查看"
 
 ---
 
-### **阶段6：测试验证 (30分钟)**
+### **阶段6：用户注册邮箱验证码集成 (45分钟)**
 
-#### **步骤16：功能完整性测试**
+#### **步骤16：创建验证码管理工具**
+
+```bash
+# 创建验证码管理工具
+cat > frontend/src/lib/verification.ts << 'EOF'
+/**
+ * 邮箱验证码管理工具
+ */
+import { sendVerificationCode } from '@/lib/billionmail';
+
+interface VerificationData {
+  email: string;
+  code: string;
+  expiresAt: number;
+  attempts: number;
+}
+
+// 内存存储验证码（生产环境建议使用Redis）
+const verificationCodes = new Map<string, VerificationData>();
+
+export class VerificationManager {
+  private static readonly MAX_ATTEMPTS = 3;
+  private static readonly EXPIRY_TIME = 10 * 60 * 1000; // 10分钟
+  private static readonly RESEND_INTERVAL = 60 * 1000; // 1分钟重发间隔
+
+  /**
+   * 发送邮箱验证码
+   */
+  static async sendVerificationCode(email: string, userName: string): Promise<{
+    success: boolean;
+    message: string;
+    canResendAt?: number;
+  }> {
+    try {
+      // 检查重发间隔
+      const existing = verificationCodes.get(email);
+      if (existing) {
+        const now = Date.now();
+        const timeSinceLastSend = now - (existing.expiresAt - this.EXPIRY_TIME);
+        if (timeSinceLastSend < this.RESEND_INTERVAL) {
+          const waitTime = Math.ceil((this.RESEND_INTERVAL - timeSinceLastSend) / 1000);
+          return {
+            success: false,
+            message: `请等待 ${waitTime} 秒后再次发送`,
+            canResendAt: now + (this.RESEND_INTERVAL - timeSinceLastSend)
+          };
+        }
+      }
+
+      // 生成验证码
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiresAt = Date.now() + this.EXPIRY_TIME;
+
+      // 通过BillionMail发送验证码
+      await sendVerificationCode(email, userName);
+
+      // 存储验证码
+      verificationCodes.set(email, {
+        email,
+        code,
+        expiresAt,
+        attempts: 0
+      });
+
+      return {
+        success: true,
+        message: '验证码已发送到您的邮箱，请在10分钟内使用'
+      };
+    } catch (error) {
+      console.error('发送验证码失败:', error);
+      return {
+        success: false,
+        message: '验证码发送失败，请稍后重试'
+      };
+    }
+  }
+
+  /**
+   * 验证邮箱验证码
+   */
+  static verifyCode(email: string, inputCode: string): {
+    success: boolean;
+    message: string;
+    remainingAttempts?: number;
+  } {
+    const data = verificationCodes.get(email);
+    
+    if (!data) {
+      return {
+        success: false,
+        message: '验证码不存在或已过期，请重新发送'
+      };
+    }
+
+    // 检查是否过期
+    if (Date.now() > data.expiresAt) {
+      verificationCodes.delete(email);
+      return {
+        success: false,
+        message: '验证码已过期，请重新发送'
+      };
+    }
+
+    // 检查尝试次数
+    if (data.attempts >= this.MAX_ATTEMPTS) {
+      verificationCodes.delete(email);
+      return {
+        success: false,
+        message: '验证码尝试次数过多，请重新发送'
+      };
+    }
+
+    // 验证码校验
+    if (data.code !== inputCode) {
+      data.attempts++;
+      const remainingAttempts = this.MAX_ATTEMPTS - data.attempts;
+      
+      if (remainingAttempts === 0) {
+        verificationCodes.delete(email);
+        return {
+          success: false,
+          message: '验证码错误次数过多，请重新发送'
+        };
+      }
+
+      return {
+        success: false,
+        message: `验证码错误，还可尝试 ${remainingAttempts} 次`,
+        remainingAttempts
+      };
+    }
+
+    // 验证成功，删除验证码
+    verificationCodes.delete(email);
+    return {
+      success: true,
+      message: '邮箱验证成功'
+    };
+  }
+
+  /**
+   * 清理过期验证码
+   */
+  static cleanupExpiredCodes() {
+    const now = Date.now();
+    for (const [email, data] of verificationCodes.entries()) {
+      if (now > data.expiresAt) {
+        verificationCodes.delete(email);
+      }
+    }
+  }
+}
+
+// 定期清理过期验证码
+if (typeof window !== 'undefined') {
+  setInterval(() => {
+    VerificationManager.cleanupExpiredCodes();
+  }, 5 * 60 * 1000); // 每5分钟清理一次
+}
+EOF
+```
+
+#### **步骤17：创建用户注册验证码组件**
+
+```bash
+# 创建邮箱验证码输入组件
+cat > frontend/src/components/auth/EmailVerification.tsx << 'EOF'
+/**
+ * 邮箱验证码组件
+ */
+'use client';
+
+import { useState, useEffect } from 'react';
+import { VerificationManager } from '@/lib/verification';
+
+interface EmailVerificationProps {
+  email: string;
+  userName: string;
+  onVerificationSuccess: () => void;
+  onCancel?: () => void;
+}
+
+export function EmailVerification({
+  email,
+  userName,
+  onVerificationSuccess,
+  onCancel
+}: EmailVerificationProps) {
+  const [code, setCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState<'success' | 'error' | 'info'>('info');
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [canResend, setCanResend] = useState(false);
+
+  // 倒计时功能
+  useEffect(() => {
+    if (remainingTime > 0) {
+      const timer = setTimeout(() => {
+        setRemainingTime(remainingTime - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setCanResend(true);
+    }
+  }, [remainingTime]);
+
+  // 发送验证码
+  const handleSendCode = async () => {
+    setIsLoading(true);
+    try {
+      const result = await VerificationManager.sendVerificationCode(email, userName);
+      
+      if (result.success) {
+        setMessage(result.message);
+        setMessageType('success');
+        setRemainingTime(60); // 60秒倒计时
+        setCanResend(false);
+      } else {
+        setMessage(result.message);
+        setMessageType('error');
+        if (result.canResendAt) {
+          const waitTime = Math.ceil((result.canResendAt - Date.now()) / 1000);
+          setRemainingTime(waitTime);
+          setCanResend(false);
+        }
+      }
+    } catch (error) {
+      setMessage('发送验证码失败，请稍后重试');
+      setMessageType('error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 验证验证码
+  const handleVerifyCode = async () => {
+    if (!code || code.length !== 6) {
+      setMessage('请输入6位验证码');
+      setMessageType('error');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const result = VerificationManager.verifyCode(email, code);
+      
+      if (result.success) {
+        setMessage(result.message);
+        setMessageType('success');
+        setTimeout(() => {
+          onVerificationSuccess();
+        }, 1000);
+      } else {
+        setMessage(result.message);
+        setMessageType('error');
+        if (!result.remainingAttempts) {
+          setCode('');
+          setCanResend(true);
+        }
+      }
+    } catch (error) {
+      setMessage('验证失败，请稍后重试');
+      setMessageType('error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 初始发送验证码
+  useEffect(() => {
+    handleSendCode();
+  }, []);
+
+  return (
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">邮箱验证</h2>
+        <p className="text-gray-600">
+          验证码已发送到 <span className="font-medium text-blue-600">{email}</span>
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <label htmlFor="verification-code" className="block text-sm font-medium text-gray-700 mb-2">
+            请输入6位验证码
+          </label>
+          <input
+            id="verification-code"
+            type="text"
+            maxLength={6}
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-lg tracking-widest"
+            placeholder="000000"
+            disabled={isLoading}
+          />
+        </div>
+
+        {message && (
+          <div className={`p-3 rounded-md text-sm ${
+            messageType === 'success' ? 'bg-green-50 text-green-800' :
+            messageType === 'error' ? 'bg-red-50 text-red-800' :
+            'bg-blue-50 text-blue-800'
+          }`}>
+            {message}
+          </div>
+        )}
+
+        <div className="flex gap-3">
+          <button
+            onClick={handleVerifyCode}
+            disabled={isLoading || !code || code.length !== 6}
+            className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? '验证中...' : '验证'}
+          </button>
+          
+          <button
+            onClick={handleSendCode}
+            disabled={isLoading || !canResend}
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {!canResend && remainingTime > 0 ? `${remainingTime}s` : '重新发送'}
+          </button>
+        </div>
+
+        {onCancel && (
+          <button
+            onClick={onCancel}
+            className="w-full text-gray-500 hover:text-gray-700 text-sm"
+          >
+            取消验证
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+EOF
+```
+
+---
+
+### **阶段7：测试验证 (30分钟)**
+
+#### **步骤18：功能完整性测试**
 
 ```bash
 # 1. 检查BillionMail服务状态
@@ -666,14 +1100,21 @@ echo "  - BillionMail日志查看"
 # 2. 测试API连接
 curl -X GET http://localhost:8080/api/health
 
-# 3. 测试前端邮件订阅功能
-echo "🧪 请测试以下功能："
-echo "  1. 前端邮件订阅表单"
-echo "  2. BillionMail管理界面访问"
-echo "  3. 邮件模板创建"
-echo "  4. API密钥配置"
+# 3. 测试邮件模板创建
+echo "🧪 请在BillionMail管理界面测试以下功能："
+echo "  1. 创建邮箱验证码模板 (email_verification)"
+echo "  2. 测试模板变量 {{verification_code}}, {{user_name}} 等"
+echo "  3. 发送测试邮件验证模板正常工作"
 
-# 4. 验证环境变量配置
+# 4. 测试前端验证码功能
+echo ""
+echo "🧪 请测试前端验证码功能："
+echo "  1. 用户注册时邮箱验证码发送"
+echo "  2. 验证码输入和校验"
+echo "  3. 重发验证码功能"
+echo "  4. 验证码过期和错误次数限制"
+
+# 5. 验证环境变量配置
 echo ""
 echo "📋 验证环境变量配置："
 echo "BILLIONMAIL_API_URL: ${BILLIONMAIL_API_URL:-'未设置'}"
@@ -690,10 +1131,11 @@ echo "⚠️  如果API密钥未设置，请在BillionMail管理界面获取并�
 
 - [ ] 在BillionMail管理界面创建管理员账户
 - [ ] 配置SMTP邮件服务商（阿里云/腾讯云等）
-- [ ] 创建系统邮件模板（welcome_email, password_reset等）
+- [ ] 创建邮箱验证码邮件模板 ⭐
+- [ ] 创建其他系统邮件模板（welcome_email, password_reset等）
 - [ ] 获取API密钥并更新环境变量
 - [ ] 创建默认邮件列表
-- [ ] 测试邮件发送功能
+- [ ] 测试验证码邮件发送功能 ⭐
 
 ### **可选优化配置**
 
@@ -702,6 +1144,7 @@ echo "⚠️  如果API密钥未设置，请在BillionMail管理界面获取并�
 - [ ] 配置A/B测试模板
 - [ ] 设置邮件统计和分析
 - [ ] 配置webhook回调
+- [ ] 验证码Redis存储优化（生产环境）
 
 ---
 
@@ -716,6 +1159,7 @@ echo "⚠️  如果API密钥未设置，请在BillionMail管理界面获取并�
          │                       │                       │
          ├─ 邮件订阅表单 ─────────────────────────────┤
          ├─ 用户交互界面         ├─ 内容API              ├─ 邮件发送
+         ├─ 邮箱验证码 ───────────────────────────────┤
          └─ 系统邮件发送         └─ 用户认证              └─ 营销自动化
 ```
 
@@ -728,6 +1172,8 @@ echo "⚠️  如果API密钥未设置，请在BillionMail管理界面获取并�
 3. **API密钥**：必须在BillionMail管理界面获取API密钥
 4. **SMTP配置**：需要配置真实的SMTP服务商才能发送邮件
 5. **防火墙**：确保容器间网络通信正常
+6. **验证码安全**：生产环境建议使用Redis存储验证码 ⭐
+7. **邮件模板**：验证码邮件模板必须包含正确的变量名 ⭐
 
 ---
 
@@ -745,6 +1191,21 @@ docker ps | grep billionmail
 
 # 检查网络连接
 curl -v http://localhost:8080/api/health
+
+# 测试验证码邮件发送
+curl -X POST http://localhost:8080/api/emails/send \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "to": "test@example.com",
+    "template_id": "email_verification",
+    "variables": {
+      "user_name": "测试用户",
+      "verification_code": "123456",
+      "expiry_time": "10分钟",
+      "site_name": "AI变现之路"
+    }
+  }'
 ```
 
 ---
@@ -753,11 +1214,35 @@ curl -v http://localhost:8080/api/health
 
 执行完成后需要更新以下文档：
 
-- [ ] `README.md` - 更新项目架构说明
+- [ ] `README.md` - 更新项目架构说明，添加BillionMail邮箱验证码功能
 - [ ] `API-ENDPOINTS.md` - 移除自建邮件API文档
 - [ ] `docs/当前开发/AI变现之路项目功能完成清单_v2.0.md` - 标记邮件功能为BillionMail完成
 - [ ] 项目部署文档 - 添加BillionMail部署说明
+- [ ] 用户注册流程文档 - 更新为使用BillionMail验证码
 
 ---
 
-执行完成后，您将拥有一个完全集成的BillionMail邮件营销系统，替换掉所有现有的自建邮件功能！🚀
+## 🎯 **验证码功能特色**
+
+### **安全特性**
+- ✅ 6位数随机验证码
+- ✅ 10分钟有效期
+- ✅ 最多3次验证机会
+- ✅ 1分钟重发间隔限制
+- ✅ 自动清理过期验证码
+
+### **用户体验**
+- ✅ 实时倒计时显示
+- ✅ 智能重发控制
+- ✅ 友好的错误提示
+- ✅ 专业的邮件模板
+- ✅ 移动端适配
+
+### **技术优势**
+- ✅ 完全依赖BillionMail发送
+- ✅ 无需维护SMTP配置
+- ✅ 专业的邮件送达率
+- ✅ 完整的发送统计
+- ✅ 可扩展的模板系统
+
+执行完成后，您将拥有一个完全集成的BillionMail邮件营销系统，包含专业的用户注册邮箱验证码功能！🚀📧
