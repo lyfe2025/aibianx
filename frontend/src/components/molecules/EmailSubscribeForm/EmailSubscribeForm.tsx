@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useToast } from '@/components/ui'
 import { HERO_CONTENT, HERO_STYLES, EMAIL_REGEX } from '@/constants/heroSection'
+import { useEmailSubscription } from '@/lib/hooks/useEmailSubscription'
 
 interface EmailSubscribeFormProps {
     className?: string
@@ -21,9 +22,9 @@ interface EmailSubscribeFormProps {
  */
 export function EmailSubscribeForm({ className }: EmailSubscribeFormProps) {
     const [email, setEmail] = useState('')
-    const [isSubmitting, setIsSubmitting] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
     const { showSuccess, showError } = useToast()
+    const { subscribe, isLoading: isSubmitting, validateEmailFormat } = useEmailSubscription()
 
     const handleSubscribe = async () => {
         if (isSubmitting) return
@@ -34,37 +35,26 @@ export function EmailSubscribeForm({ className }: EmailSubscribeFormProps) {
             return
         }
 
-        if (!EMAIL_REGEX.test(email)) {
+        if (!validateEmailFormat(email.trim())) {
             showError(HERO_CONTENT.invalidEmailMessage)
             return
         }
 
-        setIsSubmitting(true)
-
         try {
-            // 调用新的邮件订阅API
-            const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/email-subscription/subscribe`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email.trim(),
-                    source: 'homepage',
-                    tags: ['newsletter'] // 默认订阅新闻简报
-                })
+            // 使用BillionMail订阅API
+            const result = await subscribe({
+                email: email.trim(),
+                name: '', // 可以后续添加姓名字段
+                tags: ['newsletter', 'homepage'], // 标记来源
+                preferences: {
+                    newsletter: true,
+                    marketing: false,
+                    updates: true
+                }
             })
 
-            const result = await response.json()
-
-            if (response.ok) {
-                if (result.status === 'success') {
-                    showSuccess('订阅成功！欢迎加入AI变现之路社区，欢迎邮件已发送至您的邮箱')
-                } else if (result.status === 'existing') {
-                    showSuccess('您已经订阅过了，感谢支持！')
-                } else if (result.status === 'resubscribed') {
-                    showSuccess('欢迎回来！您已重新订阅我们的邮件列表')
-                }
+            if (result.success) {
+                showSuccess('订阅成功！欢迎加入AI变现之路社区，欢迎邮件已发送至您的邮箱')
                 setEmail('') // 清空输入框
             } else {
                 showError(result.message || HERO_CONTENT.errorMessage)
@@ -72,8 +62,6 @@ export function EmailSubscribeForm({ className }: EmailSubscribeFormProps) {
         } catch (error) {
             console.error('订阅失败:', error)
             showError(HERO_CONTENT.errorMessage)
-        } finally {
-            setIsSubmitting(false)
         }
     }
 

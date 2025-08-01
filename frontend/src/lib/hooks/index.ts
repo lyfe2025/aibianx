@@ -11,6 +11,7 @@ export { useWeeklyLogicWithAPI } from './useWeeklyLogicWithAPI'
 export { useSettingsLogic } from './useSettingsLogic'
 export { useBookmarksLogic } from './useBookmarksLogic'
 export { useHomeArticles } from './useHomeArticles'
+export { useEmailSubscription } from './useEmailSubscription'
 
 // 系统配置相关Hooks
 export {

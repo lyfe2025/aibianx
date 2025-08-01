@@ -2,7 +2,7 @@
 
 # 🔥 完全自动化的内容类型配置脚本
 # 功能：自动配置数据库表注释和字段描述
-# 用法：./scripts/content-type/configure-content-type.sh smtp-config
+# 用法：./scripts/content-type/configure-content-type.sh article
 
 set -e
 
@@ -37,11 +37,11 @@ configure_content_type() {
     if [ -z "$content_type" ]; then
         log_error "请指定内容类型名称"
         echo "用法: $0 <content-type-name>"
-        echo "示例: $0 smtp-config"
+        echo "示例: $0 article"
         exit 1
     fi
     
-    # 转换为表名 (smtp-config -> smtp_configs)
+    # 转换为表名 (article -> articles)
     local table_name="${content_type//-/_}s"
     local schema_file="backend/src/api/${content_type}/content-types/${content_type}/schema.json"
     

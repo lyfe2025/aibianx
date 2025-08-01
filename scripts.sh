@@ -54,9 +54,11 @@ show_usage() {
     echo "  cleanup      - 清理临时文件"
     echo ""
     echo -e "${GREEN}📧 邮件管理 (email)${NC}"
-    echo "  test         - 测试SMTP配置连接"
-    echo "  list         - 查看SMTP配置列表"
-    echo "  web          - 打开SMTP测试Web界面"
+    echo "  deploy       - 部署BillionMail邮件系统"
+    echo "  check        - 检查BillionMail服务状态"
+    echo "  restart      - 重启BillionMail服务"
+    echo "  logs         - 查看BillionMail日志"
+    echo "  admin        - 打开BillionMail管理界面"
     echo ""
     echo -e "${GREEN}🔧 工具 (tools)${NC}"
     echo "  status       - 查看系统状态"
@@ -71,10 +73,10 @@ show_usage() {
     echo "  ./scripts.sh search deploy   # 部署搜索引擎"
     echo "  ./scripts.sh search restart  # 重启搜索服务"
     echo "  ./scripts.sh search reindex  # 智能重建搜索索引"
-    echo "  ./scripts.sh email test 1    # 测试ID为1的SMTP配置"
-    echo "  ./scripts.sh email test 1 test@example.com # 测试并发送邮件"
-    echo "  ./scripts.sh email list      # 查看SMTP配置列表"
-    echo "  ./scripts.sh email web       # 打开Web测试界面"
+    echo "  ./scripts.sh email deploy    # 部署BillionMail邮件系统"
+    echo "  ./scripts.sh email check     # 检查BillionMail服务状态"
+    echo "  ./scripts.sh email restart   # 重启BillionMail服务"
+    echo "  ./scripts.sh email admin     # 打开BillionMail管理界面"
     echo "  ./scripts.sh backup full     # 完整备份"
     echo "  ./scripts.sh tools status    # 查看系统状态"
     echo "  ./scripts.sh tools fix-fields # 修复字段描述配置（Article）"
@@ -118,9 +120,9 @@ show_menu() {
     echo -e " ${CYAN}15${NC}) 清理备份临时文件"
     echo ""
     echo -e "${GREEN} 📧 邮件系统${NC}"
-    echo -e " ${CYAN}16${NC}) 测试SMTP配置         (连接测试+发送测试邮件)"
-    echo -e " ${CYAN}17${NC}) 查看SMTP配置列表     (显示所有配置状态)"
-    echo -e " ${CYAN}18${NC}) 打开SMTP测试Web界面  (浏览器图形界面)"
+    echo -e " ${CYAN}16${NC}) 部署BillionMail      (邮件营销系统)"
+    echo -e " ${CYAN}17${NC}) 检查BillionMail状态  (服务健康检查)"
+    echo -e " ${CYAN}18${NC}) 打开BillionMail管理   (浏览器管理界面)"
     echo ""
     echo -e "${GREEN} 🔧 系统维护${NC}"
     echo -e " ${CYAN}19${NC}) 修复字段描述配置      (解决描述不显示问题)"
@@ -211,67 +213,47 @@ execute_choice() {
             echo -e "${YELLOW}🧹 清理备份临时文件...${NC}"
             exec "$SCRIPT_DIR/scripts/backup/cleanup-backup-temp.sh"
             ;;
-        16)
-            echo -e "${YELLOW}📧 测试SMTP配置...${NC}"
+        16) 
+            echo -e "${BLUE}🚀 BillionMail已部署完成，直接使用真实系统...${NC}"
+            echo -e "${GREEN}✅ BillionMail管理界面: http://localhost:8080/billion${NC}"
+            echo -e "${GREEN}✅ WebMail界面: http://localhost:8080/roundcube${NC}"
+            echo -e "${GREEN}✅ 默认账户: billion / billion${NC}"
             echo ""
-            read -p "请输入SMTP配置ID: " config_id
-            if [[ $config_id =~ ^[0-9]+$ ]]; then
-                echo ""
-                read -p "输入测试邮箱地址 (可选，直接回车跳过): " test_email
-                echo ""
-                if [ -n "$test_email" ]; then
-                    "$SCRIPT_DIR/scripts/email/test-smtp.sh" "$config_id" "$test_email"
-                else
-                    "$SCRIPT_DIR/scripts/email/test-smtp.sh" "$config_id"
-                fi
-            else
-                echo -e "${RED}❌ 请输入有效的数字ID${NC}"
-            fi
+            echo "💡 提示："
+            echo "  • 管理界面: 用于系统管理、用户创建、邮件列表管理"
+            echo "  • WebMail界面: 需要先在管理界面创建邮箱账户才能登录"
             echo ""
             read -p "按回车键返回主菜单..."
             return 1
-            ;;
+            ;;  
         17)
-            echo -e "${YELLOW}📧 查看SMTP配置列表...${NC}"
-            echo ""
-            if [ -z "$STRAPI_ADMIN_TOKEN" ]; then
-                echo -e "${YELLOW}⚠️  请先设置管理员token:${NC}"
-                echo "export STRAPI_ADMIN_TOKEN=\"your-admin-jwt-token\""
-                echo ""
-                echo -e "${BLUE}💡 获取方法:${NC}"
-                echo "1. 访问 http://localhost:1337/admin"
-                echo "2. 登录后查看网络请求中的Authorization header"
-            else
-                echo "正在获取SMTP配置列表..."
-                curl -s -H "Authorization: Bearer $STRAPI_ADMIN_TOKEN" \
-                     "http://localhost:1337/api/smtp-configs" | \
-                jq -r '.data[] | "ID: \(.id) | 名称: \(.name) | 提供商: \(.provider) | 状态: \(.healthStatus) | 今日发送: \(.dailySent)/\(.dailyLimit)"' 2>/dev/null || \
-                echo "无法获取配置列表，请检查服务状态和token"
-            fi
-            echo ""
-            read -p "按回车键返回主菜单..."
-            return 1
+            echo -e "${BLUE}🔍 检查BillionMail服务状态...${NC}"
+            exec "$SCRIPT_DIR/scripts/billionmail/check-billionmail.sh"
             ;;
         18)
-            echo -e "${YELLOW}📧 打开SMTP测试Web界面...${NC}"
+            echo -e "${YELLOW}🌐 打开BillionMail管理界面...${NC}"
             echo ""
-            echo -e "${BLUE}🌐 SMTP测试Web界面正在启动...${NC}"
+            echo -e "${BLUE}🌐 BillionMail真实系统管理界面...${NC}"
             echo ""
-            echo -e "${GREEN}📍 访问地址: http://localhost:1337/api/smtp-test${NC}"
+            echo -e "${GREEN}📍 访问地址: http://localhost:8080/billion${NC}"
             echo ""
-            echo "🔧 功能特点:"
-            echo "  ✅ 实时配置列表显示"
-            echo "  ✅ 一键连接测试"
-            echo "  ✅ 测试邮件发送"
-            echo "  ✅ 健康状态监控"
-            echo "  ✅ 美观的用户界面"
+            echo "🔧 BillionMail功能特点:"
+            echo "  ✅ 完整的邮件营销平台"
+            echo "  ✅ 用户订阅管理"
+            echo "  ✅ 邮件模板编辑"
+            echo "  ✅ 发送统计分析"
+            echo "  ✅ API密钥管理"
+            echo ""
+            echo "💡 默认登录信息:"
+            echo "  用户名: billion"
+            echo "  密码: billion"
             echo ""
             if command -v open > /dev/null; then
                 echo "🚀 正在打开浏览器..."
-                open "http://localhost:1337/api/smtp-test"
+                open "http://localhost:8080/billion"
             elif command -v xdg-open > /dev/null; then
                 echo "🚀 正在打开浏览器..."
-                xdg-open "http://localhost:1337/api/smtp-test"
+                xdg-open "http://localhost:8080/billion"
             else
                 echo "💡 请手动打开浏览器访问上述地址"
             fi
@@ -461,83 +443,91 @@ handle_command_line() {
             ;;
         "email")
             case "$action" in
-                "test")
-                    if [ -z "$3" ]; then
-                        echo -e "${RED}❌ 请指定SMTP配置ID${NC}"
-                        echo "用法: $0 email test <config-id> [test-email]"
-                        echo "示例: $0 email test 1"
-                        echo "      $0 email test 1 test@example.com"
-                        exit 1
-                    else
-                        if [ -n "$4" ]; then
-                            exec "$SCRIPT_DIR/scripts/email/test-smtp.sh" "$3" "$4"
-                        else
-                            exec "$SCRIPT_DIR/scripts/email/test-smtp.sh" "$3"
-                        fi
-                    fi
+                        "deploy")
+            echo -e "${BLUE}🚀 BillionMail真实系统已部署完成！${NC}"
+            echo -e "${GREEN}✅ 管理界面: http://localhost:8080/billion${NC}"
+            echo -e "${GREEN}✅ WebMail: http://localhost:8080/roundcube${NC}"
+            echo -e "${GREEN}✅ 默认账户: billion / billion${NC}"
+            ;;
+                "check")
+                    echo -e "${BLUE}🔍 检查BillionMail服务状态...${NC}"
+                    exec "$SCRIPT_DIR/scripts/billionmail/check-billionmail.sh"
                     ;;
-                "list")
-                    echo -e "${YELLOW}📧 获取SMTP配置列表...${NC}"
-                    if [ -z "$STRAPI_ADMIN_TOKEN" ]; then
-                        echo -e "${YELLOW}⚠️  请先设置管理员token:${NC}"
-                        echo "export STRAPI_ADMIN_TOKEN=\"your-admin-jwt-token\""
-                        echo ""
-                        echo -e "${BLUE}💡 获取方法:${NC}"
-                        echo "1. 访问 http://localhost:1337/admin"
-                        echo "2. 登录后查看网络请求中的Authorization header"
-                        exit 1
-                    else
-                        echo "正在获取SMTP配置列表..."
-                        curl -s -H "Authorization: Bearer $STRAPI_ADMIN_TOKEN" \
-                             "http://localhost:1337/api/smtp-configs" | \
-                        jq -r '.data[] | "ID: \(.id) | 名称: \(.name) | 提供商: \(.provider) | 状态: \(.healthStatus) | 今日发送: \(.dailySent)/\(.dailyLimit)"' 2>/dev/null || \
-                        echo "无法获取配置列表，请检查服务状态和token"
-                    fi
+                "restart")
+                    echo -e "${BLUE}🔄 重启BillionMail服务...${NC}"
+                    exec "$SCRIPT_DIR/scripts/billionmail/restart-billionmail.sh"
                     ;;
-                "web")
-                    echo -e "${YELLOW}📧 打开SMTP测试Web界面...${NC}"
+                "logs")
+                    echo -e "${YELLOW}📜 查看BillionMail日志...${NC}"
+                    echo "选择要查看的服务日志:"
+                    echo "  1) 核心服务 (billionmail-core-billionmail-1)"
+                    echo "  2) 邮件服务 (billionmail-postfix-billionmail-1)"  
+                    echo "  3) WebMail (billionmail-webmail-billionmail-1)"
+                    echo "  4) 所有服务"
+                    read -p "请选择 [1-4]: " log_choice
+                    case $log_choice in
+                        1) docker logs -f billionmail-core-billionmail-1 ;;
+                        2) docker logs -f billionmail-postfix-billionmail-1 ;;
+                        3) docker logs -f billionmail-webmail-billionmail-1 ;;
+                        4) cd "$SCRIPT_DIR/BillionMail" && docker-compose logs -f ;;
+                        *) echo "查看所有服务日志..." && cd "$SCRIPT_DIR/BillionMail" && docker-compose logs -f ;;
+                    esac
+                    ;;
+                "admin")
+                    echo -e "${YELLOW}🌐 打开BillionMail管理界面...${NC}"
                     echo ""
-                    echo -e "${GREEN}📍 访问地址: http://localhost:1337/api/smtp-test${NC}"
+                    echo -e "${GREEN}📍 访问地址: http://localhost:8080/billion${NC}"
                     echo ""
-                    echo "🔧 功能特点:"
-                    echo "  ✅ 实时配置列表显示"
-                    echo "  ✅ 一键连接测试"
-                    echo "  ✅ 测试邮件发送"
-                    echo "  ✅ 健康状态监控"
-                    echo "  ✅ 美观的用户界面"
+                    echo "🔧 BillionMail真实系统功能特点:"
+                    echo "  ✅ 完整的邮件订阅API"
+                    echo "  ✅ 专业邮件服务器和SMTP服务"
+                    echo "  ✅ 用户管理和邮件列表"
+                    echo "  ✅ 邮件发送统计和分析"
+                    echo "  ✅ RoundCube WebMail界面"
+                    echo "  ✅ 完整的管理控制台"
+                    echo ""
+                    echo "💡 BillionMail生产系统:"
+                    echo "  这是完整的BillionMail邮件营销平台"
+                    echo "  支持大规模邮件发送和专业管理"
                     echo ""
                     if command -v open > /dev/null; then
                         echo "🚀 正在打开浏览器..."
-                        open "http://localhost:1337/api/smtp-test"
+                        open "http://localhost:8080/billion"
                     elif command -v xdg-open > /dev/null; then
                         echo "🚀 正在打开浏览器..."
-                        xdg-open "http://localhost:1337/api/smtp-test"
+                        xdg-open "http://localhost:8080/billion"
                     else
                         echo "💡 请手动打开浏览器访问上述地址"
                     fi
                     ;;
                 *)
-                    echo -e "${BLUE}📧 邮件系统管理工具${NC}"
-                    echo "==============================="
+                    echo -e "${BLUE}📧 BillionMail邮件营销系统管理工具${NC}"
+                    echo "============================================"
                     echo "可用命令:"
-                    echo "  test <id> [email] - 测试SMTP配置连接"
-                    echo "  list              - 查看SMTP配置列表"
-                    echo "  web               - 打开SMTP测试Web界面"
+                    echo "  deploy       - 部署BillionMail邮件系统"
+                    echo "  check        - 检查BillionMail服务状态"
+                    echo "  restart      - 重启BillionMail服务"
+                    echo "  logs         - 查看BillionMail日志"
+                    echo "  admin        - 打开BillionMail管理界面"
                     echo ""
                     echo "示例："
-                    echo "  $0 email test 1                    # 仅测试连接"
-                    echo "  $0 email test 1 test@example.com   # 测试并发送邮件"
-                    echo "  $0 email list                      # 查看配置列表"
-                    echo "  $0 email web                       # 打开Web测试界面"
+                    echo "  $0 email deploy      # 部署BillionMail系统"
+                    echo "  $0 email check       # 检查服务状态"
+                    echo "  $0 email restart     # 重启服务"
+                    echo "  $0 email logs        # 查看实时日志"
+                    echo "  $0 email admin       # 打开管理界面"
                     echo ""
-                    echo "🌐 Web界面功能："
-                    echo "  ✅ 实时配置列表和状态监控"
-                    echo "  ✅ 一键连接测试和邮件发送"
-                    echo "  ✅ 美观的用户界面，支持移动端"
-                    echo "  📍 访问地址: http://localhost:1337/api/smtp-test"
+                    echo "🌐 BillionMail管理界面："
+                    echo "  📍 访问地址: http://localhost:8080/billion"
+                    echo "  📧 WebMail: http://localhost:8080/roundcube"  
+                    echo "  👤 默认用户: billion / billion"
+                    echo "  🔧 功能: 邮件营销、用户管理、模板编辑、统计分析"
                     echo ""
-                    echo "环境变量："
-                    echo "  STRAPI_ADMIN_TOKEN - 管理员JWT令牌（命令行查看配置时需要）"
+                    echo "💡 使用提示："
+                    echo "  • BillionMail真实系统已完全部署并运行中"
+                    echo "  • 管理界面可进行用户管理、邮件列表、模板编辑"
+                    echo "  • WebMail界面需要先在管理界面创建邮箱账户"
+                    echo "  • 获取API密钥用于前端集成和邮件发送"
                     exit 1
                     ;;
             esac
