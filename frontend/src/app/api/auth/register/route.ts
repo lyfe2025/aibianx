@@ -1,117 +1,195 @@
-import { NextRequest, NextResponse } from 'next/server';
+/**
+ * 用户注册API - 集成BillionMail邮件发送
+ */
+
+import { NextRequest, NextResponse } from 'next/server'
+import { config } from '@/lib/config'
+import { sendAccountVerificationEmail, sendWelcomeEmailForUser } from '@/lib/nextauth-email'
+import { subscribeEmail } from '@/lib/billionmail'
+
+interface RegisterRequest {
+  email: string
+  password: string
+  username?: string
+  firstName?: string
+  lastName?: string
+  autoSubscribe?: boolean // 是否自动订阅邮件列表
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, username, name } = await request.json();
+    const body: RegisterRequest = await request.json()
+    const { email, password, username, firstName, lastName, autoSubscribe = true } = body
 
-    if (!email || !password || !username) {
+    // 验证必需字段
+    if (!email || !password) {
       return NextResponse.json(
-        { error: '邮箱、密码和用户名不能为空' },
+        { error: '邮箱和密码为必填项' },
         { status: 400 }
-      );
+      )
     }
 
     // 验证邮箱格式
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: '邮箱地址格式不正确' },
+        { error: '邮箱格式不正确' },
         { status: 400 }
-      );
+      )
     }
 
     // 验证密码强度
     if (password.length < 6) {
       return NextResponse.json(
-        { error: '密码长度不能少于6位' },
+        { error: '密码长度至少6位' },
         { status: 400 }
-      );
+      )
     }
 
-    // 调用Strapi注册API
+    const strapiUrl = config.backend.url
+    const displayName = username || firstName || email.split('@')[0]
+
     try {
-      const strapiResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/auth/local/register`, {
+      // 1. 检查用户是否已存在
+      const checkResponse = await fetch(`${strapiUrl}/api/users?filters[email][$eq]=${email}`)
+      if (checkResponse.ok) {
+        const existingUsers = await checkResponse.json()
+        if (existingUsers.length > 0) {
+          return NextResponse.json(
+            { error: '该邮箱已被注册' },
+            { status: 409 }
+          )
+        }
+      }
+
+      // 2. 注册用户到Strapi
+      const registerResponse = await fetch(`${strapiUrl}/api/auth/local/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username,
+          username: displayName,
           email,
           password,
-          name: name || username
-        })
-      });
+        }),
+      })
 
-      const result = await strapiResponse.json();
-
-      if (!strapiResponse.ok) {
-        // 处理Strapi返回的错误
-        let errorMessage = '注册失败';
-        
-        if (result.error) {
-          if (result.error.message.includes('Email')) {
-            errorMessage = '该邮箱已被注册';
-          } else if (result.error.message.includes('username')) {
-            errorMessage = '该用户名已被使用';
-          } else {
-            errorMessage = result.error.message;
-          }
-        }
-
+      if (!registerResponse.ok) {
+        const errorData = await registerResponse.json()
+        console.error('❌ Strapi注册失败:', errorData)
         return NextResponse.json(
-          { error: errorMessage },
-          { status: strapiResponse.status }
-        );
+          { error: errorData.error?.message || '注册失败，请稍后重试' },
+          { status: 400 }
+        )
       }
 
-      // 注册成功，发送欢迎邮件
-      try {
-        await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/email-subscription/subscribe`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.STRAPI_API_TOKEN}`,
-          },
-          body: JSON.stringify({
+      const userData = await registerResponse.json()
+      console.log('✅ 用户注册成功:', userData.user.email)
+
+      // 3. 并行处理邮件发送
+      const emailPromises = []
+
+      // 发送账户验证邮件
+      const verificationUrl = `${process.env.NEXTAUTH_URL || 'http://localhost'}/auth/verify?token=${userData.jwt}&email=${email}`
+      emailPromises.push(
+        sendAccountVerificationEmail(email, displayName, verificationUrl)
+          .then(result => ({ type: 'verification', result }))
+          .catch(error => ({ type: 'verification', error: error.message }))
+      )
+
+      // 发送欢迎邮件
+      emailPromises.push(
+        sendWelcomeEmailForUser(email, displayName)
+          .then(result => ({ type: 'welcome', result }))
+          .catch(error => ({ type: 'welcome', error: error.message }))
+      )
+
+      // 如果选择自动订阅，添加到邮件列表
+      if (autoSubscribe) {
+        emailPromises.push(
+          subscribeEmail({
             email,
-            name: name || username,
-            source: 'register',
-            tags: ['new-user']
-          })
-        });
-      } catch (welcomeError) {
-        console.error('发送欢迎邮件失败:', welcomeError);
-        // 不因为欢迎邮件失败而影响注册成功
+            name: displayName,
+            tags: ['new-user', 'auto-subscribe'],
+            preferences: {
+              newsletter: true,
+              marketing: false,
+              updates: true
+            }
+          }).then(result => ({ type: 'subscribe', result }))
+            .catch(error => ({ type: 'subscribe', error: error.message }))
+        )
       }
 
-      console.log(`用户注册成功: ${email} (${username})`);
+      // 等待所有邮件操作完成
+      const emailResults = await Promise.allSettled(emailPromises)
+      
+      // 记录邮件发送结果
+      emailResults.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+          const { type, result: emailResult, error } = result.value
+          if (error) {
+            console.error(`❌ ${type} 邮件发送失败:`, error)
+          } else {
+            console.log(`✅ ${type} 邮件发送成功`)
+          }
+        } else {
+          console.error(`❌ 邮件操作失败:`, result.reason)
+        }
+      })
 
+      // 返回成功响应（不包含敏感信息）
       return NextResponse.json({
         success: true,
-        message: '注册成功',
+        message: '注册成功！请查收验证邮件',
         user: {
-          id: result.user.id,
-          username: result.user.username,
-          email: result.user.email,
-          name: result.user.name
+          id: userData.user.id,
+          email: userData.user.email,
+          username: userData.user.username,
+          firstName: userData.user.firstName,
+          lastName: userData.user.lastName,
         },
-        jwt: result.jwt
-      });
+        emailSent: {
+          verification: true,
+          welcome: true,
+          subscribed: autoSubscribe
+        }
+      })
 
-    } catch (strapiError) {
-      console.error('Strapi注册失败:', strapiError);
+    } catch (error) {
+      console.error('❌ 注册过程中出错:', error)
       return NextResponse.json(
-        { error: '注册服务暂时不可用，请稍后重试' },
+        { error: '注册失败，请稍后重试' },
         { status: 500 }
-      );
+      )
     }
 
   } catch (error) {
-    console.error('注册失败:', error);
+    console.error('❌ 注册API错误:', error)
     return NextResponse.json(
       { error: '服务器错误' },
       { status: 500 }
-    );
+    )
   }
+}
+
+// 获取注册表单配置
+export async function GET() {
+  return NextResponse.json({
+    fields: {
+      email: { required: true, type: 'email' },
+      password: { required: true, type: 'password', minLength: 6 },
+      username: { required: false, type: 'text' },
+      firstName: { required: false, type: 'text' },
+      lastName: { required: false, type: 'text' },
+      autoSubscribe: { required: false, type: 'boolean', default: true }
+    },
+    features: {
+      emailVerification: true,
+      welcomeEmail: true,
+      autoSubscribe: true,
+      billionMailIntegration: true
+    }
+  })
 }
