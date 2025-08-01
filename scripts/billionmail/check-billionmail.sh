@@ -82,32 +82,33 @@ fi
 
 echo ""
 
-# 检查端口可访问性
-echo -e "${YELLOW}🔍 检查服务端口...${NC}"
-
-# 检查管理端口8080
-if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 | grep -q "200"; then
-    echo -e "${GREEN}✅ 管理界面端口8080可访问${NC}"
-else
-    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
-    echo -e "${YELLOW}⚠️  管理界面端口8080状态码: $HTTP_CODE${NC}"
-fi
+# 检查服务接口
+echo -e "${YELLOW}🔍 检查服务接口...${NC}"
 
 # 检查管理界面
 HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/billion)
 if echo "$HTTP_CODE" | grep -qE "^(200|302)$"; then
-    echo -e "${GREEN}✅ 管理界面 /billion 可访问${NC}"
-    echo "  状态码: $HTTP_CODE (正常重定向)"
+    echo -e "${GREEN}✅ 管理界面可访问${NC}"
+    echo "  地址: http://localhost:8080/billion"
+    echo "  状态: 正常运行"
 else
-    echo -e "${RED}❌ 管理界面 /billion 不可访问${NC}"
+    echo -e "${RED}❌ 管理界面不可访问${NC}"
+    echo "  地址: http://localhost:8080/billion" 
     echo "  状态码: $HTTP_CODE"
+    echo "  请检查服务是否正常启动"
 fi
 
 # 检查WebMail界面
-if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/roundcube | grep -q "200"; then
-    echo -e "${GREEN}✅ WebMail界面 /roundcube 可访问${NC}"
+WEBMAIL_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/roundcube)
+if echo "$WEBMAIL_CODE" | grep -qE "^(200|302)$"; then
+    echo -e "${GREEN}✅ WebMail界面可访问${NC}"
+    echo "  地址: http://localhost:8080/roundcube"
+    echo "  状态: 正常运行"
 else
-    echo -e "${RED}❌ WebMail界面 /roundcube 不可访问${NC}"
+    echo -e "${YELLOW}⚠️  WebMail界面暂不可用${NC}"
+    echo "  地址: http://localhost:8080/roundcube"
+    echo "  状态码: $WEBMAIL_CODE"
+    echo "  说明: WebMail服务可能需要更多时间启动"
 fi
 
 echo ""
@@ -128,19 +129,20 @@ fi
 
 echo ""
 echo -e "${BLUE}📍 BillionMail服务信息:${NC}"
-echo "管理界面:    http://localhost:8080/billion"
-echo "WebMail:     http://localhost:8080/roundcube"
-echo "默认账户:    billion / billion"
+echo -e "${GREEN}管理界面:${NC}    http://localhost:8080/billion"
+echo -e "${GREEN}WebMail:${NC}     http://localhost:8080/roundcube"
+echo -e "${GREEN}默认账户:${NC}    billion / billion"
 echo ""
 echo -e "${BLUE}📧 邮件服务端口:${NC}"
 echo "SMTP:        25, 465, 587"
 echo "IMAP:        143, 993"
 echo "POP3:        110, 995"
 echo ""
-echo -e "${BLUE}💡 使用提示:${NC}"
-echo "  查看日志: ./scripts.sh email logs"
-echo "  重启服务: ./scripts.sh email restart"
-echo "  打开管理: ./scripts.sh email admin"
+echo -e "${BLUE}💡 快速操作:${NC}"
+echo "  📋 查看日志: ./scripts.sh email logs"
+echo "  🔄 重启服务: ./scripts.sh email restart"
+echo "  🌐 打开管理: ./scripts.sh email admin"
+echo "  🧪 测试API:  ./scripts.sh email test"
 echo ""
 echo -e "${YELLOW}📖 系统特点:${NC}"
 echo "  ✅ 完整的邮件营销平台"

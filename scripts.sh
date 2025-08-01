@@ -58,6 +58,8 @@ show_usage() {
     echo "  check        - 检查BillionMail服务状态"
     echo "  restart      - 重启BillionMail服务"
     echo "  logs         - 查看BillionMail日志"
+    echo "  test         - 测试BillionMail API连接"
+    echo "  fulltest     - 运行完整集成测试"
     echo "  admin        - 打开BillionMail管理界面"
     echo ""
     echo -e "${GREEN}🔧 工具 (tools)${NC}"
@@ -73,10 +75,12 @@ show_usage() {
     echo "  ./scripts.sh search deploy   # 部署搜索引擎"
     echo "  ./scripts.sh search restart  # 重启搜索服务"
     echo "  ./scripts.sh search reindex  # 智能重建搜索索引"
-    echo "  ./scripts.sh email deploy    # 部署BillionMail邮件系统"
-    echo "  ./scripts.sh email check     # 检查BillionMail服务状态"
-    echo "  ./scripts.sh email restart   # 重启BillionMail服务"
-    echo "  ./scripts.sh email admin     # 打开BillionMail管理界面"
+      echo "  ./scripts.sh email deploy    # 部署BillionMail邮件系统"
+  echo "  ./scripts.sh email check     # 检查BillionMail服务状态"
+  echo "  ./scripts.sh email restart   # 重启BillionMail服务"
+  echo "  ./scripts.sh email test      # 测试BillionMail API连接"
+  echo "  ./scripts.sh email fulltest  # 运行完整集成测试"
+  echo "  ./scripts.sh email admin     # 打开BillionMail管理界面"
     echo "  ./scripts.sh backup full     # 完整备份"
     echo "  ./scripts.sh tools status    # 查看系统状态"
     echo "  ./scripts.sh tools fix-fields # 修复字段描述配置（Article）"
@@ -473,6 +477,14 @@ handle_command_line() {
                         *) echo "查看所有服务日志..." && cd "$SCRIPT_DIR/BillionMail" && docker-compose logs -f ;;
                     esac
                     ;;
+                "test")
+                    echo -e "${BLUE}🧪 测试BillionMail API连接...${NC}"
+                    exec "$SCRIPT_DIR/scripts/billionmail/test-api.sh"
+                    ;;
+                "fulltest")
+                    echo -e "${BLUE}🧪 运行BillionMail完整集成测试...${NC}"
+                    exec "$SCRIPT_DIR/scripts/billionmail/test-integration-full.sh"
+                    ;;
                 "admin")
                     echo -e "${YELLOW}🌐 打开BillionMail管理界面...${NC}"
                     echo ""
@@ -508,6 +520,8 @@ handle_command_line() {
                     echo "  check        - 检查BillionMail服务状态"
                     echo "  restart      - 重启BillionMail服务"
                     echo "  logs         - 查看BillionMail日志"
+                    echo "  test         - 测试BillionMail API连接"
+                    echo "  fulltest     - 运行完整集成测试"
                     echo "  admin        - 打开BillionMail管理界面"
                     echo ""
                     echo "示例："
@@ -515,6 +529,7 @@ handle_command_line() {
                     echo "  $0 email check       # 检查服务状态"
                     echo "  $0 email restart     # 重启服务"
                     echo "  $0 email logs        # 查看实时日志"
+                    echo "  $0 email test        # 测试API连接"
                     echo "  $0 email admin       # 打开管理界面"
                     echo ""
                     echo "🌐 BillionMail管理界面："
