@@ -53,6 +53,11 @@ show_usage() {
     echo "  restore      - 还原系统备份"
     echo "  cleanup      - 清理临时文件"
     echo ""
+    echo -e "${GREEN}📧 邮件管理 (email)${NC}"
+    echo "  test         - 测试SMTP配置连接"
+    echo "  list         - 查看SMTP配置列表"
+    echo "  web          - 打开SMTP测试Web界面"
+    echo ""
     echo -e "${GREEN}🔧 工具 (tools)${NC}"
     echo "  status       - 查看系统状态"
     echo "  env          - 加载环境变量"
@@ -66,6 +71,10 @@ show_usage() {
     echo "  ./scripts.sh search deploy   # 部署搜索引擎"
     echo "  ./scripts.sh search restart  # 重启搜索服务"
     echo "  ./scripts.sh search reindex  # 智能重建搜索索引"
+    echo "  ./scripts.sh email test 1    # 测试ID为1的SMTP配置"
+    echo "  ./scripts.sh email test 1 test@example.com # 测试并发送邮件"
+    echo "  ./scripts.sh email list      # 查看SMTP配置列表"
+    echo "  ./scripts.sh email web       # 打开Web测试界面"
     echo "  ./scripts.sh backup full     # 完整备份"
     echo "  ./scripts.sh tools status    # 查看系统状态"
     echo "  ./scripts.sh tools fix-fields # 修复字段描述配置（Article）"
@@ -108,9 +117,14 @@ show_menu() {
     echo -e " ${CYAN}14${NC}) 完整系统备份        (数据库+文件)"
     echo -e " ${CYAN}15${NC}) 清理备份临时文件"
     echo ""
+    echo -e "${GREEN} 📧 邮件系统${NC}"
+    echo -e " ${CYAN}16${NC}) 测试SMTP配置         (连接测试+发送测试邮件)"
+    echo -e " ${CYAN}17${NC}) 查看SMTP配置列表     (显示所有配置状态)"
+    echo -e " ${CYAN}18${NC}) 打开SMTP测试Web界面  (浏览器图形界面)"
+    echo ""
     echo -e "${GREEN} 🔧 系统维护${NC}"
-    echo -e " ${CYAN}16${NC}) 修复字段描述配置      (解决描述不显示问题)"
-    echo -e " ${CYAN}17${NC}) 自动配置环境变量      (创建开发环境配置)"
+    echo -e " ${CYAN}19${NC}) 修复字段描述配置      (解决描述不显示问题)"
+    echo -e " ${CYAN}20${NC}) 自动配置环境变量      (创建开发环境配置)"
     echo ""
     echo -e "${PURPLE} h${NC}) 显示命令行帮助"
     echo -e "${RED} 0${NC}) 退出"
@@ -198,10 +212,78 @@ execute_choice() {
             exec "$SCRIPT_DIR/scripts/backup/cleanup-backup-temp.sh"
             ;;
         16)
+            echo -e "${YELLOW}📧 测试SMTP配置...${NC}"
+            echo ""
+            read -p "请输入SMTP配置ID: " config_id
+            if [[ $config_id =~ ^[0-9]+$ ]]; then
+                echo ""
+                read -p "输入测试邮箱地址 (可选，直接回车跳过): " test_email
+                echo ""
+                if [ -n "$test_email" ]; then
+                    "$SCRIPT_DIR/scripts/email/test-smtp.sh" "$config_id" "$test_email"
+                else
+                    "$SCRIPT_DIR/scripts/email/test-smtp.sh" "$config_id"
+                fi
+            else
+                echo -e "${RED}❌ 请输入有效的数字ID${NC}"
+            fi
+            echo ""
+            read -p "按回车键返回主菜单..."
+            return 1
+            ;;
+        17)
+            echo -e "${YELLOW}📧 查看SMTP配置列表...${NC}"
+            echo ""
+            if [ -z "$STRAPI_ADMIN_TOKEN" ]; then
+                echo -e "${YELLOW}⚠️  请先设置管理员token:${NC}"
+                echo "export STRAPI_ADMIN_TOKEN=\"your-admin-jwt-token\""
+                echo ""
+                echo -e "${BLUE}💡 获取方法:${NC}"
+                echo "1. 访问 http://localhost:1337/admin"
+                echo "2. 登录后查看网络请求中的Authorization header"
+            else
+                echo "正在获取SMTP配置列表..."
+                curl -s -H "Authorization: Bearer $STRAPI_ADMIN_TOKEN" \
+                     "http://localhost:1337/api/smtp-configs" | \
+                jq -r '.data[] | "ID: \(.id) | 名称: \(.name) | 提供商: \(.provider) | 状态: \(.healthStatus) | 今日发送: \(.dailySent)/\(.dailyLimit)"' 2>/dev/null || \
+                echo "无法获取配置列表，请检查服务状态和token"
+            fi
+            echo ""
+            read -p "按回车键返回主菜单..."
+            return 1
+            ;;
+        18)
+            echo -e "${YELLOW}📧 打开SMTP测试Web界面...${NC}"
+            echo ""
+            echo -e "${BLUE}🌐 SMTP测试Web界面正在启动...${NC}"
+            echo ""
+            echo -e "${GREEN}📍 访问地址: http://localhost:1337/api/smtp-test${NC}"
+            echo ""
+            echo "🔧 功能特点:"
+            echo "  ✅ 实时配置列表显示"
+            echo "  ✅ 一键连接测试"
+            echo "  ✅ 测试邮件发送"
+            echo "  ✅ 健康状态监控"
+            echo "  ✅ 美观的用户界面"
+            echo ""
+            if command -v open > /dev/null; then
+                echo "🚀 正在打开浏览器..."
+                open "http://localhost:1337/api/smtp-test"
+            elif command -v xdg-open > /dev/null; then
+                echo "🚀 正在打开浏览器..."
+                xdg-open "http://localhost:1337/api/smtp-test"
+            else
+                echo "💡 请手动打开浏览器访问上述地址"
+            fi
+            echo ""
+            read -p "按回车键返回主菜单..."
+            return 1
+            ;;
+        19)
             echo -e "${BLUE}🔧 修复字段描述配置...${NC}"
             exec "$SCRIPT_DIR/scripts/tools/configure-field-descriptions.sh"
             ;;
-        17)
+        20)
             echo -e "${BLUE}🔧 自动配置环境变量...${NC}"
             exec "$SCRIPT_DIR/scripts/tools/setup-env.sh"
             ;;
@@ -374,6 +456,120 @@ handle_command_line() {
                     echo -e "${RED}❌ 未知的工具操作: $action${NC}"
                     echo "可用操作: status, env, fix-fields, fix-fields-any, setup-env"
                     exit 1
+                    ;;
+            esac
+            ;;
+        "email")
+            case "$action" in
+                "test")
+                    if [ -z "$3" ]; then
+                        echo -e "${RED}❌ 请指定SMTP配置ID${NC}"
+                        echo "用法: $0 email test <config-id> [test-email]"
+                        echo "示例: $0 email test 1"
+                        echo "      $0 email test 1 test@example.com"
+                        exit 1
+                    else
+                        if [ -n "$4" ]; then
+                            exec "$SCRIPT_DIR/scripts/email/test-smtp.sh" "$3" "$4"
+                        else
+                            exec "$SCRIPT_DIR/scripts/email/test-smtp.sh" "$3"
+                        fi
+                    fi
+                    ;;
+                "list")
+                    echo -e "${YELLOW}📧 获取SMTP配置列表...${NC}"
+                    if [ -z "$STRAPI_ADMIN_TOKEN" ]; then
+                        echo -e "${YELLOW}⚠️  请先设置管理员token:${NC}"
+                        echo "export STRAPI_ADMIN_TOKEN=\"your-admin-jwt-token\""
+                        echo ""
+                        echo -e "${BLUE}💡 获取方法:${NC}"
+                        echo "1. 访问 http://localhost:1337/admin"
+                        echo "2. 登录后查看网络请求中的Authorization header"
+                        exit 1
+                    else
+                        echo "正在获取SMTP配置列表..."
+                        curl -s -H "Authorization: Bearer $STRAPI_ADMIN_TOKEN" \
+                             "http://localhost:1337/api/smtp-configs" | \
+                        jq -r '.data[] | "ID: \(.id) | 名称: \(.name) | 提供商: \(.provider) | 状态: \(.healthStatus) | 今日发送: \(.dailySent)/\(.dailyLimit)"' 2>/dev/null || \
+                        echo "无法获取配置列表，请检查服务状态和token"
+                    fi
+                    ;;
+                "web")
+                    echo -e "${YELLOW}📧 打开SMTP测试Web界面...${NC}"
+                    echo ""
+                    echo -e "${GREEN}📍 访问地址: http://localhost:1337/api/smtp-test${NC}"
+                    echo ""
+                    echo "🔧 功能特点:"
+                    echo "  ✅ 实时配置列表显示"
+                    echo "  ✅ 一键连接测试"
+                    echo "  ✅ 测试邮件发送"
+                    echo "  ✅ 健康状态监控"
+                    echo "  ✅ 美观的用户界面"
+                    echo ""
+                    if command -v open > /dev/null; then
+                        echo "🚀 正在打开浏览器..."
+                        open "http://localhost:1337/api/smtp-test"
+                    elif command -v xdg-open > /dev/null; then
+                        echo "🚀 正在打开浏览器..."
+                        xdg-open "http://localhost:1337/api/smtp-test"
+                    else
+                        echo "💡 请手动打开浏览器访问上述地址"
+                    fi
+                    ;;
+                *)
+                    echo -e "${BLUE}📧 邮件系统管理工具${NC}"
+                    echo "==============================="
+                    echo "可用命令:"
+                    echo "  test <id> [email] - 测试SMTP配置连接"
+                    echo "  list              - 查看SMTP配置列表"
+                    echo "  web               - 打开SMTP测试Web界面"
+                    echo ""
+                    echo "示例："
+                    echo "  $0 email test 1                    # 仅测试连接"
+                    echo "  $0 email test 1 test@example.com   # 测试并发送邮件"
+                    echo "  $0 email list                      # 查看配置列表"
+                    echo "  $0 email web                       # 打开Web测试界面"
+                    echo ""
+                    echo "🌐 Web界面功能："
+                    echo "  ✅ 实时配置列表和状态监控"
+                    echo "  ✅ 一键连接测试和邮件发送"
+                    echo "  ✅ 美观的用户界面，支持移动端"
+                    echo "  📍 访问地址: http://localhost:1337/api/smtp-test"
+                    echo ""
+                    echo "环境变量："
+                    echo "  STRAPI_ADMIN_TOKEN - 管理员JWT令牌（命令行查看配置时需要）"
+                    exit 1
+                    ;;
+            esac
+            ;;
+        "content-type")
+            case "$action" in
+                "configure")
+                    if [ -z "$3" ]; then
+                        echo -e "${RED}❌ 请指定内容类型名称${NC}"
+                        echo "用法: $0 content-type configure <content-type-name>"
+                        echo "示例: $0 content-type configure smtp-config"
+                        exit 1
+                    else
+                        echo -e "${BLUE}🔧 启动内容类型自动化配置工具...${NC}"
+                        exec "$SCRIPT_DIR/scripts/content-type/configure-content-type.sh" "$3"
+                    fi
+                    ;;
+                *)
+                    echo -e "${BLUE}🔧 内容类型管理工具${NC}"
+                    echo "==============================="
+                    echo "可用命令:"
+                    echo "  configure <name> - 自动配置内容类型（表注释+字段描述）"
+                    echo ""
+                    echo "用法示例:"
+                    echo "  $0 content-type configure smtp-config"
+                    echo "  $0 content-type configure email-subscription"
+                    echo ""
+                    echo "功能说明:"
+                    echo "  ✅ 自动生成数据库表注释"
+                    echo "  ✅ 自动配置字段描述"
+                    echo "  ✅ 自动验证配置结果"
+                    echo "  ✅ 无需手动操作"
                     ;;
             esac
             ;;

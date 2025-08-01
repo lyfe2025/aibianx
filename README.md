@@ -38,15 +38,41 @@ AI变现之路是一个完整的AI内容平台，包含会员订阅系统、专�
 
 ## 🚀 快速开始
 
-### 第一次启动
+### 🔥 全自动部署（推荐）
+
+```bash
+# 在任意目录运行一键部署脚本（完全自动化）
+curl -fsSL https://raw.githubusercontent.com/lyfe2025/aibianx/master/deployment/install.sh | bash
+```
+
+**或者下载后运行：**
+```bash
+# 1. 下载全自动安装脚本
+wget https://raw.githubusercontent.com/lyfe2025/aibianx/master/deployment/install.sh
+chmod +x install.sh
+
+# 2. 一键完成所有步骤（安装环境→下载项目→配置→部署）
+./install.sh
+```
+
+### ✨ 全自动流程说明
+脚本会自动完成以下6个步骤：
+1. **🔧 安装基础环境** - 自动安装Git、Docker、Docker Compose
+2. **📥 克隆项目** - 自动下载项目代码  
+3. **📂 进入部署目录** - 自动进入deployment目录
+4. **⚙️ 生成配置** - 自动生成所有配置和密钥
+5. **📋 检查配置** - 提示检查域名等配置
+6. **🚀 一键部署** - 自动构建和启动所有服务
+
+### 手动部署（开发者）
 
 ```bash
 # 1. 克隆项目
-git clone <repository-url>
+git clone https://github.com/lyfe2025/aibianx.git
 cd aibianx
 
 # 2. 设置脚本权限
-chmod +x *.sh
+chmod +x *.sh deployment/*.sh
 
 # 3. 启动完整开发环境
 ./start-dev.sh
@@ -73,10 +99,17 @@ chmod +x *.sh
 
 ### 访问地址
 
+#### 🔥 全自动部署后访问
+- 🌐 **前端网站**: http://localhost 或 http://你的域名
+- ⚙️ **后端管理**: http://localhost/admin 或 http://你的域名/admin  
+- 📡 **API接口**: http://localhost/api 或 http://你的域名/api
+- 📖 **API文档**: http://localhost/documentation 或 http://你的域名/documentation
+
+#### 开发环境访问
 - 🌐 **前端网站**: http://localhost
 - ⚙️ **后端管理**: http://localhost:1337/admin
 - 📡 **API测试**: http://localhost:1337/api/articles
-- 📖 **API文档**: [API-ENDPOINTS.md](./API-ENDPOINTS.md)
+- 📋 **开发文档**: [API-ENDPOINTS.md](./API-ENDPOINTS.md)
 
 ## 💻 技术栈
 

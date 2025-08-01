@@ -110,6 +110,20 @@ export default {
         description: '重置SMTP配置统计 (仅管理员)',
         tags: ['SMTP-Config'],
       }
+    },
+
+    // SMTP测试页面 (无需认证，便于快速访问)
+    {
+      method: 'GET',
+      path: '/smtp-test',
+      handler: 'smtp-test-page.testPage',
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+        description: 'SMTP配置测试页面 (Web界面)',
+        tags: ['SMTP-Test'],
+      }
     }
   ]
 };

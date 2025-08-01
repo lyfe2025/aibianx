@@ -1,0 +1,147 @@
+version: '3.8'
+
+services:
+  # PostgreSQL数据库
+  postgres:
+    image: postgres:14-alpine
+    container_name: ${PROJECT_NAME}-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  # MeiliSearch搜索引擎
+  meilisearch:
+    image: getmeili/meilisearch:v1.5
+    container_name: ${PROJECT_NAME}-meilisearch
+    restart: unless-stopped
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+      MEILI_ENV: ${MEILI_ENV}
+    volumes:
+      - meilisearch_data:/meili_data
+    ports:
+      - "7700:7700"
+    networks:
+      - app-network
+
+  # Strapi后端
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../deployment/backend.Dockerfile
+    container_name: ${PROJECT_NAME}-backend
+    restart: unless-stopped
+    environment:
+      # 核心配置
+      NODE_ENV: ${NODE_ENV}
+      HOST: ${HOST}
+      PORT: ${PORT}
+      
+      # 数据库配置
+      DATABASE_CLIENT: ${DATABASE_CLIENT}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      
+      # JWT和安全配置
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      APP_KEYS: ${APP_KEYS}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      
+      # 搜索引擎配置
+      MEILISEARCH_URL: ${MEILISEARCH_URL}
+      MEILISEARCH_API_KEY: ${MEILISEARCH_API_KEY}
+      
+      # 邮件配置
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      
+      # 可选配置
+      FLAG_NPS: ${FLAG_NPS}
+      FLAG_PROMOTE_EE: ${FLAG_PROMOTE_EE}
+      UPLOAD_SIZE_LIMIT: ${UPLOAD_SIZE_LIMIT}
+      LOG_LEVEL: ${LOG_LEVEL}
+    volumes:
+      - uploads_data:/app/public/uploads
+      - strapi_cache:/app/.cache
+    ports:
+      - "1337:1337"
+    depends_on:
+      - postgres
+      - meilisearch
+    networks:
+      - app-network
+
+  # Next.js前端
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../deployment/frontend.Dockerfile
+      args:
+        # 构建时环境变量
+        NEXT_PUBLIC_FRONTEND_DOMAIN: ${NEXT_PUBLIC_FRONTEND_DOMAIN}
+        NEXT_PUBLIC_FRONTEND_PORT: ${NEXT_PUBLIC_FRONTEND_PORT}
+        NEXT_PUBLIC_FRONTEND_PROTOCOL: ${NEXT_PUBLIC_FRONTEND_PROTOCOL}
+        NEXT_PUBLIC_BACKEND_DOMAIN: ${NEXT_PUBLIC_BACKEND_DOMAIN}
+        NEXT_PUBLIC_BACKEND_PORT: ${NEXT_PUBLIC_BACKEND_PORT}
+        NEXT_PUBLIC_BACKEND_PROTOCOL: ${NEXT_PUBLIC_BACKEND_PROTOCOL}
+        NEXT_PUBLIC_SEARCH_DOMAIN: ${NEXT_PUBLIC_SEARCH_DOMAIN}
+        NEXT_PUBLIC_SEARCH_PORT: ${NEXT_PUBLIC_SEARCH_PORT}
+        NEXT_PUBLIC_SEARCH_PROTOCOL: ${NEXT_PUBLIC_SEARCH_PROTOCOL}
+        NEXTAUTH_URL: ${NEXTAUTH_URL}
+        NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+    container_name: ${PROJECT_NAME}-frontend
+    restart: unless-stopped
+    environment:
+      # 运行时环境变量
+      NODE_ENV: production
+      PORT: 3000
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # Nginx反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: ${PROJECT_NAME}-nginx
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+  meilisearch_data:
+  uploads_data:
+  strapi_cache:
+
+networks:
+  app-network:
+    driver: bridge
