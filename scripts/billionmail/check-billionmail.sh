@@ -86,27 +86,27 @@ echo ""
 echo -e "${YELLOW}🔍 检查服务接口...${NC}"
 
 # 检查管理界面
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/billion)
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${BILLIONMAIL_ADMIN_URL}")
 if echo "$HTTP_CODE" | grep -qE "^(200|302)$"; then
     echo -e "${GREEN}✅ 管理界面可访问${NC}"
-    echo "  地址: http://localhost:8080/billion"
+    echo "  地址: ${BILLIONMAIL_ADMIN_URL}"
     echo "  状态: 正常运行"
 else
     echo -e "${RED}❌ 管理界面不可访问${NC}"
-    echo "  地址: http://localhost:8080/billion" 
+    echo "  地址: ${BILLIONMAIL_ADMIN_URL}" 
     echo "  状态码: $HTTP_CODE"
     echo "  请检查服务是否正常启动"
 fi
 
 # 检查WebMail界面
-WEBMAIL_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/roundcube)
+WEBMAIL_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${BILLIONMAIL_WEBMAIL_URL}")
 if echo "$WEBMAIL_CODE" | grep -qE "^(200|302)$"; then
     echo -e "${GREEN}✅ WebMail界面可访问${NC}"
-    echo "  地址: http://localhost:8080/roundcube"
+    echo "  地址: ${BILLIONMAIL_WEBMAIL_URL}"
     echo "  状态: 正常运行"
 else
     echo -e "${YELLOW}⚠️  WebMail界面暂不可用${NC}"
-    echo "  地址: http://localhost:8080/roundcube"
+    echo "  地址: ${BILLIONMAIL_WEBMAIL_URL}"
     echo "  状态码: $WEBMAIL_CODE"
     echo "  说明: WebMail服务可能需要更多时间启动"
 fi
@@ -129,8 +129,8 @@ fi
 
 echo ""
 echo -e "${BLUE}📍 BillionMail服务信息:${NC}"
-echo -e "${GREEN}管理界面:${NC}    http://localhost:8080/billion"
-echo -e "${GREEN}WebMail:${NC}     http://localhost:8080/roundcube"
+echo -e "${GREEN}管理界面:${NC}    ${BILLIONMAIL_ADMIN_URL}"
+echo -e "${GREEN}WebMail:${NC}     ${BILLIONMAIL_WEBMAIL_URL}"
 echo -e "${GREEN}默认账户:${NC}    billion / billion"
 echo ""
 echo -e "${BLUE}📧 邮件服务端口:${NC}"

@@ -47,7 +47,7 @@ fi
 if [ "$API_KEY" = "your-billionmail-api-key-here" ]; then
     echo -e "${RED}❌ API密钥未配置${NC}"
     echo "请在BillionMail管理界面获取真实API密钥并更新配置"
-    echo "管理界面: http://localhost:8080/billion"
+    echo "管理界面: ${BILLIONMAIL_ADMIN_URL}"
     exit 1
 fi
 
@@ -119,5 +119,5 @@ echo "2. 如果模板缺失，请在管理界面创建邮件模板"
 echo "3. 所有测试通过后，可以进行前端集成测试"
 echo ""
 echo -e "${BLUE}🔗 相关链接:${NC}"
-echo "管理界面: http://localhost:8080/billion"
+echo "管理界面: ${BILLIONMAIL_ADMIN_URL}"
 echo "配置指南: docs/当前开发/后台系统/邮件营销/BillionMail配置指南.md"

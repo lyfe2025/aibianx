@@ -558,6 +558,331 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCommissionCommission extends Struct.CollectionTypeSchema {
+  collectionName: 'commissions';
+  info: {
+    description: '\u8FD4\u4F63\u7CFB\u7EDF - \u7BA1\u7406\u4E00\u7EA7\u9080\u8BF7\u8FD4\u4F63\u8BA1\u7B97\u548C\u7ED3\u7B97';
+    displayName: '\u4E00\u7EA7\u8FD4\u4F63\u8BB0\u5F55';
+    pluralName: 'commissions';
+    singularName: 'commission';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    amount: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    commissionType: Schema.Attribute.Enumeration<
+      ['first_purchase', 'renewal', 'upgrade']
+    > &
+      Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    invitation: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::invitation.invitation'
+    >;
+    invitee: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    > &
+      Schema.Attribute.Required;
+    inviter: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    > &
+      Schema.Attribute.Required;
+    isFirstTimeBonus: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::commission.commission'
+    > &
+      Schema.Attribute.Private;
+    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'> &
+      Schema.Attribute.Required;
+    originalAmount: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    payoutMethod: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    rate: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    settledAt: Schema.Attribute.DateTime;
+    settlementBatch: Schema.Attribute.String;
+    status: Schema.Attribute.Enumeration<
+      ['pending', 'confirmed', 'paid', 'cancelled']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiInvitationInvitation extends Struct.CollectionTypeSchema {
+  collectionName: 'invitations';
+  info: {
+    description: '\u9080\u8BF7\u7CFB\u7EDF - \u7BA1\u7406\u7528\u6237\u9080\u8BF7\u5173\u7CFB\u548C\u5956\u52B1\u4FE1\u606F';
+    displayName: '\u9080\u8BF7\u8BB0\u5F55';
+    pluralName: 'invitations';
+    singularName: 'invitation';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    clickCount: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    emailOpened: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    expiredAt: Schema.Attribute.DateTime;
+    inviteChannel: Schema.Attribute.Enumeration<['email', 'link', 'social']>;
+    inviteCode: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 20;
+      }>;
+    invitedAt: Schema.Attribute.DateTime;
+    invitee: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    inviteeCoupon: Schema.Attribute.String;
+    inviteeReward: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    inviter: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    > &
+      Schema.Attribute.Required;
+    inviterBonus: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    inviterReward: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    lastClickAt: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::invitation.invitation'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    purchasedAt: Schema.Attribute.DateTime;
+    registeredAt: Schema.Attribute.DateTime;
+    rewardStatus: Schema.Attribute.Enumeration<
+      ['pending', 'granted', 'expired']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    status: Schema.Attribute.Enumeration<
+      ['sent', 'registered', 'purchased', 'expired']
+    > &
+      Schema.Attribute.DefaultTo<'sent'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
+  collectionName: 'orders';
+  info: {
+    description: '\u8BA2\u5355\u7CFB\u7EDF - \u7BA1\u7406\u6240\u6709\u8BA2\u5355\u4FE1\u606F\uFF0C\u5305\u62EC\u5546\u54C1\u3001\u652F\u4ED8\u3001\u8FD4\u4F63\u7B49';
+    displayName: '\u8BA2\u5355';
+    pluralName: 'orders';
+    singularName: 'order';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    adminNote: Schema.Attribute.Text;
+    cancelledAt: Schema.Attribute.DateTime;
+    commissionAmount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    commissionRate: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    customerNote: Schema.Attribute.Text;
+    discountAmount: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    expiredAt: Schema.Attribute.DateTime;
+    finalPrice: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    inviterUser: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
+      Schema.Attribute.Private;
+    orderNo: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 50;
+      }>;
+    orderType: Schema.Attribute.Enumeration<
+      ['membership', 'course', 'service']
+    > &
+      Schema.Attribute.Required;
+    originalPrice: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    paidAt: Schema.Attribute.DateTime;
+    paymentMethod: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 50;
+      }>;
+    productId: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    productName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    productType: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<
+      ['pending', 'paid', 'cancelled', 'refunded', 'expired']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
+  collectionName: 'payments';
+  info: {
+    description: '\u652F\u4ED8\u8BB0\u5F55\u7CFB\u7EDF - \u7BA1\u7406\u6240\u6709\u652F\u4ED8\u4EA4\u6613\u8BB0\u5F55\u548C\u7B2C\u4E09\u65B9\u652F\u4ED8\u4FE1\u606F';
+    displayName: '\u652F\u4ED8\u8BB0\u5F55';
+    pluralName: 'payments';
+    singularName: 'payment';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    amount: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    completedAt: Schema.Attribute.DateTime;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currency: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 10;
+      }> &
+      Schema.Attribute.DefaultTo<'CNY'>;
+    failReason: Schema.Attribute.Text;
+    gatewayFee: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
+    ipAddress: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 45;
+      }>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::payment.payment'
+    > &
+      Schema.Attribute.Private;
+    notifiedAt: Schema.Attribute.DateTime;
+    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'> &
+      Schema.Attribute.Required;
+    paymentMethod: Schema.Attribute.Enumeration<
+      ['alipay', 'wechat', 'stripe', 'points']
+    > &
+      Schema.Attribute.Required;
+    paymentNo: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    reconciled: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    reconciledAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<
+      ['pending', 'success', 'failed', 'cancelled', 'refunded']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    thirdPartyOrderNo: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    thirdPartyResponse: Schema.Attribute.JSON;
+    thirdPartyTransactionId: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    > &
+      Schema.Attribute.Required;
+    userAgent: Schema.Attribute.Text;
+  };
+}
+
+export interface ApiRefundRefund extends Struct.CollectionTypeSchema {
+  collectionName: 'refunds';
+  info: {
+    description: '\u9000\u6B3E\u7CFB\u7EDF - \u7BA1\u7406\u6240\u6709\u9000\u6B3E\u7533\u8BF7\u548C\u5904\u7406\u6D41\u7A0B';
+    displayName: '\u9000\u6B3E\u8BB0\u5F55';
+    pluralName: 'refunds';
+    singularName: 'refund';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::refund.refund'
+    > &
+      Schema.Attribute.Private;
+    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'> &
+      Schema.Attribute.Required;
+    payment: Schema.Attribute.Relation<'manyToOne', 'api::payment.payment'>;
+    processedAt: Schema.Attribute.DateTime;
+    processedBy: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    processNote: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    refundAmount: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    refundNo: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    refundReason: Schema.Attribute.Text & Schema.Attribute.Required;
+    status: Schema.Attribute.Enumeration<
+      ['pending', 'approved', 'rejected', 'completed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    > &
+      Schema.Attribute.Required;
+  };
+}
+
 export interface ApiSeoMetricsSeoMetrics extends Struct.CollectionTypeSchema {
   collectionName: 'seo_metrics';
   info: {
@@ -848,6 +1173,56 @@ export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 100;
       }>;
+  };
+}
+
+export interface ApiSubscriptionSubscription
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'subscriptions';
+  info: {
+    description: '\u4F1A\u5458\u8BA2\u9605\u7CFB\u7EDF - \u7BA1\u7406\u7528\u6237\u4F1A\u5458\u670D\u52A1\u72B6\u6001\u548C\u6743\u9650';
+    displayName: '\u4F1A\u5458\u8BA2\u9605';
+    pluralName: 'subscriptions';
+    singularName: 'subscription';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    autoRenew: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    endDate: Schema.Attribute.Date;
+    features: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::subscription.subscription'
+    > &
+      Schema.Attribute.Private;
+    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
+    planName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    planType: Schema.Attribute.Enumeration<['monthly', 'yearly', 'lifetime']> &
+      Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    startDate: Schema.Attribute.Date & Schema.Attribute.Required;
+    status: Schema.Attribute.Enumeration<
+      ['active', 'expired', 'cancelled', 'suspended']
+    > &
+      Schema.Attribute.DefaultTo<'active'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    > &
+      Schema.Attribute.Required;
   };
 }
 
@@ -1546,8 +1921,8 @@ export interface PluginUsersPermissionsUser
   extends Struct.CollectionTypeSchema {
   collectionName: 'up_users';
   info: {
-    description: '';
-    displayName: 'User';
+    description: '\u6269\u5C55\u7684\u7528\u6237\u8868 - \u652F\u6301\u591A\u8BA4\u8BC1\u65B9\u5F0F\u3001\u4F1A\u5458\u7CFB\u7EDF\u3001\u9080\u8BF7\u8FD4\u4F63\u3001BillionMail\u96C6\u6210';
+    displayName: '\u7528\u6237';
     name: 'user';
     pluralName: 'users';
     singularName: 'user';
@@ -1557,35 +1932,79 @@ export interface PluginUsersPermissionsUser
     timestamps: true;
   };
   attributes: {
+    avatar: Schema.Attribute.Media<'images'>;
+    billionmailListIds: Schema.Attribute.JSON;
+    billionmailSubscribed: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    billionmailSubscriberId: Schema.Attribute.String;
+    birthday: Schema.Attribute.Date;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    connectedProviders: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     email: Schema.Attribute.Email &
       Schema.Attribute.Required &
+      Schema.Attribute.Unique &
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    gender: Schema.Attribute.Enumeration<['male', 'female', 'other']>;
+    githubId: Schema.Attribute.String;
+    githubUsername: Schema.Attribute.String;
+    googleId: Schema.Attribute.String;
+    hasPassword: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    inviteCode: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 20;
+      }>;
+    inviteCount: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    invitedBy: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    isEmailVerified: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    lastLoginAt: Schema.Attribute.DateTime;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    loginCount: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    membershipAutoRenew: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    membershipExpiry: Schema.Attribute.DateTime;
+    membershipLevel: Schema.Attribute.Enumeration<
+      ['free', 'basic', 'premium', 'vip']
+    > &
+      Schema.Attribute.DefaultTo<'free'>;
+    nickname: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 50;
+      }>;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    phone: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 20;
+      }>;
     provider: Schema.Attribute.String;
+    providerAccountId: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
     role: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    totalCommission: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1611,8 +2030,14 @@ declare module '@strapi/strapi' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
+      'api::commission.commission': ApiCommissionCommission;
+      'api::invitation.invitation': ApiInvitationInvitation;
+      'api::order.order': ApiOrderOrder;
+      'api::payment.payment': ApiPaymentPayment;
+      'api::refund.refund': ApiRefundRefund;
       'api::seo-metrics.seo-metrics': ApiSeoMetricsSeoMetrics;
       'api::site-config.site-config': ApiSiteConfigSiteConfig;
+      'api::subscription.subscription': ApiSubscriptionSubscription;
       'api::system-config.system-config': ApiSystemConfigSystemConfig;
       'api::tag.tag': ApiTagTag;
       'plugin::content-releases.release': PluginContentReleasesRelease;

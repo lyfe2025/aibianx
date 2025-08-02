@@ -104,8 +104,8 @@ execute_choice() {
             ;;
         16) 
             echo -e "${BLUE}🚀 BillionMail已部署完成，直接使用真实系统...${NC}"
-            echo -e "${GREEN}✅ BillionMail管理界面: http://localhost:8080/billion${NC}"
-            echo -e "${GREEN}✅ WebMail界面: http://localhost:8080/roundcube${NC}"
+            echo -e "${GREEN}✅ BillionMail管理界面: ${BILLIONMAIL_ADMIN_URL}${NC}"
+            echo -e "${GREEN}✅ WebMail界面: ${BILLIONMAIL_WEBMAIL_URL}${NC}"
             echo -e "${GREEN}✅ 默认账户: billion / billion${NC}"
             echo ""
             echo "💡 提示："
@@ -124,7 +124,7 @@ execute_choice() {
             echo ""
             echo -e "${BLUE}🌐 BillionMail真实系统管理界面...${NC}"
             echo ""
-            echo -e "${GREEN}📍 访问地址: http://localhost:8080/billion${NC}"
+            echo -e "${GREEN}📍 访问地址: ${BILLIONMAIL_ADMIN_URL}${NC}"
             echo ""
             echo "🔧 BillionMail功能特点:"
             echo "  ✅ 完整的邮件营销平台"
@@ -139,10 +139,10 @@ execute_choice() {
             echo ""
             if command -v open > /dev/null; then
                 echo "🚀 正在打开浏览器..."
-                open "http://localhost:8080/billion"
+                open "${BILLIONMAIL_ADMIN_URL}"
             elif command -v xdg-open > /dev/null; then
                 echo "🚀 正在打开浏览器..."
-                xdg-open "http://localhost:8080/billion"
+                xdg-open "${BILLIONMAIL_ADMIN_URL}"
             else
                 echo "💡 请手动打开浏览器访问上述地址"
             fi
@@ -334,8 +334,8 @@ handle_command_line() {
             case "$action" in
                         "deploy")
             echo -e "${BLUE}🚀 BillionMail真实系统已部署完成！${NC}"
-            echo -e "${GREEN}✅ 管理界面: http://localhost:8080/billion${NC}"
-            echo -e "${GREEN}✅ WebMail: http://localhost:8080/roundcube${NC}"
+            echo -e "${GREEN}✅ 管理界面: ${BILLIONMAIL_ADMIN_URL}${NC}"
+            echo -e "${GREEN}✅ WebMail: ${BILLIONMAIL_WEBMAIL_URL}${NC}"
             echo -e "${GREEN}✅ 默认账户: billion / billion${NC}"
             ;;
                 "check")
@@ -377,7 +377,7 @@ handle_command_line() {
                 "admin")
                     echo -e "${YELLOW}🌐 打开BillionMail管理界面...${NC}"
                     echo ""
-                    echo -e "${GREEN}📍 访问地址: http://localhost:8080/billion${NC}"
+                    echo -e "${GREEN}📍 访问地址: ${BILLIONMAIL_ADMIN_URL}${NC}"
                     echo ""
                     echo "🔧 BillionMail真实系统功能特点:"
                     echo "  ✅ 完整的邮件订阅API"
@@ -393,10 +393,10 @@ handle_command_line() {
                     echo ""
                     if command -v open > /dev/null; then
                         echo "🚀 正在打开浏览器..."
-                        open "http://localhost:8080/billion"
+                        open "${BILLIONMAIL_ADMIN_URL}"
                     elif command -v xdg-open > /dev/null; then
                         echo "🚀 正在打开浏览器..."
-                        xdg-open "http://localhost:8080/billion"
+                        xdg-open "${BILLIONMAIL_ADMIN_URL}"
                     else
                         echo "💡 请手动打开浏览器访问上述地址"
                     fi
@@ -425,8 +425,8 @@ handle_command_line() {
                     echo "  $0 email admin       # 打开管理界面"
                     echo ""
                     echo "🌐 BillionMail管理界面："
-                    echo "  📍 访问地址: http://localhost:8080/billion"
-                    echo "  📧 WebMail: http://localhost:8080/roundcube"  
+                    echo "  📍 访问地址: ${BILLIONMAIL_ADMIN_URL}"
+                    echo "  📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"  
                     echo "  👤 默认用户: billion / billion"
                     echo "  🔧 功能: 邮件营销、用户管理、模板编辑、统计分析"
                     echo ""

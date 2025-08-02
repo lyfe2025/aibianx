@@ -38,10 +38,10 @@ export class BillionMailClient {
 
   constructor(config?: Partial<BillionMailConfig>) {
     this.config = {
-      apiUrl: config?.apiUrl || process.env.BILLIONMAIL_API_URL || 'http://localhost:8081/api',
+      apiUrl: config?.apiUrl || process.env.BILLIONMAIL_API_URL || 'http://localhost:8080/api/v1',
       apiKey: config?.apiKey || process.env.BILLIONMAIL_API_KEY || '',
       defaultListId: config?.defaultListId || process.env.BILLIONMAIL_DEFAULT_LIST_ID || '1',
-      adminUrl: config?.adminUrl || process.env.BILLIONMAIL_ADMIN_URL || 'http://localhost:8081/admin'
+      adminUrl: config?.adminUrl || process.env.BILLIONMAIL_ADMIN_URL || 'http://localhost:8080/billion'
     };
   }
 
@@ -230,6 +230,91 @@ export class BillionMailClient {
       return response.json();
     } catch (error) {
       console.error('获取订阅者信息失败:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 更新订阅者信息
+   */
+  async updateSubscriber(subscriberId: string, data: { tags?: string[], customFields?: Record<string, any> }): Promise<any> {
+    try {
+      const response = await fetch(`${this.config.apiUrl}/subscribers/${subscriberId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${this.config.apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) {
+        throw new Error(`BillionMail更新订阅者失败: ${response.statusText}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('更新订阅者信息失败:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 发送模板邮件
+   */
+  async sendTemplateEmail(email: string, templateId: string, variables: Record<string, any>): Promise<any> {
+    try {
+      const response = await fetch(`${this.config.apiUrl}/emails/template`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.config.apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          to: email,
+          template_id: templateId,
+          variables,
+          type: 'marketing'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`BillionMail发送模板邮件失败: ${response.statusText}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('发送模板邮件失败:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 发送营销活动
+   */
+  async sendCampaign(options: { listId: string, templateId: string, variables: Record<string, any>, scheduledAt?: Date | null }): Promise<any> {
+    try {
+      const response = await fetch(`${this.config.apiUrl}/campaigns/send`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.config.apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          list_id: options.listId,
+          template_id: options.templateId,
+          variables: options.variables,
+          scheduled_at: options.scheduledAt?.toISOString() || null
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`BillionMail发送营销活动失败: ${response.statusText}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('发送营销活动失败:', error);
       throw error;
     }
   }
