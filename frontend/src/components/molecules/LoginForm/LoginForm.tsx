@@ -3,10 +3,19 @@
 import { useState } from 'react'
 import { GradientButton, Icon, Input } from '@/components/ui'
 import { useModalStore } from '@/stores'
+import { signIn } from 'next-auth/react'
 
 interface LoginFormProps {
     onSubmit?: (data: LoginFormData) => Promise<void>
     isLoading?: boolean
+    showOAuth?: boolean
+    oauthConfig?: {
+        isOAuthEnabled: boolean
+        isGitHubEnabled: boolean
+        isGoogleEnabled: boolean
+        isWeChatEnabled: boolean
+        isQQEnabled: boolean
+    }
 }
 
 interface LoginFormData {
@@ -15,8 +24,8 @@ interface LoginFormData {
     rememberMe: boolean
 }
 
-export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormProps = {}) {
-    const { openModal } = useModalStore()
+export function LoginForm({ onSubmit, isLoading: externalLoading, showOAuth = true, oauthConfig }: LoginFormProps = {}) {
+    const { openModal, closeModal } = useModalStore()
     const [formData, setFormData] = useState({
         emailOrUsername: '',
         password: '',
@@ -26,6 +35,70 @@ export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormPro
     const [isLoading, setIsLoading] = useState(false)
     const effectiveLoading = externalLoading ?? isLoading
     const [showPassword, setShowPassword] = useState(false)
+
+    // OAuth登录处理函数
+    const handleOAuthLogin = async (provider: string) => {
+        try {
+            console.log(`${provider}登录`)
+            const result = await signIn(provider, {
+                callbackUrl: '/',
+                redirect: false
+            })
+
+            if (result?.ok) {
+                closeModal()
+            } else {
+                console.error(`${provider}登录失败:`, result?.error)
+                alert(`${provider}登录失败，请稍后重试`)
+            }
+        } catch (error) {
+            console.error(`${provider}登录失败:`, error)
+            alert(`${provider}登录失败，请稍后重试`)
+        }
+    }
+
+    // 获取启用的OAuth按钮配置
+    const getEnabledOAuthButtons = () => {
+        if (!oauthConfig?.isOAuthEnabled) return []
+
+        const buttons = []
+
+        if (oauthConfig.isGitHubEnabled) {
+            buttons.push({
+                provider: 'github',
+                label: '使用 GitHub 登录',
+                icon: 'modals/github-icon-login'
+            })
+        }
+
+        if (oauthConfig.isGoogleEnabled) {
+            buttons.push({
+                provider: 'google',
+                label: '使用 Google 登录',
+                icon: 'google'
+            })
+        }
+
+        if (oauthConfig.isWeChatEnabled) {
+            buttons.push({
+                provider: 'wechat',
+                label: '使用微信登录',
+                icon: 'wechat'
+            })
+        }
+
+        if (oauthConfig.isQQEnabled) {
+            buttons.push({
+                provider: 'qq',
+                label: '使用 QQ 登录',
+                icon: 'qq'
+            })
+        }
+
+        return buttons
+    }
+
+    const oauthButtons = getEnabledOAuthButtons()
 
     const handleInputChange = (field: string, value: string | boolean) => {
         setFormData(prev => ({ ...prev, [field]: value }))
@@ -214,60 +287,71 @@ export function LoginForm({ onSubmit, isLoading: externalLoading }: LoginFormPro
                 {effectiveLoading ? '登录中...' : '登录'}
             </GradientButton>
 
-            {/* 社交登录分隔线 */}
-            <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-                margin: 'var(--spacing-5) 0'
-            }}>
-                <div style={{
-                    flex: 1,
-                    height: '1px',
-                    background: '#2A2A2A'
-                }} />
-                <div style={{
-                    fontSize: 'var(--font-size-base)',
-                    color: 'var(--color-text-disabled)',
-                    lineHeight: '24px',
-                    textAlign: 'center',
-                    whiteSpace: 'nowrap'
-                }}>
-                    或
-                </div>
-                <div style={{
-                    flex: 1,
-                    height: '1px',
-                    background: '#2A2A2A'
-                }} />
-            </div>
+            {/* OAuth登录区域 - 根据showOAuth和OAuth配置动态显示 */}
+            {showOAuth && oauthButtons.length > 0 && (
+                <>
+                    {/* 社交登录分隔线 */}
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '16px',
+                        margin: 'var(--spacing-5) 0'
+                    }}>
+                        <div style={{
+                            flex: 1,
+                            height: '1px',
+                            background: '#2A2A2A'
+                        }} />
+                        <div style={{
+                            fontSize: 'var(--font-size-base)',
+                            color: 'var(--color-text-disabled)',
+                            lineHeight: '24px',
+                            textAlign: 'center',
+                            whiteSpace: 'nowrap'
+                        }}>
+                            或
+                        </div>
+                        <div style={{
+                            flex: 1,
+                            height: '1px',
+                            background: '#2A2A2A'
+                        }} />
+                    </div>
 
-            {/* GitHub登录 */}
-            <button
-                type="button"
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 'var(--spacing-3)',
-                    width: '100%',
-                    padding: '12px 24px',
-                    background: 'rgba(18, 18, 18, 0.70)',
-                    border: '1px solid var(--color-border-secondary)',
-                    borderRadius: 'var(--radius-lg)',
-                    color: 'var(--color-text-primary)',
-                    fontSize: 'var(--font-size-base)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease'
-                }}
-                onClick={() => {
-                    // TODO: 实现GitHub登录
-                    console.log('GitHub登录')
-                }}
-            >
-                <Icon name="modals/github-icon-login" size="sm" />
-                使用 GitHub 登录
-            </button>
+                    {/* 动态OAuth登录按钮列表 */}
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 'var(--spacing-3)'
+                    }}>
+                        {oauthButtons.map((oauth) => (
+                            <button
+                                key={oauth.provider}
+                                type="button"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: 'var(--spacing-3)',
+                                    width: '100%',
+                                    padding: '12px 24px',
+                                    background: 'rgba(18, 18, 18, 0.70)',
+                                    border: '1px solid var(--color-border-secondary)',
+                                    borderRadius: 'var(--radius-lg)',
+                                    color: 'var(--color-text-primary)',
+                                    fontSize: 'var(--font-size-base)',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease'
+                                }}
+                                onClick={() => handleOAuthLogin(oauth.provider)}
+                            >
+                                <Icon name={oauth.icon} size="sm" />
+                                {oauth.label}
+                            </button>
+                        ))}
+                    </div>
+                </>
+            )}
 
             {/* 注册链接 */}
             <div style={{

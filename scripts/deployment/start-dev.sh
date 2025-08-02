@@ -245,6 +245,38 @@ done
 echo ""
 echo "🎉 开发环境启动完成！"
 echo "========================================="
+
+# 自动同步搜索索引（可通过环境变量控制）
+AUTO_SYNC_SEARCH=${AUTO_SYNC_SEARCH:-true}
+if [ "$AUTO_SYNC_SEARCH" = "true" ]; then
+    echo ""
+    echo "🔍 自动同步搜索索引..."
+    
+    # 静默运行搜索索引同步
+    if [ -f "$(dirname "$0")/../search/quick-reindex.sh" ]; then
+        # 创建后台任务同步索引，避免阻塞启动流程
+        (
+            sleep 5  # 等待后端完全稳定
+            "$(dirname "$0")/../search/quick-reindex.sh" > logs/search-sync.log 2>&1
+            if [ $? -eq 0 ]; then
+                echo "$(date '+%Y-%m-%d %H:%M:%S') - ✅ 搜索索引自动同步完成" >> logs/search-sync.log
+            else
+                echo "$(date '+%Y-%m-%d %H:%M:%S') - ❌ 搜索索引同步失败" >> logs/search-sync.log
+            fi
+        ) &
+        SEARCH_SYNC_PID=$!
+        echo "✅ 搜索索引同步已启动 (后台运行，PID: $SEARCH_SYNC_PID)"
+        echo "📝 同步日志: logs/search-sync.log"
+        
+        # 保存搜索同步PID
+        mkdir -p .pids
+        echo $SEARCH_SYNC_PID > .pids/search-sync.pid
+    else
+        echo "⚠️  搜索索引同步脚本不存在，跳过自动同步"
+    fi
+    
+    echo "💡 可设置 AUTO_SYNC_SEARCH=false 禁用自动搜索索引同步"
+fi
 echo "📍 访问地址："
 echo "   🌐 前端网站: ${FRONTEND_URL}"
 echo "   ⚙️  后端管理: ${BACKEND_ADMIN_URL}"

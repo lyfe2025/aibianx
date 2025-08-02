@@ -28,6 +28,8 @@ if [ -f "logs/backend.pid" ]; then
         echo "⚠️  后端服务已停止"
     fi
     rm logs/backend.pid
+    # 同时清理新PID目录中的文件
+    rm -f .pids/backend.pid
 else
     echo "⚠️  未找到后端PID文件"
 fi
@@ -55,8 +57,25 @@ if [ -f "logs/frontend.pid" ]; then
         echo "⚠️  前端服务已停止"
     fi
     rm logs/frontend.pid
+    # 同时清理新PID目录中的文件
+    rm -f .pids/frontend.pid
 else
     echo "⚠️  未找到前端PID文件"
+fi
+
+# 停止搜索索引同步服务
+if [ -f ".pids/search-sync.pid" ]; then
+    SEARCH_SYNC_PID=$(cat .pids/search-sync.pid)
+    if kill -0 $SEARCH_SYNC_PID 2>/dev/null; then
+        echo "🔄 停止搜索索引同步服务 (PID: $SEARCH_SYNC_PID)..."
+        kill $SEARCH_SYNC_PID 2>/dev/null || true
+        echo "✅ 搜索索引同步服务已停止"
+    else
+        echo "⚠️  搜索索引同步服务已停止"
+    fi
+    rm .pids/search-sync.pid
+else
+    echo "💡 未发现搜索索引同步进程"
 fi
 
 # 强制清理残留进程

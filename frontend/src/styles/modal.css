@@ -27,7 +27,7 @@
 /* 弹窗容器 */
 .modal-container {
     position: relative;
-    background: var(--color-bg-glass);
+    background: rgba(26, 26, 26, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--color-border-primary);
@@ -143,7 +143,7 @@
 }
 
 [data-theme="light"] .modal-container {
-    background: var(--color-bg-primary);
+    background: rgba(248, 250, 252, 0.92);
     border: 1px solid var(--color-border-primary);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }

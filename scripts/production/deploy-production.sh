@@ -433,6 +433,44 @@ show_deployment_result() {
     
     echo -e "${GREEN}🎉 生产部署成功！${NC}"
     echo "=================="
+    
+    # 自动同步搜索索引（可通过环境变量控制）
+    AUTO_SYNC_SEARCH_PROD=${AUTO_SYNC_SEARCH_PROD:-true}
+    if [ "$AUTO_SYNC_SEARCH_PROD" = "true" ]; then
+        echo ""
+        echo -e "${CYAN}🔍 自动同步搜索索引...${NC}"
+        
+        # 检查搜索索引同步脚本是否存在
+        if [ -f "$SCRIPT_DIR/../search/quick-reindex.sh" ]; then
+            # 创建生产环境日志目录
+            mkdir -p "$PROJECT_ROOT/logs"
+            
+            # 后台运行搜索索引同步
+            (
+                sleep 10  # 等待生产服务完全稳定
+                echo "$(date '+%Y-%m-%d %H:%M:%S') - 🚀 开始生产环境搜索索引同步" >> "$PROJECT_ROOT/logs/search-sync-prod.log"
+                "$SCRIPT_DIR/../search/quick-reindex.sh" >> "$PROJECT_ROOT/logs/search-sync-prod.log" 2>&1
+                if [ $? -eq 0 ]; then
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') - ✅ 生产环境搜索索引同步完成" >> "$PROJECT_ROOT/logs/search-sync-prod.log"
+                else
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') - ❌ 生产环境搜索索引同步失败" >> "$PROJECT_ROOT/logs/search-sync-prod.log"
+                fi
+            ) &
+            
+            local search_sync_pid=$!
+            echo "✅ 搜索索引同步已启动 (后台运行，PID: $search_sync_pid)"
+            echo "📝 同步日志: logs/search-sync-prod.log"
+            
+            # 保存PID以便管理
+            mkdir -p "$PROJECT_ROOT/.pids"
+            echo $search_sync_pid > "$PROJECT_ROOT/.pids/search-sync-prod.pid"
+        else
+            echo "⚠️  搜索索引同步脚本不存在，跳过自动同步"
+        fi
+        
+        echo "💡 可设置 AUTO_SYNC_SEARCH_PROD=false 禁用生产环境搜索索引同步"
+        echo ""
+    fi
     echo ""
     echo -e "${CYAN}📊 部署信息:${NC}"
     echo "   部署模式: $DEPLOY_MODE"

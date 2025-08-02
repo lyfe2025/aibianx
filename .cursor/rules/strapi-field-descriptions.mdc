@@ -1,0 +1,237 @@
+# Strapi 5.x 字段描述强制配置规则
+
+## 🚨 致命错误级别 - 字段描述缺失预防
+
+### 💀 核心铁律 (绝对不可违背)
+
+#### **字段描述配置是绝对强制要求**
+- ❌ **任何新建内容类型未配置字段描述 = 致命错误**
+- ❌ **Admin界面显示英文字段名 = 致命错误**
+- ❌ **跳过字段描述自动化配置 = 致命错误**
+
+#### **后果严重性说明**
+- 📊 **管理体验**: 非技术人员无法理解英文字段含义，导致数据录入错误
+- 🛠️ **维护困难**: 团队成员需要反复询问字段用途，效率极低
+- 🚫 **业务影响**: 内容管理员无法有效使用后台系统，影响业务运营
+- 🔄 **技术债务**: 后期补充字段描述需要停服维护，风险极高
+
+---
+
+## ⚡ 强制执行机制
+
+### 🔥 新建内容类型强制流程 (7步验证法)
+
+**每次新建任何内容类型后，必须立即执行以下验证：**
+
+```bash
+# 🚨 强制验证脚本 (必须100%通过)
+content_type="新建的内容类型名"  # 替换为实际类型名
+table_name="${content_type//-/_}s"
+
+echo "🔍 第1步: 验证数据库表注释..."
+psql -U aibianx_dev -d aibianx_dev -c "
+SELECT 
+    t.table_name,
+    obj_description(c.oid) as table_comment
+FROM information_schema.tables t
+LEFT JOIN pg_class c ON c.relname = t.table_name
+WHERE t.table_name = '${table_name}';
+"
+
+echo "🔍 第2步: 验证字段注释..."
+psql -U aibianx_dev -d aibianx_dev -c "
+SELECT 
+    column_name,
+    col_description(pgc.oid, pa.attnum) as column_comment
+FROM information_schema.columns ic
+JOIN pg_class pgc ON pgc.relname = ic.table_name
+JOIN pg_attribute pa ON pa.attrelid = pgc.oid AND pa.attname = ic.column_name
+WHERE ic.table_name = '${table_name}' AND pa.attnum > 0;
+"
+
+echo "🔍 第3步: 验证Strapi字段描述配置..."
+psql -U aibianx_dev -d aibianx_dev -c "
+SELECT 
+    jsonb_object_keys(value::jsonb->'metadatas') as configured_fields,
+    (SELECT COUNT(*) FROM jsonb_object_keys(value::jsonb->'metadatas')) as total_fields
+FROM strapi_core_store_settings 
+WHERE key = 'plugin_content_manager_configuration_content_types::api::${content_type}.${content_type}';
+"
+
+echo "🔍 第4步: 验证具体字段描述内容..."
+./scripts/tools/configure-any-field-descriptions.sh ${content_type}
+
+echo "🔍 第5步: 验证Admin界面显示..."
+echo "🌐 请访问并确认字段显示中文描述："
+echo "   http://localhost:1337/admin/content-manager/collection-types/api::${content_type}.${content_type}"
+
+echo "🔍 第6步: 强制刷新测试..."
+echo "🔄 请执行强制刷新: Cmd+Shift+R (Mac) 或 Ctrl+Shift+R (Windows)"
+
+echo "🔍 第7步: 最终验证..."
+echo "✅ 确认所有字段都显示中文描述，无任何英文字段名"
+```
+
+### 🛡️ 自动预防机制
+
+#### **开发时预防检查**
+```bash
+# 每次开发启动前执行
+echo "🔍 检查所有内容类型字段描述配置..."
+psql -U aibianx_dev -d aibianx_dev -c "
+SELECT 
+    REPLACE(REPLACE(key, 'plugin_content_manager_configuration_content_types::', ''), 'api::', '') as content_type,
+    CASE 
+        WHEN value::jsonb->'metadatas' IS NULL THEN '❌ 未配置metadatas'
+        WHEN value::jsonb->'metadatas' = '{}' THEN '❌ metadatas为空'
+        ELSE '✅ 已配置字段描述'
+    END as description_status,
+    (SELECT COUNT(*) FROM jsonb_object_keys(value::jsonb->'metadatas')) as field_count
+FROM strapi_core_store_settings 
+WHERE key LIKE 'plugin_content_manager_configuration_content_types::api::%'
+ORDER BY content_type;
+"
+```
+
+#### **提交前强制检查**
+```bash
+# Git提交前必须通过的检查
+if [[ $(psql -U aibianx_dev -d aibianx_dev -t -c "
+SELECT COUNT(*) FROM strapi_core_store_settings 
+WHERE key LIKE 'plugin_content_manager_configuration_content_types::api::%' 
+AND (value::jsonb->'metadatas' IS NULL OR value::jsonb->'metadatas' = '{}')
+") -gt 0 ]]; then
+    echo "❌ 发现未配置字段描述的内容类型，禁止提交！"
+    echo "请执行: ./scripts/tools/configure-any-field-descriptions.sh [content-type]"
+    exit 1
+fi
+```
+
+---
+
+## 🔧 标准化配置工具
+
+### **统一配置脚本**
+- **通用脚本**: `./scripts/tools/configure-any-field-descriptions.sh [content-type]`
+- **支持类型**: article, author, category, tag, site-config, seo-metrics, payment-config
+- **自动功能**: 停服 → 清缓存 → 配置 → 重启 → 验证
+
+### **快速配置命令**
+```bash
+# 配置单个内容类型
+./scripts/tools/configure-any-field-descriptions.sh payment-config
+
+# 批量检查所有类型
+for type in article author category tag site-config seo-metrics payment-config; do
+    echo "检查 $type..."
+    ./scripts/tools/configure-any-field-descriptions.sh $type
+done
+```
+
+---
+
+## 📋 问题排查与解决
+
+### **常见问题及解决方案**
+
+#### **问题1: Admin界面仍显示英文字段名**
+```bash
+# 解决方案: 强制刷新和缓存清理
+1. 强制刷新浏览器: Cmd+Shift+R
+2. 清理后端缓存: rm -rf backend/.tmp backend/.cache
+3. 重启后端服务: ./scripts.sh deploy restart
+4. 再次强制刷新浏览器
+```
+
+#### **问题2: 数据库更新失败**
+```bash
+# 解决方案: 检查数据库连接和权限
+1. 验证数据库连接: psql -U aibianx_dev -d aibianx_dev -c "SELECT 1;"
+2. 检查表是否存在: \dt+ strapi_core_store_settings
+3. 重新生成SQL: 删除旧的update-*.sql文件，重新运行脚本
+```
+
+#### **问题3: 脚本执行中断**
+```bash
+# 解决方案: 分步执行和状态恢复
+1. 检查进程状态: ./scripts.sh tools status
+2. 手动停止服务: ./scripts.sh deploy stop
+3. 清理缓存后重新执行脚本
+```
+
+---
+
+## 🎯 团队协作规范
+
+### **代码审查清单**
+- [ ] 新建内容类型是否执行了字段描述配置？
+- [ ] 是否验证了Admin界面显示中文描述？
+- [ ] 是否添加了数据库表和字段注释？
+- [ ] 是否测试了强制刷新后的显示效果？
+
+### **文档维护要求**
+- 每个新内容类型必须在项目文档中记录字段用途
+- 字段描述变更必须同步更新数据库注释
+- 重要配置变更必须在团队群中通知
+
+### **知识传承机制**
+- 新团队成员必须了解字段描述配置的重要性
+- 定期回顾和更新字段描述配置工具
+- 经验教训及时记录到项目知识库
+
+---
+
+## 🚨 违规后果与补救
+
+### **违规定义**
+- 新建内容类型后24小时内未配置字段描述
+- Admin界面出现英文字段名超过1个工作日
+- 连续2次忘记配置字段描述
+
+### **立即补救措施**
+1. **紧急配置**: 立即停止其他开发工作，优先配置字段描述
+2. **影响评估**: 评估对团队其他成员的影响
+3. **经验总结**: 分析原因并更新预防机制
+4. **流程改进**: 根据问题更新自动化检查脚本
+
+---
+
+## 💡 最佳实践总结
+
+### **预防为主**
+- 内容类型设计阶段就规划好字段描述
+- 使用模板化的字段描述格式
+- 建立字段描述审查机制
+
+### **工具先行**
+- 优先使用自动化配置工具
+- 定期更新和维护配置脚本
+- 建立一键检查和修复机制
+
+### **流程保障**
+- 将字段描述配置纳入标准开发流程
+- 建立强制检查和阻断机制
+- 定期进行全量验证和清理
+
+---
+
+## 🔄 持续改进
+
+### **监控机制**
+- 每周检查一次所有内容类型的字段描述完整性
+- 监控Admin界面使用情况和用户反馈
+- 跟踪字段描述相关的支持请求数量
+
+### **优化方向**
+- 自动化程度不断提升
+- 配置工具功能不断完善
+- 预防机制不断加强
+
+### **版本演进**
+- 根据Strapi版本更新调整配置方法
+- 根据团队反馈改进工具和流程
+- 根据业务发展调整字段描述规范
+
+---
+
+**⚠️ 重要提醒: 字段描述配置不是可选项，而是绝对强制要求！任何违反都将视为严重的开发质量问题。**

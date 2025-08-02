@@ -390,9 +390,16 @@ app.listen(PORT, () => {
   console.log('🚀 ======================================');
   console.log('🚀 BillionMail Mock API 服务已启动');
   console.log('🚀 ======================================');
-  console.log(`🌐 管理界面: http://localhost:${PORT}/admin`);
-  console.log(`🔗 API地址:   http://localhost:${PORT}/api`);
-  console.log(`💻 健康检查: http://localhost:${PORT}/api/health`);
+  
+  // 动态构建访问URL
+  const protocol = process.env.NEXT_PUBLIC_BILLIONMAIL_PROTOCOL || 'http';
+  const domain = process.env.NEXT_PUBLIC_BILLIONMAIL_DOMAIN || 'localhost';
+  const port = process.env.NEXT_PUBLIC_BILLIONMAIL_PORT || PORT;
+  const baseUrl = port === '80' || port === '443' ? `${protocol}://${domain}` : `${protocol}://${domain}:${port}`;
+  
+  console.log(`🌐 管理界面: ${baseUrl}/admin`);
+  console.log(`🔗 API地址:   ${baseUrl}/api`);
+  console.log(`💻 健康检查: ${baseUrl}/api/health`);
   console.log('🚀 ======================================');
   console.log('📝 日志信息：');
 });

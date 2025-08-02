@@ -107,10 +107,28 @@ case $deploy_method in
         
         # 检查服务状态
         if docker-compose ps | grep -q "Up"; then
+            # 加载动态配置
+            if [ -f "$PROJECT_ROOT/scripts/tools/load-config.sh" ]; then
+                source "$PROJECT_ROOT/scripts/tools/load-config.sh"
+                load_dynamic_config
+            fi
+            
+            # 动态构建BillionMail访问URL
+            local billionmail_protocol="${NEXT_PUBLIC_BILLIONMAIL_PROTOCOL:-http}"
+            local billionmail_domain="${NEXT_PUBLIC_BILLIONMAIL_DOMAIN:-localhost}"
+            local billionmail_port="${NEXT_PUBLIC_BILLIONMAIL_PORT:-8081}"
+            
+            # 构建完整URL（智能省略标准端口）
+            if [[ ("$billionmail_protocol" = "http" && "$billionmail_port" = "80") || ("$billionmail_protocol" = "https" && "$billionmail_port" = "443") ]]; then
+                local billionmail_url="${billionmail_protocol}://${billionmail_domain}"
+            else
+                local billionmail_url="${billionmail_protocol}://${billionmail_domain}:${billionmail_port}"
+            fi
+            
             echo -e "${GREEN}✅ BillionMail部署成功！${NC}"
             echo ""
             echo -e "${BLUE}📍 访问信息:${NC}"
-            echo "  管理界面: http://localhost:8081"
+            echo "  管理界面: ${billionmail_url}"
             echo "  用户名: billionmail"
             echo "  密码: billionmail"
             echo ""
@@ -125,14 +143,14 @@ case $deploy_method in
             
             # 更新环境变量
             if [ -f "$PROJECT_ROOT/backend/.env" ]; then
-                sed -i.bak 's|BILLIONMAIL_API_URL=.*|BILLIONMAIL_API_URL=http://localhost:8081/api|g' "$PROJECT_ROOT/backend/.env"
-                sed -i.bak 's|BILLIONMAIL_ADMIN_URL=.*|BILLIONMAIL_ADMIN_URL=http://localhost:8081|g' "$PROJECT_ROOT/backend/.env"
+                sed -i.bak "s|BILLIONMAIL_API_URL=.*|BILLIONMAIL_API_URL=${billionmail_url}/api|g" "$PROJECT_ROOT/backend/.env"
+                sed -i.bak "s|BILLIONMAIL_ADMIN_URL=.*|BILLIONMAIL_ADMIN_URL=${billionmail_url}|g" "$PROJECT_ROOT/backend/.env"
             fi
             
             # 尝试打开浏览器
             if command -v open > /dev/null; then
                 echo -e "${YELLOW}🌐 正在打开浏览器...${NC}"
-                open "http://localhost:8081"
+                open "${billionmail_url}"
             fi
             
         else

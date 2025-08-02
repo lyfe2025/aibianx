@@ -34,6 +34,7 @@ if [ -z "$CONTENT_TYPE" ]; then
     echo "  tag           - 标签管理"
     echo "  site-config   - 网站配置"
     echo "  seo-metrics   - SEO监控"
+    echo "  payment-config- 支付配置"
     echo ""
     echo -e "${YELLOW}使用方法:${NC}"
     echo "  $0 article"
@@ -154,9 +155,25 @@ EOF
 }
 EOF
             ;;
+        "payment-config")
+            cat << 'EOF'
+{
+  "general": "通用支付配置：基础支付设置，包含网站名称、超时时间、日志开关等全局配置",
+  "alipay": "支付宝配置：支付宝支付接入配置，包含应用ID、私钥、公钥等认证信息",
+  "wechatPay": "微信支付配置：微信支付接入配置，包含商户号、密钥、证书等认证信息",
+  "stripe": "Stripe支付配置：国际信用卡支付配置，包含API密钥和webhook设置",
+  "environment": "运行环境：沙箱/生产环境选择，影响支付接口的调用地址和证书使用",
+  "webhookSecret": "Webhook通用密钥：用于验证支付回调的安全性，确保回调来源可信",
+  "callbackBaseUrl": "回调基础URL：支付平台回调时使用的基础地址，用于生成完整的webhook地址",
+  "frontendBaseUrl": "前端基础URL：用户支付完成后跳转的前端地址，影响支付成功页面显示",
+  "lastModifiedBy": "最后修改人：记录最后一次修改配置的管理员，用于配置变更追踪",
+  "configNotes": "配置说明和注意事项：记录重要的配置说明、变更历史和注意事项"
+}
+EOF
+            ;;
         *)
             echo -e "${RED}❌ 未知的内容类型: $content_type${NC}"
-            echo "支持的类型: article, author, category, tag, site-config, seo-metrics"
+            echo "支持的类型: article, author, category, tag, site-config, seo-metrics, payment-config"
             return 1
             ;;
     esac
@@ -232,6 +249,21 @@ UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadata
 UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,icon,edit,description}', '"标签图标：图标名称或路径，增强标签的视觉识别"') WHERE key = 'plugin_content_manager_configuration_content_types::api::tag.tag' AND value::jsonb->'metadatas' ? 'icon';
 UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,featured,edit,description}', '"是否特色标签：用于推荐标签显示和热门标签推荐"') WHERE key = 'plugin_content_manager_configuration_content_types::api::tag.tag' AND value::jsonb->'metadatas' ? 'featured';
 UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,articles,edit,description}', '"标签文章列表：多对多关系，显示使用该标签的所有文章"') WHERE key = 'plugin_content_manager_configuration_content_types::api::tag.tag' AND value::jsonb->'metadatas' ? 'articles';
+EOF
+            ;;
+        "payment-config")
+            cat >> "$sql_file" << 'EOF'
+-- 更新Payment Config字段描述
+UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,general,edit,description}', '"通用支付配置：基础支付设置，包含网站名称、超时时间、日志开关等全局配置"') WHERE key = 'plugin_content_manager_configuration_content_types::api::payment-config.payment-config' AND value::jsonb->'metadatas' ? 'general';
+UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,alipay,edit,description}', '"支付宝配置：支付宝支付接入配置，包含应用ID、私钥、公钥等认证信息"') WHERE key = 'plugin_content_manager_configuration_content_types::api::payment-config.payment-config' AND value::jsonb->'metadatas' ? 'alipay';
+UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,wechatPay,edit,description}', '"微信支付配置：微信支付接入配置，包含商户号、密钥、证书等认证信息"') WHERE key = 'plugin_content_manager_configuration_content_types::api::payment-config.payment-config' AND value::jsonb->'metadatas' ? 'wechatPay';
+UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,stripe,edit,description}', '"Stripe支付配置：国际信用卡支付配置，包含API密钥和webhook设置"') WHERE key = 'plugin_content_manager_configuration_content_types::api::payment-config.payment-config' AND value::jsonb->'metadatas' ? 'stripe';
+UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,environment,edit,description}', '"运行环境：沙箱/生产环境选择，影响支付接口的调用地址和证书使用"') WHERE key = 'plugin_content_manager_configuration_content_types::api::payment-config.payment-config' AND value::jsonb->'metadatas' ? 'environment';
+UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,webhookSecret,edit,description}', '"Webhook通用密钥：用于验证支付回调的安全性，确保回调来源可信"') WHERE key = 'plugin_content_manager_configuration_content_types::api::payment-config.payment-config' AND value::jsonb->'metadatas' ? 'webhookSecret';
+UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,callbackBaseUrl,edit,description}', '"回调基础URL：支付平台回调时使用的基础地址，用于生成完整的webhook地址"') WHERE key = 'plugin_content_manager_configuration_content_types::api::payment-config.payment-config' AND value::jsonb->'metadatas' ? 'callbackBaseUrl';
+UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,frontendBaseUrl,edit,description}', '"前端基础URL：用户支付完成后跳转的前端地址，影响支付成功页面显示"') WHERE key = 'plugin_content_manager_configuration_content_types::api::payment-config.payment-config' AND value::jsonb->'metadatas' ? 'frontendBaseUrl';
+UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,lastModifiedBy,edit,description}', '"最后修改人：记录最后一次修改配置的管理员，用于配置变更追踪"') WHERE key = 'plugin_content_manager_configuration_content_types::api::payment-config.payment-config' AND value::jsonb->'metadatas' ? 'lastModifiedBy';
+UPDATE strapi_core_store_settings SET value = jsonb_set(value::jsonb, '{metadatas,configNotes,edit,description}', '"配置说明和注意事项：记录重要的配置说明、变更历史和注意事项"') WHERE key = 'plugin_content_manager_configuration_content_types::api::payment-config.payment-config' AND value::jsonb->'metadatas' ? 'configNotes';
 EOF
             ;;
         *)

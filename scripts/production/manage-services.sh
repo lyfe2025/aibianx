@@ -101,6 +101,24 @@ stop_services() {
     echo "   服务: $service"
     echo ""
     
+    # 停止搜索索引同步服务（仅在停止所有服务时）
+    if [ "$service" = "all" ]; then
+        if [ -f "$PROJECT_ROOT/.pids/search-sync-prod.pid" ]; then
+            SEARCH_SYNC_PID=$(cat "$PROJECT_ROOT/.pids/search-sync-prod.pid")
+            if kill -0 $SEARCH_SYNC_PID 2>/dev/null; then
+                echo -e "${BLUE}🔄 停止搜索索引同步服务 (PID: $SEARCH_SYNC_PID)...${NC}"
+                kill $SEARCH_SYNC_PID 2>/dev/null || true
+                echo -e "${GREEN}✅ 搜索索引同步服务已停止${NC}"
+            else
+                echo -e "${YELLOW}⚠️  搜索索引同步服务已停止${NC}"
+            fi
+            rm -f "$PROJECT_ROOT/.pids/search-sync-prod.pid"
+        else
+            echo -e "${CYAN}💡 未发现搜索索引同步进程${NC}"
+        fi
+        echo ""
+    fi
+    
     cd "$PROJECT_ROOT"
     
     if [ "$service" = "all" ]; then

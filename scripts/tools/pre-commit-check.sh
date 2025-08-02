@@ -41,14 +41,18 @@ echo -e "${BLUE}0️⃣ 硬编码和语法检查${NC}"
 echo "   运行硬编码检查工具..."
 
 if [ -f "$PROJECT_ROOT/scripts/tools/check-hardcode.sh" ]; then
-    "$PROJECT_ROOT/scripts/tools/check-hardcode.sh" > /dev/null 2>&1
+    # 显示进度，不隐藏输出
+    echo "   📋 正在扫描项目文件..."
+    "$PROJECT_ROOT/scripts/tools/check-hardcode.sh"
     HARDCODE_CHECK=$?
     
+    echo ""
     if [ $HARDCODE_CHECK -eq 1 ]; then
         record_error "发现严重硬编码问题，必须立即修复！"
-        echo "   运行详细检查: ./scripts/tools/check-hardcode.sh"
+        echo "   💡 查看详细问题: ./scripts/tools/check-hardcode.sh"
     elif [ $HARDCODE_CHECK -eq 2 ]; then
         record_warning "发现硬编码警告，建议修复"
+        echo "   💡 查看详细问题: ./scripts/tools/check-hardcode.sh"
     else
         record_success "硬编码检查通过"
     fi

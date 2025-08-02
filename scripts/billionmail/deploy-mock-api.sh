@@ -70,13 +70,14 @@ sleep 3
 # 检查服务状态
 if ps -p $SERVER_PID > /dev/null; then
     # 验证API响应
-    if curl -s -f http://localhost:8081/api/health >/dev/null 2>&1; then
+    local api_url="http://localhost:8081"
+    if curl -s -f "${api_url}/api/health" >/dev/null 2>&1; then
         echo -e "${GREEN}✅ BillionMail模拟API服务启动成功${NC}"
         echo ""
         echo -e "${BLUE}📍 访问地址:${NC}"
-        echo "  管理界面: http://localhost:8081/admin"
-        echo "  API地址:   http://localhost:8081/api"
-        echo "  健康检查: http://localhost:8081/api/health"
+        echo "  管理界面: ${api_url}/admin"
+        echo "  API地址:   ${api_url}/api"
+        echo "  健康检查: ${api_url}/api/health"
         echo ""
         echo -e "${YELLOW}📋 服务信息:${NC}"
         echo "  进程ID: $SERVER_PID"

@@ -22,8 +22,14 @@ TEST_EMAIL="test-nextauth@example.com"
 TEST_USERNAME="NextAuthTestUser"
 TEST_PASSWORD="test123456"
 
-# 前端服务URL
-FRONTEND_URL="http://localhost"
+# 前端服务URL (动态加载)
+if [ -f "$SCRIPT_DIR/../tools/load-config.sh" ]; then
+    source "$SCRIPT_DIR/../tools/load-config.sh"
+    load_dynamic_config
+    FRONTEND_URL="${FRONTEND_URL:-http://localhost}"
+else
+    FRONTEND_URL="http://localhost"
+fi
 API_BASE="${FRONTEND_URL}/api"
 
 echo -e "${YELLOW}📋 测试配置${NC}"
@@ -205,7 +211,7 @@ echo "🌐 测试地址："
 echo "  • 验证请求页面: $FRONTEND_URL/auth/verify-request"
 echo "  • 注册API: $API_BASE/auth/register"
 echo "  • 密码重置API: $API_BASE/auth/reset-password"
-echo "  • BillionMail管理: http://localhost:8080/billion"
+echo "  • BillionMail管理: ${BILLIONMAIL_ADMIN_URL:-http://localhost:8080}/billion"
 echo ""
 
 # 7. 提供快速测试命令
