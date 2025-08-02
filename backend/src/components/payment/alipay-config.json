@@ -1,0 +1,90 @@
+{
+  "collectionName": "components_payment_alipay_configs",
+  "info": {
+    "displayName": "支付宝配置",
+    "description": "支付宝支付相关配置"
+  },
+  "options": {},
+  "attributes": {
+    "enabled": {
+      "type": "boolean",
+      "default": false,
+      "required": true,
+      "description": "启用支付宝支付"
+    },
+    
+    "appId": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "支付宝应用ID"
+    },
+    
+    "privateKey": {
+      "type": "text",
+      "description": "应用私钥（RSA2048）"
+    },
+    
+    "alipayPublicKey": {
+      "type": "text", 
+      "description": "支付宝公钥"
+    },
+    
+    "gateway": {
+      "type": "enumeration",
+      "enum": [
+        "https://openapi.alipay.com/gateway.do",
+        "https://openapi.alipaydev.com/gateway.do"
+      ],
+      "default": "https://openapi.alipaydev.com/gateway.do",
+      "description": "支付宝网关地址"
+    },
+    
+    "supportedMethods": {
+      "type": "json",
+      "default": {
+        "web": true,
+        "wap": true,
+        "app": false,
+        "qrcode": true
+      },
+      "description": "支持的支付方式"
+    },
+    
+    "notifyUrl": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "异步通知地址（自动生成：{callbackBaseUrl}/api/payment/alipay/callback）"
+    },
+    
+    "signType": {
+      "type": "enumeration",
+      "enum": ["RSA2", "RSA"],
+      "default": "RSA2",
+      "description": "签名类型"
+    },
+    
+    "charset": {
+      "type": "enumeration",
+      "enum": ["utf-8", "gbk"],
+      "default": "utf-8",
+      "description": "字符编码"
+    },
+    
+    "configStatus": {
+      "type": "enumeration",
+      "enum": ["draft", "configured", "testing", "active"],
+      "default": "draft",
+      "description": "配置状态"
+    },
+    
+    "lastTestedAt": {
+      "type": "datetime",
+      "description": "最后测试时间"
+    },
+    
+    "testResult": {
+      "type": "json",
+      "description": "测试结果详情"
+    }
+  }
+}

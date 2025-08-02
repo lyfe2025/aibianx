@@ -20,6 +20,7 @@
     "@strapi/plugin-users-permissions": "5.20.0",
     "@strapi/strapi": "5.20.0",
     "@types/nodemailer": "^6.4.17",
+    "alipay-sdk": "^4.14.0",
     "axios": "^1.11.0",
     "meilisearch": "^0.51.0",
     "nodemailer": "^7.0.5",

@@ -1,0 +1,98 @@
+{
+  "collectionName": "components_payment_wechat_configs",
+  "info": {
+    "displayName": "微信支付配置",
+    "description": "微信支付相关配置"
+  },
+  "options": {},
+  "attributes": {
+    "enabled": {
+      "type": "boolean",
+      "default": false,
+      "required": true,
+      "description": "启用微信支付"
+    },
+    
+    "appId": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "微信应用ID（公众号/小程序）"
+    },
+    
+    "mchId": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "商户号"
+    },
+    
+    "apiKey": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "API密钥（APIv2）"
+    },
+    
+    "privateKey": {
+      "type": "text",
+      "description": "API私钥（APIv3）"
+    },
+    
+    "certificate": {
+      "type": "text",
+      "description": "API证书（APIv3）"
+    },
+    
+    "apiVersion": {
+      "type": "enumeration",
+      "enum": ["v2", "v3"],
+      "default": "v3",
+      "description": "微信支付API版本"
+    },
+    
+    "supportedMethods": {
+      "type": "json",
+      "default": {
+        "jsapi": true,
+        "h5": true,
+        "native": true,
+        "app": false,
+        "miniprogram": false
+      },
+      "description": "支持的支付方式"
+    },
+    
+    "notifyUrl": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "异步通知地址（自动生成：{callbackBaseUrl}/api/payment/wechat/callback）"
+    },
+    
+    "jsApiDomain": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "JSAPI支付域名（需要在微信后台配置）"
+    },
+    
+    "h5Domain": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "H5支付域名（需要在微信后台配置）"
+    },
+    
+    "configStatus": {
+      "type": "enumeration",
+      "enum": ["draft", "configured", "testing", "active"],
+      "default": "draft",
+      "description": "配置状态"
+    },
+    
+    "lastTestedAt": {
+      "type": "datetime",
+      "description": "最后测试时间"
+    },
+    
+    "testResult": {
+      "type": "json",
+      "description": "测试结果详情"
+    }
+  }
+}

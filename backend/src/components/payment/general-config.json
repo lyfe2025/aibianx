@@ -1,0 +1,49 @@
+{
+  "collectionName": "components_payment_general_configs",
+  "info": {
+    "displayName": "通用支付配置",
+    "description": "支付系统通用配置项"
+  },
+  "options": {},
+  "attributes": {
+    "siteName": {
+      "type": "string",
+      "required": true,
+      "default": "AI变现之路",
+      "maxLength": 100,
+      "description": "网站名称（用于支付页面显示）"
+    },
+    
+    "paymentTimeout": {
+      "type": "integer",
+      "default": 30,
+      "min": 5,
+      "max": 60,
+      "description": "支付超时时间（分钟）"
+    },
+    
+    "enablePaymentLogs": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用支付日志记录"
+    },
+    
+    "enableAutoRefund": {
+      "type": "boolean", 
+      "default": false,
+      "description": "启用自动退款（超时订单）"
+    },
+    
+    "minPaymentAmount": {
+      "type": "decimal",
+      "default": 1,
+      "description": "最小支付金额（分）"
+    },
+    
+    "maxPaymentAmount": {
+      "type": "decimal",
+      "default": 100000,
+      "description": "最大支付金额（分）"
+    }
+  }
+}

@@ -22,7 +22,10 @@ export default {
     // 4. 初始化邮件系统 (esbuild问题已解决，暂时跳过等待重新创建)
     // await initializeEmailSystem(strapi)
 
-            // 5. 显示API端点信息
+            // 5. 初始化支付系统
+            await initializePaymentSystem(strapi)
+
+            // 6. 显示API端点信息
             displayAPIEndpoints()
 
             console.log('✅ Strapi应用启动完成！')
@@ -432,6 +435,40 @@ function registerSearchRoutes(strapi: any, meilisearchService: any) {
     })
 
     console.log('✅ 搜索API路由已注册')
+}
+
+/**
+ * 初始化支付系统
+ */
+async function initializePaymentSystem(strapi: Core.Strapi) {
+    console.log('💳 初始化支付系统...')
+
+    try {
+        // 1. 初始化默认支付配置
+        await strapi.service('api::payment-config.payment-config').initializeDefaultConfig()
+
+        // 2. 注册支付服务到全局
+        const paymentService = strapi.service('payment-service')
+        if (paymentService) {
+            // 初始化支付管理器
+            paymentService.getPaymentManager()
+            console.log('✅ 支付管理器初始化完成')
+        }
+
+        // 3. 启动支付超时检查任务 (每5分钟检查一次)
+        setInterval(async () => {
+            try {
+                await strapi.service('api::payments.payments').checkPaymentTimeout()
+            } catch (error) {
+                strapi.log.error('支付超时检查错误:', error)
+            }
+        }, 5 * 60 * 1000) // 5分钟
+
+        console.log('✅ 支付系统初始化完成')
+    } catch (error) {
+        console.error('❌ 支付系统初始化失败:', error)
+        throw error
+    }
 }
 
 /**
