@@ -77,33 +77,33 @@ export default factories.createCoreController('api::payment-config.payment-confi
       const availableMethods = [];
 
       // 检查支付宝
-      if (config.alipay?.enabled && config.alipay?.configStatus === 'active') {
+      if ((config as any).alipay?.enabled && (config as any).alipay?.configStatus === 'active') {
         availableMethods.push({
           id: 'alipay',
           name: '支付宝',
           icon: '/icons/alipay.svg',
-          supportedMethods: config.alipay.supportedMethods || {}
+          supportedMethods: (config as any).alipay.supportedMethods || {}
         });
       }
 
       // 检查微信支付
-      if (config.wechatPay?.enabled && config.wechatPay?.configStatus === 'active') {
+      if ((config as any).wechatPay?.enabled && (config as any).wechatPay?.configStatus === 'active') {
         availableMethods.push({
           id: 'wechat',
           name: '微信支付',
           icon: '/icons/wechat.svg',
-          supportedMethods: config.wechatPay.supportedMethods || {}
+          supportedMethods: (config as any).wechatPay.supportedMethods || {}
         });
       }
 
       // 检查Stripe
-      if (config.stripe?.enabled && config.stripe?.configStatus === 'active') {
+      if ((config as any).stripe?.enabled && (config as any).stripe?.configStatus === 'active') {
         availableMethods.push({
           id: 'stripe',
           name: '信用卡支付',
           icon: '/icons/stripe.svg',
-          supportedMethods: config.stripe.supportedMethods || {},
-          supportedCurrencies: config.stripe.supportedCurrencies || ['usd']
+          supportedMethods: (config as any).stripe.supportedMethods || {},
+          supportedCurrencies: (config as any).stripe.supportedCurrencies || ['usd']
         });
       }
 
@@ -113,10 +113,10 @@ export default factories.createCoreController('api::payment-config.payment-confi
           availableMethods,
           environment: config.environment,
           general: {
-            siteName: config.general?.siteName || 'AI变现之路',
-            paymentTimeout: config.general?.paymentTimeout || 30,
-            minPaymentAmount: config.general?.minPaymentAmount || 1,
-            maxPaymentAmount: config.general?.maxPaymentAmount || 100000
+            siteName: (config as any).general?.siteName || 'AI变现之路',
+            paymentTimeout: (config as any).general?.paymentTimeout || 30,
+            minPaymentAmount: (config as any).general?.minPaymentAmount || 1,
+            maxPaymentAmount: (config as any).general?.maxPaymentAmount || 100000
           }
         }
       };

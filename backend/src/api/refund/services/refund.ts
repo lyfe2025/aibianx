@@ -62,7 +62,7 @@ export default factories.createCoreService('api::refund.refund', ({ strapi }) =>
   async cancelRelatedSubscription(orderId: number) {
     const subscriptions = await strapi.entityService.findMany('api::subscription.subscription', {
       filters: {
-        order: orderId,
+        order: { id: orderId },
         status: 'active'
       }
     });
@@ -87,14 +87,14 @@ export default factories.createCoreService('api::refund.refund', ({ strapi }) =>
       // 创建返佣回收记录
       await strapi.entityService.create('api::commission.commission', {
         data: {
-          inviterUser: order.inviterUser.id,
+          inviterUser: (order as any).inviterUser.id,
           invitedUser: order.user.id,
           order: order.id,
           commissionAmount: -order.commissionAmount, // 负数表示回收
           commissionType: 'refund_recovery',
           status: 'completed',
           description: `订单 ${order.orderNo} 退款返佣回收`
-        }
+        } as any
       });
     }
   },

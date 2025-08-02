@@ -27,7 +27,7 @@ export default factories.createCoreController('api::refund.refund', ({ strapi })
       return ctx.notFound('订单不存在');
     }
     
-    if (order.user.id !== user.id) {
+    if ((order as any).user.id !== user.id) {
       return ctx.forbidden('无权限操作此订单');
     }
     
@@ -39,7 +39,7 @@ export default factories.createCoreController('api::refund.refund', ({ strapi })
     const existingRefund = await strapi.entityService.findMany('api::refund.refund', {
       filters: {
         order: orderId,
-        status: ['pending', 'approved']
+        status: { $in: ['pending', 'approved'] }
       }
     });
     
@@ -60,12 +60,12 @@ export default factories.createCoreController('api::refund.refund', ({ strapi })
     };
     
     const result = await strapi.entityService.create('api::refund.refund', {
-      data: refundData,
+      data: refundData as any,
       populate: ['order', 'user', 'payment']
     });
     
     // 发送退款申请通知给管理员
-    await this.sendRefundNotificationToAdmin(result);
+    await (this as any).sendRefundNotificationToAdmin(result);
     
     return result;
   },
@@ -151,7 +151,7 @@ export default factories.createCoreController('api::refund.refund', ({ strapi })
     });
     
     // 发送处理结果通知给用户
-    await this.sendRefundResultNotification(result);
+    await (this as any).sendRefundResultNotification(result);
     
     return result;
   },
@@ -235,11 +235,11 @@ export default factories.createCoreController('api::refund.refund', ({ strapi })
    */
   async sendRefundResultNotification(refund) {
     try {
-      const templateName = refund.status === 'completed' ? 'refund-approved' : 'refund-rejected';
+      const templateName = String(refund.status) === 'completed' ? 'refund-approved' : 'refund-rejected';
       
       await strapi.plugins['email'].services.email.send({
-        to: refund.user.email,
-        subject: refund.status === 'completed' ? '退款申请已通过' : '退款申请已拒绝',
+        to: (refund as any).user.email,
+        subject: String(refund.status) === 'completed' ? '退款申请已通过' : '退款申请已拒绝',
         template: templateName,
         data: {
           user: refund.user,

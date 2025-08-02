@@ -448,7 +448,7 @@ async function initializePaymentSystem(strapi: Core.Strapi) {
         await strapi.service('api::payment-config.payment-config').initializeDefaultConfig()
 
         // 2. 注册支付服务到全局
-        const paymentService = strapi.service('payment-service')
+        const paymentService = strapi.service('payment-service' as any)
         if (paymentService) {
             // 初始化支付管理器
             paymentService.getPaymentManager()

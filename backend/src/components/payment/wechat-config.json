@@ -2,7 +2,7 @@
   "collectionName": "components_payment_wechat_configs",
   "info": {
     "displayName": "微信支付配置",
-    "description": "微信支付相关配置"
+    "description": "微信支付相关配置，包含AppID、商户号、API密钥等必要信息"
   },
   "options": {},
   "attributes": {

@@ -31,17 +31,35 @@ export default ({ strapi }) => ({
   initializeProviders() {
     const manager = strapi.paymentManager;
     
-    // 注册支付宝提供商 (稍后实现)
-    // const alipayProvider = new AlipayProvider(strapi);
-    // manager.register(alipayProvider);
+    // 注册支付宝提供商
+    try {
+      const { AlipayProvider } = require('./providers/alipay-provider');
+      const alipayProvider = new AlipayProvider(strapi);
+      manager.register(alipayProvider);
+      strapi.log.info('支付宝提供商已注册');
+    } catch (error) {
+      strapi.log.error('注册支付宝提供商失败:', error);
+    }
 
-    // 注册微信支付提供商 (稍后实现)
-    // const wechatProvider = new WechatProvider(strapi);
-    // manager.register(wechatProvider);
+    // 注册微信支付提供商
+    try {
+      const { WechatProvider } = require('./providers/wechat-provider');
+      const wechatProvider = new WechatProvider(strapi);
+      manager.register(wechatProvider);
+      strapi.log.info('微信支付提供商已注册');
+    } catch (error) {
+      strapi.log.error('注册微信支付提供商失败:', error);
+    }
 
-    // 注册Stripe提供商 (稍后实现)
-    // const stripeProvider = new StripeProvider(strapi);
-    // manager.register(stripeProvider);
+    // 注册Stripe提供商
+    try {
+      const { StripeProvider } = require('./providers/stripe-provider');
+      const stripeProvider = new StripeProvider(strapi);
+      manager.register(stripeProvider);
+      strapi.log.info('Stripe提供商已注册');
+    } catch (error) {
+      strapi.log.error('注册Stripe提供商失败:', error);
+    }
 
     strapi.log.info('支付提供商初始化完成');
   },

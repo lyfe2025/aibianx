@@ -94,7 +94,7 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
         commissionType: 'order',
         status: 'pending',
         description: `订单 ${orderNo} 返佣`
-      }
+      } as any
     });
     
     // 这里可以添加积分或余额增加逻辑
@@ -252,9 +252,9 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
     
     // 根据groupBy参数添加分组统计
     if (groupBy === 'daily') {
-      baseStats.dailyStats = this.groupOrdersByDay(orders, payments);
+      (baseStats as any).dailyStats = this.groupOrdersByDay(orders, payments);
     } else if (groupBy === 'monthly') {
-      baseStats.monthlyStats = this.groupOrdersByMonth(orders, payments);
+      (baseStats as any).monthlyStats = this.groupOrdersByMonth(orders, payments);
     }
     
     return baseStats;

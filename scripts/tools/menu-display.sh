@@ -125,18 +125,21 @@ show_usage() {
 
 # 智能环境自适应菜单显示
 show_menu() {
-    # 检测当前环境
+    # 检测当前环境（避免递归调用）
     local env_info=""
-    if [ -f "$SCRIPT_DIR/scripts.sh" ]; then
-        # 从主脚本获取环境信息
-        env_info=$(source "$SCRIPT_DIR/scripts.sh" && detect_current_environment 2>/dev/null || echo "development:unknown")
-    else
-        env_info="development:unknown"
+    local env_type="development"
+    local env_status="unknown"
+    
+    # 直接检查环境标记文件
+    if [ -f "$SCRIPT_DIR/.production" ]; then
+        env_type="production"
+        env_status=$(cat "$SCRIPT_DIR/.production" 2>/dev/null | cut -d'-' -f2- || echo "unknown")
+    elif [ -f "$SCRIPT_DIR/.development" ]; then
+        env_type="development"
+        env_status=$(cat "$SCRIPT_DIR/.development" 2>/dev/null | cut -d'-' -f2- || echo "unknown")
     fi
     
-    local env_type="${env_info%%:*}"
-    local env_status="${env_info#*:}"
-    env_status="${env_status%%:*}"
+    env_info="${env_type}:${env_status}"
     
     clear
     

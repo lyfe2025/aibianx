@@ -466,6 +466,75 @@ show_deployment_result() {
     echo ""
 }
 
+# 统一模式部署
+deploy_unified() {
+    local compose_file="$1"
+    
+    log_step "执行统一部署"
+    
+    # 如果有setup-unified-deployment.sh，优先使用
+    if [ -f "$PROJECT_ROOT/deployment/setup-unified-deployment.sh" ]; then
+        log_info "使用统一部署脚本..."
+        
+        # 获取域名配置
+        local domain=$(grep "NEXT_PUBLIC_FRONTEND_DOMAIN=" "$PROJECT_ROOT/frontend/.env.local" 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "yourdomain.com")
+        local mail_domain=$(grep "MAIL_DOMAIN=" "$PROJECT_ROOT/backend/.env" 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "mail.$domain")
+        
+        # 执行统一部署
+        cd "$PROJECT_ROOT/deployment"
+        if ./setup-unified-deployment.sh "$domain" "$mail_domain"; then
+            log_success "统一部署完成"
+            return 0
+        else
+            log_error "统一部署失败"
+            return 1
+        fi
+    else
+        # 使用标准docker-compose部署
+        log_info "使用Docker Compose统一部署..."
+        
+        # 停止现有服务
+        if docker compose -f "$compose_file" ps -q 2>/dev/null | grep -q .; then
+            log_info "停止现有服务..."
+            docker compose -f "$compose_file" down
+        fi
+        
+        # 构建并启动服务
+        log_info "构建并启动所有服务..."
+        if docker compose -f "$compose_file" up -d --build; then
+            log_success "服务启动成功"
+            return 0
+        else
+            log_error "服务启动失败"
+            return 1
+        fi
+    fi
+}
+
+# 分离模式部署
+deploy_separate() {
+    local compose_file="$1"
+    
+    log_step "执行分离部署"
+    
+    # 分步启动服务
+    local services=("postgres" "redis" "meilisearch" "backend" "frontend" "nginx")
+    
+    for service in "${services[@]}"; do
+        log_info "启动服务: $service"
+        if docker compose -f "$compose_file" up -d "$service"; then
+            log_info "等待服务稳定..."
+            sleep 5
+        else
+            log_error "服务 $service 启动失败"
+            return 1
+        fi
+    done
+    
+    log_success "分离部署完成"
+    return 0
+}
+
 # 显示帮助信息
 show_help() {
     echo -e "${GREEN}🚀 AI变现之路 - 生产部署工具${NC}"

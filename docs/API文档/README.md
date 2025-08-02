@@ -1,328 +1,116 @@
-# API文档 📡
+# 📡 API文档
 
-> 📋 **接口文档、数据格式、调用示例**
+> 接口文档、数据格式、调用示例的完整指南
 
-## 📚 目录说明
+## 📋 目录说明
 
-本目录包含AI变现之路项目的API接口文档、数据格式说明和调用示例。
-
----
-
-## 📁 **文档分类**
-
-### 🔗 **核心API文档**
-- **[API-ENDPOINTS.md](../../API-ENDPOINTS.md)** - 完整的API端点文档，包含所有接口说明
-- **[Strapi API](../当前开发/后台系统/)** - Strapi CMS自动生成的API接口
-
-### 📊 **API分类**
-
-#### **内容管理API**
-- **文章API** (`/api/articles`)
-  - 获取文章列表
-  - 获取单篇文章
-  - 文章搜索和筛选
-  - 文章分页查询
-
-- **作者API** (`/api/authors`)
-  - 获取作者列表
-  - 获取作者详情
-  - 作者文章列表
-
-- **分类标签API** (`/api/categories`, `/api/tags`)
-  - 获取分类/标签列表
-  - 按分类/标签筛选文章
-
-#### **邮件营销API**
-- **邮件订阅API** (`/api/email-subscription`)
-  - 邮件订阅
-  - 取消订阅
-  - 订阅状态查询
-
-- **SMTP配置API** (`/api/smtp-configs`)
-  - SMTP配置管理
-  - 连接测试
-  - 健康检查
-
-#### **用户认证API**
-- **用户注册** (`/api/auth/register`)
-- **密码管理** (`/api/auth/forgot-password`)
-- **邮箱验证** (`/api/auth/verify-code`)
-
-#### **搜索引擎API**
-- **文章搜索** (`/api/search/articles`)
-- **搜索建议** (`/api/search/suggestions`)
-- **搜索统计** (`/api/search/stats`)
+本目录包含AI变现之路项目的API接口文档和集成指南，是前后端对接和第三方集成的核心参考。
 
 ---
 
-## 🔗 **API基础信息**
+## 📊 文档清单
 
-### **基础配置**
-```
-API Base URL: http://localhost:1337/api
-管理后台: http://localhost:1337/admin
-认证方式: JWT Bearer Token (生产环境)
-数据格式: JSON
-API版本: Strapi 5.20.0
-```
+### 💰 **支付系统API**
+- **[轻量级支付集成方案.md](./轻量级支付集成方案.md)** - 多渠道支付系统的完整设计和实现方案
+- **[支付系统开发完成总结.md](./支付系统开发完成总结.md)** - 支付功能完整实现的经验总结和技术要点
+- **[支付系统完整验证报告.md](./支付系统完整验证报告.md)** - 支付功能测试验证和质量保证报告
+- **[三大支付平台申请指南.md](./三大支付平台申请指南.md)** - 支付宝、微信支付、Stripe平台申请流程
+- **[三大支付平台后台配置指南.md](./三大支付平台后台配置指南.md)** - 支付平台后台配置的详细操作指南
 
-### **通用响应格式**
-```json
-{
-  "data": [
-    {
-      "id": 1,
-      "documentId": "unique-doc-id",
-      "attributes": {
-        "title": "标题",
-        "content": "内容"
-      }
-    }
-  ],
-  "meta": {
-    "pagination": {
-      "page": 1,
-      "pageSize": 25,
-      "pageCount": 10,
-      "total": 250
-    }
-  }
-}
-```
-
-### **错误响应格式**
-```json
-{
-  "error": {
-    "status": 400,
-    "name": "ValidationError",
-    "message": "参数验证失败",
-    "details": {
-      "field": "email",
-      "message": "邮箱格式不正确"
-    }
-  }
-}
-```
+### 🔧 **API调试工具**
+- **[API调试速查指南.md](./API调试速查指南.md)** - API接口调试工具和方法的快速参考
 
 ---
 
-## 📖 **API使用指南**
+## 🎯 **使用指南**
 
-### **认证方式**
+### **👥 适用人群**
+- **前端开发** - API接口调用和数据格式规范
+- **后端开发** - API设计规范和接口实现标准
+- **支付开发** - 支付系统集成和平台配置
+- **测试工程师** - API测试方法和验证流程
+- **第三方集成** - 外部系统对接和数据交换
 
-#### **公开访问**
-```bash
-# 获取文章列表（无需认证）
-curl -X GET "http://localhost:1337/api/articles?populate=*"
-```
-
-#### **需要认证的API**
-```bash
-# 使用JWT Token
-curl -X POST "http://localhost:1337/api/articles" \
-  -H "Authorization: Bearer your-jwt-token" \
-  -H "Content-Type: application/json" \
-  -d '{"data": {"title": "新文章"}}'
-```
-
-### **查询参数**
-
-#### **分页参数**
-```bash
-# 分页查询
-GET /api/articles?pagination[page]=1&pagination[pageSize]=10
-```
-
-#### **关联查询**
-```bash
-# 包含关联数据
-GET /api/articles?populate=author,category,tags,featuredImage
-```
-
-#### **筛选查询**
-```bash
-# 按分类筛选
-GET /api/articles?filters[category][slug][$eq]=tech-guide
-
-# 搜索文章
-GET /api/articles?filters[title][$containsi]=AI变现
-```
-
-#### **排序参数**
-```bash
-# 按发布时间降序
-GET /api/articles?sort[0]=publishedAt:desc
-```
+### **📖 阅读顺序建议**
+1. **支付集成开发**: 轻量级支付集成方案 → 三大支付平台申请 → 后台配置指南
+2. **支付系统维护**: 支付系统完成总结 → 完整验证报告 → 调试速查指南
+3. **API调试测试**: API调试速查指南 → 支付系统验证报告
+4. **新手入门**: 支付集成方案概览 → 申请指南 → 配置指南
 
 ---
 
-## 🛠️ **开发工具**
+## 🔧 **API规范要点**
 
-### **API测试工具**
-- **命令行**: curl, httpie
-- **图形界面**: Postman, Insomnia
-- **浏览器**: 直接访问GET接口
-- **开发工具**: VS Code REST Client
+### **💰 支付系统API**
+- **多渠道支持**: 支付宝、微信支付、Stripe国际支付
+- **安全保障**: 完整的签名验证和数据加密
+- **状态管理**: 统一的订单状态和支付状态管理
+- **异常处理**: 完善的错误处理和重试机制
+- **回调处理**: 标准化的支付回调和状态同步
 
-### **API客户端库**
+### **🔍 API调试规范**
+- **统一格式**: 标准的请求/响应格式和错误码
+- **调试工具**: Postman集合和测试用例
+- **日志记录**: 完整的API调用日志和监控
+- **测试数据**: 标准化的测试数据和mock服务
 
-#### **前端客户端**
-```typescript
-// frontend/src/lib/strapi.ts
-import { strapiApi } from '@/lib/api'
-
-// 获取文章列表
-const articles = await strapiApi.getArticles({
-  pagination: { pageSize: 10, page: 1 },
-  filters: { featured: { $eq: true } }
-})
-```
-
-#### **Node.js客户端**
-```javascript
-// backend/src/lib/billionmail.ts
-import { billionMail } from '@/lib/billionmail'
-
-// 发送邮件
-await billionMail.sendEmail({
-  to: 'user@example.com',
-  subject: '欢迎订阅',
-  content: '感谢您的订阅！'
-})
-```
+### **📊 数据格式标准**
+- **请求格式**: JSON格式，统一的字段命名规范
+- **响应格式**: 标准的成功/错误响应结构
+- **数据类型**: 明确的数据类型定义和验证规则
+- **分页处理**: 统一的分页参数和响应格式
 
 ---
 
-## 📊 **API规范**
+## 💡 **集成指南**
 
-### **RESTful设计原则**
-- **资源导向**: URL表示资源，HTTP方法表示操作
-- **无状态**: 每个请求包含所有必要信息
-- **统一接口**: 一致的HTTP状态码和响应格式
-- **分层系统**: 客户端不需要知道服务器内部结构
+### **🚀 快速集成**
+1. **支付系统集成**: 按照轻量级支付集成方案进行
+2. **平台申请**: 参考三大支付平台申请指南
+3. **配置设置**: 按照后台配置指南进行设置
+4. **测试验证**: 使用API调试指南进行测试
 
-### **HTTP状态码**
-| 状态码 | 说明 | 使用场景 |
-|--------|------|----------|
-| 200 | 成功 | GET, PUT请求成功 |
-| 201 | 已创建 | POST请求成功创建资源 |
-| 204 | 无内容 | DELETE请求成功 |
-| 400 | 请求错误 | 参数验证失败 |
-| 401 | 未授权 | 需要认证 |
-| 403 | 禁止访问 | 权限不足 |
-| 404 | 未找到 | 资源不存在 |
-| 500 | 服务器错误 | 内部错误 |
+### **🔐 安全要求**
+- **HTTPS通信**: 所有API调用必须使用HTTPS
+- **签名验证**: 关键接口需要签名验证
+- **权限控制**: 基于角色的API访问控制
+- **频率限制**: 合理的API调用频率限制
 
-### **命名规范**
-- **URL**: 小写字母，连字符分隔 (`/api/articles`)
-- **字段名**: 驼峰命名 (`firstName`, `publishedAt`)
-- **枚举值**: 下划线分隔 (`user_role`, `payment_status`)
+### **📈 性能优化**
+- **缓存策略**: 合理使用缓存减少API调用
+- **批量处理**: 支持批量操作提高效率
+- **异步处理**: 长时间操作使用异步模式
+- **监控告警**: 完整的性能监控和告警机制
 
 ---
 
-## 🧪 **API测试**
+## 🔧 **维护说明**
 
-### **基础测试**
-```bash
-# 健康检查
-curl -s http://localhost:1337/_health
+### **📝 维护责任**
+- **维护团队**: 后端开发组
+- **更新频率**: API变更时同步更新文档
+- **审核流程**: 技术负责人审核后发布
 
-# 获取文章总数
-curl -s 'http://localhost:1337/api/articles' | jq '.meta.pagination.total'
+### **✏️ 文档更新规范**
+1. **新增API接口时需要同步更新文档**
+2. **API参数变更时需要及时更新说明**
+3. **集成方案优化时需要更新指南文档**
+4. **第三方平台变更时需要更新配置说明**
 
-# 测试搜索功能
-curl -s 'http://localhost:1337/api/search/articles?q=AI变现' | jq '.data.hits | length'
-```
-
-### **性能测试**
-```bash
-# API响应时间测试
-time curl -s 'http://localhost:1337/api/articles' > /dev/null
-
-# 并发测试
-ab -n 100 -c 10 http://localhost:1337/api/articles
-```
-
-### **集成测试**
-```bash
-# 完整API流程测试
-./scripts.sh test api-integration
-```
+### **🎯 文档质量标准**
+- **完整性**: 包含完整的接口说明和示例
+- **准确性**: 参数说明和响应格式准确无误
+- **实用性**: 提供可直接使用的代码示例
+- **时效性**: 及时反映最新的接口变更
 
 ---
 
-## 📈 **API监控**
+## 🔗 **相关文档**
 
-### **性能指标**
-- **响应时间**: < 200ms
-- **成功率**: > 99.9%
-- **并发处理**: 100 req/s
-- **错误率**: < 0.1%
-
-### **监控工具**
-```bash
-# API健康检查
-curl -s http://localhost:1337/api/health
-
-# 系统状态监控
-./scripts.sh tools status
-
-# 错误日志监控
-tail -f logs/backend.log | grep ERROR
-```
+- **[架构文档](../架构文档/README.md)** - 了解API架构设计和技术选型
+- **[开发指南](../开发指南/README.md)** - API开发规范和最佳实践
+- **[部署运维](../部署运维/README.md)** - API服务部署和运维管理
 
 ---
 
-## 🔐 **API安全**
-
-### **安全措施**
-- **HTTPS**: 生产环境强制HTTPS
-- **CORS**: 跨域访问控制
-- **Rate Limiting**: 请求频率限制
-- **Input Validation**: 输入参数验证
-- **SQL Injection**: 参数化查询防护
-
-### **认证授权**
-```typescript
-// JWT Token验证
-const token = req.headers.authorization?.replace('Bearer ', '');
-const user = await verifyJWTToken(token);
-```
-
----
-
-## 📝 **API版本管理**
-
-### **版本策略**
-- **URL版本**: `/api/v1/articles`, `/api/v2/articles`
-- **Header版本**: `Accept: application/vnd.api+json; version=1`
-- **向后兼容**: 保持旧版本API的稳定性
-
-### **变更记录**
-- **v1.0.0** (2024-01): 初始版本，基础CRUD功能
-- **v1.1.0** (2024-01): 新增搜索API和邮件订阅
-- **v1.2.0** (计划中): 用户认证和权限管理
-
----
-
-## 🔗 **相关资源**
-
-### **内部文档**
-- [架构文档](../架构文档/README.md) - 系统架构设计
-- [开发指南](../开发指南/README.md) - 开发规范
-- [部署运维](../部署运维/README.md) - 部署和运维
-
-### **外部资源**
-- [Strapi API文档](https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/)
-- [REST API设计指南](https://restfulapi.net/)
-- [HTTP状态码](https://httpstatuses.com/)
-- [JWT Token](https://jwt.io/)
-
----
-
-**📡 API文档 - 让AI变现之路的API接口清晰易用！**
-
-**📅 最后更新**: 2024年1月  
-**📝 维护团队**: 后端开发组  
-**🎯 下一步**: 完善API文档和增加更多示例
+*最后更新：2025年2月 | 维护：后端开发组*

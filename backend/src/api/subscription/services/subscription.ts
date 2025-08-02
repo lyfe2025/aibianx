@@ -11,7 +11,7 @@ export default factories.createCoreService('api::subscription.subscription', ({ 
   async checkUserFeaturePermission(userId: number, feature: string): Promise<boolean> {
     const subscription = await strapi.entityService.findMany('api::subscription.subscription', {
       filters: {
-        user: userId,
+        user: { id: userId },
         status: 'active'
       },
       limit: 1,
@@ -38,15 +38,15 @@ export default factories.createCoreService('api::subscription.subscription', ({ 
     
     switch (feature) {
       case 'premiumContent':
-        return features.premiumContent === true;
+        return (features as any).premiumContent === true;
       case 'downloadLimit':
-        return features.downloadLimit === -1 || (features.downloadLimit && features.downloadLimit > 0);
+        return (features as any).downloadLimit === -1 || ((features as any).downloadLimit && (features as any).downloadLimit > 0);
       case 'exclusiveContent':
-        return features.exclusiveContent === true;
+        return (features as any).exclusiveContent === true;
       case 'supportPriority':
-        return ['high', 'premium'].includes(features.supportPriority);
+        return ['high', 'premium'].includes((features as any).supportPriority);
       case 'earlyAccess':
-        return features.earlyAccess === true;
+        return (features as any).earlyAccess === true;
       default:
         return false;
     }
@@ -161,8 +161,8 @@ export default factories.createCoreService('api::subscription.subscription', ({ 
     let monthlyRevenue = 0;
     
     for (const subscription of activeSubscriptions) {
-      if (subscription.order) {
-        monthlyRevenue += subscription.order.finalPrice || 0;
+      if ((subscription as any).order) {
+        monthlyRevenue += (subscription as any).order.finalPrice || 0;
       }
     }
     
@@ -185,8 +185,8 @@ export default factories.createCoreService('api::subscription.subscription', ({ 
     
     let yearlyRevenue = 0;
     for (const subscription of yearlySubscriptions) {
-      if (subscription.order) {
-        yearlyRevenue += subscription.order.finalPrice || 0;
+      if ((subscription as any).order) {
+        yearlyRevenue += (subscription as any).order.finalPrice || 0;
       }
     }
     
@@ -268,8 +268,8 @@ export default factories.createCoreService('api::subscription.subscription', ({ 
         orderType: 'membership',
         productName: `${subscription.planName} - 续费`,
         productType: `${subscription.planType}-member`,
-        originalPrice: subscription.order.originalPrice,
-        finalPrice: subscription.order.finalPrice,
+        originalPrice: (subscription as any).order.originalPrice,
+        finalPrice: (subscription as any).order.finalPrice,
         status: 'pending',
         expiredAt: new Date(Date.now() + 30 * 60 * 1000) // 30分钟过期
       }
@@ -281,8 +281,8 @@ export default factories.createCoreService('api::subscription.subscription', ({ 
         order: renewalOrder.id,
         user: subscription.user.id,
         paymentNo: `PAY${Date.now()}R${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
-        paymentMethod: subscription.order.paymentMethod || 'auto',
-        amount: subscription.order.finalPrice,
+        paymentMethod: (subscription as any).order.paymentMethod || 'auto',
+        amount: (subscription as any).order.finalPrice,
         status: 'pending'
       }
     });
@@ -301,7 +301,7 @@ export default factories.createCoreService('api::subscription.subscription', ({ 
   async getUserPermissionDetails(userId: number) {
     const subscription = await strapi.entityService.findMany('api::subscription.subscription', {
       filters: {
-        user: userId,
+        user: { id: userId },
         status: 'active'
       },
       limit: 1,
@@ -324,11 +324,11 @@ export default factories.createCoreService('api::subscription.subscription', ({ 
       planName: currentSubscription.planName,
       endDate: currentSubscription.endDate,
       permissions: {
-        premiumContent: features.premiumContent === true,
-        downloadLimit: features.downloadLimit || 0,
-        exclusiveContent: features.exclusiveContent === true,
-        supportPriority: features.supportPriority || 'standard',
-        earlyAccess: features.earlyAccess === true
+        premiumContent: (features as any).premiumContent === true,
+        downloadLimit: (features as any).downloadLimit || 0,
+        exclusiveContent: (features as any).exclusiveContent === true,
+        supportPriority: (features as any).supportPriority || 'standard',
+        earlyAccess: (features as any).earlyAccess === true
       }
     };
   },

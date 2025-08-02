@@ -143,6 +143,70 @@ if (process.env.NODE_ENV === 'development') {
     console.log('🔍 [DEBUG] STRAPI_URL:', STRAPI_URL)
 }
 
+// Strapi API客户端对象
+export const strapiApi = {
+    async get(endpoint: string) {
+        const response = await fetch(`${STRAPI_URL}${endpoint}`, {
+            headers: getHeaders(),
+        })
+        
+        if (!response.ok) {
+            throw new Error(`API request failed: ${response.status}`)
+        }
+        
+        return {
+            data: await response.json()
+        }
+    },
+    
+    async post(endpoint: string, data?: any) {
+        const response = await fetch(`${STRAPI_URL}${endpoint}`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: data ? JSON.stringify(data) : undefined,
+        })
+        
+        if (!response.ok) {
+            throw new Error(`API request failed: ${response.status}`)
+        }
+        
+        return {
+            data: await response.json()
+        }
+    },
+    
+    async put(endpoint: string, data?: any) {
+        const response = await fetch(`${STRAPI_URL}${endpoint}`, {
+            method: 'PUT',
+            headers: getHeaders(),
+            body: data ? JSON.stringify(data) : undefined,
+        })
+        
+        if (!response.ok) {
+            throw new Error(`API request failed: ${response.status}`)
+        }
+        
+        return {
+            data: await response.json()
+        }
+    },
+    
+    async delete(endpoint: string) {
+        const response = await fetch(`${STRAPI_URL}${endpoint}`, {
+            method: 'DELETE',
+            headers: getHeaders(),
+        })
+        
+        if (!response.ok) {
+            throw new Error(`API request failed: ${response.status}`)
+        }
+        
+        return {
+            data: await response.json()
+        }
+    }
+}
+
 // Strapi响应类型定义
 interface StrapiResponse<T> {
     data: T

@@ -76,4 +76,11 @@ export { WhyChooseCard } from './WhyChooseCard'
 export { WhyChooseSection } from './WhyChooseSection'
 export { WithdrawActions } from './WithdrawActions'
 export { WithdrawInstructions } from './WithdrawInstructions'
-export { WithdrawRecordTable } from './WithdrawRecordTable' 
+export { WithdrawRecordTable } from './WithdrawRecordTable'
+
+// Payment components
+export { PaymentCheckout } from './PaymentCheckout'
+export { PaymentMethodSelector } from './PaymentMethodSelector' 
+export { AlipayCheckout } from './AlipayCheckout'
+export { WechatCheckout } from './WechatCheckout'
+export { StripeCheckout } from './StripeCheckout' 

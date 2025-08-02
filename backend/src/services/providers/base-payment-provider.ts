@@ -12,7 +12,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   protected config: any;
 
   constructor(strapi: Strapi) {
-    this.strapi = strapi;
+    strapi = strapi;
   }
 
   /**
@@ -20,7 +20,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
    */
   protected async getConfig(): Promise<any> {
     if (!this.config) {
-      this.config = await this.strapi.service('api::payment-config.payment-config')
+      this.config = await strapi.service('api::payment-config.payment-config')
         .getPaymentMethodConfig(this.name);
     }
     return this.config;
@@ -60,13 +60,13 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     
     switch (level) {
       case 'info':
-        this.strapi.log.info(logMessage, data);
+        strapi.log.info(logMessage, data);
         break;
       case 'error':
-        this.strapi.log.error(logMessage, data);
+        strapi.log.error(logMessage, data);
         break;
       case 'warn':
-        this.strapi.log.warn(logMessage, data);
+        strapi.log.warn(logMessage, data);
         break;
     }
   }

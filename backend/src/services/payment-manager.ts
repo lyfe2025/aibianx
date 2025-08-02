@@ -98,7 +98,7 @@ export class PaymentManager {
   private strapi: Strapi;
 
   constructor(strapi: Strapi) {
-    this.strapi = strapi;
+    strapi = strapi;
   }
 
   /**
@@ -106,7 +106,7 @@ export class PaymentManager {
    */
   register(provider: PaymentProvider) {
     this.providers.set(provider.name, provider);
-    this.strapi.log.info(`支付提供商 ${provider.name} 已注册`);
+    strapi.log.info(`支付提供商 ${provider.name} 已注册`);
   }
 
   /**
@@ -129,7 +129,7 @@ export class PaymentManager {
   async createPayment(method: string, orderData: PaymentData): Promise<PaymentResult> {
     try {
       // 1. 验证支付方式是否可用
-      const isEnabled = await this.strapi.service('api::payment-config.payment-config')
+      const isEnabled = await strapi.service('api::payment-config.payment-config')
         .isPaymentMethodEnabled(method);
       
       if (!isEnabled) {
@@ -156,12 +156,12 @@ export class PaymentManager {
       };
 
       // 4. 在数据库中创建支付记录
-      const payment = await this.strapi.entityService.create('api::payment.payment', {
+      const payment = await strapi.entityService.create('api::payment.payment', {
         data: {
           paymentNo,
           order: orderData.orderId,
           user: orderData.userId,
-          paymentMethod: method,
+          paymentMethod: method as any,
           amount: orderData.amount,
           currency: orderData.currency || 'CNY',
           status: 'pending',
@@ -175,7 +175,7 @@ export class PaymentManager {
 
       // 6. 更新支付记录
       if (result.success) {
-        await this.strapi.entityService.update('api::payment.payment', payment.id, {
+        await strapi.entityService.update('api::payment.payment', payment.id, {
           data: {
             thirdPartyOrderNo: result.paymentId,
             thirdPartyResponse: result.rawResponse
@@ -183,24 +183,24 @@ export class PaymentManager {
         });
 
         // 记录支付日志
-        this.strapi.log.info(`支付创建成功: ${paymentNo}, 方式: ${method}`);
+        strapi.log.info(`支付创建成功: ${paymentNo}, 方式: ${method}`);
       } else {
-        await this.strapi.entityService.update('api::payment.payment', payment.id, {
+        await strapi.entityService.update('api::payment.payment', payment.id, {
           data: {
             status: 'failed',
             failReason: result.message
           }
         });
 
-        this.strapi.log.error(`支付创建失败: ${paymentNo}, 原因: ${result.message}`);
+        strapi.log.error(`支付创建失败: ${paymentNo}, 原因: ${result.message}`);
       }
 
       return {
         ...result,
-        paymentId: payment.id
+        paymentId: String(payment.id)
       };
     } catch (error) {
-      this.strapi.log.error('创建支付时发生错误:', error);
+      strapi.log.error('创建支付时发生错误:', error);
       return {
         success: false,
         message: '创建支付失败，请稍后重试'
@@ -214,7 +214,7 @@ export class PaymentManager {
   async queryPaymentStatus(paymentNo: string): Promise<PaymentStatus> {
     try {
       // 1. 从数据库获取支付记录
-      const payments = await this.strapi.entityService.findMany('api::payment.payment', {
+      const payments = await strapi.entityService.findMany('api::payment.payment', {
         filters: { paymentNo }
       });
 
@@ -235,7 +235,7 @@ export class PaymentManager {
           status: payment.status,
           amount: payment.amount,
           thirdPartyTransactionId: payment.thirdPartyTransactionId,
-          completedAt: payment.completedAt
+          completedAt: payment.completedAt ? new Date(payment.completedAt) : undefined
         };
       }
 
@@ -246,7 +246,7 @@ export class PaymentManager {
         
         // 4. 如果第三方状态有变化，更新数据库
         if (thirdPartyStatus.status !== payment.status) {
-          await this.updatePaymentStatus(payment.id, thirdPartyStatus);
+          await this.updatePaymentStatus(String(payment.id), thirdPartyStatus);
         }
 
         return thirdPartyStatus;
@@ -258,7 +258,7 @@ export class PaymentManager {
         amount: payment.amount
       };
     } catch (error) {
-      this.strapi.log.error('查询支付状态错误:', error);
+      strapi.log.error('查询支付状态错误:', error);
       return {
         paymentNo,
         status: 'failed',
@@ -274,24 +274,24 @@ export class PaymentManager {
     try {
       const provider = this.getProvider(method);
       if (!provider) {
-        this.strapi.log.error(`未找到支付提供商: ${method}`);
+        strapi.log.error(`未找到支付提供商: ${method}`);
         return false;
       }
 
       // 1. 验证回调签名
       const isValid = provider.verifyCallback(callbackData);
       if (!isValid) {
-        this.strapi.log.error(`支付回调签名验证失败: ${method}`);
+        strapi.log.error(`支付回调签名验证失败: ${method}`);
         return false;
       }
 
       // 2. 处理回调
       await provider.handleCallback(callbackData);
       
-      this.strapi.log.info(`支付回调处理成功: ${method}`);
+      strapi.log.info(`支付回调处理成功: ${method}`);
       return true;
     } catch (error) {
-      this.strapi.log.error('处理支付回调错误:', error);
+      strapi.log.error('处理支付回调错误:', error);
       return false;
     }
   }
@@ -302,7 +302,7 @@ export class PaymentManager {
   async processRefund(paymentNo: string, refundAmount: number, reason?: string): Promise<RefundResult> {
     try {
       // 1. 获取支付记录
-      const payments = await this.strapi.entityService.findMany('api::payment.payment', {
+      const payments = await strapi.entityService.findMany('api::payment.payment', {
         filters: { paymentNo },
         populate: ['order']
       });
@@ -349,12 +349,12 @@ export class PaymentManager {
 
       // 5. 创建退款记录
       if (refundResult.success) {
-        await this.strapi.entityService.create('api::refund.refund', {
+        await strapi.entityService.create('api::refund.refund', {
           data: {
             refundNo: this.generateRefundNo(),
-            order: payment.order.id,
+            order: (payment as any).order.id,
             payment: payment.id,
-            user: payment.user,
+            user: (payment as any).user,
             refundAmount,
             refundReason: reason || '用户申请退款',
             status: 'completed',
@@ -363,7 +363,7 @@ export class PaymentManager {
         });
 
         // 6. 更新支付状态
-        await this.strapi.entityService.update('api::payment.payment', payment.id, {
+        await strapi.entityService.update('api::payment.payment', payment.id, {
           data: {
             status: 'refunded'
           }
@@ -372,7 +372,7 @@ export class PaymentManager {
 
       return refundResult;
     } catch (error) {
-      this.strapi.log.error('处理退款错误:', error);
+      strapi.log.error('处理退款错误:', error);
       return {
         success: false,
         refundAmount,
@@ -398,18 +398,18 @@ export class PaymentManager {
       updateData.notifiedAt = new Date();
     }
 
-    await this.strapi.entityService.update('api::payment.payment', paymentId, {
+    await strapi.entityService.update('api::payment.payment', paymentId, {
       data: updateData
     });
 
     // 如果支付成功，触发订单处理
     if (statusData.status === 'success') {
-      const payment = await this.strapi.entityService.findOne('api::payment.payment', paymentId, {
+      const payment = await strapi.entityService.findOne('api::payment.payment', paymentId, {
         populate: ['order']
       });
       
-      if (payment?.order) {
-        await this.strapi.service('api::order.order').handlePaymentSuccess(payment.order);
+      if ((payment as any)?.order) {
+        await strapi.service('api::order.order').handlePaymentSuccess((payment as any).order);
       }
     }
   }

@@ -20,7 +20,7 @@ export default factories.createCoreController('api::order.order', ({ strapi }) =
     const orderNo = `ORD${Date.now()}${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
     
     // 计算返佣信息
-    const commissionInfo = await this.calculateCommission(data);
+    const commissionInfo = await (this as any).calculateCommission(data);
     
     const orderData = {
       ...data,
@@ -28,11 +28,11 @@ export default factories.createCoreController('api::order.order', ({ strapi }) =
       user: user.id,
       status: 'pending',
       expiredAt: new Date(Date.now() + 30 * 60 * 1000), // 30分钟过期
-      ...commissionInfo
+      ...(commissionInfo as any)
     };
     
     const result = await strapi.entityService.create('api::order.order', {
-      data: orderData,
+      data: orderData as any,
       populate: ['user', 'inviterUser']
     });
     
@@ -83,7 +83,7 @@ export default factories.createCoreController('api::order.order', ({ strapi }) =
       return ctx.notFound('订单不存在');
     }
     
-    if (order.user.id !== user.id) {
+    if ((order as any).user.id !== user.id) {
       return ctx.forbidden('无权限操作此订单');
     }
     
@@ -123,7 +123,7 @@ export default factories.createCoreController('api::order.order', ({ strapi }) =
     }
     
     // 检查权限：只有订单所属用户或管理员可以查看
-    if (order.user.id !== user.id && !this.isAdmin(user)) {
+    if ((order as any).user.id !== user.id && !(this as any).isAdmin(user)) {
       return ctx.forbidden('无权限查看此订单');
     }
     
@@ -156,7 +156,7 @@ export default factories.createCoreController('api::order.order', ({ strapi }) =
   async getAdminStats(ctx) {
     const { user } = ctx.state;
     
-    if (!user || !this.isAdmin(user)) {
+    if (!user || !(this as any).isAdmin(user)) {
       return ctx.forbidden('需要管理员权限');
     }
     

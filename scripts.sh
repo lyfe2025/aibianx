@@ -919,14 +919,8 @@ execute_choice() {
                 echo -e "${YELLOW}🧹 清理生产资源...${NC}"
                 exec "$SCRIPT_DIR/scripts/production/maintain-production.sh" cleanup
             else
-                echo -e "${BLUE}💾 整合环境数据库备份...${NC}"
-                if [ -f "$SCRIPT_DIR/scripts/database/backup-integrated.sh" ]; then
-                    exec "$SCRIPT_DIR/scripts/database/backup-integrated.sh"
-                else
-                    echo -e "${RED}❌ 整合备份脚本不存在${NC}"
-                    read -p "按回车键返回主菜单..."
-                    return 1
-                fi
+                echo -e "${BLUE}💾 开发环境备份...${NC}"
+                exec "$SCRIPT_DIR/scripts/backup/backup-strapi.sh"
             fi
             ;;
         22) # 验证/整合恢复
@@ -943,13 +937,7 @@ execute_choice() {
                 echo "请指定备份文件路径："
                 read -p "备份文件: " backup_file
                 if [ -n "$backup_file" ] && [ -f "$backup_file" ]; then
-                    if [ -f "$SCRIPT_DIR/scripts/database/restore-integrated.sh" ]; then
-                        exec "$SCRIPT_DIR/scripts/database/restore-integrated.sh" "$backup_file"
-                    else
-                        echo -e "${RED}❌ 整合恢复脚本不存在${NC}"
-                        read -p "按回车键返回主菜单..."
-                        return 1
-                    fi
+                    exec "$SCRIPT_DIR/scripts/backup/restore-strapi.sh" "$backup_file"
                 else
                     echo -e "${RED}❌ 备份文件不存在或未指定${NC}"
                     echo ""
@@ -963,14 +951,8 @@ execute_choice() {
                 echo -e "${BLUE}🔄 更新生产系统...${NC}"
                 exec "$SCRIPT_DIR/scripts/production/maintain-production.sh" update
             else
-                echo -e "${BLUE}🔍 整合环境状态检查...${NC}"
-                if [ -f "$SCRIPT_DIR/scripts/database/check-integrated.sh" ]; then
-                    exec "$SCRIPT_DIR/scripts/database/check-integrated.sh"
-                else
-                    echo -e "${RED}❌ 整合检查脚本不存在${NC}"
-                    read -p "按回车键返回主菜单..."
-                    return 1
-                fi
+                echo -e "${BLUE}🔍 开发环境状态检查...${NC}"
+                exec "$SCRIPT_DIR/scripts/tools/status.sh"
             fi
             ;;
         24) # 告警/验证备份
@@ -1194,9 +1176,17 @@ handle_command_line() {
                     echo -e "${BLUE}🔧 启动环境变量自动配置工具...${NC}"
                     exec "$SCRIPT_DIR/scripts/tools/setup-env.sh" "$@"
                     ;;
+                "check-hardcode")
+                    echo -e "${BLUE}🔍 启动硬编码检查工具...${NC}"
+                    exec "$SCRIPT_DIR/scripts/tools/check-hardcode.sh" "$@"
+                    ;;
+                "pre-commit")
+                    echo -e "${BLUE}🚀 启动提交前检查工具...${NC}"
+                    exec "$SCRIPT_DIR/scripts/tools/pre-commit-check.sh" "$@"
+                    ;;
                 *)
                     echo -e "${RED}❌ 未知的工具操作: $action${NC}"
-                    echo "可用操作: status, env, fix-fields, fix-fields-any, setup-env"
+                    echo "可用操作: status, env, fix-fields, fix-fields-any, setup-env, check-hardcode, pre-commit"
                     exit 1
                     ;;
             esac
@@ -1344,8 +1334,8 @@ handle_command_line() {
         "integrated")
             case "$action" in
                 "backup")
-                    echo -e "${BLUE}💾 整合环境数据库备份...${NC}"
-                    exec "$SCRIPT_DIR/scripts/database/backup-integrated.sh"
+                    echo -e "${BLUE}💾 开发环境完整备份...${NC}"
+                    exec "$SCRIPT_DIR/scripts/backup/backup-strapi.sh"
                     ;;
                 "restore")
                     if [ -z "$3" ]; then
@@ -1354,13 +1344,13 @@ handle_command_line() {
                         echo "示例: $0 integrated restore backups/integrated/integrated_backup_20250130_140000.tar.gz"
                         exit 1
                     else
-                        echo -e "${YELLOW}🔄 整合环境数据库还原...${NC}"
-                        exec "$SCRIPT_DIR/scripts/database/restore-integrated.sh" "$3"
+                        echo -e "${YELLOW}🔄 开发环境数据还原...${NC}"
+                        exec "$SCRIPT_DIR/scripts/backup/restore-strapi.sh" "$3"
                     fi
                     ;;
                 "check")
-                    echo -e "${BLUE}🔍 整合环境状态检查...${NC}"
-                    exec "$SCRIPT_DIR/scripts/database/check-integrated.sh"
+                    echo -e "${BLUE}🔍 开发环境状态检查...${NC}"
+                    exec "$SCRIPT_DIR/scripts/tools/status.sh"
                     ;;
                 "verify")
                     if [ -z "$3" ]; then
@@ -1374,12 +1364,12 @@ handle_command_line() {
                     fi
                     ;;
                 *)
-                    echo -e "${BLUE}🔄 AI变现之路 + BillionMail - 整合部署管理工具${NC}"
+                    echo -e "${BLUE}🔄 AI变现之路 - 开发环境管理工具（兼容整合备份）${NC}"
                     echo "========================================================="
                     echo "可用命令:"
-                    echo "  backup                    - 整合环境数据库备份 (AI变现之路 + BillionMail)"
-                    echo "  restore <backup-file>     - 整合环境数据库还原"
-                    echo "  check                     - 整合环境状态检查"
+                    echo "  backup                    - 开发环境完整备份 (数据库+文件)"
+                    echo "  restore <backup-file>     - 开发环境数据还原"
+                    echo "  check                     - 开发环境状态检查"
                     echo "  verify <backup-file>      - 验证整合备份文件"
                     echo ""
                     echo "用法示例:"

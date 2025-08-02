@@ -19,11 +19,18 @@ echo "✅ Node.js 版本: $(node --version)"
 
 # 加载统一配置
 source "$(dirname "$0")/../tools/load-config.sh"
+source "$(dirname "$0")/../tools/load-env.sh"
 load_config
+
+# 加载后端环境变量（修复数据库信息显示问题）
+if ! load_backend_env; then
+    echo "❌ 加载后端环境变量失败"
+    exit 1
+fi
 
 # 显示数据库配置
 echo "🗄️ 数据库配置:"
-echo "   主机: $DB_HOST:$DB_PORT"
+echo "   主机: $DATABASE_HOST:$DATABASE_PORT"
 
 # 检查PostgreSQL服务
 check_postgresql() {
@@ -141,7 +148,10 @@ fi
 echo "🔄 启动Strapi后端服务..."
 npm run develop > ../logs/backend.log 2>&1 &
 BACKEND_PID=$!
+# 创建PID目录并保存PID文件
+mkdir -p ../.pids
 echo $BACKEND_PID > ../logs/backend.pid
+echo $BACKEND_PID > ../.pids/backend.pid
 cd ..
 
 echo "✅ 后端服务已启动 (PID: $BACKEND_PID)"
@@ -150,7 +160,7 @@ echo "📝 后端日志: logs/backend.log"
 # 等待后端启动完成
 echo "⏳ 等待后端服务启动完成..."
 BACKEND_READY=false
-for i in {1..60}; do
+for i in {1..30}; do
     # 检查进程是否还在运行
     if ! kill -0 $BACKEND_PID 2>/dev/null; then
         echo ""
@@ -158,19 +168,17 @@ for i in {1..60}; do
         exit 1
     fi
     
-    # 检查多个端点，更准确判断启动状态
-    if curl -s "${BACKEND_URL}/_health" > /dev/null 2>&1 || \
-       curl -s "${BACKEND_ADMIN_URL}" > /dev/null 2>&1 || \
-       curl -s "${BACKEND_API_URL}/articles" > /dev/null 2>&1; then
+    # 检查后端API是否可访问 (使用动态URL而不是硬编码)
+    if curl -s "${BACKEND_API_URL}/articles" > /dev/null 2>&1; then
         echo ""
         echo "✅ 后端服务启动完成"
         BACKEND_READY=true
         break
     fi
     
-    if [ $i -eq 60 ]; then
+    if [ $i -eq 30 ]; then
         echo ""
-        echo "❌ 后端服务启动超时（120秒），请检查日志文件: logs/backend.log"
+        echo "❌ 后端服务启动超时（60秒），请检查日志文件: logs/backend.log"
         echo "💡 常见问题："
         echo "   - 数据库连接问题"
         echo "   - 端口被占用"
@@ -193,7 +201,10 @@ echo "🔄 启动Next.js前端服务..."
 cd frontend
 npm run dev > ../logs/frontend.log 2>&1 &
 FRONTEND_PID=$!
+# 创建PID目录并保存PID文件
+mkdir -p ../.pids
 echo $FRONTEND_PID > ../logs/frontend.pid
+echo $FRONTEND_PID > ../.pids/frontend.pid
 cd ..
 
 echo "✅ 前端服务已启动 (PID: $FRONTEND_PID)"
@@ -202,7 +213,7 @@ echo "📝 前端日志: logs/frontend.log"
 # 等待前端启动完成
 echo "⏳ 等待前端服务启动完成..."
 FRONTEND_READY=false
-for i in {1..30}; do
+for i in {1..20}; do
     # 检查进程是否还在运行
     if ! kill -0 $FRONTEND_PID 2>/dev/null; then
         echo ""
@@ -212,7 +223,7 @@ for i in {1..30}; do
         exit 1
     fi
     
-    # 检查前端是否可访问
+    # 检查前端是否可访问 (使用动态URL而不是硬编码)
     if curl -s "${FRONTEND_URL}" > /dev/null 2>&1; then
         echo ""
         echo "✅ 前端服务启动完成"
@@ -220,9 +231,9 @@ for i in {1..30}; do
         break
     fi
     
-    if [ $i -eq 30 ]; then
+    if [ $i -eq 20 ]; then
         echo ""
-        echo "⚠️  前端服务启动超时（60秒），但进程正在运行"
+        echo "⚠️  前端服务启动超时（40秒），但进程正在运行"
         echo "💡 前端服务可能仍在编译中，请稍后访问"
         FRONTEND_READY=true  # 继续执行，不退出
         break
@@ -251,7 +262,7 @@ echo ""
 echo "📝 日志文件："
 echo "   📄 后端日志: logs/backend.log"
 echo "   📄 前端日志: logs/frontend.log"
-echo "   📄 进程ID: logs/backend.pid, logs/frontend.pid"
+echo "   📄 进程ID: .pids/backend.pid, .pids/frontend.pid"
 echo ""
 echo "🌐 所有访问地址："
 echo "   🖥️  前端应用: ${FRONTEND_URL} (AI变现之路主站)"

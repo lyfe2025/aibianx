@@ -2,7 +2,7 @@
   "collectionName": "components_payment_general_configs",
   "info": {
     "displayName": "通用支付配置",
-    "description": "支付系统通用配置项"
+    "description": "支付系统通用配置项，包含超时时间、金额限制等通用设置"
   },
   "options": {},
   "attributes": {

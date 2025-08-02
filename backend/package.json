@@ -28,7 +28,9 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
-    "styled-components": "^6.0.0"
+    "stripe": "^18.4.0",
+    "styled-components": "^6.0.0",
+    "wechatpay-axios-plugin": "^0.9.4"
   },
   "devDependencies": {
     "@types/node": "^20",

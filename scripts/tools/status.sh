@@ -50,7 +50,7 @@ if [ -f "logs/frontend.pid" ]; then
     if kill -0 $FRONTEND_PID 2>/dev/null; then
         echo -e "   ${GREEN}✅ 运行中 (PID: $FRONTEND_PID)${NC}"
         if curl -s "${FRONTEND_URL}" > /dev/null 2>&1; then
-            echo -e "   ${GREEN}✅ HTTP服务正常 (http://localhost)${NC}"
+            echo -e "   ${GREEN}✅ HTTP服务正常 (${FRONTEND_URL})${NC}"
         else
             echo -e "   ${YELLOW}⚠️  HTTP服务异常${NC}"
         fi

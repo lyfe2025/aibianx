@@ -755,8 +755,169 @@ const articleCards = transformArticleList(apiResponse.data)
 
 ---
 
+## 💳 **支付系统**
+
+### 🔧 **支付配置管理** (管理员权限)
+
+#### 获取支付配置
+```http
+GET /api/payment-config
+Authorization: Bearer {admin_token}
+```
+
+#### 更新支付配置
+```http
+PUT /api/payment-config
+Authorization: Bearer {admin_token}
+Content-Type: application/json
+
+{
+  "data": {
+    "environment": "sandbox",
+    "callbackBaseUrl": "http://localhost:1337",
+    "frontendBaseUrl": "http://localhost",
+    "alipay": {
+      "enabled": true,
+      "appId": "your_app_id",
+      "configStatus": "active"
+    }
+  }
+}
+```
+
+#### 测试支付配置
+```http
+POST /api/payment-config/test/{method}
+Authorization: Bearer {admin_token}
+```
+**支持的方法**: `alipay`, `wechat`, `stripe`
+
+### 🌐 **支付方式查询** (公开API)
+
+#### 获取可用支付方式
+```http
+GET /api/payment-config/available-methods
+```
+
+**响应示例:**
+```json
+{
+  "success": true,
+  "data": {
+    "availableMethods": [
+      {
+        "id": "alipay",
+        "name": "支付宝",
+        "icon": "/icons/alipay.svg",
+        "supportedMethods": {
+          "web": true,
+          "wap": true,
+          "qrcode": true
+        }
+      }
+    ],
+    "environment": "sandbox",
+    "general": {
+      "siteName": "AI变现之路",
+      "paymentTimeout": 30,
+      "minPaymentAmount": 1,
+      "maxPaymentAmount": 100000
+    }
+  }
+}
+```
+
+### 💰 **支付操作** (用户认证)
+
+#### 创建支付订单
+```http
+POST /api/payments/create
+Authorization: Bearer {user_token}
+Content-Type: application/json
+
+{
+  "orderId": "order_123456",
+  "paymentMethod": "alipay",
+  "amount": 9900,
+  "currency": "CNY",
+  "productName": "AI变现之路 - 高级会员月费",
+  "returnUrl": "https://yourdomain.com/payment/success",
+  "cancelUrl": "https://yourdomain.com/payment/cancel"
+}
+```
+
+**响应示例:**
+```json
+{
+  "success": true,
+  "data": {
+    "paymentId": "payment_789",
+    "paymentData": {
+      "type": "redirect",
+      "url": "https://openapi.alipaydev.com/gateway.do?..."
+    },
+    "message": "支付创建成功"
+  }
+}
+```
+
+#### 查询支付状态
+```http
+GET /api/payments/status/{paymentNo}
+Authorization: Bearer {user_token}
+```
+
+#### 获取支付历史
+```http
+GET /api/payments/history?page=1&pageSize=10&status=success
+Authorization: Bearer {user_token}
+```
+
+#### 取消支付
+```http
+POST /api/payments/cancel/{paymentNo}
+Authorization: Bearer {user_token}
+```
+
+#### 申请退款
+```http
+POST /api/payments/refund/{paymentNo}
+Authorization: Bearer {user_token}
+Content-Type: application/json
+
+{
+  "refundAmount": 9900,
+  "reason": "用户申请退款"
+}
+```
+
+### 🔄 **支付回调** (第三方通知)
+
+#### 通用支付回调
+```http
+POST /api/payments/callback/{method}
+Content-Type: application/json
+```
+
+#### 支付宝专用回调
+```http
+# 异步通知回调
+POST /api/payments/alipay/callback
+
+# 同步跳转回调
+GET /api/payments/alipay/return?out_trade_no=xxx&trade_status=TRADE_SUCCESS
+
+# 取消支付回调
+GET /api/payments/alipay/cancel?out_trade_no=xxx
+```
+
+---
+
 ## 📝 **更新日志**
 
+- **2025-08-02**: 🎉 新增轻量级支付系统，支持支付宝、微信支付、Stripe三种支付方式
+- **2025-08-02**: 💳 完整的支付配置管理，支持后台开关控制和沙箱/生产环境切换
+- **2025-08-02**: 🔄 支付状态实时轮询，H5内嵌支付体验，支持回调和状态同步
 - **2025-01-23**: 新增邮件营销系统完整API，包含订阅管理、SMTP配置、模板系统
 - **2025-01-23**: 新增用户认证系统前端API路由，支持注册、密码重置、邮箱验证
 - **2025-01-23**: 集成MeiliSearch搜索引擎，提供高性能文章搜索功能

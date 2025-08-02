@@ -6,6 +6,20 @@
 
 echo "🚀 开始代码提交前检查..."
 
+# 🚨 第0步：硬编码检查（新增 - 最高优先级）
+echo "0️⃣ 硬编码和语法检查"
+echo "   运行硬编码检查工具..."
+./scripts/tools/check-hardcode.sh
+HARDCODE_CHECK=$?
+if [ $HARDCODE_CHECK -eq 1 ]; then
+    echo "   ❌ 发现严重硬编码问题，必须立即修复！"
+    exit 1
+elif [ $HARDCODE_CHECK -eq 2 ]; then
+    echo "   ⚠️  发现硬编码警告，建议修复"
+else
+    echo "   ✅ 硬编码检查通过"
+fi
+
 # ✅ 第1步：基础代码质量检查
 echo "1️⃣ 基础代码质量检查"
 echo "   检查TypeScript类型错误..."
@@ -36,7 +50,9 @@ npx madge --circular frontend/src/ && echo "   ❌ 发现循环依赖" || echo "
 # ✅ 第4步：API和数据库检查
 echo "4️⃣ API和数据库检查"
 echo "   检查API端点可访问性..."
-curl -s "http://localhost:1337/api/articles" > /dev/null && echo "   ✅ 核心API正常" || echo "   ❌ API访问失败"
+# 加载动态配置
+source scripts/tools/load-config.sh
+curl -s "${BACKEND_API_URL}/articles" > /dev/null && echo "   ✅ 核心API正常" || echo "   ❌ API访问失败"
 
 echo "   检查数据库连接..."
 psql -U aibianx_dev -d aibianx_dev -c "SELECT 1;" > /dev/null 2>&1 && echo "   ✅ 数据库连接正常" || echo "   ❌ 数据库连接失败"
@@ -46,8 +62,8 @@ echo "5️⃣ 环境变量检查"
 echo "   检查必需的环境变量..."
 test -f backend/.env && test -f frontend/.env.local && echo "   ✅ 环境变量文件存在" || echo "   ❌ 环境变量文件缺失"
 
-echo "   检查硬编码URL..."
-grep -r "localhost:1337\|localhost:3000" frontend/src/ backend/src/ && echo "   ❌ 发现硬编码URL" || echo "   ✅ 无硬编码URL"
+echo "   检查动态配置加载..."
+source scripts/tools/load-config.sh && echo "   ✅ 动态配置加载成功" || echo "   ❌ 动态配置加载失败"
 
 # ✅ 第6步：样式和UI检查
 echo "6️⃣ 样式和UI检查"
@@ -439,44 +455,117 @@ echo "✅ 快速检查完成，可以提交！"
 '
 ```
 
-### 脚本分类使用示例
+### 🧠 智能脚本管理系统使用示例（最新版本）
+
+#### **🎨 智能交互式菜单模式（推荐）**
 ```bash
-# 交互式菜单模式
-./scripts.sh
+# 智能环境检测菜单
+./scripts.sh                  # 自动检测环境，显示对应菜单主题
 
-# 命令行模式 - 服务管理
-./scripts.sh deploy start     # 启动开发环境
-./scripts.sh deploy backend   # 启动后端服务
-./scripts.sh deploy frontend  # 启动前端服务
-./scripts.sh deploy stop      # 停止所有服务
+# 环境切换
+./scripts.sh                  # 进入菜单，选择 'e' 进行环境切换
+```
 
-# 命令行模式 - 搜索引擎
-./scripts.sh search deploy    # 部署MeiliSearch
-./scripts.sh search manage    # 搜索管理工具
-./scripts.sh search restart   # 重启搜索服务
-./scripts.sh search reindex   # 重建搜索索引
-./scripts.sh search check     # 检查搜索状态
-./scripts.sh search logs      # 查看搜索日志
+#### **🔧 开发环境命令行模式**
+```bash
+# 服务管理
+./scripts.sh deploy start     # 启动完整开发环境
+./scripts.sh deploy backend   # 启动后端服务（Strapi开发模式）
+./scripts.sh deploy frontend  # 启动前端服务（Next.js开发模式）
+./scripts.sh deploy stop      # 停止所有开发服务
 
-# 命令行模式 - 系统监控
-./scripts.sh tools status     # 查看系统状态
-./scripts.sh db check         # 检查数据库
-./scripts.sh backup full      # 完整备份
+# 系统监控和调试
+./scripts.sh tools status     # 查看开发环境状态（服务+端口+资源）
+./scripts.sh db check         # 检查PostgreSQL数据库连接
+./scripts.sh search check     # 检查MeiliSearch搜索引擎
 
-# 命令行模式 - 性能监控
-./scripts.sh tools monitor    # 系统性能监控
-./scripts.sh tools logs       # 查看系统日志
-./scripts.sh tools health     # 健康检查报告
+# 搜索引擎管理
+./scripts.sh search deploy    # 一键部署MeiliSearch容器
+./scripts.sh search manage    # 完整搜索管理界面
+./scripts.sh search restart   # 重启MeiliSearch服务
+./scripts.sh search reindex   # 智能重建搜索索引
 
-# 命令行模式 - 验证检查 (新增)
-./scripts.sh tools verify-content-type [name]  # 验证内容类型配置
-./scripts.sh tools verify-api [endpoint]       # 验证API端点
-./scripts.sh tools verify-deployment          # 验证部署准备情况
+# 数据备份和恢复
+./scripts.sh backup full      # 完整系统备份（数据库+文件）
+./scripts.sh backup cleanup   # 清理备份临时文件
+./scripts.sh integrated backup  # 开发环境完整备份
 
-# 快速检查别名（配合使用）
+# BillionMail邮件系统
+./scripts.sh billionmail check # 检查BillionMail状态
+./scripts.sh billionmail manage # 打开BillionMail管理界面
+```
+
+#### **🚀 生产环境命令行模式（企业级）**
+```bash
+# 全自动部署（从零开始）
+./scripts.sh production auto-deploy yourdomain.com mail.yourdomain.com
+
+# 环境管理
+./scripts.sh production install-env    # 安装基础环境（Git+Docker+Compose）
+./scripts.sh production check-env      # 检查环境状态
+./scripts.sh production clone-project  # 克隆项目代码
+./scripts.sh production update-project # 更新项目代码
+
+# 配置管理
+./scripts.sh production configure yourdomain.com mail.yourdomain.com
+./scripts.sh production configure-check # 验证配置文件
+
+# 专业部署管理
+./scripts.sh production deploy unified   # 整合部署模式
+./scripts.sh production deploy separate  # 分离部署模式
+./scripts.sh production deploy-check     # 检查部署状态
+
+# 企业级服务管理
+./scripts.sh production start           # 启动生产服务
+./scripts.sh production stop            # 停止生产服务
+./scripts.sh production restart         # 重启生产服务
+./scripts.sh production status          # 检查生产状态（容器+服务+健康检查）
+
+# 专业监控系统
+./scripts.sh production monitor         # 实时监控环境（监控面板）
+./scripts.sh production logs backend    # 查看生产日志（实时日志监控）
+
+# 生产维护套件
+./scripts.sh production backup          # 完整生产备份
+./scripts.sh production restore <file>  # 安全恢复机制
+./scripts.sh production cleanup         # 清理生产资源（Docker+日志+临时文件）
+./scripts.sh production update          # 系统更新（代码+依赖+镜像）
+```
+
+#### **🔍 验证检查命令（企业级标准）**
+```bash
+# 配置验证
+./scripts.sh production configure-check # 生产配置验证
+./scripts.sh tools fix-fields          # 修复字段描述配置
+
+# 系统诊断
+./scripts.sh tools status              # 开发环境状态检查
+./scripts.sh production status         # 生产环境状态检查
+
+# 备份验证
+./scripts.sh integrated verify <backup-file>  # 验证整合备份文件
+```
+
+#### **⚡ 快速检查别名（升级版本）**
+```bash
+# 开发环境快速检查
 verify-all              # 全面系统验证
-dev-check               # 开发质量检查
+dev-check               # 开发质量检查  
 diagnose                # 问题诊断
 fresh-start             # 清理缓存重启
 pre-commit-quick        # 快速提交前检查
+
+# 生产环境快速检查
+./scripts.sh production check-env       # 环境检查
+./scripts.sh production configure-check # 配置验证
+./scripts.sh production deploy-check    # 部署状态检查
+```
+
+#### **🌟 智能环境检测特性**
+```bash
+# 环境自动识别
+ls -la | grep -E "^\.(development|production)$"  # 查看环境标记
+
+# 环境状态
+./scripts.sh                         # 菜单自动显示当前环境状态
 ```

@@ -2,7 +2,7 @@
   "collectionName": "components_payment_stripe_configs",
   "info": {
     "displayName": "Stripe配置",
-    "description": "Stripe支付相关配置"
+    "description": "Stripe支付相关配置，包含API密钥、Webhook密钥等必要信息"
   },
   "options": {},
   "attributes": {

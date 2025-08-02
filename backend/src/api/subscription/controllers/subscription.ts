@@ -87,7 +87,7 @@ export default factories.createCoreController('api::subscription.subscription', 
       return ctx.notFound('订阅记录不存在');
     }
     
-    if (subscription.user.id !== user.id) {
+    if ((subscription as any).user.id !== user.id) {
       return ctx.forbidden('无权限操作此订阅');
     }
     
@@ -105,7 +105,7 @@ export default factories.createCoreController('api::subscription.subscription', 
     });
     
     // 发送取消通知
-    await this.sendCancellationNotification(result, reason);
+    await (this as any).sendCancellationNotification(result, reason);
     
     return result;
   },
@@ -165,7 +165,7 @@ export default factories.createCoreController('api::subscription.subscription', 
       return ctx.notFound('订阅记录不存在');
     }
     
-    if (subscription.user.id !== user.id) {
+    if ((subscription as any).user.id !== user.id) {
       return ctx.forbidden('无权限操作此订阅');
     }
     

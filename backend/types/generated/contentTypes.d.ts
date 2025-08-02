@@ -754,6 +754,58 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiPaymentConfigPaymentConfig extends Struct.SingleTypeSchema {
+  collectionName: 'payment_config';
+  info: {
+    description: '\u652F\u4ED8\u7CFB\u7EDF\u914D\u7F6E\u7BA1\u7406 - \u63A7\u5236\u5404\u79CD\u652F\u4ED8\u65B9\u5F0F\u7684\u5F00\u5173\u548C\u53C2\u6570\u914D\u7F6E';
+    displayName: '\u652F\u4ED8\u914D\u7F6E';
+    pluralName: 'payment-configs';
+    singularName: 'payment-config';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    alipay: Schema.Attribute.Component<'payment.alipay-config', false>;
+    callbackBaseUrl: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 500;
+      }> &
+      Schema.Attribute.DefaultTo<'http://localhost:1337'>;
+    configNotes: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    environment: Schema.Attribute.Enumeration<['sandbox', 'production']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'sandbox'>;
+    frontendBaseUrl: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 500;
+      }> &
+      Schema.Attribute.DefaultTo<'http://localhost'>;
+    general: Schema.Attribute.Component<'payment.general-config', false> &
+      Schema.Attribute.Required;
+    lastModifiedBy: Schema.Attribute.Relation<'manyToOne', 'admin::user'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::payment-config.payment-config'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    stripe: Schema.Attribute.Component<'payment.stripe-config', false>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    webhookSecret: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    wechatPay: Schema.Attribute.Component<'payment.wechat-config', false>;
+  };
+}
+
 export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
   collectionName: 'payments';
   info: {
@@ -2033,6 +2085,7 @@ declare module '@strapi/strapi' {
       'api::commission.commission': ApiCommissionCommission;
       'api::invitation.invitation': ApiInvitationInvitation;
       'api::order.order': ApiOrderOrder;
+      'api::payment-config.payment-config': ApiPaymentConfigPaymentConfig;
       'api::payment.payment': ApiPaymentPayment;
       'api::refund.refund': ApiRefundRefund;
       'api::seo-metrics.seo-metrics': ApiSeoMetricsSeoMetrics;

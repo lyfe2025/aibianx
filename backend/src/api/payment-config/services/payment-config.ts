@@ -26,11 +26,11 @@ export default factories.createCoreService('api::payment-config.payment-config',
 
     switch (method) {
       case 'alipay':
-        return config.alipay?.enabled && config.alipay?.configStatus === 'active';
+        return (config as any).alipay?.enabled && (config as any).alipay?.configStatus === 'active';
       case 'wechat':
-        return config.wechatPay?.enabled && config.wechatPay?.configStatus === 'active';
+        return (config as any).wechatPay?.enabled && (config as any).wechatPay?.configStatus === 'active';
       case 'stripe':
-        return config.stripe?.enabled && config.stripe?.configStatus === 'active';
+        return (config as any).stripe?.enabled && (config as any).stripe?.configStatus === 'active';
       default:
         return false;
     }
@@ -46,11 +46,11 @@ export default factories.createCoreService('api::payment-config.payment-config',
 
     switch (method) {
       case 'alipay':
-        return config.alipay;
+        return (config as any).alipay;
       case 'wechat':
-        return config.wechatPay;
+        return (config as any).wechatPay;
       case 'stripe':
-        return config.stripe;
+        return (config as any).stripe;
       default:
         return null;
     }
@@ -288,7 +288,7 @@ export default factories.createCoreService('api::payment-config.payment-config',
     };
 
     const config = await strapi.entityService.create('api::payment-config.payment-config', {
-      data: defaultConfig,
+      data: defaultConfig as any,
       populate: ['general', 'alipay', 'wechatPay', 'stripe']
     });
 

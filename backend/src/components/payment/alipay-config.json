@@ -2,7 +2,7 @@
   "collectionName": "components_payment_alipay_configs",
   "info": {
     "displayName": "支付宝配置",
-    "description": "支付宝支付相关配置"
+    "description": "支付宝支付相关配置，包含AppID、密钥、网关等必要信息"
   },
   "options": {},
   "attributes": {
