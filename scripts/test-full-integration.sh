@@ -4,12 +4,16 @@
 # 测试认证、支付、返佣、邮件订阅全流程
 # 基于架构文档《用户体系与支付系统架构设计方案.md》
 
+# 加载动态配置
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/tools/load-config.sh"
+
 echo "🚀 开始AI变现之路系统完整集成测试"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # 测试配置
-TEST_API_BASE="http://localhost:1337/api"
-FRONTEND_BASE="http://localhost"
+TEST_API_BASE="${BACKEND_API_URL}"
+FRONTEND_BASE="${FRONTEND_URL}"
 TEST_EMAIL="test-$(date +%s)@example.com"
 TEST_PASSWORD="Test123456"
 TEST_USERNAME="testuser$(date +%s)"
@@ -278,7 +282,7 @@ main() {
         echo "   • 支付订单系统（Order + Payment + Subscription）"
         echo "   • 一级邀请返佣系统（Invitation + Commission）"
         echo "   • 数据库表结构完整性"
-        echo "   • API接口可用性"
+        echo "   • API接口可用性 (测试/articles端点)"
         echo "   • 前端组件渲染"
         echo ""
         echo "🚀 系统已准备就绪，可以开始使用！"

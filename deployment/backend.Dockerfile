@@ -34,7 +34,7 @@ USER strapi
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:1337/admin', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+    CMD node -e "require('http').get('http://0.0.0.0:' + (process.env.PORT || '1337') + '/admin', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 # 暴露端口
 EXPOSE 1337

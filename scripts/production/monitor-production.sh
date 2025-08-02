@@ -8,6 +8,11 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+# 加载动态配置 (如果可用)
+if [ -f "$SCRIPT_DIR/../tools/load-config.sh" ]; then
+    source "$SCRIPT_DIR/../tools/load-config.sh" 2>/dev/null || true
+fi
+
 # 颜色定义
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -109,9 +114,9 @@ real_time_monitor() {
         
         # 显示服务健康状态
         echo -e "${CYAN}💓 服务健康:${NC}"
-        check_service_health "frontend" "http://localhost:3000" || check_service_health "frontend" "http://localhost"
-        check_service_health "backend" "http://localhost:1337"
-        check_service_health "meilisearch" "http://localhost:7700/health"
+        check_service_health "frontend" "${FRONTEND_URL:-http://localhost}"
+        check_service_health "backend" "${BACKEND_URL:-http://localhost:1337}"
+        check_service_health "meilisearch" "${SEARCH_URL:-http://localhost:7700}/health"
         check_service_health "postgres" "" "docker"
         echo ""
         
@@ -250,16 +255,19 @@ performance_check() {
     echo -e "${CYAN}🌐 响应时间检查:${NC}"
     
     # 前端响应时间
-    local frontend_time=$(curl -o /dev/null -s -w '%{time_total}' http://localhost:3000 2>/dev/null || curl -o /dev/null -s -w '%{time_total}' http://localhost 2>/dev/null || echo "超时")
-    echo "   前端服务: ${frontend_time}s"
+    local frontend_url="${FRONTEND_URL:-http://localhost}"
+    local frontend_time=$(curl -o /dev/null -s -w '%{time_total}' "$frontend_url" 2>/dev/null || echo "超时")
+    echo "   前端服务: ${frontend_time}s ($frontend_url)"
     
     # 后端响应时间
-    local backend_time=$(curl -o /dev/null -s -w '%{time_total}' http://localhost:1337 2>/dev/null || echo "超时")
-    echo "   后端服务: ${backend_time}s"
+    local backend_url="${BACKEND_URL:-http://localhost:1337}"
+    local backend_time=$(curl -o /dev/null -s -w '%{time_total}' "$backend_url" 2>/dev/null || echo "超时")
+    echo "   后端服务: ${backend_time}s ($backend_url)"
     
     # 搜索引擎响应时间
-    local search_time=$(curl -o /dev/null -s -w '%{time_total}' http://localhost:7700/health 2>/dev/null || echo "超时")
-    echo "   搜索引擎: ${search_time}s"
+    local search_url="${SEARCH_URL:-http://localhost:7700}/health"
+    local search_time=$(curl -o /dev/null -s -w '%{time_total}' "$search_url" 2>/dev/null || echo "超时")
+    echo "   搜索引擎: ${search_time}s ($search_url)"
     
     echo ""
     
@@ -317,12 +325,14 @@ alert_check() {
     fi
     
     # 服务状态告警
-    if ! curl -f http://localhost:3000 &>/dev/null && ! curl -f http://localhost &>/dev/null; then
-        alerts+=("🌐 前端服务无响应")
+    local frontend_check_url="${FRONTEND_URL:-http://localhost}"
+    if ! curl -f "$frontend_check_url" &>/dev/null; then
+        alerts+=("🌐 前端服务无响应 ($frontend_check_url)")
     fi
     
-    if ! curl -f http://localhost:1337 &>/dev/null; then
-        alerts+=("⚙️ 后端服务无响应")
+    local backend_check_url="${BACKEND_URL:-http://localhost:1337}"
+    if ! curl -f "$backend_check_url" &>/dev/null; then
+        alerts+=("⚙️ 后端服务无响应 ($backend_check_url)")
     fi
     
     # 容器状态告警

@@ -4,6 +4,9 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+# 加载动态配置
+source "$SCRIPT_DIR/../tools/load-config.sh"
+
 # 颜色定义
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -67,8 +70,8 @@ if docker-compose ps | grep -q "Up"; then
     echo -e "${GREEN}✅ BillionMail服务启动成功${NC}"
     echo ""
     echo -e "${BLUE}📍 访问地址:${NC}"
-    echo "  管理界面: http://localhost:8081/admin"
-    echo "  API地址:   http://localhost:8081/api"
+    echo "  管理界面: ${BILLIONMAIL_ADMIN_URL}"
+    echo "  API地址:   ${BILLIONMAIL_ADMIN_URL%/*}/api"
     echo ""
     echo -e "${YELLOW}📋 下一步操作:${NC}"
     echo "  1. 访问管理界面完成初始化设置"

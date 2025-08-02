@@ -60,6 +60,25 @@ else
     record_warning "硬编码检查工具不存在"
 fi
 
+# ✅ 第0.5步：根目录NPM文件检查
+echo -e "${BLUE}0️⃣.5️⃣ 根目录NPM文件检查${NC}"
+echo "   检查根目录是否有意外的npm文件..."
+
+if [ -f "$PROJECT_ROOT/scripts/tools/check-root-npm.sh" ]; then
+    "$PROJECT_ROOT/scripts/tools/check-root-npm.sh" > /dev/null 2>&1
+    ROOT_NPM_CHECK=$?
+    
+    if [ $ROOT_NPM_CHECK -eq 0 ]; then
+        record_success "根目录npm文件检查通过"
+    else
+        record_error "根目录发现不应该的npm文件！"
+        echo "   💡 查看详细问题: ./scripts/tools/check-root-npm.sh"
+        echo "   🧹 自动清理: ./scripts/tools/check-root-npm.sh --clean"
+    fi
+else
+    record_warning "根目录npm检查工具不存在"
+fi
+
 # ✅ 第1步：基础语法检查
 echo -e "${BLUE}1️⃣ 基础语法检查${NC}"
 

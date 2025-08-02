@@ -130,7 +130,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   cd "/Volumes/wwx/dev/WebProjects/aibianx/backend"
   npm run develop &
   echo "✅ Strapi服务已在后台启动"
-  echo "📱 管理界面: http://localhost:1337/admin"
+  echo "📱 管理界面: ${BACKEND_ADMIN_URL}"
 fi
 
 echo "🎉 数据库还原任务完成！" 

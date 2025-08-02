@@ -8,6 +8,11 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+# 加载动态配置 (如果可用)
+if [ -f "$SCRIPT_DIR/../tools/load-config.sh" ]; then
+    source "$SCRIPT_DIR/../tools/load-config.sh" 2>/dev/null || true
+fi
+
 # 颜色定义
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -345,14 +350,15 @@ post_deploy_verification() {
     log_info "执行健康检查..."
     
     # 检查前端响应
+    FRONTEND_CHECK_URL="${FRONTEND_URL:-http://localhost}"
     while [ $attempt -lt $max_attempts ]; do
-        if curl -f "http://localhost:3000" &>/dev/null || curl -f "http://localhost" &>/dev/null; then
-            log_success "前端服务 - 响应正常"
+        if curl -f "$FRONTEND_CHECK_URL" &>/dev/null; then
+            log_success "前端服务 - 响应正常 ($FRONTEND_CHECK_URL)"
             break
         else
             attempt=$((attempt + 1))
             if [ $attempt -eq $max_attempts ]; then
-                log_warning "前端服务 - 响应超时"
+                log_warning "前端服务 - 响应超时 ($FRONTEND_CHECK_URL)"
                 failed_services+=("frontend-health")
             else
                 log_info "等待前端服务... ($attempt/$max_attempts)"
@@ -365,14 +371,15 @@ post_deploy_verification() {
     attempt=0
     
     # 检查后端响应
+    BACKEND_CHECK_URL="${BACKEND_URL:-http://localhost:1337}"
     while [ $attempt -lt $max_attempts ]; do
-        if curl -f "http://localhost:1337" &>/dev/null; then
-            log_success "后端服务 - 响应正常"
+        if curl -f "$BACKEND_CHECK_URL" &>/dev/null; then
+            log_success "后端服务 - 响应正常 ($BACKEND_CHECK_URL)"
             break
         else
             attempt=$((attempt + 1))
             if [ $attempt -eq $max_attempts ]; then
-                log_warning "后端服务 - 响应超时"
+                log_warning "后端服务 - 响应超时 ($BACKEND_CHECK_URL)"
                 failed_services+=("backend-health")
             else
                 log_info "等待后端服务... ($attempt/$max_attempts)"

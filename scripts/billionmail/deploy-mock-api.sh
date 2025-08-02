@@ -4,6 +4,9 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+# 加载动态配置
+source "$SCRIPT_DIR/../tools/load-config.sh"
+
 # 颜色定义
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -69,8 +72,8 @@ sleep 3
 
 # 检查服务状态
 if ps -p $SERVER_PID > /dev/null; then
-    # 验证API响应
-    local api_url="http://localhost:8081"
+    # 验证API响应  
+    local api_url="${BILLIONMAIL_ADMIN_URL%/*}"
     if curl -s -f "${api_url}/api/health" >/dev/null 2>&1; then
         echo -e "${GREEN}✅ BillionMail模拟API服务启动成功${NC}"
         echo ""

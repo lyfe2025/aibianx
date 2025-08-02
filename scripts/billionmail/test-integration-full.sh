@@ -6,6 +6,9 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+# 加载动态配置
+source "$SCRIPT_DIR/../tools/load-config.sh"
+
 # 颜色定义
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -188,15 +191,15 @@ echo "  • API端点可访问性"
 echo "  • BillionMail服务状态"
 echo ""
 echo "🎯 下一步操作："
-echo "  1. 访问测试页面: http://localhost/test-email"
+echo "  1. 访问测试页面: ${FRONTEND_URL}/test-email"
 echo "  2. 手动测试邮件订阅功能"
 echo "  3. 手动测试验证码发送功能"
 echo "  4. 检查邮件是否正确发送"
 echo ""
 echo "🔗 相关链接："
-echo "  • BillionMail管理界面: http://localhost:8080/billion"
-echo "  • 测试页面: http://localhost/test-email"
-echo "  • API文档: http://localhost:8080/api/v1"
+echo "  • BillionMail管理界面: ${BILLIONMAIL_ADMIN_URL}"
+echo "  • 测试页面: ${FRONTEND_URL}/test-email"
+echo "  • API文档: ${BILLIONMAIL_ADMIN_URL%/*}/api/v1"
 echo ""
 
 # 8. 提供快速测试命令
@@ -212,4 +215,4 @@ echo "# 启动前端开发服务器"
 echo "./scripts.sh deploy frontend"
 echo ""
 echo "# 访问测试页面"
-echo "open http://localhost/test-email"
+echo "open ${FRONTEND_URL}/test-email"

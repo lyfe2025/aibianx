@@ -76,13 +76,17 @@ load_dynamic_config() {
     fi
 
     if ([ "$billionmail_port" = "80" ] && [ "$billionmail_protocol" = "http" ]) || ([ "$billionmail_port" = "443" ] && [ "$billionmail_protocol" = "https" ]); then
-        export BILLIONMAIL_ADMIN_URL="${billionmail_protocol}://${billionmail_domain}"
+        export BILLIONMAIL_ADMIN_URL="${billionmail_protocol}://${billionmail_domain}/billion"
     else
-        export BILLIONMAIL_ADMIN_URL="${billionmail_protocol}://${billionmail_domain}:${billionmail_port}"
+        export BILLIONMAIL_ADMIN_URL="${billionmail_protocol}://${billionmail_domain}:${billionmail_port}/billion"
     fi
 
-    # WebMail 通常使用不同的端口（8001）
-    export BILLIONMAIL_WEBMAIL_URL="${billionmail_protocol}://${billionmail_domain}:8001"
+    # WebMail 使用与BillionMail相同的端口，但路径为/roundcube
+    if ([ "$billionmail_port" = "80" ] && [ "$billionmail_protocol" = "http" ]) || ([ "$billionmail_port" = "443" ] && [ "$billionmail_protocol" = "https" ]); then
+        export BILLIONMAIL_WEBMAIL_URL="${billionmail_protocol}://${billionmail_domain}/roundcube"
+    else
+        export BILLIONMAIL_WEBMAIL_URL="${billionmail_protocol}://${billionmail_domain}:${billionmail_port}/roundcube"
+    fi
     
     # 导出单独的配置变量（供其他脚本使用）
     export NEXT_PUBLIC_FRONTEND_DOMAIN="$frontend_domain"

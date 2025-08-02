@@ -71,9 +71,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # 切换到非root用户
 USER nextjs
 
-# 健康检查
+# 健康检查  
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3000', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+    CMD node -e "require('http').get('http://0.0.0.0:' + (process.env.PORT || '3000'), (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 # 暴露端口
 EXPOSE 3000

@@ -67,7 +67,7 @@ echo "📝 日志文件: logs/frontend.log"
 # 等待服务启动
 echo "⏳ 等待前端服务启动完成..."
 for i in {1..20}; do
-    if curl -s http://localhost > /dev/null 2>&1; then
+    if curl -s "${FRONTEND_URL}" > /dev/null 2>&1; then
         echo "✅ 前端服务启动完成"
         break
     fi

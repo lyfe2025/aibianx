@@ -8,6 +8,11 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+# 加载动态配置 (如果可用)
+if [ -f "$SCRIPT_DIR/../tools/load-config.sh" ]; then
+    source "$SCRIPT_DIR/../tools/load-config.sh" 2>/dev/null || true
+fi
+
 # 颜色定义
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -194,24 +199,27 @@ show_services_status() {
     echo -e "${CYAN}🌐 网络检查:${NC}"
     
     # 检查前端
-    if curl -f "http://localhost:3000" &>/dev/null || curl -f "http://localhost" &>/dev/null; then
-        echo "   ✅ 前端服务 - 响应正常"
+    FRONTEND_CHECK_URL="${FRONTEND_URL:-http://localhost}"
+    if curl -f "$FRONTEND_CHECK_URL" &>/dev/null; then
+        echo "   ✅ 前端服务 - 响应正常 ($FRONTEND_CHECK_URL)"
     else
-        echo "   ❌ 前端服务 - 响应异常"
+        echo "   ❌ 前端服务 - 响应异常 ($FRONTEND_CHECK_URL)"
     fi
     
     # 检查后端
-    if curl -f "http://localhost:1337" &>/dev/null; then
-        echo "   ✅ 后端服务 - 响应正常"
+    BACKEND_CHECK_URL="${BACKEND_URL:-http://localhost:1337}"
+    if curl -f "$BACKEND_CHECK_URL" &>/dev/null; then
+        echo "   ✅ 后端服务 - 响应正常 ($BACKEND_CHECK_URL)"
     else
-        echo "   ❌ 后端服务 - 响应异常"
+        echo "   ❌ 后端服务 - 响应异常 ($BACKEND_CHECK_URL)"
     fi
     
     # 检查搜索引擎
-    if curl -f "http://localhost:7700/health" &>/dev/null; then
-        echo "   ✅ 搜索引擎 - 响应正常"
+    SEARCH_CHECK_URL="${SEARCH_URL:-http://localhost:7700}/health"
+    if curl -f "$SEARCH_CHECK_URL" &>/dev/null; then
+        echo "   ✅ 搜索引擎 - 响应正常 ($SEARCH_CHECK_URL)"
     else
-        echo "   ❌ 搜索引擎 - 响应异常"
+        echo "   ❌ 搜索引擎 - 响应异常 ($SEARCH_CHECK_URL)"
     fi
     
     echo ""

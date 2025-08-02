@@ -102,18 +102,15 @@ show_complete_help() {
     # 加载动态配置
     if [ -f "$SCRIPT_DIR/load-config.sh" ]; then
         source "$SCRIPT_DIR/load-config.sh"
-        echo "• 前端页面: ${FRONTEND_URL:-http://localhost}"
-        echo "• 后端API: ${BACKEND_API_URL:-http://localhost:1337/api}"
-        echo "• 后端管理: ${BACKEND_ADMIN_URL:-http://localhost:1337/admin}"
-        echo "• 搜索引擎: ${SEARCH_URL:-http://localhost:7700}"
-        echo "• 邮件管理: ${BILLIONMAIL_ADMIN_URL:-http://localhost:8080}"
-        echo "• WebMail: ${BILLIONMAIL_WEBMAIL_URL:-http://localhost:8080/webmail}"
+        echo "• 前端页面: ${FRONTEND_URL}"
+        echo "• API示例: ${BACKEND_API_URL}/articles (文章API)"
+        echo "• 后端管理: ${BACKEND_ADMIN_URL}"
+        echo "• 搜索引擎: ${SEARCH_URL}"
+        echo "• 邮件管理: ${BILLIONMAIL_ADMIN_URL}"
+        echo "• WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
     else
-        echo "• 前端页面: http://localhost"
-        echo "• 后端API: http://localhost:1337/api"
-        echo "• 后端管理: http://localhost:1337/admin"
-        echo "• 搜索引擎: http://localhost:7700"
-        echo "• 邮件管理: http://localhost:8080"
+        echo "⚠️  配置文件未找到，无法显示服务地址"
+        echo "   请运行 './scripts.sh deploy start' 启动服务"
     fi
     echo ""
     

@@ -25,10 +25,13 @@ TEST_PASSWORD="test123456"
 # 前端服务URL (动态加载)
 if [ -f "$SCRIPT_DIR/../tools/load-config.sh" ]; then
     source "$SCRIPT_DIR/../tools/load-config.sh"
-    load_dynamic_config
-    FRONTEND_URL="${FRONTEND_URL:-http://localhost}"
+    if [ -z "$FRONTEND_URL" ]; then
+        echo "❌ 配置加载失败，无法获取前端URL"
+        exit 1
+    fi
 else
-    FRONTEND_URL="http://localhost"
+    echo "❌ 配置文件未找到，请先启动开发环境"
+    exit 1
 fi
 API_BASE="${FRONTEND_URL}/api"
 
@@ -211,7 +214,7 @@ echo "🌐 测试地址："
 echo "  • 验证请求页面: $FRONTEND_URL/auth/verify-request"
 echo "  • 注册API: $API_BASE/auth/register"
 echo "  • 密码重置API: $API_BASE/auth/reset-password"
-echo "  • BillionMail管理: ${BILLIONMAIL_ADMIN_URL:-http://localhost:8080}/billion"
+echo "  • BillionMail管理: ${BILLIONMAIL_ADMIN_URL}"
 echo ""
 
 # 7. 提供快速测试命令
