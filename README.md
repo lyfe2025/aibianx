@@ -76,7 +76,17 @@ chmod +x *.sh deployment/*.sh
 
 # 3. 启动完整开发环境
 ./start-dev.sh
+
+# 4. 执行数据库迁移（首次部署后必需）
+cd backend
+psql -U aibianx_dev -d aibianx_dev -f database/migrations/add_missing_table_comments.sql
+psql -U aibianx_dev -d aibianx_dev -f database/migrations/add_link_table_comments.sql
+psql -U aibianx_dev -d aibianx_dev -f database/migrations/add_core_table_comments.sql
+psql -U aibianx_dev -d aibianx_dev -f database/migrations/add_user_table_comments.sql
+cd ..
 ```
+
+⚠️ **重要说明**：第4步数据库迁移是**首次部署后必需的**，用于添加数据库的中文注释。执行后Strapi管理界面的字段将显示为中文描述，便于管理员使用。
 
 ### 日常开发
 

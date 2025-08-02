@@ -158,6 +158,43 @@ execute_choice() {
             echo -e "${BLUE}🔧 自动配置环境变量...${NC}"
             exec "$SCRIPT_DIR/scripts/tools/setup-env.sh"
             ;;
+        21)
+            echo -e "${BLUE}💾 整合环境数据库备份...${NC}"
+            exec "$SCRIPT_DIR/scripts/database/backup-integrated.sh"
+            ;;
+        22)
+            echo -e "${YELLOW}🔄 整合环境数据库还原...${NC}"
+            echo ""
+            echo -e "${YELLOW}⚠️ 还原操作将覆盖现有数据！${NC}"
+            echo "请指定备份文件路径："
+            read -p "备份文件: " backup_file
+            if [ -n "$backup_file" ] && [ -f "$backup_file" ]; then
+                exec "$SCRIPT_DIR/scripts/database/restore-integrated.sh" "$backup_file"
+            else
+                echo -e "${RED}❌ 备份文件不存在或未指定${NC}"
+                echo ""
+                read -p "按回车键返回主菜单..."
+                return 1
+            fi
+            ;;
+        23)
+            echo -e "${BLUE}🔍 整合环境状态检查...${NC}"
+            exec "$SCRIPT_DIR/scripts/database/check-integrated.sh"
+            ;;
+        24)
+            echo -e "${PURPLE}🔍 验证整合备份文件...${NC}"
+            echo ""
+            echo "请指定要验证的备份文件路径："
+            read -p "备份文件: " backup_file
+            if [ -n "$backup_file" ] && [ -f "$backup_file" ]; then
+                exec "$SCRIPT_DIR/scripts/database/verify-integrated-backup.sh" "$backup_file"
+            else
+                echo -e "${RED}❌ 备份文件不存在或未指定${NC}"
+                echo ""
+                read -p "按回车键返回主菜单..."
+                return 1
+            fi
+            ;;
         h|H)
             show_usage
             echo ""
@@ -170,7 +207,7 @@ execute_choice() {
             ;;
         *)
             echo -e "${RED}❌ 无效选择: $choice${NC}"
-            echo "请输入 0-17 之间的数字，或 'h' 查看帮助"
+            echo "请输入 0-24 之间的数字，或 'h' 查看帮助"
             echo ""
             read -p "按回车键继续..." 
             return 1
@@ -467,6 +504,69 @@ handle_command_line() {
                     echo "  ✅ 自动配置字段描述"
                     echo "  ✅ 自动验证配置结果"
                     echo "  ✅ 无需手动操作"
+                    ;;
+            esac
+            ;;
+        "integrated")
+            case "$action" in
+                "backup")
+                    echo -e "${BLUE}💾 整合环境数据库备份...${NC}"
+                    exec "$SCRIPT_DIR/scripts/database/backup-integrated.sh"
+                    ;;
+                "restore")
+                    if [ -z "$3" ]; then
+                        echo -e "${RED}❌ 请指定备份文件${NC}"
+                        echo "用法: $0 integrated restore <backup-file.tar.gz>"
+                        echo "示例: $0 integrated restore backups/integrated/integrated_backup_20250130_140000.tar.gz"
+                        exit 1
+                    else
+                        echo -e "${YELLOW}🔄 整合环境数据库还原...${NC}"
+                        exec "$SCRIPT_DIR/scripts/database/restore-integrated.sh" "$3"
+                    fi
+                    ;;
+                "check")
+                    echo -e "${BLUE}🔍 整合环境状态检查...${NC}"
+                    exec "$SCRIPT_DIR/scripts/database/check-integrated.sh"
+                    ;;
+                "verify")
+                    if [ -z "$3" ]; then
+                        echo -e "${RED}❌ 请指定备份文件${NC}"
+                        echo "用法: $0 integrated verify <backup-file.tar.gz>"
+                        echo "示例: $0 integrated verify backups/integrated/integrated_backup_20250130_140000.tar.gz"
+                        exit 1
+                    else
+                        echo -e "${PURPLE}🔍 验证整合备份文件...${NC}"
+                        exec "$SCRIPT_DIR/scripts/database/verify-integrated-backup.sh" "$3"
+                    fi
+                    ;;
+                *)
+                    echo -e "${BLUE}🔄 AI变现之路 + BillionMail - 整合部署管理工具${NC}"
+                    echo "========================================================="
+                    echo "可用命令:"
+                    echo "  backup                    - 整合环境数据库备份 (AI变现之路 + BillionMail)"
+                    echo "  restore <backup-file>     - 整合环境数据库还原"
+                    echo "  check                     - 整合环境状态检查"
+                    echo "  verify <backup-file>      - 验证整合备份文件"
+                    echo ""
+                    echo "用法示例:"
+                    echo "  $0 integrated backup      # 备份整合环境"
+                    echo "  $0 integrated restore backups/integrated/integrated_backup_20250130_140000.tar.gz"
+                    echo "  $0 integrated check       # 检查整合环境状态"
+                    echo "  $0 integrated verify backup.tar.gz  # 验证备份文件"
+                    echo ""
+                    echo "功能说明:"
+                    echo "  ✅ 支持 AI变现之路 + BillionMail 整合环境"
+                    echo "  ✅ 多数据库备份 (aibianx + billionmail)"
+                    echo "  ✅ 容器化环境兼容"
+                    echo "  ✅ 完整的文件和配置备份"
+                    echo "  ✅ 备份完整性验证"
+                    echo "  ✅ 安全的还原机制"
+                    echo ""
+                    echo "💡 提示："
+                    echo "  • 整合环境指 docker-compose.integrated.yml 部署的环境"
+                    echo "  • 备份包含两个数据库和所有相关文件"
+                    echo "  • 还原前会自动创建安全备份"
+                    echo "  • 使用 check 命令验证环境是否正常"
                     ;;
             esac
             ;;
