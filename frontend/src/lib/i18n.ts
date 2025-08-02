@@ -11,9 +11,9 @@ interface TranslationObject {
 export const translations: Record<Language, TranslationObject> = {
     zh: {
         nav: {
-            home: '首页',
+            discover: '发现',
             weekly: '周刊',
-            about: '关于'
+            profile: '个人中心'
         },
         buttons: {
             login: '登录',
@@ -53,9 +53,9 @@ export const translations: Record<Language, TranslationObject> = {
     },
     en: {
         nav: {
-            home: 'Home',
+            discover: 'Discover',
             weekly: 'Weekly',
-            about: 'About'
+            profile: 'Profile'
         },
         buttons: {
             login: 'Login',

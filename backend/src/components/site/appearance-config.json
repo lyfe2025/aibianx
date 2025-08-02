@@ -1,0 +1,155 @@
+{
+  "collectionName": "components_site_appearance_configs",
+  "info": {
+    "displayName": "外观设置",
+    "description": "网站外观设置 - 管理主题、颜色、字体、布局等视觉相关配置"
+  },
+  "options": {},
+  "attributes": {
+    "defaultTheme": {
+      "type": "enumeration",
+      "enum": ["light", "dark", "auto"],
+      "default": "light",
+      "required": true,
+      "description": "默认主题：网站默认主题模式。light=浅色主题，dark=深色主题，auto=跟随系统"
+    },
+    "enableDarkMode": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用深色模式：是否允许用户切换深色模式"
+    },
+    "enableThemeToggle": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用主题切换：是否显示主题切换按钮供用户切换"
+    },
+    "primaryColor": {
+      "type": "string",
+      "default": "#3B82F6",
+      "maxLength": 20,
+      "description": "主色调：网站主要颜色，影响按钮、链接等主要元素。格式：#RRGGBB"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "#10B981",
+      "maxLength": 20,
+      "description": "强调色：用于突出显示、悬停效果等。格式：#RRGGBB"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#FFFFFF",
+      "maxLength": 20,
+      "description": "背景色：页面主要背景颜色。格式：#RRGGBB"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#1F2937",
+      "maxLength": 20,
+      "description": "文字颜色：主要文字颜色。格式：#RRGGBB"
+    },
+    "fontFamily": {
+      "type": "enumeration",
+      "enum": [
+        "Alibaba PuHuiTi 3.0",
+        "system-ui",
+        "Helvetica Neue",
+        "PingFang SC",
+        "Microsoft YaHei"
+      ],
+      "default": "Alibaba PuHuiTi 3.0",
+      "description": "字体系列：网站主要字体"
+    },
+    "fontSizeBase": {
+      "type": "enumeration",
+      "enum": ["14px", "16px", "18px", "20px"],
+      "default": "16px",
+      "description": "基础字体大小：网站基础字体大小，其他字体大小基于此计算"
+    },
+    "headerStyle": {
+      "type": "enumeration",
+      "enum": ["fixed", "sticky", "static", "transparent"],
+      "default": "sticky",
+      "description": "页头样式：页头的显示和定位方式"
+    },
+    "headerHeight": {
+      "type": "integer",
+      "default": 80,
+      "min": 60,
+      "max": 120,
+      "description": "页头高度：页头区域的像素高度"
+    },
+    "footerStyle": {
+      "type": "enumeration",
+      "enum": ["default", "minimal", "extended"],
+      "default": "default",
+      "description": "页脚样式：页脚的显示样式"
+    },
+    "layoutStyle": {
+      "type": "enumeration",
+      "enum": ["container", "full-width", "boxed"],
+      "default": "container",
+      "description": "布局样式：页面主体布局方式"
+    },
+    "maxWidth": {
+      "type": "integer",
+      "default": 1440,
+      "min": 1200,
+      "max": 1920,
+      "description": "最大宽度：容器最大宽度（像素）"
+    },
+    "enableAnimations": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用动画效果：是否启用页面切换和元素动画"
+    },
+    "animationDuration": {
+      "type": "enumeration",
+      "enum": ["fast", "normal", "slow"],
+      "default": "normal",
+      "description": "动画持续时间：动画播放速度"
+    },
+    "enableGradients": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用渐变效果：是否在按钮、背景等元素使用渐变效果"
+    },
+    "enableGlassEffect": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用毛玻璃效果：是否启用毛玻璃背景效果"
+    },
+    "borderRadius": {
+      "type": "enumeration",
+      "enum": ["none", "small", "medium", "large"],
+      "default": "medium",
+      "description": "圆角大小：元素圆角的大小程度"
+    },
+    "spacing": {
+      "type": "enumeration",
+      "enum": ["compact", "normal", "relaxed"],
+      "default": "normal",
+      "description": "间距设置：元素之间的间距大小"
+    },
+    "cardStyle": {
+      "type": "enumeration",
+      "enum": ["flat", "raised", "outlined"],
+      "default": "raised",
+      "description": "卡片样式：卡片元素的显示样式"
+    },
+    "buttonStyle": {
+      "type": "enumeration",
+      "enum": ["solid", "outline", "ghost", "gradient"],
+      "default": "gradient",
+      "description": "按钮样式：按钮的默认显示样式"
+    },
+    "enableCustomCss": {
+      "type": "boolean",
+      "default": false,
+      "description": "启用自定义CSS：是否允许注入自定义CSS样式"
+    },
+    "customCss": {
+      "type": "text",
+      "description": "自定义CSS：自定义CSS代码，会被注入到页面头部（需要CSS知识）"
+    }
+  }
+}

@@ -1,556 +1,62 @@
 /**
- * AI变现之路 - 移动端优化样式
- * 
- * 移动端触摸友好交互和专用样式优化
- * 包括：触摸反馈、防溢出、性能优化、安全区域适配等
+ * 移动端样式主文件 - mobile.css
+ * 统一导入所有移动端样式模块
  */
 
-/* ===== 移动端触摸友好交互优化 ===== */
+/* 导入移动端样式模块 */
+@import './mobile-base.css';
+@import './mobile-components.css';
+@import './mobile-layout.css';
+@import './mobile-performance.css';
 
-/* 移动端触摸基础优化 */
-@media (hover: none) and (pointer: coarse) {
-
-    /* 移除所有触摸高亮 */
-    * {
-        -webkit-tap-highlight-color: transparent !important;
-        -webkit-touch-callout: none !important;
-        -webkit-user-select: none !important;
-        user-select: none !important;
-    }
-
-    /* 文本内容恢复选择 */
-    p,
-    span,
-    div[class*="text"],
-    article,
-    section {
-        -webkit-user-select: text !important;
-        user-select: text !important;
-    }
-
-    /* 输入框恢复选择 */
-    input,
-    textarea {
-        -webkit-user-select: text !important;
-        user-select: text !important;
-    }
-
-    /* 触摸友好的按钮最小尺寸 */
-    button,
-    [role="button"],
-    .btn,
-    .clickable,
-    a[href] {
-        min-height: 44px !important;
-        min-width: 44px !important;
-        touch-action: manipulation !important;
-    }
-
-    /* 触摸反馈效果 */
-    button:active:not(:disabled),
-    [role="button"]:active,
-    .btn:active:not(:disabled),
-    .clickable:active,
-    a[href]:active {
-        transform: scale(0.95) !important;
-        transition: transform 0.1s ease !important;
-    }
-
-    /* 特殊按钮触摸优化 */
-    .glass-card:active {
-        transform: scale(0.98) !important;
-        transition: transform 0.1s ease !important;
-    }
-
-    /* 图标按钮触摸优化 */
-    .icon-button:active {
-        transform: scale(0.9) !important;
-        background: rgba(59, 130, 246, 0.2) !important;
-    }
-
-    /* 导航链接触摸优化 */
-    .nav-link:active {
-        color: var(--color-primary-blue) !important;
-        transform: scale(0.95) !important;
-    }
-
-    /* 表单输入框触摸优化 */
-    input:focus,
-    textarea:focus {
-        transform: none !important;
-        outline: 2px solid var(--color-primary-blue) !important;
-        outline-offset: 2px !important;
-    }
-
-    /* 移动端卡片间距优化 */
-    .glass-card {
-        margin: 8px 0 !important;
-    }
-
-    /* 移动端文字大小优化 - 防止缩放 */
-    input,
-    textarea,
-    select {
-        font-size: 16px !important;
-        /* 防止iOS Safari自动缩放 */
-    }
+/* 移动端应用根容器 */
+.mobile-app {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* ===== 移动端全局防溢出保护 ===== */
-@media (max-width: 767px) {
-
-    html,
-    body {
-        overflow-x: hidden !important;
-        max-width: 100vw !important;
-    }
-
-    /* 强制所有容器响应式 */
-    * {
-        max-width: 100vw !important;
-        box-sizing: border-box !important;
-    }
-
-    /* 特殊处理可能溢出的元素 */
-    div[style*="width:"],
-    div[style*="max-width:"],
-    section[style*="width:"],
-    article[style*="width:"] {
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
-    }
-
-    /* 图片和媒体元素响应式 */
-    img,
-    video,
-    iframe,
-    svg {
-        max-width: 100% !important;
-        height: auto !important;
-    }
-
-    /* 表格和代码块水平滚动 */
-    table,
-    pre,
-    code {
-        overflow-x: auto !important;
-        display: block !important;
-        white-space: pre-wrap !important;
-        word-wrap: break-word !important;
-    }
-
-    /* 长链接处理 */
-    a[href] {
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-        word-break: break-all !important;
-    }
-
-    /* 长文本处理 */
-    p,
-    span,
-    div {
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-        hyphens: auto !important;
-    }
-
-    /* 触摸友好的导航按钮 */
-    .mobile-menu-button {
-        min-width: 48px !important;
-        min-height: 48px !important;
-        padding: 12px !important;
-    }
-
-    /* 触摸友好的链接间距 */
-    a {
-        padding: 8px 4px !important;
-        margin: 4px 0 !important;
-    }
-
-    /* 触摸友好的表单元素 */
-    .hero-email-form {
-        gap: 16px !important;
-    }
-
-    .hero-email-input {
-        min-height: 52px !important;
-        padding: 16px 20px !important;
-        font-size: 16px !important;
-    }
-
-    .hero-subscribe-button {
-        min-height: 52px !important;
-        padding: 16px 24px !important;
-        font-size: 16px !important;
-    }
-
-    /* 触摸友好的文章卡片 */
-    .article-card {
-        padding: 20px !important;
-        margin: 16px 0 !important;
-    }
-
-    /* 触摸友好的按钮组 */
-    .button-group {
-        gap: 16px !important;
-    }
-
-    .button-group button {
-        min-height: 48px !important;
-        padding: 14px 20px !important;
-    }
-
-    /* 触摸友好的分页 */
-    .pagination button {
-        min-width: 44px !important;
-        min-height: 44px !important;
-        padding: 12px !important;
-        margin: 4px !important;
-    }
-
-    /* 触摸友好的返回顶部按钮 */
-    .back-to-top-button {
-        width: 56px !important;
-        height: 56px !important;
-        bottom: 24px !important;
-        right: 24px !important;
-    }
-
-    /* 触摸友好的标签 */
-    .tag {
-        min-height: 36px !important;
-        padding: 8px 16px !important;
-        margin: 4px !important;
-    }
-
-    /* 触摸友好的下拉菜单 */
-    .dropdown-item {
-        min-height: 48px !important;
-        padding: 12px 16px !important;
-    }
-
-    /* 触摸友好的搜索框 */
-    .search-input {
-        min-height: 48px !important;
-        padding: 12px 16px !important;
-        font-size: 16px !important;
-    }
+.mobile-app * {
+  box-sizing: border-box;
 }
 
-/* ===== 大屏幕移动设备优化 (平板) ===== */
-@media (min-width: 768px) and (max-width: 1023px) and (hover: none) {
+/* 基础工具类 */
+.mobile-show { display: block !important; }
+.mobile-hide { display: none !important; }
+.mobile-w-full { width: 100%; }
+.mobile-h-full { height: 100%; }
 
-    /* 平板触摸优化 */
-    button,
-    .btn {
-        min-height: 48px !important;
-        padding: 12px 20px !important;
-        /* 🎯 确保文字在任何padding下都居中 */
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        text-align: center !important;
-    }
-
-    .glass-card {
-        padding: 24px !important;
-    }
-
-    .nav-link {
-        padding: 12px 16px !important;
-    }
+/* 毛玻璃效果 */
+.mobile-glass {
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-/* ===== 触摸设备的文本选择优化 ===== */
-@media (hover: none) and (pointer: coarse) {
-
-    /* 标题和重要文本可选择 */
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        -webkit-user-select: text !important;
-        user-select: text !important;
-    }
-
-    /* 代码块可选择 */
-    pre,
-    code {
-        -webkit-user-select: text !important;
-        user-select: text !important;
-    }
-
-    /* 防止意外选择的元素 */
-    .icon,
-    .logo,
-    .decoration,
-    .background {
-        -webkit-user-select: none !important;
-        user-select: none !important;
-    }
+/* 渐变背景 */
+.mobile-gradient-primary {
+  background: linear-gradient(135deg, 
+    var(--color-primary-blue) 0%, 
+    var(--color-primary-purple) 100%);
 }
 
-/* ===== 触摸设备滚动优化 ===== */
-@media (hover: none) and (pointer: coarse) {
-
-    /* 平滑滚动 */
-    html {
-        scroll-behavior: smooth !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
-
-    /* 优化滚动容器 */
-    .scroll-container {
-        overflow-x: auto !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
-
-    /* 侧边栏滚动优化 */
-    .mobile-menu {
-        -webkit-overflow-scrolling: touch !important;
-    }
+/* 加载动画 */
+.mobile-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--color-primary-blue);
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: mobile-spin 1s linear infinite;
 }
 
-/* ===== 触摸设备动画性能优化 ===== */
-@media (hover: none) and (pointer: coarse) {
-
-    /* 减少复杂动画 */
-    *,
-    *::before,
-    *::after {
-        will-change: auto !important;
-    }
-
-    /* 关键元素使用硬件加速 */
-    .mobile-menu,
-    .modal-overlay,
-    .modal-container,
-    .back-to-top-button {
-        will-change: transform, opacity !important;
-        transform: translateZ(0) !important;
-        /* 强制硬件加速 */
-    }
-}
-
-/* ===== 移动端字体渲染优化 ===== */
-@media (max-width: 767px) {
-    body {
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale !important;
-        text-rendering: optimizeLegibility !important;
-    }
-}
-
-/* ===== 移动端输入框样式防止缩放 ===== */
-@media (max-width: 767px) {
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="search"],
-    input[type="tel"],
-    input[type="url"],
-    input[type="number"],
-    textarea,
-    select {
-        font-size: 16px !important;
-        /* 防止iOS Safari缩放 */
-        border-radius: 8px !important;
-        /* 统一圆角 */
-        min-height: 44px !important;
-        /* 触摸友好高度 */
-    }
-}
-
-/* ===== 移动端表单优化 ===== */
-@media (max-width: 767px) {
-
-    /* 输入框统一样式 */
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="search"],
-    input[type="tel"],
-    input[type="url"],
-    input[type="number"],
-    textarea,
-    select {
-        font-size: 16px !important;
-        /* 防止iOS Safari缩放 */
-        min-height: 44px !important;
-        padding: 12px 16px !important;
-        border-radius: 8px !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    /* 表单按钮优化 */
-    button[type="submit"],
-    input[type="submit"] {
-        min-height: 48px !important;
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        border-radius: 8px !important;
-    }
-
-    /* 表单布局优化 */
-    form {
-        max-width: 100% !important;
-    }
-
-    .form-row {
-        flex-direction: column !important;
-        gap: 12px !important;
-    }
-
-    .form-group {
-        width: 100% !important;
-    }
-}
-
-/* ===== 移动端导航优化 ===== */
-@media (max-width: 767px) {
-
-    /* 头部固定优化 */
-    header {
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 1000 !important;
-        backdrop-filter: blur(20px) !important;
-        -webkit-backdrop-filter: blur(20px) !important;
-    }
-
-    /* 移动菜单优化 */
-    .mobile-menu {
-        position: fixed !important;
-        top: 64px !important;
-        left: 0 !important;
-        right: 0 !important;
-        background: var(--color-bg-glass) !important;
-        backdrop-filter: blur(20px) !important;
-        -webkit-backdrop-filter: blur(20px) !important;
-        border-bottom: 1px solid var(--color-border-primary) !important;
-        max-height: calc(100vh - 64px) !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
-}
-
-/* ===== 移动端性能优化 ===== */
-@media (max-width: 767px) {
-
-    /* 减少动画复杂度 */
-    * {
-        will-change: auto !important;
-    }
-
-    /* 关键动画元素使用硬件加速 */
-    .modal-container,
-    .mobile-menu,
-    header {
-        will-change: transform, opacity !important;
-        transform: translateZ(0) !important;
-    }
-
-    /* 简化复杂效果 */
-    .glass-card {
-        backdrop-filter: blur(8px) !important;
-        -webkit-backdrop-filter: blur(8px) !important;
-    }
-
-    /* 优化字体渲染 */
-    body {
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale !important;
-        text-rendering: optimizeLegibility !important;
-    }
-}
-
-/* ===== 移动端滚动优化 ===== */
-@media (max-width: 767px) {
-    html {
-        scroll-behavior: smooth !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
-
-    /* 滚动容器优化 */
-    .scroll-container,
-    .modal-body,
-    .mobile-menu {
-        -webkit-overflow-scrolling: touch !important;
-        scroll-behavior: smooth !important;
-    }
-
-    /* 隐藏滚动条但保持功能 */
-    .hide-scrollbar {
-        -ms-overflow-style: none !important;
-        scrollbar-width: none !important;
-    }
-
-    .hide-scrollbar::-webkit-scrollbar {
-        display: none !important;
-    }
-}
-
-/* ===== 移动端安全区域适配 ===== */
-@media (max-width: 767px) {
-
-    /* iPhone X系列安全区域 */
-    body {
-        padding-top: env(safe-area-inset-top) !important;
-        padding-bottom: env(safe-area-inset-bottom) !important;
-        padding-left: env(safe-area-inset-left) !important;
-        padding-right: env(safe-area-inset-right) !important;
-    }
-
-    /* 固定元素安全区域适配 */
-    header {
-        padding-top: calc(env(safe-area-inset-top) + 10px) !important;
-    }
-
-    .back-to-top-button {
-        bottom: calc(env(safe-area-inset-bottom) + 20px) !important;
-        right: calc(env(safe-area-inset-right) + 20px) !important;
-    }
-}
-
-/* ===== 移动端可访问性增强 ===== */
-@media (max-width: 767px) {
-
-    /* 焦点可见性 */
-    *:focus-visible {
-        outline: 2px solid var(--color-primary-blue) !important;
-        outline-offset: 2px !important;
-    }
-}
-
-/* ===== 移动端高对比度支持 ===== */
-@media (max-width: 767px) and (prefers-contrast: high) {
-
-    .glass-card,
-    .modal-container {
-        border: 2px solid var(--color-border-primary) !important;
-    }
-
-    button,
-    .btn {
-        border: 2px solid currentColor !important;
-    }
-}
-
-/* ===== 移动端减少动画偏好 ===== */
-@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+@keyframes mobile-spin {
+  to { transform: rotate(360deg); }
 }

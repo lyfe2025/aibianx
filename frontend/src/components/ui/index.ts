@@ -26,9 +26,16 @@ export { ThemeInit } from './ThemeInit/ThemeInit'
 export { Pagination } from '../molecules/Pagination/Pagination'
 
 // 用户体验反馈组件
-export { Toast, ToastContainer, useToast } from './Toast'
+export { Toast, ToastContainer, ToastProvider, useToast, ToastPresets } from './Toast'
+export type { ToastData, ToastType, ToastPosition } from './Toast'
+
+// 移动端触控优化
+export { TouchOptimized, withTouchOptimization, TouchOptimizedButton, TouchOptimizedCard } from './TouchOptimized'
+
+// 移动端性能优化
+export { LazyImage } from './LazyImage'
+export { PerformanceOptimizer } from './PerformanceOptimizer'
 export { Loading } from './Loading'
-export type { ToastType, ToastItem } from './Toast'
 export type { LoadingSize, LoadingVariant, LoadingColor } from './Loading'
 
 // 阅读体验优化组件

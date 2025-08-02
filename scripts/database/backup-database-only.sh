@@ -5,7 +5,8 @@
 set -e
 
 # 项目配置
-PROJECT_ROOT="/Volumes/wwx/dev/WebProjects/aibianx"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 BACKUP_ROOT="$PROJECT_ROOT/backups/database-only"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 

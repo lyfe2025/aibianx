@@ -127,7 +127,7 @@ echo ""
 read -p "是否立即启动Strapi服务？[y/N]: " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "🚀 启动Strapi服务..."
-  cd "/Volumes/wwx/dev/WebProjects/aibianx/backend"
+  cd "${PROJECT_ROOT}/backend"
   npm run develop &
   echo "✅ Strapi服务已在后台启动"
   echo "📱 管理界面: ${BACKEND_ADMIN_URL}"

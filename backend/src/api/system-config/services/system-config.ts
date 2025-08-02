@@ -221,58 +221,138 @@ export default factories.createCoreService('api::system-config.system-config', (
                 return existingConfig
             }
 
-            // 创建默认配置
+            // 创建默认配置（组件化结构）
             const defaultConfig = {
-                // 邮件服务配置
-                emailServiceEnabled: true,
-                emailServiceProvider: 'gmail' as const,
-                emailSmtpHost: 'smtp.gmail.com',
-                emailSmtpPort: 587,
-                emailFromAddress: 'noreply@aibianx.com',
-                emailFromName: 'AI变现之路',
-                emailUseTLS: true,
+                configName: '系统配置',
+                
+                // 用户管理配置组件
+                userManagement: {
+                    registrationEnabled: true,
+                    emailVerificationEnabled: true,
+                    passwordResetEnabled: true,
+                    enableUserProfileEdit: true,
+                    enableAccountDeletion: false,
+                    enableUserListPublic: false,
+                    maxAvatarSize: 2097152,
+                    defaultUserRole: 'authenticated' as const,
+                    enableUserApproval: false
+                },
 
-                // 用户注册配置
-                registrationEnabled: true,
-                emailVerificationEnabled: true,
-                passwordResetEnabled: true,
-                verificationCodeExpiry: 600,
-                passwordResetTokenExpiry: 3600,
+                // 密码策略配置组件
+                passwordPolicy: {
+                    passwordMinLength: 8,
+                    passwordMaxLength: 128,
+                    passwordRequireSpecialChar: true,
+                    passwordRequireNumber: true,
+                    passwordRequireUppercase: false,
+                    passwordRequireLowercase: true,
+                    passwordHistoryCount: 5,
+                    passwordExpiryDays: 0
+                },
 
-                // 密码策略
-                passwordMinLength: 8,
-                passwordRequireSpecialChar: true,
-                passwordRequireNumber: true,
-                passwordRequireUppercase: false,
+                // 验证设置配置组件
+                verificationSettings: {
+                    verificationCodeLength: 6,
+                    verificationCodeType: 'numeric' as const,
+                    verificationCodeExpiry: 600,
+                    passwordResetTokenExpiry: 3600,
+                    emailVerificationTokenExpiry: 86400,
+                    maxVerificationAttempts: 5,
+                    verificationCooldown: 60,
+                    maxDailyVerifications: 10
+                },
 
-                // OAuth配置
-                oauthEnabled: true,
-                githubOauthEnabled: true,
-                googleOauthEnabled: false,
-                wechatOauthEnabled: false,
-                qqOauthEnabled: false,
-                oauthAutoRegister: true,
+                // OAuth设置配置组件
+                oauthSettings: {
+                    oauthEnabled: true,
+                    oauthAutoRegister: true,
+                    oauthLinkExistingAccount: true,
+                    oauthEmailRequired: true,
+                    
+                    // GitHub OAuth
+                    githubOauth: {
+                        enabled: false,
+                        client_id: '',
+                        client_secret: '',
+                        callback_url: oauthConfig.github,
+                        scope: 'user:email',
+                        button_text: '使用GitHub登录',
+                        button_icon: 'github'
+                    },
+                    
+                    // Google OAuth
+                    googleOauth: {
+                        enabled: false,
+                        client_id: '',
+                        client_secret: '',
+                        callback_url: oauthConfig.google,
+                        scope: 'email profile',
+                        button_text: '使用Google登录',
+                        button_icon: 'google'
+                    },
+                    
+                    // 微信OAuth
+                    wechatOauth: {
+                        enabled: false,
+                        client_id: '',
+                        client_secret: '',
+                        callback_url: oauthConfig.wechat,
+                        scope: 'snsapi_userinfo',
+                        button_text: '使用微信登录',
+                        button_icon: 'wechat'
+                    },
+                    
+                    // QQ OAuth
+                    qqOauth: {
+                        enabled: false,
+                        client_id: '',
+                        client_secret: '',
+                        callback_url: oauthConfig.qq,
+                        scope: 'get_user_info',
+                        button_text: '使用QQ登录',
+                        button_icon: 'qq'
+                    },
+                    
+                    oauthButtonStyle: 'horizontal' as const,
+                    showOauthDivider: true,
+                    oauthDividerText: '或使用第三方账号登录',
+                    enableOauthOnRegister: true,
+                    enableOauthOnLogin: true
+                },
 
-                // OAuth回调地址（使用统一配置系统）
-                githubCallbackUrl: oauthConfig.github,
-                googleCallbackUrl: oauthConfig.google,
-                wechatCallbackUrl: oauthConfig.wechat,
-                qqCallbackUrl: oauthConfig.qq,
+                // 安全设置配置组件
+                securitySettings: {
+                    sessionTimeout: 2592000,
+                    enableRememberMe: true,
+                    rememberMeDuration: 7776000,
+                    maxLoginAttempts: 5,
+                    accountLockoutDuration: 900,
+                    enableIpWhitelist: false,
+                    enableIpBlacklist: true,
+                    enableRateLimiting: true,
+                    rateLimitWindow: 3600,
+                    rateLimitMax: 1000,
+                    enableCsrfProtection: true,
+                    enableXssProtection: true,
+                    enableSecurityHeaders: true,
+                    enableAuditLog: true,
+                    auditLogRetention: 90
+                },
 
-                // 安全配置
-                sessionTimeout: 2592000,
-                maxLoginAttempts: 5,
-                accountLockoutDuration: 900,
-
-                // 系统状态
-                maintenanceMode: false,
-                maintenanceMessage: '网站正在进行系统升级维护，预计30分钟后恢复正常访问。',
-
-                // 用户功能
-                enableUserProfileEdit: true,
-                enableAccountDeletion: false,
-                enableUserListPublic: false,
-                maxAvatarSize: 2097152
+                // 系统维护配置组件
+                systemMaintenance: {
+                    maintenanceMode: false,
+                    maintenanceMessage: '网站正在进行系统升级维护，预计30分钟后恢复正常访问。',
+                    maintenanceTitle: '系统维护中',
+                    estimatedDowntime: '30分钟',
+                    allowAdminAccess: true,
+                    enableMaintenanceEmail: true,
+                    enableSystemNotifications: true,
+                    enableErrorReporting: true,
+                    errorReportingLevel: 'error' as const,
+                    logLevel: 'info' as const,
+                    debugMode: false
+                }
             }
 
             const config = await strapi.entityService.create('api::system-config.system-config', {

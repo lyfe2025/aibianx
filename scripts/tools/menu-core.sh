@@ -71,7 +71,7 @@ show_core_menu() {
     
     # 字母命令（保留最重要的）
     echo -e " ${theme_color}🌐 快捷命令${NC}"
-    echo "  q) 硬编码检查          (开发质量保证)"
+    echo "  q) 日志查看            (快速日志入口)"
     echo "  h) 帮助信息           (查看所有命令)"
     echo "  0) 退出"
     echo ""
@@ -138,8 +138,8 @@ execute_core_choice() {
                 return 1
             fi
             ;;
-        q|Q) # 硬编码检查
-            exec "$PROJECT_ROOT/scripts/tools/check-hardcode.sh"
+        q|Q) # 日志查看
+            exec "$PROJECT_ROOT/scripts/tools/quick-logs.sh"
             ;;
         h|H) # 帮助信息
             exec "$PROJECT_ROOT/scripts/tools/show-help.sh"

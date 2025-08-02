@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-08-02T08:13:52.843Z"
+    "x-generation-date": "2025-08-02T13:29:15.679Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -14198,34 +14198,28 @@
         "properties": {
           "data": {
             "required": [
-              "siteName",
-              "siteDescription",
-              "siteUrl"
+              "configName",
+              "seoSettings",
+              "generalSettings"
             ],
             "type": "object",
             "properties": {
-              "siteName": {
+              "configName": {
                 "type": "string"
               },
-              "siteDescription": {
-                "type": "string"
+              "seoSettings": {
+                "$ref": "#/components/schemas/SiteSeoConfigComponent"
               },
-              "siteUrl": {
-                "type": "string"
+              "generalSettings": {
+                "$ref": "#/components/schemas/SiteGeneralConfigComponent"
               },
-              "googleVerificationCode": {
-                "type": "string"
+              "appearanceSettings": {
+                "$ref": "#/components/schemas/SiteAppearanceConfigComponent"
               },
-              "baiduVerificationCode": {
-                "type": "string"
+              "contactSettings": {
+                "$ref": "#/components/schemas/SiteContactConfigComponent"
               },
-              "bingVerificationCode": {
-                "type": "string"
-              },
-              "yandexVerificationCode": {
-                "type": "string"
-              },
-              "defaultOgImage": {
+              "lastModifiedBy": {
                 "oneOf": [
                   {
                     "type": "integer"
@@ -14236,48 +14230,9 @@
                 ],
                 "example": "string or id"
               },
-              "twitterHandle": {
-                "type": "string"
-              },
-              "googleSubmissionStatus": {
-                "type": "string",
-                "enum": [
-                  "status_not_submitted",
-                  "status_submitted",
-                  "status_pending",
-                  "status_indexed"
-                ]
-              },
-              "baiduSubmissionStatus": {
-                "type": "string",
-                "enum": [
-                  "status_not_submitted",
-                  "status_submitted",
-                  "status_pending",
-                  "status_indexed"
-                ]
-              },
-              "lastSitemapUpdate": {
+              "lastModifiedAt": {
                 "type": "string",
                 "format": "date-time"
-              },
-              "enablePerformanceTracking": {
-                "type": "boolean"
-              },
-              "enableIndexingMonitoring": {
-                "type": "boolean"
-              },
-              "primaryKeywords": {
-                "type": "string"
-              },
-              "analyticsId": {
-                "type": "string"
-              },
-              "gscPropertyUrl": {
-                "type": "string"
-              },
-              "baiduSiteToken": {
-                "type": "string"
               },
               "locale": {
                 "type": "string"
@@ -14338,9 +14293,9 @@
       "SiteConfig": {
         "type": "object",
         "required": [
-          "siteName",
-          "siteDescription",
-          "siteUrl"
+          "configName",
+          "seoSettings",
+          "generalSettings"
         ],
         "properties": {
           "id": {
@@ -14348,6 +14303,187 @@
           },
           "documentId": {
             "type": "string"
+          },
+          "configName": {
+            "type": "string"
+          },
+          "seoSettings": {
+            "$ref": "#/components/schemas/SiteSeoConfigComponent"
+          },
+          "generalSettings": {
+            "$ref": "#/components/schemas/SiteGeneralConfigComponent"
+          },
+          "appearanceSettings": {
+            "$ref": "#/components/schemas/SiteAppearanceConfigComponent"
+          },
+          "contactSettings": {
+            "$ref": "#/components/schemas/SiteContactConfigComponent"
+          },
+          "lastModifiedBy": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "documentId": {
+                "type": "string"
+              }
+            }
+          },
+          "lastModifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "documentId": {
+                "type": "string"
+              }
+            }
+          },
+          "updatedBy": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "documentId": {
+                "type": "string"
+              }
+            }
+          },
+          "locale": {
+            "type": "string"
+          },
+          "localizations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "documentId": {
+                  "type": "string"
+                },
+                "configName": {
+                  "type": "string"
+                },
+                "seoSettings": {
+                  "$ref": "#/components/schemas/SiteSeoConfigComponent"
+                },
+                "generalSettings": {
+                  "$ref": "#/components/schemas/SiteGeneralConfigComponent"
+                },
+                "appearanceSettings": {
+                  "$ref": "#/components/schemas/SiteAppearanceConfigComponent"
+                },
+                "contactSettings": {
+                  "$ref": "#/components/schemas/SiteContactConfigComponent"
+                },
+                "lastModifiedBy": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "lastModifiedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "updatedBy": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "locale": {
+                  "type": "string"
+                },
+                "localizations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "documentId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "SiteConfigResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/SiteConfig"
+          },
+          "meta": {
+            "type": "object"
+          }
+        }
+      },
+      "SiteSeoConfigComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
           },
           "siteName": {
             "type": "string"
@@ -14369,6 +14505,46 @@
           },
           "yandexVerificationCode": {
             "type": "string"
+          },
+          "analyticsId": {
+            "type": "string"
+          },
+          "gscPropertyUrl": {
+            "type": "string"
+          },
+          "baiduSiteToken": {
+            "type": "string"
+          },
+          "primaryKeywords": {
+            "type": "string"
+          },
+          "enablePerformanceTracking": {
+            "type": "boolean"
+          },
+          "enableIndexingMonitoring": {
+            "type": "boolean"
+          },
+          "lastSitemapUpdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "googleSubmissionStatus": {
+            "type": "string",
+            "enum": [
+              "status_not_submitted",
+              "status_submitted",
+              "status_pending",
+              "status_indexed"
+            ]
+          },
+          "baiduSubmissionStatus": {
+            "type": "string",
+            "enum": [
+              "status_not_submitted",
+              "status_submitted",
+              "status_pending",
+              "status_indexed"
+            ]
           },
           "defaultOgImage": {
             "type": "object",
@@ -14440,475 +14616,6 @@
                   },
                   "documentId": {
                     "type": "string"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "pathId": {
-                    "type": "integer"
-                  },
-                  "parent": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "number"
-                      },
-                      "documentId": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "children": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "number"
-                        },
-                        "documentId": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  },
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "number"
-                        },
-                        "documentId": {
-                          "type": "string"
-                        },
-                        "name": {
-                          "type": "string"
-                        },
-                        "alternativeText": {
-                          "type": "string"
-                        },
-                        "caption": {
-                          "type": "string"
-                        },
-                        "width": {
-                          "type": "integer"
-                        },
-                        "height": {
-                          "type": "integer"
-                        },
-                        "formats": {},
-                        "hash": {
-                          "type": "string"
-                        },
-                        "ext": {
-                          "type": "string"
-                        },
-                        "mime": {
-                          "type": "string"
-                        },
-                        "size": {
-                          "type": "number",
-                          "format": "float"
-                        },
-                        "url": {
-                          "type": "string"
-                        },
-                        "previewUrl": {
-                          "type": "string"
-                        },
-                        "provider": {
-                          "type": "string"
-                        },
-                        "provider_metadata": {},
-                        "related": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "number"
-                              },
-                              "documentId": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        },
-                        "folder": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "number"
-                            },
-                            "documentId": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        "folderPath": {
-                          "type": "string"
-                        },
-                        "createdAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "updatedAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "publishedAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "createdBy": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "number"
-                            },
-                            "documentId": {
-                              "type": "string"
-                            },
-                            "firstname": {
-                              "type": "string"
-                            },
-                            "lastname": {
-                              "type": "string"
-                            },
-                            "username": {
-                              "type": "string"
-                            },
-                            "email": {
-                              "type": "string",
-                              "format": "email"
-                            },
-                            "resetPasswordToken": {
-                              "type": "string"
-                            },
-                            "registrationToken": {
-                              "type": "string"
-                            },
-                            "isActive": {
-                              "type": "boolean"
-                            },
-                            "roles": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "type": "number"
-                                  },
-                                  "documentId": {
-                                    "type": "string"
-                                  },
-                                  "name": {
-                                    "type": "string"
-                                  },
-                                  "code": {
-                                    "type": "string"
-                                  },
-                                  "description": {
-                                    "type": "string"
-                                  },
-                                  "users": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "object",
-                                      "properties": {
-                                        "id": {
-                                          "type": "number"
-                                        },
-                                        "documentId": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    }
-                                  },
-                                  "permissions": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "object",
-                                      "properties": {
-                                        "id": {
-                                          "type": "number"
-                                        },
-                                        "documentId": {
-                                          "type": "string"
-                                        },
-                                        "action": {
-                                          "type": "string"
-                                        },
-                                        "actionParameters": {},
-                                        "subject": {
-                                          "type": "string"
-                                        },
-                                        "properties": {},
-                                        "conditions": {},
-                                        "role": {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "number"
-                                            },
-                                            "documentId": {
-                                              "type": "string"
-                                            }
-                                          }
-                                        },
-                                        "createdAt": {
-                                          "type": "string",
-                                          "format": "date-time"
-                                        },
-                                        "updatedAt": {
-                                          "type": "string",
-                                          "format": "date-time"
-                                        },
-                                        "publishedAt": {
-                                          "type": "string",
-                                          "format": "date-time"
-                                        },
-                                        "createdBy": {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "number"
-                                            },
-                                            "documentId": {
-                                              "type": "string"
-                                            }
-                                          }
-                                        },
-                                        "updatedBy": {
-                                          "type": "object",
-                                          "properties": {
-                                            "id": {
-                                              "type": "number"
-                                            },
-                                            "documentId": {
-                                              "type": "string"
-                                            }
-                                          }
-                                        },
-                                        "locale": {
-                                          "type": "string"
-                                        },
-                                        "localizations": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "object",
-                                            "properties": {
-                                              "id": {
-                                                "type": "number"
-                                              },
-                                              "documentId": {
-                                                "type": "string"
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-                                  },
-                                  "createdAt": {
-                                    "type": "string",
-                                    "format": "date-time"
-                                  },
-                                  "updatedAt": {
-                                    "type": "string",
-                                    "format": "date-time"
-                                  },
-                                  "publishedAt": {
-                                    "type": "string",
-                                    "format": "date-time"
-                                  },
-                                  "createdBy": {
-                                    "type": "object",
-                                    "properties": {
-                                      "id": {
-                                        "type": "number"
-                                      },
-                                      "documentId": {
-                                        "type": "string"
-                                      }
-                                    }
-                                  },
-                                  "updatedBy": {
-                                    "type": "object",
-                                    "properties": {
-                                      "id": {
-                                        "type": "number"
-                                      },
-                                      "documentId": {
-                                        "type": "string"
-                                      }
-                                    }
-                                  },
-                                  "locale": {
-                                    "type": "string"
-                                  },
-                                  "localizations": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "object",
-                                      "properties": {
-                                        "id": {
-                                          "type": "number"
-                                        },
-                                        "documentId": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "blocked": {
-                              "type": "boolean"
-                            },
-                            "preferedLanguage": {
-                              "type": "string"
-                            },
-                            "createdAt": {
-                              "type": "string",
-                              "format": "date-time"
-                            },
-                            "updatedAt": {
-                              "type": "string",
-                              "format": "date-time"
-                            },
-                            "publishedAt": {
-                              "type": "string",
-                              "format": "date-time"
-                            },
-                            "createdBy": {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "type": "number"
-                                },
-                                "documentId": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "updatedBy": {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "type": "number"
-                                },
-                                "documentId": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "locale": {
-                              "type": "string"
-                            },
-                            "localizations": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "type": "number"
-                                  },
-                                  "documentId": {
-                                    "type": "string"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        "updatedBy": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "number"
-                            },
-                            "documentId": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        "locale": {
-                          "type": "string"
-                        },
-                        "localizations": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "number"
-                              },
-                              "documentId": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "path": {
-                    "type": "string"
-                  },
-                  "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "updatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "publishedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "createdBy": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "number"
-                      },
-                      "documentId": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "updatedBy": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "number"
-                      },
-                      "documentId": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "locale": {
-                    "type": "string"
-                  },
-                  "localizations": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "number"
-                        },
-                        "documentId": {
-                          "type": "string"
-                        }
-                      }
-                    }
                   }
                 }
               },
@@ -14970,60 +14677,62 @@
           },
           "twitterHandle": {
             "type": "string"
+          }
+        }
+      },
+      "SiteGeneralConfigComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
           },
-          "googleSubmissionStatus": {
+          "siteTitle": {
+            "type": "string"
+          },
+          "siteSlogan": {
+            "type": "string"
+          },
+          "defaultLanguage": {
             "type": "string",
             "enum": [
-              "status_not_submitted",
-              "status_submitted",
-              "status_pending",
-              "status_indexed"
+              "zh-CN",
+              "en-US",
+              "zh-TW",
+              "ja-JP"
             ]
           },
-          "baiduSubmissionStatus": {
+          "timezone": {
+            "type": "string"
+          },
+          "dateFormat": {
             "type": "string",
             "enum": [
-              "status_not_submitted",
-              "status_submitted",
-              "status_pending",
-              "status_indexed"
+              "YYYY-MM-DD",
+              "MM/DD/YYYY",
+              "DD/MM/YYYY",
+              "YYYY年MM月DD日"
             ]
           },
-          "lastSitemapUpdate": {
+          "timeFormat": {
             "type": "string",
-            "format": "date-time"
+            "enum": [
+              "24h",
+              "12h"
+            ]
           },
-          "enablePerformanceTracking": {
+          "enableComments": {
             "type": "boolean"
           },
-          "enableIndexingMonitoring": {
+          "enableNewsletter": {
             "type": "boolean"
           },
-          "primaryKeywords": {
-            "type": "string"
+          "enableSearch": {
+            "type": "boolean"
           },
-          "analyticsId": {
-            "type": "string"
+          "enableRss": {
+            "type": "boolean"
           },
-          "gscPropertyUrl": {
-            "type": "string"
-          },
-          "baiduSiteToken": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "publishedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
+          "favicon": {
             "type": "object",
             "properties": {
               "id": {
@@ -15031,240 +14740,49 @@
               },
               "documentId": {
                 "type": "string"
-              }
-            }
-          },
-          "updatedBy": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "number"
               },
-              "documentId": {
+              "name": {
                 "type": "string"
-              }
-            }
-          },
-          "locale": {
-            "type": "string"
-          },
-          "localizations": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "number"
-                },
-                "documentId": {
-                  "type": "string"
-                },
-                "siteName": {
-                  "type": "string"
-                },
-                "siteDescription": {
-                  "type": "string"
-                },
-                "siteUrl": {
-                  "type": "string"
-                },
-                "googleVerificationCode": {
-                  "type": "string"
-                },
-                "baiduVerificationCode": {
-                  "type": "string"
-                },
-                "bingVerificationCode": {
-                  "type": "string"
-                },
-                "yandexVerificationCode": {
-                  "type": "string"
-                },
-                "defaultOgImage": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number"
-                    },
-                    "documentId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "alternativeText": {
-                      "type": "string"
-                    },
-                    "caption": {
-                      "type": "string"
-                    },
-                    "width": {
-                      "type": "integer"
-                    },
-                    "height": {
-                      "type": "integer"
-                    },
-                    "formats": {},
-                    "hash": {
-                      "type": "string"
-                    },
-                    "ext": {
-                      "type": "string"
-                    },
-                    "mime": {
-                      "type": "string"
-                    },
-                    "size": {
-                      "type": "number",
-                      "format": "float"
-                    },
-                    "url": {
-                      "type": "string"
-                    },
-                    "previewUrl": {
-                      "type": "string"
-                    },
-                    "provider": {
-                      "type": "string"
-                    },
-                    "provider_metadata": {},
-                    "related": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "documentId": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    },
-                    "folder": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "number"
-                        },
-                        "documentId": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "folderPath": {
-                      "type": "string"
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "publishedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "createdBy": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "number"
-                        },
-                        "documentId": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "updatedBy": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "number"
-                        },
-                        "documentId": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "locale": {
-                      "type": "string"
-                    },
-                    "localizations": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "documentId": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "twitterHandle": {
-                  "type": "string"
-                },
-                "googleSubmissionStatus": {
-                  "type": "string",
-                  "enum": [
-                    "status_not_submitted",
-                    "status_submitted",
-                    "status_pending",
-                    "status_indexed"
-                  ]
-                },
-                "baiduSubmissionStatus": {
-                  "type": "string",
-                  "enum": [
-                    "status_not_submitted",
-                    "status_submitted",
-                    "status_pending",
-                    "status_indexed"
-                  ]
-                },
-                "lastSitemapUpdate": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "enablePerformanceTracking": {
-                  "type": "boolean"
-                },
-                "enableIndexingMonitoring": {
-                  "type": "boolean"
-                },
-                "primaryKeywords": {
-                  "type": "string"
-                },
-                "analyticsId": {
-                  "type": "string"
-                },
-                "gscPropertyUrl": {
-                  "type": "string"
-                },
-                "baiduSiteToken": {
-                  "type": "string"
-                },
-                "createdAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "updatedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "publishedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "createdBy": {
+              },
+              "alternativeText": {
+                "type": "string"
+              },
+              "caption": {
+                "type": "string"
+              },
+              "width": {
+                "type": "integer"
+              },
+              "height": {
+                "type": "integer"
+              },
+              "formats": {},
+              "hash": {
+                "type": "string"
+              },
+              "ext": {
+                "type": "string"
+              },
+              "mime": {
+                "type": "string"
+              },
+              "size": {
+                "type": "number",
+                "format": "float"
+              },
+              "url": {
+                "type": "string"
+              },
+              "previewUrl": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "provider_metadata": {},
+              "related": {
+                "type": "array",
+                "items": {
                   "type": "object",
                   "properties": {
                     "id": {
@@ -15274,8 +14792,62 @@
                       "type": "string"
                     }
                   }
-                },
-                "updatedBy": {
+                }
+              },
+              "folder": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "documentId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "folderPath": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "publishedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "createdBy": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "documentId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "updatedBy": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "documentId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "locale": {
+                "type": "string"
+              },
+              "localizations": {
+                "type": "array",
+                "items": {
                   "type": "object",
                   "properties": {
                     "id": {
@@ -15283,39 +14855,394 @@
                     },
                     "documentId": {
                       "type": "string"
-                    }
-                  }
-                },
-                "locale": {
-                  "type": "string"
-                },
-                "localizations": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "number"
-                      },
-                      "documentId": {
-                        "type": "string"
-                      }
                     }
                   }
                 }
               }
             }
+          },
+          "enableCookieConsent": {
+            "type": "boolean"
+          },
+          "enableRobotsTxt": {
+            "type": "boolean"
+          },
+          "postsPerPage": {
+            "type": "integer"
+          },
+          "excerptLength": {
+            "type": "integer"
+          },
+          "enableLazyLoading": {
+            "type": "boolean"
+          },
+          "enablePwa": {
+            "type": "boolean"
+          },
+          "maintenancePageUrl": {
+            "type": "string"
           }
         }
       },
-      "SiteConfigResponse": {
+      "SiteAppearanceConfigComponent": {
         "type": "object",
         "properties": {
-          "data": {
-            "$ref": "#/components/schemas/SiteConfig"
+          "id": {
+            "type": "number"
           },
-          "meta": {
-            "type": "object"
+          "defaultTheme": {
+            "type": "string",
+            "enum": [
+              "light",
+              "dark",
+              "auto"
+            ]
+          },
+          "enableDarkMode": {
+            "type": "boolean"
+          },
+          "enableThemeToggle": {
+            "type": "boolean"
+          },
+          "primaryColor": {
+            "type": "string"
+          },
+          "accentColor": {
+            "type": "string"
+          },
+          "backgroundColor": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "fontFamily": {
+            "type": "string",
+            "enum": [
+              "Alibaba PuHuiTi 3.0",
+              "system-ui",
+              "Helvetica Neue",
+              "PingFang SC",
+              "Microsoft YaHei"
+            ]
+          },
+          "fontSizeBase": {
+            "type": "string",
+            "enum": [
+              "14px",
+              "16px",
+              "18px",
+              "20px"
+            ]
+          },
+          "headerStyle": {
+            "type": "string",
+            "enum": [
+              "fixed",
+              "sticky",
+              "static",
+              "transparent"
+            ]
+          },
+          "headerHeight": {
+            "type": "integer"
+          },
+          "footerStyle": {
+            "type": "string",
+            "enum": [
+              "default",
+              "minimal",
+              "extended"
+            ]
+          },
+          "layoutStyle": {
+            "type": "string",
+            "enum": [
+              "container",
+              "full-width",
+              "boxed"
+            ]
+          },
+          "maxWidth": {
+            "type": "integer"
+          },
+          "enableAnimations": {
+            "type": "boolean"
+          },
+          "animationDuration": {
+            "type": "string",
+            "enum": [
+              "fast",
+              "normal",
+              "slow"
+            ]
+          },
+          "enableGradients": {
+            "type": "boolean"
+          },
+          "enableGlassEffect": {
+            "type": "boolean"
+          },
+          "borderRadius": {
+            "type": "string",
+            "enum": [
+              "none",
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "spacing": {
+            "type": "string",
+            "enum": [
+              "compact",
+              "normal",
+              "relaxed"
+            ]
+          },
+          "cardStyle": {
+            "type": "string",
+            "enum": [
+              "flat",
+              "raised",
+              "outlined"
+            ]
+          },
+          "buttonStyle": {
+            "type": "string",
+            "enum": [
+              "solid",
+              "outline",
+              "ghost",
+              "gradient"
+            ]
+          },
+          "enableCustomCss": {
+            "type": "boolean"
+          },
+          "customCss": {
+            "type": "string"
+          }
+        }
+      },
+      "SiteContactConfigComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "contactEmail": {
+            "type": "string",
+            "format": "email"
+          },
+          "supportEmail": {
+            "type": "string",
+            "format": "email"
+          },
+          "businessEmail": {
+            "type": "string",
+            "format": "email"
+          },
+          "contactPhone": {
+            "type": "string"
+          },
+          "contactAddress": {
+            "type": "string"
+          },
+          "workingHours": {
+            "type": "string"
+          },
+          "responseTime": {
+            "type": "string"
+          },
+          "wechatQr": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "documentId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "alternativeText": {
+                "type": "string"
+              },
+              "caption": {
+                "type": "string"
+              },
+              "width": {
+                "type": "integer"
+              },
+              "height": {
+                "type": "integer"
+              },
+              "formats": {},
+              "hash": {
+                "type": "string"
+              },
+              "ext": {
+                "type": "string"
+              },
+              "mime": {
+                "type": "string"
+              },
+              "size": {
+                "type": "number",
+                "format": "float"
+              },
+              "url": {
+                "type": "string"
+              },
+              "previewUrl": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "provider_metadata": {},
+              "related": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "folder": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "documentId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "folderPath": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "publishedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "createdBy": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "documentId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "updatedBy": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "documentId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "locale": {
+                "type": "string"
+              },
+              "localizations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "wechatAccount": {
+            "type": "string"
+          },
+          "qqGroup": {
+            "type": "string"
+          },
+          "twitterUrl": {
+            "type": "string"
+          },
+          "githubUrl": {
+            "type": "string"
+          },
+          "linkedinUrl": {
+            "type": "string"
+          },
+          "youtubeUrl": {
+            "type": "string"
+          },
+          "bilibiliUrl": {
+            "type": "string"
+          },
+          "zhihuUrl": {
+            "type": "string"
+          },
+          "privacyPolicyUrl": {
+            "type": "string"
+          },
+          "termsOfServiceUrl": {
+            "type": "string"
+          },
+          "copyrightText": {
+            "type": "string"
+          },
+          "copyrightYear": {
+            "type": "integer"
+          },
+          "icp": {
+            "type": "string"
+          },
+          "policeRecord": {
+            "type": "string"
+          },
+          "enableContactForm": {
+            "type": "boolean"
+          },
+          "enableSocialShare": {
+            "type": "boolean"
+          },
+          "enableSocialLinks": {
+            "type": "boolean"
+          },
+          "aboutPageUrl": {
+            "type": "string"
+          },
+          "contactPageUrl": {
+            "type": "string"
+          },
+          "joinUsText": {
+            "type": "string"
           }
         }
       },
@@ -15326,135 +15253,49 @@
         ],
         "properties": {
           "data": {
+            "required": [
+              "userManagement",
+              "passwordPolicy",
+              "verificationSettings",
+              "securitySettings"
+            ],
             "type": "object",
             "properties": {
               "configName": {
                 "type": "string"
               },
-              "registrationEnabled": {
-                "type": "boolean"
+              "userManagement": {
+                "$ref": "#/components/schemas/SystemUserManagementConfigComponent"
               },
-              "emailVerificationEnabled": {
-                "type": "boolean"
+              "passwordPolicy": {
+                "$ref": "#/components/schemas/SystemPasswordPolicyConfigComponent"
               },
-              "passwordResetEnabled": {
-                "type": "boolean"
+              "verificationSettings": {
+                "$ref": "#/components/schemas/SystemVerificationSettingsConfigComponent"
               },
-              "verificationCodeLength": {
-                "type": "integer"
+              "oauthSettings": {
+                "$ref": "#/components/schemas/SystemOauthSettingsConfigComponent"
               },
-              "verificationCodeExpiry": {
-                "type": "integer"
+              "securitySettings": {
+                "$ref": "#/components/schemas/SystemSecuritySettingsConfigComponent"
               },
-              "passwordResetTokenExpiry": {
-                "type": "integer"
+              "systemMaintenance": {
+                "$ref": "#/components/schemas/SystemSystemMaintenanceConfigComponent"
               },
-              "passwordMinLength": {
-                "type": "integer"
+              "lastModifiedBy": {
+                "oneOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "example": "string or id"
               },
-              "passwordRequireSpecialChar": {
-                "type": "boolean"
-              },
-              "passwordRequireNumber": {
-                "type": "boolean"
-              },
-              "passwordRequireUppercase": {
-                "type": "boolean"
-              },
-              "oauthEnabled": {
-                "type": "boolean"
-              },
-              "githubOauthEnabled": {
-                "type": "boolean"
-              },
-              "githubClientId": {
-                "type": "string"
-              },
-              "githubClientSecret": {
+              "lastModifiedAt": {
                 "type": "string",
-                "format": "password",
-                "example": "*******"
-              },
-              "githubCallbackUrl": {
-                "type": "string"
-              },
-              "googleOauthEnabled": {
-                "type": "boolean"
-              },
-              "googleClientId": {
-                "type": "string"
-              },
-              "googleClientSecret": {
-                "type": "string",
-                "format": "password",
-                "example": "*******"
-              },
-              "googleCallbackUrl": {
-                "type": "string"
-              },
-              "wechatOauthEnabled": {
-                "type": "boolean"
-              },
-              "wechatAppId": {
-                "type": "string"
-              },
-              "wechatAppSecret": {
-                "type": "string",
-                "format": "password",
-                "example": "*******"
-              },
-              "wechatCallbackUrl": {
-                "type": "string"
-              },
-              "qqOauthEnabled": {
-                "type": "boolean"
-              },
-              "qqAppId": {
-                "type": "string"
-              },
-              "qqAppSecret": {
-                "type": "string",
-                "format": "password",
-                "example": "*******"
-              },
-              "qqCallbackUrl": {
-                "type": "string"
-              },
-              "oauthAutoRegister": {
-                "type": "boolean"
-              },
-              "sessionTimeout": {
-                "type": "integer"
-              },
-              "maxLoginAttempts": {
-                "type": "integer"
-              },
-              "accountLockoutDuration": {
-                "type": "integer"
-              },
-              "maintenanceMode": {
-                "type": "boolean"
-              },
-              "maintenanceMessage": {
-                "type": "string"
-              },
-              "allowedEmailDomains": {
-                "type": "string"
-              },
-              "blockedEmailDomains": {
-                "type": "string"
-              },
-              "enableUserProfileEdit": {
-                "type": "boolean"
-              },
-              "enableAccountDeletion": {
-                "type": "boolean"
-              },
-              "enableUserListPublic": {
-                "type": "boolean"
-              },
-              "maxAvatarSize": {
-                "type": "integer"
+                "format": "date-time"
               },
               "locale": {
                 "type": "string"
@@ -15514,6 +15355,12 @@
       },
       "SystemConfig": {
         "type": "object",
+        "required": [
+          "userManagement",
+          "passwordPolicy",
+          "verificationSettings",
+          "securitySettings"
+        ],
         "properties": {
           "id": {
             "type": "number"
@@ -15524,124 +15371,25 @@
           "configName": {
             "type": "string"
           },
-          "registrationEnabled": {
-            "type": "boolean"
+          "userManagement": {
+            "$ref": "#/components/schemas/SystemUserManagementConfigComponent"
           },
-          "emailVerificationEnabled": {
-            "type": "boolean"
+          "passwordPolicy": {
+            "$ref": "#/components/schemas/SystemPasswordPolicyConfigComponent"
           },
-          "passwordResetEnabled": {
-            "type": "boolean"
+          "verificationSettings": {
+            "$ref": "#/components/schemas/SystemVerificationSettingsConfigComponent"
           },
-          "verificationCodeLength": {
-            "type": "integer"
+          "oauthSettings": {
+            "$ref": "#/components/schemas/SystemOauthSettingsConfigComponent"
           },
-          "verificationCodeExpiry": {
-            "type": "integer"
+          "securitySettings": {
+            "$ref": "#/components/schemas/SystemSecuritySettingsConfigComponent"
           },
-          "passwordResetTokenExpiry": {
-            "type": "integer"
+          "systemMaintenance": {
+            "$ref": "#/components/schemas/SystemSystemMaintenanceConfigComponent"
           },
-          "passwordMinLength": {
-            "type": "integer"
-          },
-          "passwordRequireSpecialChar": {
-            "type": "boolean"
-          },
-          "passwordRequireNumber": {
-            "type": "boolean"
-          },
-          "passwordRequireUppercase": {
-            "type": "boolean"
-          },
-          "oauthEnabled": {
-            "type": "boolean"
-          },
-          "githubOauthEnabled": {
-            "type": "boolean"
-          },
-          "githubClientId": {
-            "type": "string"
-          },
-          "githubCallbackUrl": {
-            "type": "string"
-          },
-          "googleOauthEnabled": {
-            "type": "boolean"
-          },
-          "googleClientId": {
-            "type": "string"
-          },
-          "googleCallbackUrl": {
-            "type": "string"
-          },
-          "wechatOauthEnabled": {
-            "type": "boolean"
-          },
-          "wechatAppId": {
-            "type": "string"
-          },
-          "wechatCallbackUrl": {
-            "type": "string"
-          },
-          "qqOauthEnabled": {
-            "type": "boolean"
-          },
-          "qqAppId": {
-            "type": "string"
-          },
-          "qqCallbackUrl": {
-            "type": "string"
-          },
-          "oauthAutoRegister": {
-            "type": "boolean"
-          },
-          "sessionTimeout": {
-            "type": "integer"
-          },
-          "maxLoginAttempts": {
-            "type": "integer"
-          },
-          "accountLockoutDuration": {
-            "type": "integer"
-          },
-          "maintenanceMode": {
-            "type": "boolean"
-          },
-          "maintenanceMessage": {
-            "type": "string"
-          },
-          "allowedEmailDomains": {
-            "type": "string"
-          },
-          "blockedEmailDomains": {
-            "type": "string"
-          },
-          "enableUserProfileEdit": {
-            "type": "boolean"
-          },
-          "enableAccountDeletion": {
-            "type": "boolean"
-          },
-          "enableUserListPublic": {
-            "type": "boolean"
-          },
-          "maxAvatarSize": {
-            "type": "integer"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "publishedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdBy": {
+          "lastModifiedBy": {
             "type": "object",
             "properties": {
               "id": {
@@ -15904,6 +15652,33 @@
               }
             }
           },
+          "lastModifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "documentId": {
+                "type": "string"
+              }
+            }
+          },
           "updatedBy": {
             "type": "object",
             "properties": {
@@ -15932,110 +15707,38 @@
                 "configName": {
                   "type": "string"
                 },
-                "registrationEnabled": {
-                  "type": "boolean"
+                "userManagement": {
+                  "$ref": "#/components/schemas/SystemUserManagementConfigComponent"
                 },
-                "emailVerificationEnabled": {
-                  "type": "boolean"
+                "passwordPolicy": {
+                  "$ref": "#/components/schemas/SystemPasswordPolicyConfigComponent"
                 },
-                "passwordResetEnabled": {
-                  "type": "boolean"
+                "verificationSettings": {
+                  "$ref": "#/components/schemas/SystemVerificationSettingsConfigComponent"
                 },
-                "verificationCodeLength": {
-                  "type": "integer"
+                "oauthSettings": {
+                  "$ref": "#/components/schemas/SystemOauthSettingsConfigComponent"
                 },
-                "verificationCodeExpiry": {
-                  "type": "integer"
+                "securitySettings": {
+                  "$ref": "#/components/schemas/SystemSecuritySettingsConfigComponent"
                 },
-                "passwordResetTokenExpiry": {
-                  "type": "integer"
+                "systemMaintenance": {
+                  "$ref": "#/components/schemas/SystemSystemMaintenanceConfigComponent"
                 },
-                "passwordMinLength": {
-                  "type": "integer"
+                "lastModifiedBy": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
                 },
-                "passwordRequireSpecialChar": {
-                  "type": "boolean"
-                },
-                "passwordRequireNumber": {
-                  "type": "boolean"
-                },
-                "passwordRequireUppercase": {
-                  "type": "boolean"
-                },
-                "oauthEnabled": {
-                  "type": "boolean"
-                },
-                "githubOauthEnabled": {
-                  "type": "boolean"
-                },
-                "githubClientId": {
-                  "type": "string"
-                },
-                "githubCallbackUrl": {
-                  "type": "string"
-                },
-                "googleOauthEnabled": {
-                  "type": "boolean"
-                },
-                "googleClientId": {
-                  "type": "string"
-                },
-                "googleCallbackUrl": {
-                  "type": "string"
-                },
-                "wechatOauthEnabled": {
-                  "type": "boolean"
-                },
-                "wechatAppId": {
-                  "type": "string"
-                },
-                "wechatCallbackUrl": {
-                  "type": "string"
-                },
-                "qqOauthEnabled": {
-                  "type": "boolean"
-                },
-                "qqAppId": {
-                  "type": "string"
-                },
-                "qqCallbackUrl": {
-                  "type": "string"
-                },
-                "oauthAutoRegister": {
-                  "type": "boolean"
-                },
-                "sessionTimeout": {
-                  "type": "integer"
-                },
-                "maxLoginAttempts": {
-                  "type": "integer"
-                },
-                "accountLockoutDuration": {
-                  "type": "integer"
-                },
-                "maintenanceMode": {
-                  "type": "boolean"
-                },
-                "maintenanceMessage": {
-                  "type": "string"
-                },
-                "allowedEmailDomains": {
-                  "type": "string"
-                },
-                "blockedEmailDomains": {
-                  "type": "string"
-                },
-                "enableUserProfileEdit": {
-                  "type": "boolean"
-                },
-                "enableAccountDeletion": {
-                  "type": "boolean"
-                },
-                "enableUserListPublic": {
-                  "type": "boolean"
-                },
-                "maxAvatarSize": {
-                  "type": "integer"
+                "lastModifiedAt": {
+                  "type": "string",
+                  "format": "date-time"
                 },
                 "createdAt": {
                   "type": "string",
@@ -16101,6 +15804,535 @@
           },
           "meta": {
             "type": "object"
+          }
+        }
+      },
+      "SystemUserManagementConfigComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "registrationEnabled": {
+            "type": "boolean"
+          },
+          "emailVerificationEnabled": {
+            "type": "boolean"
+          },
+          "passwordResetEnabled": {
+            "type": "boolean"
+          },
+          "enableUserProfileEdit": {
+            "type": "boolean"
+          },
+          "enableAccountDeletion": {
+            "type": "boolean"
+          },
+          "enableUserListPublic": {
+            "type": "boolean"
+          },
+          "maxAvatarSize": {
+            "type": "integer"
+          },
+          "defaultUserRole": {
+            "type": "string",
+            "enum": [
+              "authenticated",
+              "subscriber",
+              "contributor",
+              "author"
+            ]
+          },
+          "enableUserApproval": {
+            "type": "boolean"
+          },
+          "enableUserSuspension": {
+            "type": "boolean"
+          },
+          "suspensionReasons": {
+            "type": "string"
+          },
+          "allowedAvatarTypes": {
+            "type": "string",
+            "enum": [
+              "jpg,png",
+              "jpg,png,gif",
+              "jpg,png,gif,webp"
+            ]
+          },
+          "minUsernameLength": {
+            "type": "integer"
+          },
+          "maxUsernameLength": {
+            "type": "integer"
+          },
+          "usernamePattern": {
+            "type": "string"
+          },
+          "enableUserStatistics": {
+            "type": "boolean"
+          },
+          "enableLoginNotification": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SystemPasswordPolicyConfigComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "passwordMinLength": {
+            "type": "integer"
+          },
+          "passwordMaxLength": {
+            "type": "integer"
+          },
+          "passwordRequireSpecialChar": {
+            "type": "boolean"
+          },
+          "passwordRequireNumber": {
+            "type": "boolean"
+          },
+          "passwordRequireUppercase": {
+            "type": "boolean"
+          },
+          "passwordRequireLowercase": {
+            "type": "boolean"
+          },
+          "specialCharacters": {
+            "type": "string"
+          },
+          "passwordHistoryCount": {
+            "type": "integer"
+          },
+          "passwordExpiryDays": {
+            "type": "integer"
+          },
+          "passwordExpiryWarningDays": {
+            "type": "integer"
+          },
+          "commonPasswordsBlacklist": {
+            "type": "string"
+          },
+          "enablePasswordStrengthMeter": {
+            "type": "boolean"
+          },
+          "minimumPasswordStrength": {
+            "type": "string",
+            "enum": [
+              "weak",
+              "fair",
+              "good",
+              "strong"
+            ]
+          },
+          "enablePasswordSimilarityCheck": {
+            "type": "boolean"
+          },
+          "maxPasswordSimilarity": {
+            "type": "integer"
+          },
+          "enableBruteForceProtection": {
+            "type": "boolean"
+          },
+          "temporaryPasswordExpiry": {
+            "type": "integer"
+          },
+          "passwordChangeInterval": {
+            "type": "integer"
+          }
+        }
+      },
+      "SystemVerificationSettingsConfigComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "verificationCodeLength": {
+            "type": "integer"
+          },
+          "verificationCodeType": {
+            "type": "string",
+            "enum": [
+              "numeric",
+              "alphabetic",
+              "alphanumeric"
+            ]
+          },
+          "verificationCodeExpiry": {
+            "type": "integer"
+          },
+          "passwordResetTokenExpiry": {
+            "type": "integer"
+          },
+          "emailVerificationTokenExpiry": {
+            "type": "integer"
+          },
+          "maxVerificationAttempts": {
+            "type": "integer"
+          },
+          "verificationCooldown": {
+            "type": "integer"
+          },
+          "maxDailyVerifications": {
+            "type": "integer"
+          },
+          "enableSmsVerification": {
+            "type": "boolean"
+          },
+          "smsCodeLength": {
+            "type": "integer"
+          },
+          "smsCodeExpiry": {
+            "type": "integer"
+          },
+          "enableTwoFactorAuth": {
+            "type": "boolean"
+          },
+          "twoFactorMethods": {
+            "type": "string"
+          },
+          "totpIssuer": {
+            "type": "string"
+          },
+          "backupCodesCount": {
+            "type": "integer"
+          },
+          "enableCaptcha": {
+            "type": "boolean"
+          },
+          "captchaProvider": {
+            "type": "string",
+            "enum": [
+              "recaptcha",
+              "hcaptcha",
+              "turnstile",
+              "simple"
+            ]
+          },
+          "captchaThreshold": {
+            "type": "integer"
+          },
+          "allowedEmailDomains": {
+            "type": "string"
+          },
+          "blockedEmailDomains": {
+            "type": "string"
+          },
+          "emailTemplateVerification": {
+            "type": "string"
+          },
+          "emailTemplatePasswordReset": {
+            "type": "string"
+          }
+        }
+      },
+      "SystemOauthProviderConfigComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "client_id": {
+            "type": "string"
+          },
+          "client_secret": {
+            "type": "string"
+          },
+          "callback_url": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "button_text": {
+            "type": "string"
+          },
+          "button_icon": {
+            "type": "string"
+          }
+        }
+      },
+      "SystemOauthSettingsConfigComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "oauthEnabled": {
+            "type": "boolean"
+          },
+          "oauthAutoRegister": {
+            "type": "boolean"
+          },
+          "oauthLinkExistingAccount": {
+            "type": "boolean"
+          },
+          "oauthEmailRequired": {
+            "type": "boolean"
+          },
+          "githubOauth": {
+            "$ref": "#/components/schemas/SystemOauthProviderConfigComponent"
+          },
+          "googleOauth": {
+            "$ref": "#/components/schemas/SystemOauthProviderConfigComponent"
+          },
+          "wechatOauth": {
+            "$ref": "#/components/schemas/SystemOauthProviderConfigComponent"
+          },
+          "qqOauth": {
+            "$ref": "#/components/schemas/SystemOauthProviderConfigComponent"
+          },
+          "weiboOauth": {
+            "$ref": "#/components/schemas/SystemOauthProviderConfigComponent"
+          },
+          "oauthButtonStyle": {
+            "type": "string",
+            "enum": [
+              "horizontal",
+              "vertical",
+              "grid"
+            ]
+          },
+          "showOauthDivider": {
+            "type": "boolean"
+          },
+          "oauthDividerText": {
+            "type": "string"
+          },
+          "enableOauthOnRegister": {
+            "type": "boolean"
+          },
+          "enableOauthOnLogin": {
+            "type": "boolean"
+          },
+          "oauthCallbackTimeout": {
+            "type": "integer"
+          },
+          "oauthStateExpiry": {
+            "type": "integer"
+          },
+          "enableOauthBindingFlow": {
+            "type": "boolean"
+          },
+          "maxOauthAccountsPerUser": {
+            "type": "integer"
+          }
+        }
+      },
+      "SystemSecuritySettingsConfigComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "sessionTimeout": {
+            "type": "integer"
+          },
+          "enableRememberMe": {
+            "type": "boolean"
+          },
+          "rememberMeDuration": {
+            "type": "integer"
+          },
+          "maxLoginAttempts": {
+            "type": "integer"
+          },
+          "accountLockoutDuration": {
+            "type": "integer"
+          },
+          "enableIpWhitelist": {
+            "type": "boolean"
+          },
+          "ipWhitelist": {
+            "type": "string"
+          },
+          "enableIpBlacklist": {
+            "type": "boolean"
+          },
+          "ipBlacklist": {
+            "type": "string"
+          },
+          "enableRateLimiting": {
+            "type": "boolean"
+          },
+          "rateLimitWindow": {
+            "type": "integer"
+          },
+          "rateLimitMax": {
+            "type": "integer"
+          },
+          "enableCsrfProtection": {
+            "type": "boolean"
+          },
+          "enableXssProtection": {
+            "type": "boolean"
+          },
+          "enableClickjackingProtection": {
+            "type": "boolean"
+          },
+          "enableContentTypeNosniff": {
+            "type": "boolean"
+          },
+          "enableReferrerPolicy": {
+            "type": "boolean"
+          },
+          "referrerPolicy": {
+            "type": "string",
+            "enum": [
+              "no-referrer",
+              "no-referrer-when-downgrade",
+              "origin",
+              "origin-when-cross-origin",
+              "same-origin",
+              "strict-origin",
+              "strict-origin-when-cross-origin",
+              "unsafe-url"
+            ]
+          },
+          "enablePermissionsPolicy": {
+            "type": "boolean"
+          },
+          "enableSecurityHeaders": {
+            "type": "boolean"
+          },
+          "enableAuditLog": {
+            "type": "boolean"
+          },
+          "auditLogRetention": {
+            "type": "integer"
+          },
+          "enableLoginNotification": {
+            "type": "boolean"
+          },
+          "suspiciousLoginDetection": {
+            "type": "boolean"
+          },
+          "maxConcurrentSessions": {
+            "type": "integer"
+          },
+          "enableGeoBlocking": {
+            "type": "boolean"
+          },
+          "allowedCountries": {
+            "type": "string"
+          },
+          "blockedCountries": {
+            "type": "string"
+          }
+        }
+      },
+      "SystemSystemMaintenanceConfigComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "maintenanceMode": {
+            "type": "boolean"
+          },
+          "maintenanceMessage": {
+            "type": "string"
+          },
+          "maintenanceTitle": {
+            "type": "string"
+          },
+          "estimatedDowntime": {
+            "type": "string"
+          },
+          "maintenanceStartTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maintenanceEndTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "allowAdminAccess": {
+            "type": "boolean"
+          },
+          "allowedIpsDuringMaintenance": {
+            "type": "string"
+          },
+          "enableScheduledMaintenance": {
+            "type": "boolean"
+          },
+          "maintenanceNotificationAdvance": {
+            "type": "integer"
+          },
+          "enableMaintenanceEmail": {
+            "type": "boolean"
+          },
+          "maintenanceEmailTemplate": {
+            "type": "string"
+          },
+          "enableSystemNotifications": {
+            "type": "boolean"
+          },
+          "notificationChannels": {
+            "type": "string"
+          },
+          "enableErrorReporting": {
+            "type": "boolean"
+          },
+          "errorReportingLevel": {
+            "type": "string",
+            "enum": [
+              "error",
+              "warning",
+              "info",
+              "debug"
+            ]
+          },
+          "enablePerformanceMonitoring": {
+            "type": "boolean"
+          },
+          "performanceThresholds": {
+            "type": "string"
+          },
+          "enableHealthCheck": {
+            "type": "boolean"
+          },
+          "healthCheckInterval": {
+            "type": "integer"
+          },
+          "enableBackupNotifications": {
+            "type": "boolean"
+          },
+          "backupRetentionDays": {
+            "type": "integer"
+          },
+          "enableUpdateNotifications": {
+            "type": "boolean"
+          },
+          "systemContactEmail": {
+            "type": "string",
+            "format": "email"
+          },
+          "emergencyContactPhone": {
+            "type": "string"
+          },
+          "debugMode": {
+            "type": "boolean"
+          },
+          "logLevel": {
+            "type": "string",
+            "enum": [
+              "silent",
+              "error",
+              "warn",
+              "info",
+              "debug"
+            ]
+          },
+          "enableDeveloperMode": {
+            "type": "boolean"
           }
         }
       },

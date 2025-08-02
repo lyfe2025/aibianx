@@ -1132,99 +1132,46 @@ export interface ApiSeoMetricsSeoMetrics extends Struct.CollectionTypeSchema {
 export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
   collectionName: 'site_configs';
   info: {
-    description: '\u5168\u7AD9SEO\u548C\u641C\u7D22\u5F15\u64CE\u914D\u7F6E\u7BA1\u7406 - \u7EDF\u4E00\u7BA1\u7406\u7F51\u7AD9\u57FA\u672C\u4FE1\u606F\u3001\u641C\u7D22\u5F15\u64CE\u9A8C\u8BC1\u4EE3\u7801\u3001\u793E\u4EA4\u5A92\u4F53\u914D\u7F6E\u7B49';
+    description: '\u7F51\u7AD9\u5168\u5C40\u914D\u7F6E\u7BA1\u7406 - \u7EDF\u4E00\u7BA1\u7406SEO\u3001\u5916\u89C2\u3001\u8054\u7CFB\u4FE1\u606F\u7B49\u7F51\u7AD9\u901A\u7528\u8BBE\u7F6E';
     displayName: '\u7F51\u7AD9\u914D\u7F6E';
     pluralName: 'site-configs';
     singularName: 'site-config';
   };
   options: {
-    comment: '\u7F51\u7AD9\u914D\u7F6E\u5355\u4F8B - \u5B58\u50A8\u5168\u7AD9\u901A\u7528\u7684SEO\u548C\u57FA\u7840\u914D\u7F6E\u4FE1\u606F';
+    comment: '\u7F51\u7AD9\u914D\u7F6E\u5355\u4F8B - \u5B58\u50A8\u5168\u7AD9\u901A\u7528\u7684\u914D\u7F6E\u4FE1\u606F\uFF0C\u6309\u529F\u80FD\u5206\u7EC4\u7BA1\u7406';
     draftAndPublish: false;
   };
   attributes: {
-    analyticsId: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 50;
-      }>;
-    baiduSiteToken: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
-    baiduSubmissionStatus: Schema.Attribute.Enumeration<
-      [
-        'status_not_submitted',
-        'status_submitted',
-        'status_pending',
-        'status_indexed',
-      ]
-    > &
-      Schema.Attribute.DefaultTo<'status_not_submitted'>;
-    baiduVerificationCode: Schema.Attribute.String &
+    appearanceSettings: Schema.Attribute.Component<
+      'site.appearance-config',
+      false
+    >;
+    configName: Schema.Attribute.String &
+      Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 100;
-      }>;
-    bingVerificationCode: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
+      }> &
+      Schema.Attribute.DefaultTo<'\u7F51\u7AD9\u914D\u7F6E'>;
+    contactSettings: Schema.Attribute.Component<'site.contact-config', false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    defaultOgImage: Schema.Attribute.Media<'images'>;
-    enableIndexingMonitoring: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    enablePerformanceTracking: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    googleSubmissionStatus: Schema.Attribute.Enumeration<
-      [
-        'status_not_submitted',
-        'status_submitted',
-        'status_pending',
-        'status_indexed',
-      ]
-    > &
-      Schema.Attribute.DefaultTo<'status_not_submitted'>;
-    googleVerificationCode: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
-    gscPropertyUrl: Schema.Attribute.String;
-    lastSitemapUpdate: Schema.Attribute.DateTime;
+    generalSettings: Schema.Attribute.Component<'site.general-config', false> &
+      Schema.Attribute.Required;
+    lastModifiedAt: Schema.Attribute.DateTime;
+    lastModifiedBy: Schema.Attribute.Relation<'manyToOne', 'admin::user'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::site-config.site-config'
     > &
       Schema.Attribute.Private;
-    primaryKeywords: Schema.Attribute.Text;
     publishedAt: Schema.Attribute.DateTime;
-    siteDescription: Schema.Attribute.Text &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 160;
-      }> &
-      Schema.Attribute.DefaultTo<'\u6C47\u805AAI\u9886\u57DF\u4E13\u5BB6\u5B9E\u6218\u7ECF\u9A8C\uFF0C\u6BCF\u5468\u5206\u4EAB\u6700\u65B0\u53D8\u73B0\u673A\u4F1A\u4E0E\u5B9E\u7528\u5DE5\u5177'>;
-    siteName: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }> &
-      Schema.Attribute.DefaultTo<'AI\u53D8\u73B0\u4E4B\u8DEF'>;
-    siteUrl: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'https://aibianx.com'>;
-    twitterHandle: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 50;
-      }> &
-      Schema.Attribute.DefaultTo<'@aibianx'>;
+    seoSettings: Schema.Attribute.Component<'site.seo-config', false> &
+      Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    yandexVerificationCode: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
   };
 }
 
@@ -1281,27 +1228,16 @@ export interface ApiSubscriptionSubscription
 export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
   collectionName: 'system_configs';
   info: {
-    description: '\u7CFB\u7EDF\u529F\u80FD\u914D\u7F6E\u7BA1\u7406 - \u7EDF\u4E00\u7BA1\u7406\u90AE\u4EF6\u670D\u52A1\u3001OAuth\u7B2C\u4E09\u65B9\u767B\u5F55\u3001\u7528\u6237\u6CE8\u518C\u7B49\u7CFB\u7EDF\u529F\u80FD\u914D\u7F6E';
+    description: '\u7CFB\u7EDF\u529F\u80FD\u914D\u7F6E\u7BA1\u7406 - \u5206\u7EC4\u7BA1\u7406\u7528\u6237\u7BA1\u7406\u3001\u5B89\u5168\u7B56\u7565\u3001OAuth\u7B49\u7CFB\u7EDF\u529F\u80FD\u914D\u7F6E';
     displayName: '\u7CFB\u7EDF\u914D\u7F6E';
     pluralName: 'system-configs';
     singularName: 'system-config';
   };
   options: {
-    comment: '\u7CFB\u7EDF\u914D\u7F6E\u5355\u4F8B - \u5B58\u50A8\u90AE\u4EF6\u670D\u52A1\u3001OAuth\u767B\u5F55\u3001\u7528\u6237\u7BA1\u7406\u7B49\u7CFB\u7EDF\u529F\u80FD\u914D\u7F6E';
+    comment: '\u7CFB\u7EDF\u914D\u7F6E\u5355\u4F8B - \u5B58\u50A8\u7CFB\u7EDF\u529F\u80FD\u76F8\u5173\u914D\u7F6E\uFF0C\u6309\u529F\u80FD\u57DF\u5206\u7EC4\u7BA1\u7406';
     draftAndPublish: false;
   };
   attributes: {
-    accountLockoutDuration: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 86400;
-          min: 300;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<900>;
-    allowedEmailDomains: Schema.Attribute.Text;
-    blockedEmailDomains: Schema.Attribute.Text;
     configName: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 100;
@@ -1310,175 +1246,46 @@ export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    emailVerificationEnabled: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    enableAccountDeletion: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<false>;
-    enableUserListPublic: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<false>;
-    enableUserProfileEdit: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    githubCallbackUrl: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }> &
-      Schema.Attribute.DefaultTo<'http://localhost/api/auth/callback/github'>;
-    githubClientId: Schema.Attribute.String &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    githubClientSecret: Schema.Attribute.Password &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    githubOauthEnabled: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    googleCallbackUrl: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }> &
-      Schema.Attribute.DefaultTo<'http://localhost/api/auth/callback/google'>;
-    googleClientId: Schema.Attribute.String &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    googleClientSecret: Schema.Attribute.Password &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    googleOauthEnabled: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<false>;
+    lastModifiedAt: Schema.Attribute.DateTime;
+    lastModifiedBy: Schema.Attribute.Relation<'manyToOne', 'admin::user'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::system-config.system-config'
     > &
       Schema.Attribute.Private;
-    maintenanceMessage: Schema.Attribute.Text &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 500;
-      }> &
-      Schema.Attribute.DefaultTo<'\u7F51\u7AD9\u6B63\u5728\u8FDB\u884C\u7CFB\u7EDF\u5347\u7EA7\u7EF4\u62A4\uFF0C\u9884\u8BA130\u5206\u949F\u540E\u6062\u590D\u6B63\u5E38\u8BBF\u95EE\u3002'>;
-    maintenanceMode: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<false>;
-    maxAvatarSize: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 10485760;
-          min: 102400;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<2097152>;
-    maxLoginAttempts: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 10;
-          min: 3;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<5>;
-    oauthAutoRegister: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    oauthEnabled: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
-    passwordMinLength: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 20;
-          min: 6;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<8>;
-    passwordRequireNumber: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    passwordRequireSpecialChar: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    passwordRequireUppercase: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<false>;
-    passwordResetEnabled: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    passwordResetTokenExpiry: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 86400;
-          min: 300;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<3600>;
+    oauthSettings: Schema.Attribute.Component<
+      'system.oauth-settings-config',
+      false
+    >;
+    passwordPolicy: Schema.Attribute.Component<
+      'system.password-policy-config',
+      false
+    > &
+      Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    qqAppId: Schema.Attribute.String &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    qqAppSecret: Schema.Attribute.Password &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    qqCallbackUrl: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }> &
-      Schema.Attribute.DefaultTo<'http://localhost/api/auth/callback/qq'>;
-    qqOauthEnabled: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<false>;
-    registrationEnabled: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<true>;
-    sessionTimeout: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 31536000;
-          min: 3600;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<2592000>;
+    securitySettings: Schema.Attribute.Component<
+      'system.security-settings-config',
+      false
+    > &
+      Schema.Attribute.Required;
+    systemMaintenance: Schema.Attribute.Component<
+      'system.system-maintenance-config',
+      false
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    verificationCodeExpiry: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 3600;
-          min: 60;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<600>;
-    verificationCodeLength: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 8;
-          min: 4;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<6>;
-    wechatAppId: Schema.Attribute.String &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    wechatAppSecret: Schema.Attribute.Password &
-      Schema.Attribute.Private &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }>;
-    wechatCallbackUrl: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 255;
-      }> &
-      Schema.Attribute.DefaultTo<'http://localhost/api/auth/callback/wechat'>;
-    wechatOauthEnabled: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<false>;
+    userManagement: Schema.Attribute.Component<
+      'system.user-management-config',
+      false
+    > &
+      Schema.Attribute.Required;
+    verificationSettings: Schema.Attribute.Component<
+      'system.verification-settings-config',
+      false
+    > &
+      Schema.Attribute.Required;
   };
 }
 

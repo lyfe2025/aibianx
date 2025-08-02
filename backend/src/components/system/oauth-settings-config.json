@@ -1,0 +1,108 @@
+{
+  "collectionName": "components_system_oauth_settings_configs",
+  "info": {
+    "displayName": "OAuth设置",
+    "description": "OAuth登录配置 - 管理第三方登录相关配置，包括GitHub、Google、微信、QQ等"
+  },
+  "options": {},
+  "attributes": {
+    "oauthEnabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "OAuth登录总开关：是否启用第三方登录功能"
+    },
+    "oauthAutoRegister": {
+      "type": "boolean",
+      "default": true,
+      "description": "OAuth自动注册：第三方登录时是否自动创建用户账号"
+    },
+    "oauthLinkExistingAccount": {
+      "type": "boolean",
+      "default": true,
+      "description": "OAuth关联现有账号：是否允许OAuth登录关联到现有邮箱账号"
+    },
+    "oauthEmailRequired": {
+      "type": "boolean",
+      "default": true,
+      "description": "OAuth邮箱必需：第三方登录是否必须提供邮箱信息"
+    },
+    "githubOauth": {
+      "type": "component",
+      "component": "system.oauth-provider-config",
+      "description": "GitHub OAuth配置"
+    },
+    "googleOauth": {
+      "type": "component",
+      "component": "system.oauth-provider-config",
+      "description": "Google OAuth配置"
+    },
+    "wechatOauth": {
+      "type": "component",
+      "component": "system.oauth-provider-config",
+      "description": "微信 OAuth配置"
+    },
+    "qqOauth": {
+      "type": "component",
+      "component": "system.oauth-provider-config",
+      "description": "QQ OAuth配置"
+    },
+    "weiboOauth": {
+      "type": "component",
+      "component": "system.oauth-provider-config",
+      "description": "微博 OAuth配置"
+    },
+    "oauthButtonStyle": {
+      "type": "enumeration",
+      "enum": ["horizontal", "vertical", "grid"],
+      "default": "horizontal",
+      "description": "OAuth按钮布局：第三方登录按钮的排列方式"
+    },
+    "showOauthDivider": {
+      "type": "boolean",
+      "default": true,
+      "description": "显示OAuth分隔线：是否在第三方登录和普通登录之间显示分隔线"
+    },
+    "oauthDividerText": {
+      "type": "string",
+      "default": "或使用第三方账号登录",
+      "maxLength": 50,
+      "description": "OAuth分隔线文字：分隔线上显示的文字"
+    },
+    "enableOauthOnRegister": {
+      "type": "boolean",
+      "default": true,
+      "description": "注册页面OAuth：是否在注册页面显示第三方登录选项"
+    },
+    "enableOauthOnLogin": {
+      "type": "boolean",
+      "default": true,
+      "description": "登录页面OAuth：是否在登录页面显示第三方登录选项"
+    },
+    "oauthCallbackTimeout": {
+      "type": "integer",
+      "default": 300,
+      "min": 60,
+      "max": 1800,
+      "description": "OAuth回调超时：OAuth登录流程的超时时间（秒）"
+    },
+    "oauthStateExpiry": {
+      "type": "integer",
+      "default": 600,
+      "min": 300,
+      "max": 3600,
+      "description": "OAuth状态过期：OAuth state参数的有效时间（秒）"
+    },
+    "enableOauthBindingFlow": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用OAuth绑定流程：是否允许已登录用户绑定第三方账号"
+    },
+    "maxOauthAccountsPerUser": {
+      "type": "integer",
+      "default": 5,
+      "min": 1,
+      "max": 10,
+      "description": "用户最大OAuth账号数：单个用户最多可绑定的第三方账号数量"
+    }
+  }
+}

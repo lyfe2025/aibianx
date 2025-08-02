@@ -1,0 +1,280 @@
+/**
+ * 移动端布局样式 - mobile-layout.css
+ * 
+ * 移动端网格系统和响应式布局
+ */
+
+/* ========================================
+   移动端网格系统
+   ======================================== */
+
+.mobile-grid {
+  display: grid;
+  gap: var(--mobile-spacing-md);
+  padding: 0 var(--mobile-spacing-md);
+  width: 100%;
+  max-width: 100vw;
+}
+
+.mobile-grid-1 {
+  grid-template-columns: 1fr;
+}
+
+.mobile-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.mobile-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* ========================================
+   响应式断点调整
+   ======================================== */
+
+@media (max-width: 480px) {
+  .mobile-grid {
+    gap: var(--mobile-spacing-sm);
+    padding: 0 var(--mobile-spacing-sm);
+  }
+  
+  .mobile-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 360px) {
+  .mobile-grid-2,
+  .mobile-grid-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  :root {
+    --mobile-spacing-md: 12px;
+    --mobile-spacing-lg: 16px;
+    --mobile-spacing-xl: 24px;
+  }
+}
+
+/* ========================================
+   移动端导航布局
+   ======================================== */
+
+.mobile-nav {
+  background: var(--color-bg-glass);
+  border-bottom: 1px solid var(--color-border-glass);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.mobile-nav-item {
+  min-height: var(--touch-target-comfortable);
+  padding: 0 var(--mobile-spacing-md);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--color-text-primary);
+  transition: all 0.3s ease;
+}
+
+.mobile-nav-item:hover,
+.mobile-nav-item.active {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--color-primary-blue);
+}
+
+/* ========================================
+   移动端容器布局
+   ======================================== */
+
+.mobile-container {
+  width: 100%;
+  max-width: 100vw;
+  padding: 0 var(--mobile-spacing-md);
+  margin: 0 auto;
+}
+
+.mobile-container-fluid {
+  width: 100vw;
+  padding: 0;
+}
+
+.mobile-section {
+  padding: var(--mobile-spacing-xl) 0;
+}
+
+.mobile-section-compact {
+  padding: var(--mobile-spacing-lg) 0;
+}
+
+/* ========================================
+   移动端页面布局
+   ======================================== */
+
+.mobile-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-primary);
+}
+
+.mobile-page-header {
+  flex-shrink: 0;
+}
+
+.mobile-page-content {
+  flex: 1;
+  overflow-x: hidden;
+}
+
+.mobile-page-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+/* ========================================
+   移动端FlexBox工具类
+   ======================================== */
+
+.mobile-flex {
+  display: flex;
+}
+
+.mobile-flex-col {
+  flex-direction: column;
+}
+
+.mobile-flex-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.mobile-flex-between {
+  justify-content: space-between;
+}
+
+.mobile-flex-around {
+  justify-content: space-around;
+}
+
+.mobile-flex-wrap {
+  flex-wrap: wrap;
+}
+
+/* ========================================
+   移动端间距工具类
+   ======================================== */
+
+.mobile-m-0 { margin: 0; }
+.mobile-m-xs { margin: var(--mobile-spacing-xs); }
+.mobile-m-sm { margin: var(--mobile-spacing-sm); }
+.mobile-m-md { margin: var(--mobile-spacing-md); }
+.mobile-m-lg { margin: var(--mobile-spacing-lg); }
+.mobile-m-xl { margin: var(--mobile-spacing-xl); }
+
+.mobile-p-0 { padding: 0; }
+.mobile-p-xs { padding: var(--mobile-spacing-xs); }
+.mobile-p-sm { padding: var(--mobile-spacing-sm); }
+.mobile-p-md { padding: var(--mobile-spacing-md); }
+.mobile-p-lg { padding: var(--mobile-spacing-lg); }
+.mobile-p-xl { padding: var(--mobile-spacing-xl); }
+
+/* ========================================
+   移动端定位工具类
+   ======================================== */
+
+.mobile-fixed-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.mobile-fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.mobile-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* ========================================
+   移动端隐藏显示工具类
+   ======================================== */
+
+.mobile-hidden {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+  
+  .desktop-only {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none;
+  }
+  
+  .desktop-only {
+    display: block;
+  }
+}
+
+/* ========================================
+   横屏适配
+   ======================================== */
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .mobile-section {
+    padding: var(--mobile-spacing-md) 0;
+  }
+  
+  .mobile-modal {
+    max-height: 95vh;
+  }
+  
+  .discover-hero-mobile {
+    padding: var(--mobile-spacing-md);
+  }
+}
+
+/* ========================================
+   大屏移动设备适配
+   ======================================== */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mobile-grid {
+    max-width: 80%;
+    margin: 0 auto;
+  }
+  
+  .mobile-container {
+    max-width: 600px;
+  }
+  
+  .mobile-modal {
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 20px;
+  }
+  
+  .mobile-modal-overlay {
+    align-items: center;
+    padding: var(--mobile-spacing-lg);
+  }
+}

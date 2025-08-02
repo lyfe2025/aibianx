@@ -5,11 +5,11 @@
         "singularName": "system-config",
         "pluralName": "system-configs",
         "displayName": "系统配置",
-        "description": "系统功能配置管理 - 统一管理邮件服务、OAuth第三方登录、用户注册等系统功能配置"
+        "description": "系统功能配置管理 - 分组管理用户管理、安全策略、OAuth等系统功能配置"
     },
     "options": {
         "draftAndPublish": false,
-        "comment": "系统配置单例 - 存储邮件服务、OAuth登录、用户管理等系统功能配置"
+        "comment": "系统配置单例 - 存储系统功能相关配置，按功能域分组管理"
     },
     "pluginOptions": {},
     "attributes": {
@@ -20,227 +20,56 @@
             "description": "配置名称：用于标识此配置实例，便于管理界面显示"
         },
 
-        "registrationEnabled": {
-            "type": "boolean",
-            "default": true,
-            "description": "用户注册开关：是否允许新用户注册账号"
+        "userManagement": {
+            "type": "component",
+            "component": "system.user-management-config",
+            "required": true,
+            "description": "用户管理 - 注册、认证、权限相关配置"
         },
-        "emailVerificationEnabled": {
-            "type": "boolean",
-            "default": true,
-            "description": "邮箱验证开关：新用户注册时是否需要邮箱验证"
+        
+        "passwordPolicy": {
+            "type": "component",
+            "component": "system.password-policy-config", 
+            "required": true,
+            "description": "密码策略 - 密码强度、验证规则配置"
         },
-        "passwordResetEnabled": {
-            "type": "boolean",
-            "default": true,
-            "description": "密码重置开关：是否允许用户通过邮件重置密码"
+        
+        "verificationSettings": {
+            "type": "component",
+            "component": "system.verification-settings-config",
+            "required": true, 
+            "description": "验证设置 - 邮箱验证、验证码相关配置"
         },
-        "verificationCodeLength": {
-            "type": "integer",
-            "default": 6,
-            "min": 4,
-            "max": 8,
-            "description": "验证码长度：邮箱验证码的位数，默认6位数字"
+        
+        "oauthSettings": {
+            "type": "component",
+            "component": "system.oauth-settings-config",
+            "description": "OAuth设置 - 第三方登录配置"
         },
-        "verificationCodeExpiry": {
-            "type": "integer",
-            "default": 600,
-            "min": 60,
-            "max": 3600,
-            "description": "验证码有效期：邮箱验证码的有效时间（秒），默认600秒（10分钟）"
+        
+        "securitySettings": {
+            "type": "component",
+            "component": "system.security-settings-config",
+            "required": true,
+            "description": "安全设置 - 会话、登录限制、安全策略"
         },
-        "passwordResetTokenExpiry": {
-            "type": "integer",
-            "default": 3600,
-            "min": 300,
-            "max": 86400,
-            "description": "重置令牌有效期：密码重置链接的有效时间（秒），默认3600秒（1小时）"
+        
+        "systemMaintenance": {
+            "type": "component", 
+            "component": "system.system-maintenance-config",
+            "description": "系统维护 - 维护模式、系统消息配置"
         },
-        "passwordMinLength": {
-            "type": "integer",
-            "default": 8,
-            "min": 6,
-            "max": 20,
-            "description": "密码最小长度：用户密码最少字符数要求（6-20位）"
+
+        "lastModifiedBy": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "admin::user",
+            "description": "最后修改人：记录最后修改此配置的管理员"
         },
-        "passwordRequireSpecialChar": {
-            "type": "boolean",
-            "default": true,
-            "description": "密码特殊字符要求：是否要求密码包含特殊字符"
-        },
-        "passwordRequireNumber": {
-            "type": "boolean",
-            "default": true,
-            "description": "密码数字要求：是否要求密码包含数字"
-        },
-        "passwordRequireUppercase": {
-            "type": "boolean",
-            "default": false,
-            "description": "密码大写字母要求：是否要求密码包含大写字母"
-        },
-        "oauthEnabled": {
-            "type": "boolean",
-            "default": true,
-            "description": "OAuth登录总开关：是否启用第三方登录功能"
-        },
-        "githubOauthEnabled": {
-            "type": "boolean",
-            "default": true,
-            "description": "GitHub登录开关：是否启用GitHub OAuth登录"
-        },
-        "githubClientId": {
-            "type": "string",
-            "maxLength": 255,
-            "private": true,
-            "description": "GitHub客户端ID：在GitHub Developer Settings中创建OAuth App获得的Client ID"
-        },
-        "githubClientSecret": {
-            "type": "password",
-            "maxLength": 255,
-            "private": true,
-            "description": "GitHub客户端密钥：在GitHub Developer Settings中创建OAuth App获得的Client Secret"
-        },
-        "githubCallbackUrl": {
-            "type": "string",
-            "maxLength": 255,
-            "default": "http://localhost/api/auth/callback/github",
-            "description": "GitHub回调地址：OAuth授权成功后的回调URL，生产环境需修改为实际域名"
-        },
-        "googleOauthEnabled": {
-            "type": "boolean",
-            "default": false,
-            "description": "Google登录开关：是否启用Google OAuth登录"
-        },
-        "googleClientId": {
-            "type": "string",
-            "maxLength": 255,
-            "private": true,
-            "description": "Google客户端ID：在Google Cloud Console中创建OAuth 2.0客户端获得的Client ID"
-        },
-        "googleClientSecret": {
-            "type": "password",
-            "maxLength": 255,
-            "private": true,
-            "description": "Google客户端密钥：在Google Cloud Console中创建OAuth 2.0客户端获得的Client Secret"
-        },
-        "googleCallbackUrl": {
-            "type": "string",
-            "maxLength": 255,
-            "default": "http://localhost/api/auth/callback/google",
-            "description": "Google回调地址：OAuth授权成功后的回调URL，生产环境需修改为实际域名"
-        },
-        "wechatOauthEnabled": {
-            "type": "boolean",
-            "default": false,
-            "description": "微信登录开关：是否启用微信OAuth登录"
-        },
-        "wechatAppId": {
-            "type": "string",
-            "maxLength": 255,
-            "private": true,
-            "description": "微信AppID：在微信开放平台注册应用获得的AppID"
-        },
-        "wechatAppSecret": {
-            "type": "password",
-            "maxLength": 255,
-            "private": true,
-            "description": "微信AppSecret：在微信开放平台注册应用获得的AppSecret"
-        },
-        "wechatCallbackUrl": {
-            "type": "string",
-            "maxLength": 255,
-            "default": "http://localhost/api/auth/callback/wechat",
-            "description": "微信回调地址：OAuth授权成功后的回调URL，需在微信开放平台配置"
-        },
-        "qqOauthEnabled": {
-            "type": "boolean",
-            "default": false,
-            "description": "QQ登录开关：是否启用QQ OAuth登录"
-        },
-        "qqAppId": {
-            "type": "string",
-            "maxLength": 255,
-            "private": true,
-            "description": "QQ互联AppID：在QQ互联平台注册应用获得的APP ID"
-        },
-        "qqAppSecret": {
-            "type": "password",
-            "maxLength": 255,
-            "private": true,
-            "description": "QQ互联AppSecret：在QQ互联平台注册应用获得的APP KEY"
-        },
-        "qqCallbackUrl": {
-            "type": "string",
-            "maxLength": 255,
-            "default": "http://localhost/api/auth/callback/qq",
-            "description": "QQ回调地址：OAuth授权成功后的回调URL，需在QQ互联平台配置"
-        },
-        "oauthAutoRegister": {
-            "type": "boolean",
-            "default": true,
-            "description": "OAuth自动注册：第三方登录时是否自动创建用户账号"
-        },
-        "sessionTimeout": {
-            "type": "integer",
-            "default": 2592000,
-            "min": 3600,
-            "max": 31536000,
-            "description": "会话超时时间：用户登录会话的有效期（秒），默认2592000秒（30天）"
-        },
-        "maxLoginAttempts": {
-            "type": "integer",
-            "default": 5,
-            "min": 3,
-            "max": 10,
-            "description": "最大登录尝试次数：连续登录失败后锁定账号的次数限制"
-        },
-        "accountLockoutDuration": {
-            "type": "integer",
-            "default": 900,
-            "min": 300,
-            "max": 86400,
-            "description": "账号锁定时长：登录失败次数达到上限后的锁定时间（秒），默认900秒（15分钟）"
-        },
-        "maintenanceMode": {
-            "type": "boolean",
-            "default": false,
-            "description": "维护模式：是否启用网站维护模式（用户将看到维护页面）"
-        },
-        "maintenanceMessage": {
-            "type": "text",
-            "maxLength": 500,
-            "default": "网站正在进行系统升级维护，预计30分钟后恢复正常访问。",
-            "description": "维护提示信息：维护模式下向用户显示的提示信息"
-        },
-        "allowedEmailDomains": {
-            "type": "text",
-            "description": "允许的邮箱域名：限制注册邮箱的域名白名单，一行一个域名。留空表示不限制。例：gmail.com"
-        },
-        "blockedEmailDomains": {
-            "type": "text",
-            "description": "禁止的邮箱域名：限制注册邮箱的域名黑名单，一行一个域名。例：temp-mail.org"
-        },
-        "enableUserProfileEdit": {
-            "type": "boolean",
-            "default": true,
-            "description": "用户资料编辑权限：是否允许用户编辑个人资料信息"
-        },
-        "enableAccountDeletion": {
-            "type": "boolean",
-            "default": false,
-            "description": "账号删除权限：是否允许用户自主删除账号"
-        },
-        "enableUserListPublic": {
-            "type": "boolean",
-            "default": false,
-            "description": "用户列表公开：是否允许公开访问用户列表"
-        },
-        "maxAvatarSize": {
-            "type": "integer",
-            "default": 2097152,
-            "min": 102400,
-            "max": 10485760,
-            "description": "头像最大尺寸：用户头像文件大小限制（字节），默认2MB"
+        
+        "lastModifiedAt": {
+            "type": "datetime",
+            "description": "最后修改时间：记录配置的最后修改时间"
         }
     }
 }

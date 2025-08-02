@@ -2,21 +2,22 @@
 
 import { useState } from 'react'
 import { GradientButton } from '@/components/ui'
-import { showToast } from '@/components/ui/Toast/Toast'
+import { useToast } from '@/components/ui'
 import { WEEKLY_DETAIL_TEXT } from '@/constants/weeklyDetail'
 import type { ArticleActionsProps } from './ArticleActions.types'
 
 export function ArticleActions({ article }: ArticleActionsProps) {
     const [isLiked, setIsLiked] = useState(false)
     const [isBookmarked, setIsBookmarked] = useState(false)
+    const { toast } = useToast()
 
     // 点赞功能处理
     const handleLike = () => {
         setIsLiked(!isLiked)
         if (!isLiked) {
-            showToast('已点赞！感谢您的支持', 'success')
+            toast.success('已点赞！感谢您的支持')
         } else {
-            showToast('已取消点赞', 'success')
+            toast.success('已取消点赞')
         }
     }
 
@@ -24,9 +25,9 @@ export function ArticleActions({ article }: ArticleActionsProps) {
     const handleBookmark = () => {
         setIsBookmarked(!isBookmarked)
         if (!isBookmarked) {
-            showToast('已收藏！可在个人中心查看', 'success')
+            toast.success('已收藏！可在个人中心查看')
         } else {
-            showToast('已取消收藏', 'success')
+            toast.success('已取消收藏')
         }
     }
 
@@ -40,7 +41,7 @@ export function ArticleActions({ article }: ArticleActionsProps) {
             case 'link':
                 try {
                     await navigator.clipboard.writeText(currentUrl)
-                    showToast('链接已复制到剪贴板！', 'success')
+                    toast.success('链接已复制到剪贴板！')
                 } catch (error) {
                     // 兜底方案：选择文本
                     const textArea = document.createElement('textarea')
@@ -49,7 +50,7 @@ export function ArticleActions({ article }: ArticleActionsProps) {
                     textArea.select()
                     document.execCommand('copy')
                     document.body.removeChild(textArea)
-                    showToast('链接已复制到剪贴板！', 'success')
+                    toast.success('链接已复制到剪贴板！')
                 }
                 break
 

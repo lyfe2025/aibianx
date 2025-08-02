@@ -1,7 +1,7 @@
 'use client'
 
 import { Container } from '@/components/ui'
-import { PageHeader, SubscriptionSection } from '@/components/molecules'
+import { PageHeader, SubscriptionSection, SimpleMembershipStatus } from '@/components/molecules'
 import {
   WeeklySearchSection,
   WeeklyArticleGrid,
@@ -84,6 +84,9 @@ export default function WeeklyPage() {
             onFilterChange={handleFilterChange}
             onClearSearch={clearSearch}
           />
+
+          {/* 会员状态显示 - 移动端优化 */}
+          <SimpleMembershipStatus />
 
           {/* 主要内容区域 */}
           {isLoading ? (

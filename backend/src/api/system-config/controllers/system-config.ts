@@ -1,25 +1,28 @@
+/**
+ * system-config controller
+ */
+
 import { factories } from '@strapi/strapi'
 
-export default factories.createCoreController('api::system-config.system-config', ({ strapi }) => ({
-    /**
-     * 获取系统配置（完整配置，仅后台使用）
-     * GET /api/system-config
-     */
-    async find(ctx) {
-        const entity = await strapi.entityService.findMany('api::system-config.system-config')
-        return this.sanitizeOutput(entity, ctx)
-    },
+// 定义标准的populate参数，包含所有组件
+const SYSTEM_CONFIG_POPULATE = {
+    userManagement: true,
+    passwordPolicy: true,
+    verificationSettings: true,
+    oauthSettings: true,
+    securitySettings: true,
+    systemMaintenance: true
+}
 
-    /**
-     * 更新系统配置
-     * PUT /api/system-config/:id
-     */
+export default factories.createCoreController('api::system-config.system-config', ({ strapi }) => ({
+    // 重写默认的update方法，确保包含组件数据
     async update(ctx) {
         const { id } = ctx.params
         const { data } = ctx.request.body
 
         const entity = await strapi.entityService.update('api::system-config.system-config', id, {
-            data
+            data,
+            populate: SYSTEM_CONFIG_POPULATE
         })
 
         return this.sanitizeOutput(entity, ctx)
@@ -30,157 +33,165 @@ export default factories.createCoreController('api::system-config.system-config'
      * GET /api/system-config/public
      */
     async getPublicConfig(ctx) {
-        const entity = await strapi.entityService.findMany('api::system-config.system-config')
-
+        const entity = await strapi.entityService.findMany('api::system-config.system-config', {
+            populate: SYSTEM_CONFIG_POPULATE
+        }) as any
+        
         if (!entity) {
             return ctx.notFound('系统配置未找到')
         }
 
         // 只返回前端需要的公开配置，隐藏所有敏感信息
         const publicConfig = {
-            // 注册和登录相关
-            registrationEnabled: entity.registrationEnabled,
-            emailVerificationEnabled: entity.emailVerificationEnabled,
-            passwordResetEnabled: entity.passwordResetEnabled,
+            // 注册和登录相关（从userManagement组件）
+            registrationEnabled: entity.userManagement?.registrationEnabled || false,
+            emailVerificationEnabled: entity.userManagement?.emailVerificationEnabled || false,
+            passwordResetEnabled: entity.userManagement?.passwordResetEnabled || false,
 
             // OAuth相关（仅开关状态，不包含密钥）
-            oauthEnabled: entity.oauthEnabled,
-            githubOauthEnabled: entity.githubOauthEnabled,
-            googleOauthEnabled: entity.googleOauthEnabled,
-            wechatOauthEnabled: entity.wechatOauthEnabled,
-            qqOauthEnabled: entity.qqOauthEnabled,
-            oauthAutoRegister: entity.oauthAutoRegister,
-
-            // OAuth回调地址（非敏感信息）
-            githubCallbackUrl: entity.githubCallbackUrl,
-            googleCallbackUrl: entity.googleCallbackUrl,
-            wechatCallbackUrl: entity.wechatCallbackUrl,
-            qqCallbackUrl: entity.qqCallbackUrl,
+            oauthEnabled: entity.oauthSettings?.oauthEnabled || false,
+            githubOauthEnabled: entity.oauthSettings?.githubOauth?.enabled || false,
+            googleOauthEnabled: entity.oauthSettings?.googleOauth?.enabled || false,
+            wechatOauthEnabled: entity.oauthSettings?.wechatOauth?.enabled || false,
+            qqOauthEnabled: entity.oauthSettings?.qqOauth?.enabled || false,
+            oauthAutoRegister: entity.oauthSettings?.oauthAutoRegister || false,
 
             // 密码策略
-            passwordMinLength: entity.passwordMinLength,
-            passwordRequireSpecialChar: entity.passwordRequireSpecialChar,
-            passwordRequireNumber: entity.passwordRequireNumber,
-            passwordRequireUppercase: entity.passwordRequireUppercase,
+            passwordMinLength: entity.passwordPolicy?.passwordMinLength || 8,
+            passwordRequireSpecialChar: entity.passwordPolicy?.passwordRequireSpecialChar || false,
+            passwordRequireNumber: entity.passwordPolicy?.passwordRequireNumber || false,
+            passwordRequireUppercase: entity.passwordPolicy?.passwordRequireUppercase || false,
 
             // 系统状态
-            maintenanceMode: entity.maintenanceMode,
-            maintenanceMessage: entity.maintenanceMessage,
+            maintenanceMode: entity.systemMaintenance?.maintenanceMode || false,
+            maintenanceMessage: entity.systemMaintenance?.maintenanceMessage || '网站正在进行系统升级维护，预计30分钟后恢复正常访问。',
 
             // 用户功能
-            enableUserProfileEdit: entity.enableUserProfileEdit,
-            enableAccountDeletion: entity.enableAccountDeletion,
-            enableUserListPublic: entity.enableUserListPublic,
-            maxAvatarSize: entity.maxAvatarSize
+            enableUserProfileEdit: entity.userManagement?.enableUserProfileEdit || false,
+            enableAccountDeletion: entity.userManagement?.enableAccountDeletion || false
         }
 
         return publicConfig
     },
 
     /**
-     * 获取OAuth配置（用于NextAuth.js，包含敏感信息）
-     * GET /api/system-config/oauth
-     * 注意：此接口仅供内部服务端使用，需要严格的访问控制
+     * 获取OAuth配置（用于后端验证，包含客户端密钥但不暴露给前端）
+     * GET /api/system-config/oauth（内部API）
      */
     async getOAuthConfig(ctx) {
-        const entity = await strapi.entityService.findMany('api::system-config.system-config')
-
-        if (!entity || !entity.oauthEnabled) {
-            return {
+        const entity = await strapi.entityService.findMany('api::system-config.system-config', {
+            populate: SYSTEM_CONFIG_POPULATE
+        }) as any
+        if (!entity || !entity.oauthSettings?.oauthEnabled) {
+            return { 
                 enabled: false,
-                providers: {}
+                providers: []
             }
         }
 
-        const oauthConfig: any = {
+        const config = {
             enabled: true,
-            autoRegister: entity.oauthAutoRegister,
-            providers: {}
+            autoRegister: entity.oauthSettings?.oauthAutoRegister,
+            providers: []
         }
 
-        // GitHub配置
-        if (entity.githubOauthEnabled && entity.githubClientId && entity.githubClientSecret) {
-            oauthConfig.providers.github = {
-                enabled: true,
-                clientId: entity.githubClientId,
-                clientSecret: entity.githubClientSecret,
-                callbackUrl: entity.githubCallbackUrl
-            }
+        // GitHub OAuth配置
+        if (entity.oauthSettings?.githubOauth?.enabled && entity.oauthSettings?.githubOauth?.client_id && entity.oauthSettings?.githubOauth?.client_secret) {
+            config.providers.push({
+                name: 'github',
+                clientId: entity.oauthSettings.githubOauth.client_id,
+                clientSecret: entity.oauthSettings.githubOauth.client_secret,
+                callbackUrl: entity.oauthSettings.githubOauth.callback_url
+            })
         }
 
-        // Google配置
-        if (entity.googleOauthEnabled && entity.googleClientId && entity.googleClientSecret) {
-            oauthConfig.providers.google = {
-                enabled: true,
-                clientId: entity.googleClientId,
-                clientSecret: entity.googleClientSecret,
-                callbackUrl: entity.googleCallbackUrl
-            }
+        // Google OAuth配置
+        if (entity.oauthSettings?.googleOauth?.enabled && entity.oauthSettings?.googleOauth?.client_id && entity.oauthSettings?.googleOauth?.client_secret) {
+            config.providers.push({
+                name: 'google',
+                clientId: entity.oauthSettings.googleOauth.client_id,
+                clientSecret: entity.oauthSettings.googleOauth.client_secret,
+                callbackUrl: entity.oauthSettings.googleOauth.callback_url
+            })
         }
 
-        // 微信配置
-        if (entity.wechatOauthEnabled && entity.wechatAppId && entity.wechatAppSecret) {
-            oauthConfig.providers.wechat = {
-                enabled: true,
-                appId: entity.wechatAppId,
-                appSecret: entity.wechatAppSecret,
-                callbackUrl: entity.wechatCallbackUrl
-            }
+        // 微信OAuth配置
+        if (entity.oauthSettings?.wechatOauth?.enabled && entity.oauthSettings?.wechatOauth?.client_id && entity.oauthSettings?.wechatOauth?.client_secret) {
+            config.providers.push({
+                name: 'wechat',
+                appId: entity.oauthSettings.wechatOauth.client_id,
+                appSecret: entity.oauthSettings.wechatOauth.client_secret,
+                callbackUrl: entity.oauthSettings.wechatOauth.callback_url
+            })
         }
 
-        // QQ配置
-        if (entity.qqOauthEnabled && entity.qqAppId && entity.qqAppSecret) {
-            oauthConfig.providers.qq = {
-                enabled: true,
-                appId: entity.qqAppId,
-                appSecret: entity.qqAppSecret,
-                callbackUrl: entity.qqCallbackUrl
-            }
+        // QQ OAuth配置
+        if (entity.oauthSettings?.qqOauth?.enabled && entity.oauthSettings?.qqOauth?.client_id && entity.oauthSettings?.qqOauth?.client_secret) {
+            config.providers.push({
+                name: 'qq',
+                appId: entity.oauthSettings.qqOauth.client_id,
+                appSecret: entity.oauthSettings.qqOauth.client_secret,
+                callbackUrl: entity.oauthSettings.qqOauth.callback_url
+            })
         }
 
-        return oauthConfig
+        return config
     },
 
-
-
     /**
-     * 获取用户注册配置
+     * 获取注册配置
      * GET /api/system-config/registration
      */
     async getRegistrationConfig(ctx) {
-        const entity = await strapi.entityService.findMany('api::system-config.system-config')
-
+        const entity = await strapi.entityService.findMany('api::system-config.system-config', {
+            populate: SYSTEM_CONFIG_POPULATE
+        }) as any
         if (!entity) {
-            return ctx.notFound('系统配置未找到')
+            return {
+                enabled: false,
+                emailVerificationEnabled: false,
+                passwordResetEnabled: false,
+                verificationCodeExpiry: 600,
+                passwordResetTokenExpiry: 3600,
+                allowedEmailDomains: '',
+                blockedEmailDomains: '',
+                password: {
+                    minLength: 8,
+                    requireSpecialChar: false,
+                    requireNumber: false,
+                    requireUppercase: false
+                }
+            }
         }
 
         return {
-            enabled: entity.registrationEnabled,
-            emailVerificationEnabled: entity.emailVerificationEnabled,
-            passwordResetEnabled: entity.passwordResetEnabled,
-            verificationCodeExpiry: entity.verificationCodeExpiry,
-            passwordResetTokenExpiry: entity.passwordResetTokenExpiry,
-            allowedEmailDomains: entity.allowedEmailDomains,
-            blockedEmailDomains: entity.blockedEmailDomains,
-            passwordPolicy: {
-                minLength: entity.passwordMinLength,
-                requireSpecialChar: entity.passwordRequireSpecialChar,
-                requireNumber: entity.passwordRequireNumber,
-                requireUppercase: entity.passwordRequireUppercase
+            enabled: entity.userManagement?.registrationEnabled,
+            emailVerificationEnabled: entity.userManagement?.emailVerificationEnabled,
+            passwordResetEnabled: entity.userManagement?.passwordResetEnabled,
+            verificationCodeExpiry: entity.verificationSettings?.verificationCodeExpiry,
+            passwordResetTokenExpiry: entity.verificationSettings?.passwordResetTokenExpiry,
+            allowedEmailDomains: entity.verificationSettings?.allowedEmailDomains,
+            blockedEmailDomains: entity.verificationSettings?.blockedEmailDomains,
+            password: {
+                minLength: entity.passwordPolicy?.passwordMinLength,
+                requireSpecialChar: entity.passwordPolicy?.passwordRequireSpecialChar,
+                requireNumber: entity.passwordPolicy?.passwordRequireNumber,
+                requireUppercase: entity.passwordPolicy?.passwordRequireUppercase
             }
         }
     },
 
     /**
-     * 检查维护模式状态
+     * 获取维护状态
      * GET /api/system-config/maintenance
      */
     async getMaintenanceStatus(ctx) {
-        const entity = await strapi.entityService.findMany('api::system-config.system-config')
-
+        const entity = await strapi.entityService.findMany('api::system-config.system-config', {
+            populate: SYSTEM_CONFIG_POPULATE
+        }) as any
         return {
-            maintenanceMode: entity?.maintenanceMode || false,
-            maintenanceMessage: entity?.maintenanceMessage || '网站正在进行系统升级维护，预计30分钟后恢复正常访问。'
+            maintenanceMode: entity?.systemMaintenance?.maintenanceMode || false,
+            maintenanceMessage: entity?.systemMaintenance?.maintenanceMessage || '网站正在进行系统升级维护，预计30分钟后恢复正常访问。'
         }
     }
 }))

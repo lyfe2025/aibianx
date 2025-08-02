@@ -30,6 +30,7 @@ interface SearchResult {
     viewCount: number
     readingTime: number
     featured: boolean
+    featuredImage?: string | null
     _formatted?: any
     _snippets?: any
 }
@@ -143,7 +144,7 @@ class MeiliSearchService {
                     primaryKey: 'documentId',
                     settings: {
                         searchableAttributes: ['title', 'excerpt', 'content', 'author.name', 'category.name', 'tags.name'],
-                        displayedAttributes: ['documentId', 'title', 'slug', 'excerpt', 'author', 'category', 'tags', 'publishedAt', 'viewCount', 'readingTime', 'featured'],
+                        displayedAttributes: ['documentId', 'title', 'slug', 'excerpt', 'author', 'category', 'tags', 'publishedAt', 'viewCount', 'readingTime', 'featured', 'featuredImage'],
                         filterableAttributes: ['category.slug', 'tags.slug', 'author.slug', 'featured', 'publishedAt'],
                         sortableAttributes: ['publishedAt', 'viewCount', 'readingTime', 'title']
                     }
@@ -237,6 +238,7 @@ class MeiliSearchService {
             const searchDocuments = articles
                 .filter(article => article.publishedAt) // 只索引已发布的文章
                 .map(article => ({
+                    id: article.documentId, // MeiliSearch需要id字段
                     documentId: article.documentId,
                     title: article.title,
                     slug: article.slug,

@@ -1,339 +1,384 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Icon } from '../Icon/Icon'
+
+/**
+ * 移动端Toast通知组件 - Toast
+ * 
+ * 专为移动端优化的通知提示系统
+ * 支持多种类型的消息展示和自动消失
+ * 
+ * 设计目标：
+ * - 移动端友好的通知展示
+ * - 多种消息类型支持
+ * - 自动消失和手动关闭
+ * - 优雅的动画效果
+ */
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
+export type ToastPosition = 'top' | 'bottom' | 'center'
 
-export interface ToastItem {
+export interface ToastData {
     id: string
     type: ToastType
     title: string
     message?: string
     duration?: number
-    persistent?: boolean
+    position?: ToastPosition
+    showCloseButton?: boolean
+    action?: {
+        label: string
+        onClick: () => void
+    }
 }
 
 interface ToastProps {
-    toast: ToastItem
+    toast: ToastData
     onClose: (id: string) => void
+    className?: string
 }
 
-/**
- * Toast 通知组件
- * 
- * 功能特性：
- * - 四种通知类型：成功、错误、警告、信息
- * - 自动消失和手动关闭
- * - 移动端优化布局
- * - 滑动手势关闭（移动端）
- * - 渐入渐出动画
- * - 可配置持续时间
- * 
- * 设计规范：
- * - 最小高度: 64px (移动端) / 56px (桌面端)
- * - 圆角: 12px
- * - 毛玻璃背景效果
- * - 类型色彩区分
- * - 触摸友好的关闭按钮 (44x44px)
- */
-export function Toast({ toast, onClose }: ToastProps) {
+export function Toast({ toast, onClose, className = '' }: ToastProps) {
     const [isVisible, setIsVisible] = useState(false)
-    const [startX, setStartX] = useState(0)
-    const [currentX, setCurrentX] = useState(0)
-    const [isDragging, setIsDragging] = useState(false)
+    const [isLeaving, setIsLeaving] = useState(false)
 
-    // 渐入动画
-    useEffect(() => {
-        const timer = setTimeout(() => setIsVisible(true), 50)
-        return () => clearTimeout(timer)
-    }, [])
+    // 获取Toast类型对应的图标和样式
+    const getToastConfig = (type: ToastType) => {
+        switch (type) {
+            case 'success':
+                return {
+                    icon: '✅',
+                    className: 'toast-success',
+                    backgroundColor: '#10B981',
+                    borderColor: '#059669'
+                }
+            case 'error':
+                return {
+                    icon: '❌',
+                    className: 'toast-error',
+                    backgroundColor: '#EF4444',
+                    borderColor: '#DC2626'
+                }
+            case 'warning':
+                return {
+                    icon: '⚠️',
+                    className: 'toast-warning',
+                    backgroundColor: '#F59E0B',
+                    borderColor: '#D97706'
+                }
+            case 'info':
+                return {
+                    icon: 'ℹ️',
+                    className: 'toast-info',
+                    backgroundColor: '#3B82F6',
+                    borderColor: '#2563EB'
+                }
+            default:
+                return {
+                    icon: 'ℹ️',
+                    className: 'toast-info',
+                    backgroundColor: '#3B82F6',
+                    borderColor: '#2563EB'
+                }
+        }
+    }
 
-    // 自动消失
-    useEffect(() => {
-        if (toast.persistent) return
+    const config = getToastConfig(toast.type)
 
-        const duration = toast.duration || 4000
-        const timer = setTimeout(() => {
-            handleClose()
-        }, duration)
-
-        return () => clearTimeout(timer)
-    }, [toast.duration, toast.persistent])
-
+    // 处理关闭动画
     const handleClose = () => {
-        setIsVisible(false)
-        setTimeout(() => onClose(toast.id), 300)
+        setIsLeaving(true)
+        setTimeout(() => {
+            onClose(toast.id)
+        }, 300) // 动画持续时间
     }
 
-    // 移动端滑动关闭
-    const handleTouchStart = (e: React.TouchEvent) => {
-        setStartX(e.touches[0].clientX)
-        setCurrentX(0)
-        setIsDragging(false)
-    }
+    // 自动消失逻辑
+    useEffect(() => {
+        setIsVisible(true)
+        
+        if (toast.duration && toast.duration > 0) {
+            const timer = setTimeout(() => {
+                handleClose()
+            }, toast.duration)
 
-    const handleTouchMove = (e: React.TouchEvent) => {
-        const touchX = e.touches[0].clientX
-        const deltaX = touchX - startX
-        setCurrentX(deltaX)
-        setIsDragging(Math.abs(deltaX) > 10)
-    }
+            return () => clearTimeout(timer)
+        }
+    }, [toast.duration])
 
-    const handleTouchEnd = () => {
-        if (Math.abs(currentX) > 100) {
+    // 处理操作按钮点击
+    const handleActionClick = () => {
+        if (toast.action?.onClick) {
+            toast.action.onClick()
             handleClose()
-        } else {
-            setCurrentX(0)
-        }
-        setIsDragging(false)
-    }
-
-    const getTypeStyles = () => {
-        const baseStyles = {
-            background: 'var(--color-bg-glass)',
-            backdropFilter: 'blur(12px)',
-            border: '1px solid',
-            borderRadius: '12px',
-        }
-
-        switch (toast.type) {
-            case 'success':
-                return {
-                    ...baseStyles,
-                    borderColor: 'var(--color-success-border)',
-                    background: 'var(--color-success-bg)',
-                }
-            case 'error':
-                return {
-                    ...baseStyles,
-                    borderColor: 'var(--color-error-border)',
-                    background: 'var(--color-error-bg)',
-                }
-            case 'warning':
-                return {
-                    ...baseStyles,
-                    borderColor: 'var(--color-warning-border)',
-                    background: 'var(--color-warning-bg)',
-                }
-            case 'info':
-                return {
-                    ...baseStyles,
-                    borderColor: 'var(--color-info-border)',
-                    background: 'var(--color-info-bg)',
-                }
-            default:
-                return baseStyles
-        }
-    }
-
-    const getTypeIcon = () => {
-        switch (toast.type) {
-            case 'success':
-                return 'check-circle'
-            case 'error':
-                return 'x-circle'
-            case 'warning':
-                return 'exclamation-triangle'
-            case 'info':
-                return 'information-circle'
-            default:
-                return 'information-circle'
-        }
-    }
-
-    const getTypeColor = () => {
-        switch (toast.type) {
-            case 'success':
-                return 'var(--color-success)'
-            case 'error':
-                return 'var(--color-error)'
-            case 'warning':
-                return 'var(--color-warning)'
-            case 'info':
-                return 'var(--color-info)'
-            default:
-                return 'var(--color-info)'
         }
     }
 
     return (
-        <div
+        <div 
+            className={`
+                toast 
+                ${config.className} 
+                ${isVisible ? 'toast-visible' : ''} 
+                ${isLeaving ? 'toast-leaving' : ''} 
+                ${className}
+            `}
             style={{
-                ...getTypeStyles(),
-                transform: `translateX(${currentX}px) translateY(${isVisible ? '0' : '20px'})`,
-                opacity: isVisible ? 1 : 0,
-                transition: isDragging ? 'none' : 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                padding: '16px',
-                minHeight: '64px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                width: '100%',
-                maxWidth: '400px',
-                position: 'relative',
-                cursor: isDragging ? 'grabbing' : 'grab',
-                touchAction: 'none',
+                backgroundColor: config.backgroundColor,
+                borderColor: config.borderColor
             }}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
         >
-            {/* 类型图标 */}
-            <div style={{
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}>
-                <Icon
-                    name={getTypeIcon()}
-                    size="lg"
-                    style={{
-                        width: '24px',
-                        height: '24px',
-                        color: getTypeColor(),
-                    }}
-                />
-            </div>
-
-            {/* 内容区域 */}
-            <div style={{
-                flex: 1,
-                minWidth: 0,
-            }}>
-                <div style={{
-                    color: 'var(--color-text-primary)',
-                    fontSize: 'var(--font-size-lg)',
-                    fontWeight: 500,
-                    lineHeight: 1.4,
-                    marginBottom: toast.message ? '4px' : '0',
-                }}>
-                    {toast.title}
+            {/* Toast内容 */}
+            <div className="toast-content">
+                {/* 图标 */}
+                <div className="toast-icon">
+                    {config.icon}
                 </div>
-                {toast.message && (
-                    <div style={{
-                        color: 'var(--color-text-secondary)',
-                        fontSize: 'var(--font-size-base)',
-                        lineHeight: 1.4,
-                    }}>
-                        {toast.message}
+
+                {/* 文本内容 */}
+                <div className="toast-text">
+                    <div className="toast-title">
+                        {toast.title}
                     </div>
+                    {toast.message && (
+                        <div className="toast-message">
+                            {toast.message}
+                        </div>
+                    )}
+                </div>
+
+                {/* 操作按钮 */}
+                {toast.action && (
+                    <button 
+                        className="toast-action"
+                        onClick={handleActionClick}
+                    >
+                        {toast.action.label}
+                    </button>
+                )}
+
+                {/* 关闭按钮 */}
+                {toast.showCloseButton && (
+                    <button 
+                        className="toast-close"
+                        onClick={handleClose}
+                        aria-label="关闭通知"
+                    >
+                        ✕
+                    </button>
                 )}
             </div>
 
-            {/* 关闭按钮 */}
-            <button
-                onClick={handleClose}
-                style={{
-                    background: 'var(--color-decoration-light)',
-                    border: '1px solid var(--color-border-primary)',
-                    borderRadius: '8px',
-                    padding: '8px',
-                    minWidth: '44px',
-                    minHeight: '44px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    flexShrink: 0,
-                }}
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'var(--color-hover)'
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'var(--color-decoration-light)'
-                }}
-            >
-                <Icon
-                    name="x-mark"
-                    size="sm"
+            {/* 进度条（如果有持续时间） */}
+            {toast.duration && toast.duration > 0 && (
+                <div 
+                    className="toast-progress"
                     style={{
-                        width: '16px',
-                        height: '16px',
-                        color: 'var(--color-text-secondary)',
+                        animationDuration: `${toast.duration}ms`
                     }}
                 />
-            </button>
-
-            {/* 进度条（非持久化通知） */}
-            {!toast.persistent && (
-                <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: '2px',
-                    background: 'var(--color-decoration-light)',
-                    borderRadius: '0 0 12px 12px',
-                    overflow: 'hidden',
-                }}>
-                    <div style={{
-                        height: '100%',
-                        background: getTypeColor(),
-                        animation: `toast-progress ${toast.duration || 4000}ms linear`,
-                        transform: 'translateX(-100%)',
-                    }} />
-                </div>
             )}
 
-            {/* 动画样式 */}
+            {/* 移动端专用样式 */}
             <style jsx>{`
-        @keyframes toast-progress {
-          to {
-            transform: translateX(0);
-          }
-        }
-      `}</style>
+                .toast {
+                    position: relative;
+                    width: 100%;
+                    max-width: 400px;
+                    margin: 0 auto 12px auto;
+                    border-radius: 12px;
+                    border: 1px solid;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+                    backdrop-filter: blur(12px);
+                    overflow: hidden;
+                    transform: translateY(100px);
+                    opacity: 0;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .toast-visible {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+
+                .toast-leaving {
+                    transform: translateY(-100px);
+                    opacity: 0;
+                }
+
+                .toast-content {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 12px;
+                    padding: 16px;
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .toast-icon {
+                    font-size: 20px;
+                    line-height: 1;
+                    flex-shrink: 0;
+                    margin-top: 2px;
+                }
+
+                .toast-text {
+                    flex: 1;
+                    min-width: 0;
+                }
+
+                .toast-title {
+                    font-size: var(--font-size-sm);
+                    font-weight: 600;
+                    color: white;
+                    margin: 0 0 4px 0;
+                    line-height: 1.4;
+                }
+
+                .toast-message {
+                    font-size: var(--font-size-xs);
+                    color: rgba(255, 255, 255, 0.9);
+                    margin: 0;
+                    line-height: 1.4;
+                }
+
+                .toast-action {
+                    background: rgba(255, 255, 255, 0.2);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 6px;
+                    font-size: var(--font-size-xs);
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    white-space: nowrap;
+                    flex-shrink: 0;
+                }
+
+                .toast-action:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                    border-color: rgba(255, 255, 255, 0.5);
+                }
+
+                .toast-close {
+                    background: transparent;
+                    border: none;
+                    color: rgba(255, 255, 255, 0.8);
+                    padding: 4px;
+                    cursor: pointer;
+                    font-size: var(--font-size-sm);
+                    line-height: 1;
+                    transition: color 0.3s ease;
+                    flex-shrink: 0;
+                }
+
+                .toast-close:hover {
+                    color: white;
+                }
+
+                .toast-progress {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    height: 3px;
+                    background: rgba(255, 255, 255, 0.3);
+                    transform-origin: left;
+                    animation: progressBar linear;
+                }
+
+                @keyframes progressBar {
+                    from {
+                        transform: scaleX(1);
+                    }
+                    to {
+                        transform: scaleX(0);
+                    }
+                }
+
+                /* 类型特定样式 */
+                .toast-success {
+                    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+                }
+
+                .toast-error {
+                    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+                }
+
+                .toast-warning {
+                    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+                }
+
+                .toast-info {
+                    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+                }
+
+                /* 移动端优化 */
+                @media (max-width: 768px) {
+                    .toast {
+                        max-width: calc(100vw - 32px);
+                        margin: 0 16px 12px 16px;
+                    }
+
+                    .toast-content {
+                        padding: 14px;
+                        gap: 10px;
+                    }
+
+                    .toast-icon {
+                        font-size: 18px;
+                    }
+
+                    .toast-title {
+                        font-size: var(--font-size-xs);
+                    }
+
+                    .toast-message {
+                        font-size: 11px;
+                    }
+
+                    .toast-action {
+                        padding: 4px 8px;
+                        font-size: 11px;
+                    }
+                }
+
+                /* 触控设备优化 */
+                @media (hover: none) and (pointer: coarse) {
+                    .toast-action,
+                    .toast-close {
+                        touch-action: manipulation;
+                        min-height: 44px;
+                        min-width: 44px;
+                    }
+
+                    .toast-action:active {
+                        transform: scale(0.95);
+                    }
+                }
+
+                /* 高分辨率显示优化 */
+                @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+                    .toast-title,
+                    .toast-message {
+                        -webkit-font-smoothing: antialiased;
+                        -moz-osx-font-smoothing: grayscale;
+                    }
+                }
+
+                /* 可访问性增强 */
+                @media (prefers-reduced-motion: reduce) {
+                    .toast,
+                    .toast-action,
+                    .toast-close {
+                        transition: none;
+                    }
+
+                    .toast-progress {
+                        animation: none;
+                    }
+                }
+            `}</style>
         </div>
     )
-} 
-
-// 添加毛玻璃风格Toast通知函数
-export function showToast(message: string, type: 'success' | 'error' = 'success') {
-    // 创建临时Toast元素
-    const toast = document.createElement('div')
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 100px;
-        left: 50%;
-        transform: translateX(-50%) translateY(100px);
-        background: rgba(26, 26, 26, 0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(42, 42, 42, 0.70);
-        color: var(--color-text-primary, #FFFFFF);
-        padding: 16px 24px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 500;
-        z-index: 100000;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        max-width: 90vw;
-        text-align: center;
-        font-family: var(--font-family-primary);
-    `
-
-    // 添加成功/错误指示器
-    const indicator = type === 'success' ? '✅ ' : '❌ '
-    toast.textContent = indicator + message
-    document.body.appendChild(toast)
-
-    // 动画显示
-    setTimeout(() => {
-        toast.style.transform = 'translateX(-50%) translateY(0)'
-    }, 100)
-
-    // 2.5秒后自动移除
-    setTimeout(() => {
-        toast.style.transform = 'translateX(-50%) translateY(100px)'
-        toast.style.opacity = '0'
-        setTimeout(() => {
-            if (document.body.contains(toast)) {
-                document.body.removeChild(toast)
-            }
-        }, 400)
-    }, 2500)
-} 
+}

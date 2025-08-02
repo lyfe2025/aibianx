@@ -25,7 +25,12 @@ echo ""
 
 # 检查MeiliSearch服务状态
 echo "🔍 检查MeiliSearch服务状态..."
-HEALTH_CHECK=$(curl -s "${SEARCH_HEALTH_URL}" 2>/dev/null)
+if [ -z "$SEARCH_URL" ]; then
+    echo -e "${RED}❌ SEARCH_URL未配置，请检查load-config.sh${NC}"
+    exit 1
+fi
+HEALTH_URL="${SEARCH_URL}/health"
+HEALTH_CHECK=$(curl -s "${HEALTH_URL}" 2>/dev/null)
 if [[ $HEALTH_CHECK != *"available"* ]]; then
     echo -e "${RED}❌ MeiliSearch服务不可用${NC}"
     echo "请先启动MeiliSearch服务："

@@ -6,13 +6,18 @@
  */
 
 /**
- * 导航菜单配置
+ * 导航菜单配置 - 移动端优化版
+ * 
+ * 更新说明：
+ * - 将"首页"替换为"发现" - 专注免费资源获取和邮箱订阅转化
+ * - 保留"周刊" - 付费内容平台和会员升级转化
+ * - 将"关于"替换为"个人中心" - 用户价值中心和会员管理
  */
 export const NAVIGATION_MENU = [
     {
-        id: 'home',
-        href: '/',
-        translationKey: 'nav.home',
+        id: 'discover',
+        href: '/discover',
+        translationKey: 'nav.discover',
         exactMatch: true
     },
     {
@@ -22,9 +27,9 @@ export const NAVIGATION_MENU = [
         exactMatch: false
     },
     {
-        id: 'about',
-        href: '/about',
-        translationKey: 'nav.about',
+        id: 'profile',
+        href: '/profile',
+        translationKey: 'nav.profile',
         exactMatch: true
     }
 ] as const

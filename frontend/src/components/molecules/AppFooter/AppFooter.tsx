@@ -61,7 +61,7 @@ export function AppFooter() {
 
     // 主导航配置 - 与 Header 组件的导航保持一致
     const mainNavItems = [
-        { href: '/', label: '首页' },
+        { href: '/', label: '发现' },
         { href: '/weekly', label: '周刊' },
         { href: '/about', label: '关于' }
     ]

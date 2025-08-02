@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
   // 重定向配置（为SEO友好）
   async redirects() {
     return [
+      // 保持现有重定向
       {
         source: '/articles/:slug',
         destination: '/weekly/:slug',

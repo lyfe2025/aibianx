@@ -54,6 +54,7 @@ echo -e "${BLUE}📋 检查范围:${NC}"
 echo "   • 脚本文件: scripts/"
 echo "   • 配置文件: deployment/"
 echo "   • 源代码: frontend/src/, backend/src/"
+echo -e "${YELLOW}   ⚠️  跳过: node_modules/ (第三方库)${NC}"
 echo ""
 
 # 1. 检查URL硬编码
@@ -73,7 +74,7 @@ while IFS= read -r line; do
         
         record_issue "CRITICAL" "$file" "$line_num" "硬编码URL: http://localhost" "使用动态变量 \${FRONTEND_URL} 或 \${BACKEND_URL}"
     fi
-done < <(grep -rn "http://localhost" "$PROJECT_ROOT/scripts/" "$PROJECT_ROOT/deployment/" 2>/dev/null || true)
+done < <(grep -rn "http://localhost" "$PROJECT_ROOT/scripts/" "$PROJECT_ROOT/deployment/" 2>/dev/null | grep -v "/node_modules/" || true)
 
 # 检查 https://localhost 硬编码
 while IFS= read -r line; do
@@ -88,7 +89,7 @@ while IFS= read -r line; do
         
         record_issue "CRITICAL" "$file" "$line_num" "硬编码HTTPS URL: https://localhost" "使用动态变量 \${FRONTEND_URL} 或 \${BACKEND_URL}"
     fi
-done < <(grep -rn "https://localhost" "$PROJECT_ROOT/scripts/" "$PROJECT_ROOT/deployment/" 2>/dev/null || true)
+done < <(grep -rn "https://localhost" "$PROJECT_ROOT/scripts/" "$PROJECT_ROOT/deployment/" 2>/dev/null | grep -v "/node_modules/" || true)
 
 # 2. 检查端口硬编码
 echo -e "${BLUE}🔍 检查端口硬编码...${NC}"
@@ -114,7 +115,7 @@ for port in "${HARDCODED_PORTS[@]}"; do
             
             record_issue "WARNING" "$file" "$line_num" "硬编码端口: $port" "使用对应的端口变量，如 \${BACKEND_PORT}, \${DATABASE_PORT}"
         fi
-    done < <(grep -rn ":$port\|=$port\|$port " "$PROJECT_ROOT/scripts/" "$PROJECT_ROOT/deployment/" 2>/dev/null | grep -v "\$" || true)
+    done < <(grep -rn ":$port\|=$port\|$port " "$PROJECT_ROOT/scripts/" "$PROJECT_ROOT/deployment/" 2>/dev/null | grep -v "\$" | grep -v "/node_modules/" || true)
 done
 
 # 3. 检查颜色硬编码
@@ -133,7 +134,7 @@ while IFS= read -r line; do
         
         record_issue "WARNING" "$file" "$line_num" "硬编码颜色代码" "使用预定义颜色变量 \${RED}, \${GREEN}, \${BLUE} 等"
     fi
-done < <(grep -rn "\\033\[" "$PROJECT_ROOT/scripts/" 2>/dev/null | grep -v "\$" || true)
+done < <(grep -rn "\\033\[" "$PROJECT_ROOT/scripts/" 2>/dev/null | grep -v "\$" | grep -v "/node_modules/" || true)
 
 # 4. 检查路径硬编码
 echo -e "${BLUE}🔍 检查路径硬编码...${NC}"
@@ -145,14 +146,14 @@ while IFS= read -r line; do
         line_num=$(echo "$line" | cut -d: -f2)
         content=$(echo "$line" | cut -d: -f3-)
         
-        # 跳过注释和明显的正当用途
-        if [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]] || [[ "$content" =~ "SCRIPT_DIR.*=" ]]; then
+        # 跳过注释、文档、检查工具自身和明显的正当用途
+        if [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]] || [[ "$file" =~ check-hardcode\.sh$ ]] || [[ "$content" =~ "SCRIPT_DIR.*=" ]]; then
             continue
         fi
         
         record_issue "WARNING" "$file" "$line_num" "绝对路径硬编码" "使用相对路径或 \${PROJECT_ROOT}, \${SCRIPT_DIR} 变量"
     fi
-done < <(grep -rn "/Volumes/\|/Users/\|/home/" "$PROJECT_ROOT/scripts/" "$PROJECT_ROOT/deployment/" 2>/dev/null || true)
+done < <(grep -rn "/Volumes/\|/Users/\|/home/" "$PROJECT_ROOT/scripts/" "$PROJECT_ROOT/deployment/" 2>/dev/null | grep -v "/node_modules/" || true)
 
 # 5. 检查Bash语法问题
 echo -e "${BLUE}🔍 检查Bash语法...${NC}"
@@ -183,7 +184,7 @@ while IFS= read -r line; do
             record_issue "WARNING" "$file" "$line_num" "复杂条件判断缺少括号" "使用括号明确逻辑优先级: (condition1 && condition2) || condition3"
         fi
     fi
-done < <(grep -rn "if.*&&.*||" "$PROJECT_ROOT/scripts/" 2>/dev/null || true)
+done < <(grep -rn "if.*&&.*||" "$PROJECT_ROOT/scripts/" 2>/dev/null | grep -v "/node_modules/" || true)
 
 # 7. 检查未引用的变量
 echo -e "${BLUE}🔍 检查变量引用...${NC}"
@@ -194,14 +195,19 @@ while IFS= read -r line; do
         line_num=$(echo "$line" | cut -d: -f2)
         content=$(echo "$line" | cut -d: -f3-)
         
-        # 跳过注释和特殊情况
-        if [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]] || [[ "$content" =~ "for.*in.*\$" ]]; then
+        # 跳过注释、文档、检查工具自身和正常的bash语法
+        if [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]] || [[ "$file" =~ check-hardcode\.sh$ ]] || 
+           [[ "$content" =~ "for.*in.*\$" ]] || [[ "$content" =~ "\[\[.*==.*\*.*\*" ]] || [[ "$content" =~ "\[\[.*=~" ]] ||
+           [[ "$content" =~ "\$REPLY" ]] || [[ "$content" =~ "read.*-p" ]]; then
             continue
         fi
         
-        record_issue "WARNING" "$file" "$line_num" "可能的未引用变量" "确保变量正确引用: \"\$VARIABLE\""
+        # 只检查真正有问题的变量引用模式
+        if [[ "$content" =~ \[[[:space:]]*\$[A-Z_][A-Z0-9_]*[[:space:]]*[=!][^=] ]]; then
+            record_issue "WARNING" "$file" "$line_num" "可能的未引用变量" "确保变量正确引用: \"\$VARIABLE\""
+        fi
     fi
-done < <(grep -rn '\[ *\$[A-Z_][A-Z0-9_]* *[=!]' "$PROJECT_ROOT/scripts/" 2>/dev/null || true)
+done < <(grep -rn '\[ *\$[A-Z_][A-Z0-9_]* *[=!]' "$PROJECT_ROOT/scripts/" 2>/dev/null | grep -v "/node_modules/" || true)
 
 # 8. 生成报告
 echo "=================================================="
