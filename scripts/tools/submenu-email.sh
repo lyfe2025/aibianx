@@ -51,8 +51,8 @@ show_email_menu() {
     echo ""
     
     echo -e " ${BLUE}🔗 服务地址${NC}"
-    echo "  📍 管理界面: ${BILLIONMAIL_ADMIN_URL:-http://localhost:8080}"
-    echo "  📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL:-http://localhost:8080/webmail}"
+    echo "  📍 管理界面: ${BILLIONMAIL_ADMIN_URL}"
+    echo "  📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
     echo "  👤 默认账户: billion / billion"
     echo ""
     

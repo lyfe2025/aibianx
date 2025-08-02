@@ -350,7 +350,7 @@ post_deploy_verification() {
     log_info "执行健康检查..."
     
     # 检查前端响应
-    FRONTEND_CHECK_URL="${FRONTEND_URL:-http://localhost}"
+    FRONTEND_CHECK_URL="${FRONTEND_URL}"
     while [ $attempt -lt $max_attempts ]; do
         if curl -f "$FRONTEND_CHECK_URL" &>/dev/null; then
             log_success "前端服务 - 响应正常 ($FRONTEND_CHECK_URL)"
@@ -371,7 +371,7 @@ post_deploy_verification() {
     attempt=0
     
     # 检查后端响应
-    BACKEND_CHECK_URL="${BACKEND_URL:-http://localhost:1337}"
+    BACKEND_CHECK_URL="${BACKEND_URL}"
     while [ $attempt -lt $max_attempts ]; do
         if curl -f "$BACKEND_CHECK_URL" &>/dev/null; then
             log_success "后端服务 - 响应正常 ($BACKEND_CHECK_URL)"

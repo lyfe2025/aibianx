@@ -66,8 +66,8 @@ while IFS= read -r line; do
         line_num=$(echo "$line" | cut -d: -f2)
         content=$(echo "$line" | cut -d: -f3-)
         
-        # 跳过注释行和文档
-        if [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]]; then
+        # 跳过注释行、文档和检查工具自身
+        if [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]] || [[ "$file" =~ check-hardcode\.sh$ ]]; then
             continue
         fi
         
@@ -82,7 +82,7 @@ while IFS= read -r line; do
         line_num=$(echo "$line" | cut -d: -f2)
         content=$(echo "$line" | cut -d: -f3-)
         
-        if [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]]; then
+        if [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]] || [[ "$file" =~ check-hardcode\.sh$ ]]; then
             continue
         fi
         

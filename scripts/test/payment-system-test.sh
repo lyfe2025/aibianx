@@ -6,6 +6,10 @@
 echo "🔧 支付系统完整测试验证"
 echo "=================================="
 
+# 获取脚本目录并加载动态配置
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../tools/load-config.sh"
+
 # 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -45,7 +49,7 @@ test_api() {
     local expected_status="${3:-200}"
     
     if command -v curl > /dev/null 2>&1; then
-        response=$(curl -s -o /dev/null -w "%{http_code}" -X "$method" "http://localhost:1337$endpoint")
+        response=$(curl -s -o /dev/null -w "%{http_code}" -X "$method" "${BACKEND_URL}$endpoint")
         if [ "$response" = "$expected_status" ]; then
             return 0
         else
@@ -119,7 +123,7 @@ fi
 echo -e "\n${BLUE}=== 5. API端点测试 ===${NC}"
 
 echo "检查服务是否运行..."
-if curl -s http://localhost:1337/api/health > /dev/null 2>&1; then
+if curl -s "${BACKEND_URL}/api/health" > /dev/null 2>&1; then
     echo -e "${GREEN}后端服务正在运行${NC}"
     
     run_test "支付配置API可访问" "test_api '/api/payment-config/available-methods' 'GET' '200'"
@@ -130,11 +134,11 @@ else
     echo "要运行API测试，请先启动后端服务: cd backend && npm run dev"
 fi
 
-if curl -s http://localhost:3000 > /dev/null 2>&1; then
+if curl -s "${FRONTEND_URL}" > /dev/null 2>&1; then
     echo -e "${GREEN}前端服务正在运行${NC}"
     echo "前端页面访问:"
-    echo "  - 会员购买: http://localhost:3000/membership"
-    echo "  - 支付测试: http://localhost:3000/payment/test"
+    echo "  - 会员购买: ${FRONTEND_URL}/membership"
+    echo "  - 支付测试: ${FRONTEND_URL}/payment/test"
 else
     echo -e "${YELLOW}前端服务未运行${NC}"
     echo "要访问前端页面，请启动前端服务: cd frontend && npm run dev"

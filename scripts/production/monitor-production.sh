@@ -114,9 +114,9 @@ real_time_monitor() {
         
         # 显示服务健康状态
         echo -e "${CYAN}💓 服务健康:${NC}"
-        check_service_health "frontend" "${FRONTEND_URL:-http://localhost}"
-        check_service_health "backend" "${BACKEND_URL:-http://localhost:1337}"
-        check_service_health "meilisearch" "${SEARCH_URL:-http://localhost:7700}/health"
+        check_service_health "frontend" "${FRONTEND_URL}"
+        check_service_health "backend" "${BACKEND_URL}"
+        check_service_health "meilisearch" "${SEARCH_URL}/health"
         check_service_health "postgres" "" "docker"
         echo ""
         
@@ -255,17 +255,17 @@ performance_check() {
     echo -e "${CYAN}🌐 响应时间检查:${NC}"
     
     # 前端响应时间
-    local frontend_url="${FRONTEND_URL:-http://localhost}"
+    local frontend_url="${FRONTEND_URL}"
     local frontend_time=$(curl -o /dev/null -s -w '%{time_total}' "$frontend_url" 2>/dev/null || echo "超时")
     echo "   前端服务: ${frontend_time}s ($frontend_url)"
     
     # 后端响应时间
-    local backend_url="${BACKEND_URL:-http://localhost:1337}"
+    local backend_url="${BACKEND_URL}"
     local backend_time=$(curl -o /dev/null -s -w '%{time_total}' "$backend_url" 2>/dev/null || echo "超时")
     echo "   后端服务: ${backend_time}s ($backend_url)"
     
     # 搜索引擎响应时间
-    local search_url="${SEARCH_URL:-http://localhost:7700}/health"
+    local search_url="${SEARCH_URL}/health"
     local search_time=$(curl -o /dev/null -s -w '%{time_total}' "$search_url" 2>/dev/null || echo "超时")
     echo "   搜索引擎: ${search_time}s ($search_url)"
     
@@ -325,12 +325,12 @@ alert_check() {
     fi
     
     # 服务状态告警
-    local frontend_check_url="${FRONTEND_URL:-http://localhost}"
+    local frontend_check_url="${FRONTEND_URL}"
     if ! curl -f "$frontend_check_url" &>/dev/null; then
         alerts+=("🌐 前端服务无响应 ($frontend_check_url)")
     fi
     
-    local backend_check_url="${BACKEND_URL:-http://localhost:1337}"
+    local backend_check_url="${BACKEND_URL}"
     if ! curl -f "$backend_check_url" &>/dev/null; then
         alerts+=("⚙️ 后端服务无响应 ($backend_check_url)")
     fi

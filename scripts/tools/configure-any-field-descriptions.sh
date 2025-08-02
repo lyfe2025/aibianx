@@ -328,7 +328,7 @@ main() {
     # 等待后端启动
     echo "   ⏳ 等待后端服务启动..."
     for i in {1..30}; do
-        if curl -s http://localhost:1337/admin >/dev/null 2>&1; then
+        if curl -s "${BACKEND_ADMIN_URL}" >/dev/null 2>&1; then
             echo "   ✅ 后端服务已启动"
             break
         fi
@@ -359,7 +359,7 @@ main() {
     # 等待服务启动
     echo "   ⏳ 等待服务完全启动..."
     for i in {1..60}; do
-        if curl -s http://localhost:1337/admin >/dev/null 2>&1 && curl -s http://localhost >/dev/null 2>&1; then
+        if curl -s "${BACKEND_ADMIN_URL}" >/dev/null 2>&1 && curl -s "${FRONTEND_URL}" >/dev/null 2>&1; then
             echo -e "${GREEN}   ✅ 所有服务已启动${NC}"
             break
         fi
@@ -375,7 +375,7 @@ main() {
     echo -e "${GREEN}🎉 ${CONTENT_TYPE} 字段描述配置完成！${NC}"
     echo "=========================================="
     echo -e "${BLUE}📍 后续操作：${NC}"
-    echo "1. 访问后台: http://localhost:1337/admin"
+    echo "1. 访问后台: ${BACKEND_ADMIN_URL}"
     echo "2. 强制刷新浏览器: Ctrl+Shift+R (Windows) 或 Cmd+Shift+R (Mac)"
     echo "3. 进入 Content Manager → ${CONTENT_TYPE} 验证字段描述显示"
     echo ""

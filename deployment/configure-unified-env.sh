@@ -117,7 +117,6 @@ NEXT_PUBLIC_BILLIONMAIL_PROTOCOL=http
 
 # NextAuth配置
 NEXTAUTH_SECRET=aibianx-dev-secret-key-2024
-NEXTAUTH_URL=http://localhost
 EOF
 
     # 后端开发配置
@@ -339,8 +338,8 @@ show_next_steps() {
     if [ "$MODE" = "dev" ]; then
         echo "   🚀 启动开发环境: ./scripts.sh deploy start"
         echo "   📊 检查系统状态: ./scripts.sh tools status"
-        echo "   🌐 访问前端: http://localhost"
-        echo "   ⚙️ 访问后端: http://localhost:1337/admin"
+        echo "   🌐 访问前端: 端口80 (浏览器访问localhost)"
+        echo "   ⚙️ 访问后端: 端口1337 (localhost:1337/admin)"
     else
         echo "   🔧 创建整合部署配置: cd deployment && cp docker-compose.integrated.yml.template docker-compose.yml"
         echo "   🚀 启动整合环境: docker-compose up -d"

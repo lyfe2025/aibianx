@@ -6,6 +6,10 @@
 
 set -e
 
+# 获取脚本目录并加载动态配置
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../tools/load-config.sh"
+
 # 颜色输出
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -81,7 +85,7 @@ configure_content_type() {
     log_success "内容类型 $content_type 配置完成！"
     echo ""
     echo "📋 验证步骤："
-    echo "1. 访问管理后台: http://localhost:1337/admin"
+    echo "1. 访问管理后台: ${BACKEND_ADMIN_URL}"
     echo "2. 进入 Content Manager -> ${content_type}"
     echo "3. 查看字段是否显示中文描述"
     echo ""
@@ -233,7 +237,7 @@ verify_configuration() {
     
     # 验证API访问
     sleep 5  # 等待服务启动
-    if curl -s "http://localhost:1337/api/${content_type}s" | grep -q "data" 2>/dev/null; then
+    if curl -s "${BACKEND_API_URL}/${content_type}s" | grep -q "data" 2>/dev/null; then
         log_success "API访问: 正常"
     else
         log_warning "API访问: 可能需要配置权限或服务未完全启动"

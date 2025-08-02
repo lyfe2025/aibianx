@@ -199,7 +199,7 @@ show_services_status() {
     echo -e "${CYAN}🌐 网络检查:${NC}"
     
     # 检查前端
-    FRONTEND_CHECK_URL="${FRONTEND_URL:-http://localhost}"
+    FRONTEND_CHECK_URL="${FRONTEND_URL}"
     if curl -f "$FRONTEND_CHECK_URL" &>/dev/null; then
         echo "   ✅ 前端服务 - 响应正常 ($FRONTEND_CHECK_URL)"
     else
@@ -207,7 +207,7 @@ show_services_status() {
     fi
     
     # 检查后端
-    BACKEND_CHECK_URL="${BACKEND_URL:-http://localhost:1337}"
+    BACKEND_CHECK_URL="${BACKEND_URL}"
     if curl -f "$BACKEND_CHECK_URL" &>/dev/null; then
         echo "   ✅ 后端服务 - 响应正常 ($BACKEND_CHECK_URL)"
     else
@@ -215,7 +215,7 @@ show_services_status() {
     fi
     
     # 检查搜索引擎
-    SEARCH_CHECK_URL="${SEARCH_URL:-http://localhost:7700}/health"
+    SEARCH_CHECK_URL="${SEARCH_URL}/health"
     if curl -f "$SEARCH_CHECK_URL" &>/dev/null; then
         echo "   ✅ 搜索引擎 - 响应正常 ($SEARCH_CHECK_URL)"
     else

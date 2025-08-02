@@ -4,6 +4,10 @@
 # 描述：为Strapi Admin界面配置所有用户表字段的中文显示描述
 # 使用方法：bash scripts/tools/configure-user-field-descriptions.sh
 
+# 获取脚本目录并加载动态配置
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/load-config.sh"
+
 echo "🔧 开始配置User表字段中文描述..."
 
 # 检查数据库连接配置
@@ -133,5 +137,5 @@ echo "   1. 重启Strapi后端服务"
 echo "   2. 访问Admin界面确认字段显示正确"
 echo "   3. 检查字段描述是否正确显示"
 echo ""
-echo "🌐 Admin访问地址: http://localhost:1337/admin"
+echo "🌐 Admin访问地址: ${BACKEND_ADMIN_URL}"
 echo "📍 具体路径: Content Manager -> Collection Types -> User"

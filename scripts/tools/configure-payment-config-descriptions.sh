@@ -3,6 +3,10 @@
 # 支付配置字段描述配置脚本
 # 为payment-config内容类型添加中文字段描述
 
+# 获取脚本目录并加载动态配置
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/load-config.sh"
+
 echo "🔧 配置支付配置字段描述..."
 
 # 1. 检查数据库连接
@@ -178,7 +182,7 @@ echo "   ✅ 后台管理界面布局"
 echo ""
 echo "📝 下一步："
 echo "   1. 启动后端服务"
-echo "   2. 登录后台管理: http://localhost:1337/admin"
+echo "   2. 登录后台管理: ${BACKEND_ADMIN_URL}"
 echo "   3. 进入内容管理 → 支付配置"
 echo "   4. 按照配置指南填入支付信息"
 echo ""

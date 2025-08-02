@@ -100,10 +100,19 @@ fi
 
 echo -e "\n${GREEN}🎉 环境变量配置完成！${NC}"
 echo -e "\n${BLUE}📋 配置摘要：${NC}"
-echo "   • 前端服务：http://localhost (端口80)"
-echo "   • 后端服务：http://localhost:1337"
-echo "   • 搜索引擎：http://localhost:7700"
-echo "   • 数据库：localhost:5432"
+
+# 从刚刚配置的环境变量中读取值显示
+frontend_domain=${FRONTEND_DOMAIN:-localhost}
+frontend_port=${FRONTEND_PORT:-80}
+backend_domain=${BACKEND_DOMAIN:-localhost}
+backend_port=${BACKEND_PORT:-1337}
+search_port=${SEARCH_PORT:-7700}
+db_port=${DB_PORT:-5432}
+
+echo "   • 前端服务：http://${frontend_domain}$([ "$frontend_port" != "80" ] && echo ":$frontend_port")"
+echo "   • 后端服务：http://${backend_domain}:${backend_port}"
+echo "   • 搜索引擎：http://${backend_domain}:${search_port}"
+echo "   • 数据库：${backend_domain}:${db_port}"
 
 echo -e "\n${YELLOW}💡 提示：${NC}"
 echo "   • 生产环境请修改相应的URL和安全配置"

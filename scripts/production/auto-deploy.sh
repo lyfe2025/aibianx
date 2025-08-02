@@ -375,7 +375,7 @@ verify_deployment() {
     sleep 5
     
     # 检查前端
-    FRONTEND_CHECK_URL="${FRONTEND_URL:-http://localhost}"
+    FRONTEND_CHECK_URL="${FRONTEND_URL}"
     if curl -f "$FRONTEND_CHECK_URL" &>/dev/null; then
         log_success "前端服务 - 响应正常 ($FRONTEND_CHECK_URL)"
     else
@@ -383,7 +383,7 @@ verify_deployment() {
     fi
     
     # 检查后端
-    BACKEND_CHECK_URL="${BACKEND_URL:-http://localhost:1337}"
+    BACKEND_CHECK_URL="${BACKEND_URL}"
     if curl -f "$BACKEND_CHECK_URL" &>/dev/null; then
         log_success "后端服务 - 响应正常 ($BACKEND_CHECK_URL)"
     else
@@ -413,8 +413,8 @@ show_deployment_result() {
     echo "   API文档: https://$DEPLOY_DOMAIN/documentation"
     echo ""
     echo -e "${CYAN}📧 邮件系统:${NC}"
-    echo "   管理界面: https://$DEPLOY_MAIL_DOMAIN:8080"
-    echo "   WebMail: https://$DEPLOY_MAIL_DOMAIN/webmail"
+    echo "   管理界面: https://$DEPLOY_MAIL_DOMAIN:8080/billion"
+    echo "   WebMail: https://$DEPLOY_MAIL_DOMAIN:8080/roundcube"
     echo ""
     echo -e "${CYAN}💡 管理命令:${NC}"
     echo "   查看状态: $PROJECT_DIR/scripts.sh production status"
