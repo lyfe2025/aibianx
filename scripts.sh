@@ -15,24 +15,49 @@ NC='\033[0m'
 
 # 显示主菜单
 show_menu() {
+    # 动态读取配置信息
+    local domain="localhost"
+    local deploy_mode="dev"
+    if [ -f "deployment/config/deploy.conf" ]; then
+        domain=$(grep "^DOMAIN=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "localhost")
+        deploy_mode=$(grep "^DEPLOY_MODE=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "dev")
+    fi
+    
+    # 根据模式设置协议
+    local protocol="http"
+    if [ "$deploy_mode" = "production" ]; then
+        protocol="https"
+    fi
+    
     echo -e "${CYAN}🚀 AI变现之路 - 极简管理工具${NC}"
-    echo "=================================="
+    echo "===================================="
+    echo -e "${GREEN}📍 当前环境: ${deploy_mode} | 域名: ${domain}${NC}"
     echo ""
+    
     echo -e "${BLUE}📋 核心功能:${NC}"
-    echo "  1) 🔧 极简一键配置"
-    echo "  2) 🚀 启动完整环境"
-    echo "  3) 🛑 停止所有服务"
-    echo "  4) 📦 备份管理"
-    echo "  5) 🔍 系统状态"
+    echo "  1) 🔧 极简一键配置        ⚙️  生成所有环境变量，恢复备份数据"
+    echo "  2) 🚀 启动完整环境        🌐 启动前端+后端+数据库+搜索+邮件"
+    echo "  3) 🛑 停止所有服务        🔴 安全停止所有Docker容器"
+    echo "  4) 📦 备份管理           💾 查看/创建/恢复/验证备份文件"
+    echo "  5) 🔍 系统状态           📊 检查所有服务运行状态"
     echo ""
+    
     echo -e "${BLUE}🛠️ 开发工具:${NC}"
-    echo "  6) 📊 代码质量检查"
-    echo "  7) 🔍 搜索引擎管理"
-    echo "  8) 📧 邮件系统管理"
+    echo "  6) 📊 代码质量检查        🔎 ESLint+硬编码+环境检查"
+    echo "  7) 🔍 搜索引擎管理        🎯 MeiliSearch索引管理"
+    echo "  8) 📧 邮件系统管理        📬 BillionMail服务检查"
     echo ""
-    echo -e "${BLUE}📚 帮助和支持:${NC}"
-    echo "  h) 📖 显示详细帮助"
-    echo "  q) 🚪 退出"
+    
+    echo -e "${BLUE}🌐 系统访问地址:${NC}"
+    echo "  🌍 前端网站: ${protocol}://${domain}"
+    echo "  ⚙️  后端管理: ${protocol}://${domain}:1337/admin"
+    echo "  🔍 搜索管理: http://${domain}:7700"
+    echo "  📧 邮件管理: ${protocol}://${domain}:8080"
+    echo ""
+    
+    echo -e "${BLUE}📚 快捷操作:${NC}"
+    echo "  h) 📖 显示详细帮助        💡 命令行用法和配置说明"
+    echo "  q) 🚪 退出              👋 安全退出管理工具"
     echo ""
 }
 
@@ -72,34 +97,69 @@ execute_choice() {
     case "$choice" in
         "1")
             echo -e "${BLUE}🔧 执行极简一键配置...${NC}"
-            exec "$SCRIPT_DIR/scripts/tools/simple-deploy.sh"
+            echo ""
+            "$SCRIPT_DIR/scripts/tools/simple-deploy.sh"
+            echo ""
+            echo -n -e "${YELLOW}配置完成！按回车键返回主菜单...${NC}"
+            read
+            return 1
             ;;
         "2")
             echo -e "${BLUE}🚀 启动完整环境...${NC}"
-            exec "$SCRIPT_DIR/scripts/deployment/start-dev.sh"
+            echo ""
+            "$SCRIPT_DIR/scripts/deployment/start-dev.sh"
+            echo ""
+            echo -n -e "${YELLOW}启动完成！按回车键返回主菜单...${NC}"
+            read
+            return 1
             ;;
         "3")
             echo -e "${BLUE}🛑 停止所有服务...${NC}"
-            exec "$SCRIPT_DIR/scripts/deployment/stop-dev.sh"
+            echo ""
+            "$SCRIPT_DIR/scripts/deployment/stop-dev.sh"
+            echo ""
+            echo -n -e "${YELLOW}停止完成！按回车键返回主菜单...${NC}"
+            read
+            return 1
             ;;
         "4")
             backup_menu
             ;;
         "5")
             echo -e "${BLUE}📊 检查系统状态...${NC}"
-            exec "$SCRIPT_DIR/scripts/tools/status.sh"
+            echo ""
+            "$SCRIPT_DIR/scripts/tools/status.sh"
+            echo ""
+            echo -n -e "${YELLOW}状态检查完成！按回车键返回主菜单...${NC}"
+            read
+            return 1
             ;;
         "6")
             echo -e "${BLUE}📊 执行代码质量检查...${NC}"
-            exec "$SCRIPT_DIR/scripts/tools/pre-commit-check.sh"
+            echo ""
+            "$SCRIPT_DIR/scripts/tools/pre-commit-check.sh"
+            echo ""
+            echo -n -e "${YELLOW}质量检查完成！按回车键返回主菜单...${NC}"
+            read
+            return 1
             ;;
         "7")
             echo -e "${BLUE}🔍 打开搜索引擎管理...${NC}"
-            exec "$SCRIPT_DIR/scripts/search/manage-meilisearch.sh"
+            echo ""
+            "$SCRIPT_DIR/scripts/search/manage-meilisearch.sh"
+            echo ""
+            echo -n -e "${YELLOW}搜索管理完成！按回车键返回主菜单...${NC}"
+            read
+            return 1
             ;;
         "8")
             echo -e "${BLUE}📧 检查邮件系统...${NC}"
-            exec "$SCRIPT_DIR/scripts/billionmail/check-billionmail.sh"
+            echo ""
+            "$SCRIPT_DIR/scripts/billionmail/check-billionmail.sh"
+            echo ""
+            echo -n -e "${YELLOW}邮件检查完成！按回车键返回主菜单...${NC}"
+            read
+            return 1
             ;;
         "h"|"H")
             show_help
@@ -121,17 +181,18 @@ execute_choice() {
 
 # 备份管理菜单
 backup_menu() {
-    echo ""
-    echo -e "${CYAN}📦 备份管理${NC}"
-    echo "========================="
-    echo "  1) 📋 查看可用备份"
-    echo "  2) 🗄️ 创建完整备份"
-    echo "  3) 🔄 从备份恢复"
-    echo "  4) ✅ 验证备份文件"
-    echo "  0) 🔙 返回主菜单"
-    echo ""
-    echo -n -e "${YELLOW}请选择: ${NC}"
-    read -r backup_choice
+    while true; do
+        echo ""
+        echo -e "${CYAN}📦 备份管理${NC}"
+        echo "========================="
+        echo "  1) 📋 查看可用备份"
+        echo "  2) 🗄️ 创建完整备份"
+        echo "  3) 🔄 从备份恢复"
+        echo "  4) ✅ 验证备份文件"
+        echo "  0) 🔙 返回主菜单"
+        echo ""
+        echo -n -e "${YELLOW}请选择: ${NC}"
+        read -r backup_choice
     
     case "$backup_choice" in
         "1")
@@ -148,17 +209,29 @@ backup_menu() {
             ;;
         "2")
             echo -e "${BLUE}🗄️ 创建完整备份...${NC}"
-            exec "$SCRIPT_DIR/scripts/backup/backup-strapi.sh"
+            echo ""
+            "$SCRIPT_DIR/scripts/backup/backup-strapi.sh"
+            echo ""
+            echo -n -e "${YELLOW}备份完成！按回车键继续...${NC}"
+            read
             ;;
         "3")
             echo -e "${BLUE}🔄 使用配置文件中的备份版本恢复...${NC}"
-            exec "$SCRIPT_DIR/scripts/tools/simple-deploy.sh"
+            echo ""
+            "$SCRIPT_DIR/scripts/tools/simple-deploy.sh"
+            echo ""
+            echo -n -e "${YELLOW}恢复完成！按回车键继续...${NC}"
+            read
             ;;
         "4")
             echo -n -e "${YELLOW}请输入备份文件路径: ${NC}"
             read -r backup_file
             if [ -n "$backup_file" ]; then
-                exec "$SCRIPT_DIR/scripts/backup/verify-backup.sh" "$backup_file"
+                echo ""
+                "$SCRIPT_DIR/scripts/backup/verify-backup.sh" "$backup_file"
+                echo ""
+                echo -n -e "${YELLOW}验证完成！按回车键继续...${NC}"
+                read
             fi
             ;;
         "0")
@@ -166,9 +239,11 @@ backup_menu() {
             ;;
         *)
             echo -e "${RED}❌ 无效选择${NC}"
-            return 1
+            echo -n -e "${YELLOW}按回车键继续...${NC}"
+            read
             ;;
     esac
+    done
 }
 
 # 命令行模式处理
