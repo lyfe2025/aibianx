@@ -1,0 +1,162 @@
+# 部署自动化专用规则文件
+
+## 🚨 **核心原则：绝对禁止硬编码**
+
+### **🔧 配置来源优先级（强制执行）**
+1. **Level 1**: `deployment/config/deploy.conf` - 主配置文件
+2. **Level 2**: `scripts/tools/load-config.sh` - 配置加载工具
+3. **Level 3**: 环境变量 - 运行时覆盖
+4. **❌ 禁止**: 脚本中直接写死任何URL、端口、路径
+
+### **📋 动态配置获取规范**
+
+#### **🔧 脚本开头必须包含配置加载**
+```bash
+#!/bin/bash
+# 强制加载配置系统
+source "$(dirname "$0")/tools/load-config.sh" || {
+    echo "❌ 无法加载配置系统"
+    exit 1
+}
+```
+
+#### **🌐 URL和地址动态构建**
+```bash
+# ✅ 正确方式 - 动态构建
+FRONTEND_URL="${PROTOCOL}://${DOMAIN}:${FRONTEND_PORT:-80}"
+BACKEND_URL="${PROTOCOL}://${DOMAIN}:${BACKEND_PORT:-1337}"
+SEARCH_URL="${PROTOCOL}://${DOMAIN}:${SEARCH_PORT:-7700}"
+BILLIONMAIL_ADMIN_URL="$(build_billionmail_url "/billion")"
+BILLIONMAIL_WEBMAIL_URL="$(build_billionmail_url "/roundcube")"
+
+# ❌ 错误方式 - 硬编码
+# FRONTEND_URL="http://localhost"  # 禁止！
+```
+
+#### **📂 路径动态获取**
+```bash
+# ✅ 正确方式 - 相对路径计算
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+CONFIG_FILE="$PROJECT_ROOT/deployment/config/deploy.conf"
+
+# ❌ 错误方式 - 绝对路径硬编码
+# CONFIG_FILE="/Volumes/wwx/dev/WebProjects/aibianx/deployment/config/deploy.conf"  # 禁止！
+```
+
+### **🛠️ 现有工具利用规范**
+
+#### **基础环境安装工具利用**
+- **已有工具**: `scripts/production/install-environment.sh`
+- **检查工具**: `scripts/tools/check-dependencies.sh`
+- **强制要求**: 新脚本必须调用现有工具，不重复造轮子
+
+```bash
+# ✅ 正确方式 - 利用现有工具
+if ! "$PROJECT_ROOT/scripts/tools/check-dependencies.sh"; then
+    echo "🔧 发现缺失依赖，尝试自动安装..."
+    if [ -f "$PROJECT_ROOT/scripts/production/install-environment.sh" ]; then
+        "$PROJECT_ROOT/scripts/production/install-environment.sh"
+    fi
+fi
+```
+
+#### **配置生成工具利用**
+```bash
+# ✅ 利用现有配置生成
+"$PROJECT_ROOT/deployment/configure-unified-env.sh"
+```
+
+### **📦 一键部署脚本架构规范**
+
+#### **🎯 bootstrap.sh 标准结构**
+```bash
+#!/bin/bash
+# 1. 环境检查 (利用现有tools)
+# 2. 项目克隆 (动态获取仓库URL)
+# 3. 配置加载 (调用load-config.sh)
+# 4. 依赖安装 (调用install-environment.sh)
+# 5. 项目配置 (调用scripts.sh deploy config)
+# 6. 项目启动 (调用scripts.sh deploy start)
+# 7. 状态显示 (调用show-all-services.sh)
+```
+
+#### **⚙️ 配置参数从deploy.conf读取**
+```bash
+# deploy.conf中的参数
+REPO_URL=https://github.com/lyfe2025/aibianx.git
+DOMAIN=localhost
+MAIL_DOMAIN=localhost
+DEPLOY_MODE=dev
+```
+
+### **🚨 违规检查清单**
+
+#### **❌ 绝对禁止的硬编码**
+- [ ] URL地址硬编码 (如 `http://localhost:8080`)
+- [ ] 端口号硬编码 (如 `:1337`, `:80`)
+- [ ] 绝对路径硬编码 (如 `/Volumes/wwx/dev/...`)
+- [ ] GitHub仓库地址硬编码
+- [ ] 用户名/组织名硬编码
+
+#### **✅ 强制要求使用**
+- [ ] `load-config.sh` 配置加载
+- [ ] `build_billionmail_url()` 函数
+- [ ] `scripts/production/install-environment.sh` 依赖安装
+- [ ] `scripts/tools/check-dependencies.sh` 依赖检查
+- [ ] `deployment/configure-unified-env.sh` 环境配置
+
+### **🔄 脚本重构检查流程**
+
+#### **Step 1: 硬编码识别**
+```bash
+# 检查脚本中的硬编码
+grep -n "localhost\|127.0.0.1\|:80\|:1337\|:8080\|/Volumes" script.sh
+```
+
+#### **Step 2: 配置文件检查**
+```bash
+# 确认配置文件存在且完整
+cat deployment/config/deploy.conf | grep -E "DOMAIN|PORT|URL"
+```
+
+#### **Step 3: 动态加载验证**
+```bash
+# 验证配置加载是否正常
+source scripts/tools/load-config.sh
+echo "FRONTEND_URL: $FRONTEND_URL"
+echo "BACKEND_URL: $BACKEND_URL"
+```
+
+### **📝 文档记录要求**
+
+每次创建或修改部署脚本时，必须记录：
+1. **使用的配置参数** - 在deploy.conf中的对应项
+2. **调用的现有工具** - 避免重复开发
+3. **动态URL构建方法** - 确保环境适配性
+4. **错误处理机制** - 配置缺失时的处理
+
+### **🎯 最佳实践示例**
+
+#### **完全动态的bootstrap.sh头部**
+```bash
+#!/bin/bash
+set -e
+
+# 动态获取项目信息 (从配置文件或环境变量)
+PROJECT_NAME="${PROJECT_NAME:-aibianx}"
+REPO_ORG="${REPO_ORG:-lyfe2025}"
+REPO_URL="${REPO_URL:-https://github.com/${REPO_ORG}/${PROJECT_NAME}.git}"
+
+# 动态路径计算
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# 利用现有工具
+source "$PROJECT_ROOT/scripts/tools/load-config.sh" 2>/dev/null || {
+    # 如果在项目外运行，克隆后再加载配置
+    echo "ℹ️ 项目尚未克隆，将在克隆后加载配置"
+}
+```
+
+这样确保了脚本的完全可移植性和可配置性！

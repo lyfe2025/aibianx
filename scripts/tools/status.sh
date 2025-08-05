@@ -6,13 +6,8 @@
 source "$(dirname "$0")/load-config.sh"
 load_config
 
-# 颜色定义
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-NC='\033[0m' # No Color
+# 加载颜色支持
+source "$(dirname "$0")/colors.sh"
 
 echo -e "${BLUE}📊 AI变现之路 - 服务状态检查${NC}"
 echo -e "${BLUE}===============================${NC}"

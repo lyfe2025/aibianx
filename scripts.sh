@@ -5,13 +5,22 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# 颜色定义
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-CYAN='\033[0;36m'
-NC='\033[0m'
+# 颜色定义 - 检测终端是否支持颜色
+if [ -t 1 ] && [ -n "$TERM" ] && [ "$TERM" != "dumb" ]; then
+    GREEN='\033[0;32m'
+    BLUE='\033[0;34m'
+    YELLOW='\033[1;33m'
+    RED='\033[0;31m'
+    CYAN='\033[0;36m'
+    NC='\033[0m'
+else
+    GREEN=''
+    BLUE=''
+    YELLOW=''
+    RED=''
+    CYAN=''
+    NC=''
+fi
 
 # 显示主菜单
 show_menu() {
@@ -40,7 +49,7 @@ show_menu() {
     echo "  3) 🛑 停止所有服务        🔴 安全停止所有Docker容器"
     echo "  4) 📦 备份管理           💾 查看/创建/恢复/验证备份文件"
     echo "  5) 🔍 系统状态           📊 检查所有服务运行状态"
-    echo "  9) 🌐 显示所有访问地址    🔗 完整服务状态+动态访问地址"
+    echo "  9) 🌐 显示所有访问地址    🔗 查看完整的系统访问地址和服务状态"
     echo ""
     
     echo -e "${BLUE}🛠️ 开发工具:${NC}"
@@ -69,16 +78,7 @@ show_menu() {
         email_port=$(grep "^BILLIONMAIL_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080")
     fi
     
-    echo -e "${BLUE}🌐 系统访问地址:${NC}"
-    if [ "$frontend_port" = "80" ]; then
-        echo "  🌍 前端网站: ${protocol}://${domain}"
-    else
-        echo "  🌍 前端网站: ${protocol}://${domain}:${frontend_port}"
-    fi
-    echo "  ⚙️  后端管理: ${protocol}://${domain}:${backend_port}/admin"
-    echo "  🔍 搜索管理: http://${domain}:${search_port}"
-    echo "  📧 邮件管理: ${protocol}://${domain}:${email_port}/billion"
-    echo ""
+
     
     echo -e "${BLUE}📚 快捷操作:${NC}"
     echo "  h) 📖 显示详细帮助        💡 命令行用法和配置说明"
@@ -108,8 +108,9 @@ show_help() {
     echo "  🔄 备份版本: latest 或 YYYYMMDD_HHMMSS"
     echo ""
     echo -e "${BLUE}🌐 访问地址:${NC}"
-    echo "  💡 动态获取所有访问地址: ./scripts.sh tools services"
-    echo "  💡 或在启动后自动显示完整的服务状态和地址"
+    echo "  🔗 主菜单选项9: 查看所有系统访问地址和服务状态"
+    echo "  📊 命令行模式: ./scripts.sh tools services"
+    echo "  💡 启动服务后会自动显示完整的访问地址"
     echo ""
 }
 

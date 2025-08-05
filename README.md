@@ -25,6 +25,7 @@
 |------|------|------|
 | 🎯 **极简配置** | 单文件配置 `deploy.conf` | 减少90%配置复杂度 |
 | 🔄 **智能部署** | 一键自动化部署流程 | 从零到生产仅需5分钟 |
+| 🚫 **零硬编码** | 完全动态配置架构 | 跨环境无缝迁移 |
 | 🛡️ **安全可靠** | 内置安全最佳实践 | 企业级安全标准 |
 | 📦 **开箱即用** | 完整功能生态系统 | 无需额外集成 |
 | 🔧 **灵活扩展** | 模块化架构设计 | 轻松定制和扩展 |
@@ -100,16 +101,17 @@ graph TB
 #### 方式一：一键部署（推荐）
 ```bash
 # 一键安装并启动完整系统
-bash <(curl -s https://raw.githubusercontent.com/你的用户名/aibianx/master/scripts/bootstrap.sh)
+bash <(curl -s https://raw.githubusercontent.com/lyfe2025/aibianx/master/scripts/bootstrap.sh)
 ```
 
 #### 方式二：手动部署
 ```bash
 # 1. 克隆项目
-git clone https://github.com/你的用户名/aibianx.git && cd aibianx
+git clone https://github.com/lyfe2025/aibianx.git && cd aibianx
 
-# 2. 一键配置启动
-./scripts.sh deploy start
+# 2. 配置和启动系统
+./scripts.sh deploy config    # 先配置
+./scripts.sh deploy start     # 再启动
 ```
 
 ### ⚙️ **详细部署流程**
@@ -119,7 +121,7 @@ git clone https://github.com/你的用户名/aibianx.git && cd aibianx
 
 #### 📋 **Step 1: 项目克隆**
 ```bash
-git clone https://github.com/你的用户名/aibianx.git
+git clone https://github.com/lyfe2025/aibianx.git
 cd aibianx
 ```
 
@@ -132,6 +134,11 @@ DEPLOY_MODE=dev                     # 部署模式: dev | production
 DOMAIN=localhost                    # 主域名
 MAIL_DOMAIN=localhost              # 邮件域名
 
+# 📦 仓库配置 (一键部署使用)
+REPO_ORG=lyfe2025                  # GitHub组织/用户名
+PROJECT_NAME=aibianx               # 项目名称
+REPO_URL=https://github.com/${REPO_ORG}/${PROJECT_NAME}.git
+
 # 🔐 安全配置  
 DB_ADMIN_PASSWORD=aibianx_2024     # 数据库管理员密码
 BILLIONMAIL_USERNAME=admin         # 邮件系统用户名
@@ -142,6 +149,12 @@ BACKUP_VERSION=latest              # 备份版本选择
 AUTO_RESTORE_BACKUP=true           # 自动数据恢复
 AUTO_DEPLOY_SEARCH=true            # 自动搜索引擎
 AUTO_DEPLOY_EMAIL=true             # 自动邮件系统
+
+# 🌐 端口配置 (可选，使用默认值)
+FRONTEND_PORT=80                   # 前端端口
+BACKEND_PORT=1337                  # 后端端口  
+MEILISEARCH_PORT=7700              # 搜索引擎端口
+BILLIONMAIL_PORT=8080              # 邮件系统端口
 ```
 
 #### 🔧 **Step 3: 系统配置**
@@ -155,8 +168,9 @@ AUTO_DEPLOY_EMAIL=true             # 自动邮件系统
 # 启动完整系统
 ./scripts.sh deploy start
 
-# 检查系统状态
+# 检查系统状态和访问地址
 ./scripts.sh tools status
+./scripts.sh tools services    # 查看所有服务访问地址
 ```
 
 </details>
@@ -167,12 +181,17 @@ AUTO_DEPLOY_EMAIL=true             # 自动邮件系统
 
 ### 🎯 **服务访问面板**
 
-| 服务 | 地址 | 说明 | 状态检查 |
+> **💡 提示**: 部署完成后，运行 `./scripts.sh tools services` 获取最新的访问地址
+
+| 服务 | 开发环境地址 | 说明 | 状态检查 |
 |------|------|------|----------|
 | 🌐 **前端网站** | [http://localhost](http://localhost) | 用户访问界面 | `curl localhost` |
 | ⚙️ **后端管理** | [http://localhost:1337/admin](http://localhost:1337/admin) | Strapi管理后台 | `curl localhost:1337/admin` |
 | 🔍 **搜索引擎** | [http://localhost:7700](http://localhost:7700) | MeiliSearch控制台 | `curl localhost:7700/health` |
-| 📧 **邮件系统** | [http://localhost:8080](http://localhost:8080) | BillionMail管理界面 | `curl localhost:8080` |
+| 📧 **邮件管理** | [http://localhost:8080/billion](http://localhost:8080/billion) | BillionMail管理界面 | `curl localhost:8080/billion` |
+| 📮 **WebMail** | [http://localhost:8080/roundcube](http://localhost:8080/roundcube) | 邮件收发界面 | `curl localhost:8080/roundcube` |
+
+**📝 注意**: 生产环境地址将根据 `deployment/config/deploy.conf` 中的域名配置自动调整
 
 </div>
 
@@ -186,7 +205,7 @@ AUTO_DEPLOY_EMAIL=true             # 自动邮件系统
   - 建议账号: `admin` / `admin@aibianx.com`
 
 - **BillionMail邮件系统**
-  - 访问: http://localhost:8080  
+  - 访问: http://localhost:8080/billion  
   - 默认账号: `admin` / `billionmail2024`
 
 - **MeiliSearch搜索**
@@ -258,13 +277,14 @@ aibianx/
 
 ### 🚀 **部署管理**
 ```bash
-# 💡 快速启动（新手推荐）
-./scripts.sh deploy start       # 一键启动完整环境
+# 💡 完整部署流程（推荐）
+./scripts.sh deploy config      # 1. 先配置所有服务
+./scripts.sh deploy start       # 2. 再启动完整环境
 
-# 🔧 高级管理
-./scripts.sh deploy config      # 配置所有服务
+# 🔧 服务管理
 ./scripts.sh deploy stop        # 停止所有服务  
 ./scripts.sh deploy restart     # 重启所有服务
+./scripts.sh tools services     # 查看所有服务访问地址
 ```
 
 ### 📊 **系统监控**
@@ -304,7 +324,8 @@ aibianx/
 # 📧 邮件服务
 ./scripts.sh email deploy       # 部署邮件系统
 ./scripts.sh email check        # 检查邮件状态
-./scripts.sh email admin        # 邮件管理界面
+./scripts.sh email admin        # 打开邮件管理界面
+./scripts.sh billionmail check  # 检查BillionMail状态
 ```
 
 <details>
@@ -403,6 +424,13 @@ aibianx/
 - 🛡️ **数据加密** - 敏感信息安全保护
 - 📝 **操作日志** - 完整的审计追踪
 - 🔍 **安全扫描** - 自动化安全检测
+
+#### ⚙️ **智能配置管理**
+- 🚫 **零硬编码架构** - 所有配置动态读取，无硬编码依赖
+- 📦 **单文件配置** - `deploy.conf` 统一管理所有参数
+- 🔄 **环境自适应** - 开发/生产环境自动切换
+- 🌐 **动态URL构建** - 根据域名和端口自动生成访问地址
+- 🔧 **现有工具优先** - 充分利用已有脚本，避免重复开发
 
 <details>
 <summary><b>🔧 更多技术特性</b></summary>
@@ -534,7 +562,7 @@ flowchart LR
 #### 🚀 **快速开始贡献**
 ```bash
 # 1. 🍴 Fork 并克隆项目
-git clone https://github.com/你的用户名/aibianx.git
+git clone https://github.com/lyfe2025/aibianx.git
 cd aibianx
 
 # 2. 🌿 创建功能分支

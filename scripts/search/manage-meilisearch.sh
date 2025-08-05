@@ -6,14 +6,8 @@ load_config
 # MeiliSearch 管理工具
 # AI变现之路项目 - 搜索引擎管理脚本
 
-# 颜色定义
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-PURPLE='\033[0;35m'
-NC='\033[0m' # No Color
+# 加载颜色支持
+source "$(dirname "$0")/../tools/colors.sh"
 
 echo -e "${BLUE}🔧 === MeiliSearch 管理工具 ===${NC}"
 echo ""
@@ -28,8 +22,8 @@ fi
 show_menu() {
     echo -e "${CYAN}请选择操作:${NC}"
     echo "1) 查看容器状态"
-    echo "2) 查看配置信息     ${PURPLE}[密钥/环境]${NC}"
-    echo "3) 重新生成密钥     ${YELLOW}[自动同步配置]${NC}"
+    echo -e "2) 查看配置信息     ${PURPLE}[密钥/环境]${NC}"
+    echo -e "3) 重新生成密钥     ${YELLOW}[自动同步配置]${NC}"
     echo "4) 重启服务"
     echo "5) 查看实时日志"
     echo "6) 重建搜索索引"

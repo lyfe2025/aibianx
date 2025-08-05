@@ -10,13 +10,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 DEPLOY_CONFIG="$PROJECT_ROOT/deployment/config/deploy.conf"
 
-# 颜色定义
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-CYAN='\033[0;36m'
-NC='\033[0m'
+# 加载颜色支持
+source "$SCRIPT_DIR/colors.sh"
 
 echo -e "${BLUE}🚀 AI变现之路 - 极简一键部署${NC}"
 echo "=================================="
@@ -367,26 +362,7 @@ main() {
     generate_configs
     
     echo ""
-    echo -e "${GREEN}🎉 极简部署配置完成！${NC}"
-    echo ""
-    echo -e "${BLUE}📋 接下来的步骤:${NC}"
-    echo "   1. 🚀 启动服务: ./scripts.sh"
-    echo "      选择: 1) 启动完整环境"
-    echo ""
-    echo "   2. 📱 访问系统:"
-    echo "      🌐 前端网站: $CURRENT_PROTOCOL://$DOMAIN"
-    echo "      ⚙️  后端管理: $CURRENT_PROTOCOL://$DOMAIN:1337/admin"
-    echo "      🔍 搜索管理: $CURRENT_PROTOCOL://$DOMAIN:7700"
-    echo "      📧 邮件管理: $CURRENT_PROTOCOL://$DOMAIN:8080"
-    echo ""
-    echo -e "${YELLOW}💡 首次访问后台时请创建管理员账号:${NC}"
-    echo "   用户名: admin"
-    echo "   邮箱: admin@aibianx.com"
-    echo "   密码: 自己设置"
-    echo ""
-    echo -e "${YELLOW}📧 BillionMail管理员账号:${NC}"
-    echo "   用户名: ${BILLIONMAIL_USERNAME:-admin}"
-    echo "   密码: ${BILLIONMAIL_PASSWORD:-billionmail2024}"
+    echo -e "${GREEN}✅ 极简部署配置完成！${NC}"
 }
 
 # 执行主流程

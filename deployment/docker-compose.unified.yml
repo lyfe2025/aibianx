@@ -110,12 +110,14 @@ services:
     environment:
       - TZ=${TZ}
       - REDISPASS=${REDIS_PASSWORD}
+      - REDIS_HOST=redis  # 连接到统一的Redis服务
+      - REDIS_DB=1        # 使用database=1用于邮件系统
     volumes:
       - ./configs/billionmail/rspamd:/etc/rspamd/local.d
       - ./data/rspamd:/var/lib/rspamd
       - ./data/logs/rspamd:/var/log/rspamd
     depends_on:
-      - redis
+      - redis             # 依赖统一的Redis服务
     networks:
       - integrated-network
 
@@ -133,6 +135,9 @@ services:
       - DBPASS=${POSTGRES_PASSWORD}
       - BILLIONMAIL_HOSTNAME=${MAIL_DOMAIN}
       - REDISPASS=${REDIS_PASSWORD}
+      - DB_HOST=postgres       # 连接到统一的PostgreSQL服务
+      - REDIS_HOST=redis       # 连接到统一的Redis服务
+      - REDIS_DB=1             # 使用database=1用于邮件系统
     volumes:
       - ./configs/billionmail/dovecot:/etc/dovecot
       - ./data/logs/dovecot:/var/log/mail
@@ -145,8 +150,8 @@ services:
       - "110:110"   # POP3
       - "995:995"   # POP3S
     depends_on:
-      - postgres
-      - redis
+      - postgres    # 依赖统一的PostgreSQL服务
+      - redis       # 依赖统一的Redis服务
     networks:
       - integrated-network
 
