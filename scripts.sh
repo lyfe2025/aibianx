@@ -48,11 +48,35 @@ show_menu() {
     echo "  8) 📧 邮件系统管理        📬 BillionMail服务检查"
     echo ""
     
+    # 动态读取端口配置（优先从配置文件读取）
+    local frontend_port="80"
+    local backend_port="1337"
+    local search_port="7700"
+    local email_port="8080"
+    
+    # 优先从配置文件读取
+    if [ -f "deployment/config/deploy.conf" ]; then
+        frontend_port=$(grep "^FRONTEND_PORT=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "80")
+        backend_port=$(grep "^BACKEND_PORT=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "1337")
+        search_port=$(grep "^MEILISEARCH_PORT=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "7700")
+        email_port=$(grep "^BILLIONMAIL_PORT=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080")
+    # 后备：从生成的环境文件读取
+    elif [ -f "backend/.env" ]; then
+        frontend_port=$(grep "^FRONTEND_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "80")
+        backend_port=$(grep "^BACKEND_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "1337")
+        search_port=$(grep "^MEILISEARCH_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "7700")
+        email_port=$(grep "^BILLIONMAIL_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080")
+    fi
+    
     echo -e "${BLUE}🌐 系统访问地址:${NC}"
-    echo "  🌍 前端网站: ${protocol}://${domain}"
-    echo "  ⚙️  后端管理: ${protocol}://${domain}:1337/admin"
-    echo "  🔍 搜索管理: http://${domain}:7700"
-    echo "  📧 邮件管理: ${protocol}://${domain}:8080"
+    if [ "$frontend_port" = "80" ]; then
+        echo "  🌍 前端网站: ${protocol}://${domain}"
+    else
+        echo "  🌍 前端网站: ${protocol}://${domain}:${frontend_port}"
+    fi
+    echo "  ⚙️  后端管理: ${protocol}://${domain}:${backend_port}/admin"
+    echo "  🔍 搜索管理: http://${domain}:${search_port}"
+    echo "  📧 邮件管理: ${protocol}://${domain}:${email_port}"
     echo ""
     
     echo -e "${BLUE}📚 快捷操作:${NC}"
