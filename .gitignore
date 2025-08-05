@@ -199,3 +199,33 @@ backend/meilisearch
 backend/meilisearch_data/
 meilisearch
 meilisearch_data/
+
+# ===== 部署相关 =====
+# 部署运行时数据（包含数据库、日志、用户数据等）
+deployment/data/
+deployment/logs/
+deployment/ssl/
+deployment/backups/
+
+# BillionMail 邮件系统数据
+BillionMail/logs/
+BillionMail/data/
+BillionMail/core-data/
+BillionMail/postfix-data/
+BillionMail/postgresql-data/
+BillionMail/postgresql-socket/
+BillionMail/redis-data/
+BillionMail/rspamd-data/
+BillionMail/vmail-data/
+BillionMail/webmail-data/
+BillionMail/php-sock/
+BillionMail/ssl/
+BillionMail/ssl-self-signed/
+
+# Docker 卷和持久化数据
+postgres-data/
+redis-data/
+uploads-data/
+
+# 环境配置备份文件
+*.backup.*

@@ -198,7 +198,7 @@ deploy_billionmail() {
         if [ $? -eq 0 ]; then
             echo "✅ BillionMail部署成功"
             echo "   🌐 管理界面: ${BILLIONMAIL_WEB}"
-            echo "   📧 WebMail: ${BILLIONMAIL_URL}/webmail"
+            echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
             echo "   🔐 管理员: admin / (查看deployment/.env)"
         else
             echo "❌ BillionMail部署失败，请检查Docker状态"

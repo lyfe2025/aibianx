@@ -128,15 +128,15 @@ echo -e "${SEARCH_STATUS} 🔍 搜索管理: ${SEARCH_URL}"
 echo -e "    📝 MeiliSearch管理界面、索引管理"
 
 # 邮件系统访问地址
-EMAIL_URL="${PROTOCOL}://${DOMAIN}:${BILLIONMAIL_PORT}"
+EMAIL_URL="${PROTOCOL}://${DOMAIN}:${BILLIONMAIL_PORT}/billion"
 echo -e "${EMAIL_STATUS} 📧 邮件管理: ${EMAIL_URL}"
 echo -e "    📝 BillionMail邮件营销系统管理"
 
 # WebMail地址 (BillionMail集成)
 if [ "$DEPLOY_MODE" = "production" ]; then
-    WEBMAIL_URL="https://${MAIL_DOMAIN}/webmail"
+    WEBMAIL_URL="https://${MAIL_DOMAIN}/roundcube"
 else
-    WEBMAIL_URL="http://${DOMAIN}:${BILLIONMAIL_PORT}/webmail"
+    WEBMAIL_URL="http://${DOMAIN}:${BILLIONMAIL_PORT}/roundcube"
 fi
 echo -e "${EMAIL_STATUS} 📬 WebMail: ${WEBMAIL_URL}"
 echo -e "    📝 邮件收发、邮箱管理"

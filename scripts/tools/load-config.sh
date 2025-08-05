@@ -93,6 +93,7 @@ load_config() {
     export -f build_frontend_url
     export -f build_backend_url  
     export -f build_search_url
+    export -f build_billionmail_url
 
     # 构建常用URL
     export FRONTEND_URL=$(build_frontend_url)
@@ -102,6 +103,8 @@ load_config() {
     export BACKEND_DOCS_URL=$(build_backend_url "/documentation")
     export SEARCH_URL=$(build_search_url)
     export SEARCH_HEALTH_URL=$(build_search_url "/health")
+    export BILLIONMAIL_ADMIN_URL=$(build_billionmail_url "/billion")
+    export BILLIONMAIL_WEBMAIL_URL=$(build_billionmail_url "/roundcube")
 
     # 数据库工具函数
     build_psql_command() {
@@ -130,6 +133,8 @@ load_config() {
         echo "   • 后端服务: $BACKEND_URL"
         echo "   • 后端管理: $BACKEND_ADMIN_URL"
         echo "   • 搜索引擎: $SEARCH_URL"
+        echo "   • 邮件管理: $BILLIONMAIL_ADMIN_URL"
+        echo "   • WebMail: $BILLIONMAIL_WEBMAIL_URL"
         echo "   • 数据库: $DB_HOST:$DB_PORT"
     fi
 }
