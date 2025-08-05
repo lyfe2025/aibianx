@@ -271,9 +271,16 @@ deploy_billionmail() {
 # 调用MeiliSearch部署
 deploy_meilisearch
 
-# 调用BillionMail部署 (如果启用)
+# 调用BillionMail部署 (如果启用) - 添加错误处理，不阻断前后端启动
 if [ "${AUTO_DEPLOY_BILLIONMAIL:-true}" = "true" ]; then
-    deploy_billionmail
+    echo "📧 检查BillionMail邮件系统..."
+    if deploy_billionmail 2>/dev/null; then
+        echo "✅ BillionMail部署检查完成"
+    else
+        echo "⚠️  BillionMail部署跳过（不影响前后端服务启动）"
+    fi
+else
+    echo "📧 BillionMail部署已禁用"
 fi
 
 # 检查PostgreSQL服务
@@ -314,7 +321,7 @@ verify_database() {
         else
             echo "❌ 无法连接到数据库: $DATABASE_NAME"
             echo "💡 请检查数据库配置或使用 scripts/database/check-database.sh 检查"
-            exit 1
+            echo "⚠️  将继续启动前后端服务，但可能无法正常运行"
         fi
     else
         # 切换到SQLite配置
@@ -350,7 +357,7 @@ if [ ! -f "frontend/.env.local" ] || [ ! -f "backend/.env" ]; then
     echo "⚠️  环境变量文件不完整，正在自动配置..."
     source "$(dirname "$0")/../tools/setup-env.sh" || {
         echo "❌ 自动配置环境变量失败"
-        exit 1
+        echo "⚠️  将使用现有配置继续启动前后端服务"
     }
 else
     echo "✅ 环境变量文件已存在"
@@ -387,6 +394,11 @@ if [ -d ".tmp" ] || [ -d ".cache" ] || [ -d "build" ] || [ -d "dist" ]; then
 else
     echo "   ✅ 无需清除缓存（目录不存在）"
 fi
+
+echo ""
+echo "🚀 === 核心服务启动阶段 ==="
+echo "📋 无论前面检查结果如何，都将尝试启动前后端服务"
+echo ""
 
 # 启动后端服务
 echo "🔄 启动Strapi后端服务..."
