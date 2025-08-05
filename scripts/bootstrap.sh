@@ -275,6 +275,14 @@ deploy_project() {
             print_info "步骤2: 启动系统 (./scripts.sh deploy start)"
             if ./scripts.sh deploy start; then
                 print_success "项目部署完成！"
+                
+                # 步骤3: 修复BillionMail部署问题 (如果存在)
+                print_info "步骤3: 检查并修复BillionMail邮件系统..."
+                if [ -f "scripts/billionmail/fix-billionmail-deployment.sh" ]; then
+                    ./scripts/billionmail/fix-billionmail-deployment.sh
+                else
+                    print_warning "BillionMail修复脚本不存在，跳过邮件系统检查"
+                fi
             else
                 print_warning "启动过程中出现问题，但核心服务可能已运行"
                 print_info "您可以手动检查状态: ./scripts.sh tools status"
