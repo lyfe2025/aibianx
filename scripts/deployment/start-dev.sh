@@ -219,62 +219,60 @@ deploy_meilisearch() {
     fi
 }
 
-# 自动部署BillionMail邮件系统
+# 自动部署BillionMail邮件系统（统一使用独立部署方案）
 deploy_billionmail() {
     echo ""
     echo "📧 检查BillionMail邮件系统..."
     
-    # 检查独立BillionMail服务是否已运行 (优先使用独立部署)
-    if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail"; then
-        echo "✅ 检测到独立BillionMail服务正在运行"
-        echo "   🌐 管理界面: http://${DOMAIN}:${BILLIONMAIL_PORT}/billion"
-        echo "   📧 WebMail: http://${DOMAIN}:${BILLIONMAIL_PORT}/roundcube"
-        echo "   📋 使用独立BillionMail，跳过统一部署"
+    # 只检查独立BillionMail服务 (统一使用独立部署方案)
+    if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
+        echo "✅ BillionMail邮件系统正在运行"
+        echo "   🌐 管理界面: http://${DOMAIN:-localhost}:8080/billion"
+        echo "   📧 WebMail: http://${DOMAIN:-localhost}:8080/roundcube"
+        echo "   📋 服务类型: 独立部署 (推荐)"
         return 0
     fi
     
-    # 检查统一部署的BillionMail容器是否已存在
-    if docker ps -a --format "table {{.Names}}" | grep -q "^aibianx-billionmail-core$"; then
-        # 检查是否正在运行
-        if docker ps --format "table {{.Names}}" | grep -q "^aibianx-billionmail-core$"; then
-            echo "✅ 统一部署BillionMail已运行"
-            echo "   🌐 管理界面: ${BILLIONMAIL_WEB}"
+    # 如果没有运行，尝试启动独立BillionMail
+    if [ -d "BillionMail" ] && [ -f "BillionMail/docker-compose.yml" ]; then
+        echo "🚀 启动BillionMail邮件系统..."
+        cd BillionMail
+        
+        # 清理可能存在的冲突容器
+        docker-compose down > /dev/null 2>&1
+        
+        # 启动独立BillionMail
+        docker-compose up -d > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            # 等待服务启动
+            echo "   ⏳ 等待BillionMail服务启动..."
+            local count=0
+            while [ $count -lt 10 ]; do
+                if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
+                    echo "   ✅ BillionMail启动成功"
+                    echo "   🌐 管理界面: http://${DOMAIN:-localhost}:8080/billion"
+                    echo "   📧 WebMail: http://${DOMAIN:-localhost}:8080/roundcube"
+                    echo "   📋 服务类型: 独立部署 (推荐)"
+                    cd ..
+                    return 0
+                fi
+                sleep 1
+                count=$((count + 1))
+            done
+            echo "   ⚠️  BillionMail容器启动较慢，服务可能仍在初始化中"
+            cd ..
             return 0
         else
-            echo "🔄 启动现有统一部署BillionMail容器..."
-            docker start aibianx-billionmail-core > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
-                echo "✅ 统一部署BillionMail启动成功"
-                echo "   🌐 管理界面: ${BILLIONMAIL_URL}"
-                return 0
-            fi
+            echo "   ❌ BillionMail启动失败"
+            cd ..
         fi
-    fi
-    
-    echo "🚀 自动部署BillionMail (容器模式)..."
-    
-    # 检查是否有统一配置和Docker Compose文件
-    if [ -f "deployment/.env" ] && [ -f "deployment/docker-compose.unified.yml" ]; then
-        echo "   📦 使用统一容器部署..."
-        cd deployment
-        
-        # 启动BillionMail相关服务
-        docker-compose -f docker-compose.unified.yml up -d billionmail-core postfix dovecot rspamd webmail > /dev/null 2>&1
-        
-        if [ $? -eq 0 ]; then
-            echo "✅ BillionMail部署成功"
-            echo "   🌐 管理界面: ${BILLIONMAIL_WEB}"
-            echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
-            echo "   🔐 管理员: admin / (查看deployment/.env)"
-        else
-            echo "❌ BillionMail部署失败，请检查Docker状态"
-        fi
-        
-        cd ..
     else
-        echo "⚠️  统一配置文件不存在，跳过BillionMail自动部署"
-        echo "💡 运行 ./scripts/tools/generate-configs.sh 生成配置"
+        echo "⚠️  BillionMail目录不存在"
+        echo "💡 请运行: ./scripts/billionmail/deploy-billionmail.sh"
     fi
+    
+    echo "⚠️  BillionMail服务未运行，但不影响前后端服务启动"
+    return 1
 }
 
 # 调用MeiliSearch部署
