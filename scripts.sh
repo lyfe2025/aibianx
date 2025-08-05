@@ -113,6 +113,7 @@ show_usage() {
     echo -e "${BLUE}🔧 主要类别:${NC}"
     echo "  deploy       - 部署管理 (start, stop, frontend, backend)"
     echo "  db           - 数据库管理 (check, backup, restore)"
+    echo "  restore      - 数据还原 (database, system, verify, list)"
     echo "  search       - 搜索引擎 (deploy, check, restart, manage)"
     echo "  tools        - 开发工具 (status, check-hardcode, pre-commit)"
     echo "  email        - 邮件系统 (deploy, check, admin, test)"
@@ -121,6 +122,8 @@ show_usage() {
     echo ""
     echo -e "${BLUE}💡 快速示例:${NC}"
     echo "  ./scripts.sh deploy start           # 启动开发环境"
+    echo "  ./scripts.sh restore list           # 查看可用备份"
+    echo "  ./scripts.sh restore database [文件] # 还原数据库"
     echo "  ./scripts.sh tools pre-commit       # 代码质量检查"
     echo "  ./scripts.sh search manage          # 搜索管理工具"
     echo "  ./scripts.sh email admin            # 邮件管理界面"
@@ -288,6 +291,54 @@ handle_command_line() {
                 *)
                     echo -e "${RED}❌ 未知的备份操作: $action${NC}"
                     echo "可用操作: full, restore, verify"
+                    exit 1
+                    ;;
+            esac
+            ;;
+        "restore")
+            # 统一的还原入口
+            case "$action" in
+                "database")
+                    if [ $# -eq 0 ]; then
+                        echo -e "${RED}❌ 请提供数据库备份文件路径${NC}"
+                        echo -e "${BLUE}💡 示例: ./scripts.sh restore database backups/database-only/backup_20240101.sql${NC}"
+                        exit 1
+                    fi
+                    exec "$SCRIPT_DIR/scripts/database/restore-database-only.sh" "$@"
+                    ;;
+                "system")
+                    if [ $# -eq 0 ]; then
+                        echo -e "${RED}❌ 请提供系统备份文件路径${NC}"
+                        echo -e "${BLUE}💡 示例: ./scripts.sh restore system backups/strapi_backup_20240101.tar.gz${NC}"
+                        exit 1
+                    fi
+                    exec "$SCRIPT_DIR/scripts/backup/restore-strapi.sh" "$@"
+                    ;;
+                "verify")
+                    if [ $# -eq 0 ]; then
+                        echo -e "${RED}❌ 请提供备份文件路径进行验证${NC}"
+                        exit 1
+                    fi
+                    exec "$SCRIPT_DIR/scripts/backup/verify-backup.sh" "$@"
+                    ;;
+                "list")
+                    echo -e "${BLUE}📋 可用的备份文件：${NC}"
+                    echo ""
+                    echo -e "${YELLOW}数据库备份：${NC}"
+                    find backups/database-only/ -name "*.sql" 2>/dev/null | sort -r | head -10 || echo "  无数据库备份文件"
+                    echo ""
+                    echo -e "${YELLOW}系统备份：${NC}"
+                    find backups/ -name "strapi_backup_*.tar.gz" 2>/dev/null | sort -r | head -10 || echo "  无系统备份文件"
+                    ;;
+                *)
+                    echo -e "${RED}❌ 未知的还原操作: $action${NC}"
+                    echo "可用操作: database, system, verify, list"
+                    echo ""
+                    echo -e "${BLUE}💡 使用示例：${NC}"
+                    echo "  ./scripts.sh restore list             # 查看可用备份"
+                    echo "  ./scripts.sh restore database [文件] # 还原数据库"
+                    echo "  ./scripts.sh restore system [文件]   # 还原整个系统"
+                    echo "  ./scripts.sh restore verify [文件]   # 验证备份文件"
                     exit 1
                     ;;
             esac

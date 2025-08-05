@@ -1,0 +1,81 @@
+{
+    "kind": "collectionType",
+    "collectionName": "categories",
+    "info": {
+        "singularName": "category",
+        "pluralName": "categories",
+        "displayName": "分类",
+        "description": "文章分类管理"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true,
+            "unique": true,
+            "maxLength": 50,
+            "description": "分类名称（必填，唯一，最长50字符）"
+        },
+        "slug": {
+            "type": "uid",
+            "targetField": "name",
+            "required": true,
+            "description": "URL友好的唯一标识符，基于分类名自动生成"
+        },
+        "description": {
+            "type": "text",
+            "maxLength": 300,
+            "description": "分类描述信息（最长300字符，用于分类页面显示）"
+        },
+        "icon": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "分类图标名称或类名（最长50字符）"
+        },
+        "color": {
+            "type": "string",
+            "default": "#8B5CF6",
+            "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+            "description": "分类主题颜色（十六进制格式，如#8B5CF6）"
+        },
+        "featuredImage": {
+            "type": "media",
+            "multiple": false,
+            "required": false,
+            "allowedTypes": [
+                "images"
+            ],
+            "description": "分类特色图片（封面图，仅支持图片格式）"
+        },
+        "sortOrder": {
+            "type": "integer",
+            "default": 0,
+            "description": "分类排序权重（数字越小越靠前，默认为0）"
+        },
+        "featured": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否为特色分类（用于首页推荐显示）"
+        },
+        "seoTitle": {
+            "type": "string",
+            "maxLength": 60,
+            "description": "SEO标题（搜索引擎显示，最长60字符）"
+        },
+        "seoDescription": {
+            "type": "text",
+            "maxLength": 160,
+            "description": "SEO描述（搜索结果摘要，最长160字符）"
+        },
+        "articles": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::article.article",
+            "mappedBy": "category",
+            "description": "该分类下的所有文章"
+        }
+    }
+}

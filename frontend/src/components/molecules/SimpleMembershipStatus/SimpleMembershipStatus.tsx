@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { GradientButton } from '@/components/ui'
+import { useModalStore } from '@/stores'
 
 /**
  * 移动端简化会员状态组件 - SimpleMembershipStatus
@@ -29,6 +29,8 @@ interface SimpleMembershipStatusProps {
 }
 
 export function SimpleMembershipStatus({ className = '' }: SimpleMembershipStatusProps) {
+    const { openModal } = useModalStore()
+    
     // 模拟用户状态 - 后续集成真实API
     const [userStatus] = useState<MembershipStatus>({
         isMember: false,
@@ -65,11 +67,13 @@ export function SimpleMembershipStatus({ className = '' }: SimpleMembershipStatu
                         </span>
                     </div>
                     
-                    <Link href="/membership" className="upgrade-link">
-                        <GradientButton size="sm" className="upgrade-btn">
-                            升级解锁
-                        </GradientButton>
-                    </Link>
+                    <GradientButton 
+                        size="sm" 
+                        className="upgrade-btn upgrade-link"
+                        onClick={() => openModal('membership')}
+                    >
+                        升级解锁
+                    </GradientButton>
                 </div>
             )}
 

@@ -1,0 +1,163 @@
+{
+  "collectionName": "components_system_security_settings_configs",
+  "info": {
+    "displayName": "安全设置",
+    "description": "安全设置配置 - 管理会话、登录限制、IP控制等安全相关配置"
+  },
+  "options": {},
+  "attributes": {
+    "sessionTimeout": {
+      "type": "integer",
+      "default": 2592000,
+      "min": 3600,
+      "max": 31536000,
+      "description": "会话超时时间：用户登录会话的有效期（秒），默认2592000秒（30天）"
+    },
+    "enableRememberMe": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用记住登录：是否允许用户选择「记住我」延长会话时间"
+    },
+    "rememberMeDuration": {
+      "type": "integer",
+      "default": 7776000,
+      "min": 604800,
+      "max": 31536000,
+      "description": "记住我持续时间：选择「记住我」后的会话持续时间（秒），默认90天"
+    },
+    "maxLoginAttempts": {
+      "type": "integer",
+      "default": 5,
+      "min": 3,
+      "max": 10,
+      "description": "最大登录尝试次数：连续登录失败后锁定账号的次数限制"
+    },
+    "accountLockoutDuration": {
+      "type": "integer",
+      "default": 900,
+      "min": 300,
+      "max": 86400,
+      "description": "账号锁定时长：登录失败次数达到上限后的锁定时间（秒），默认900秒（15分钟）"
+    },
+    "enableIpWhitelist": {
+      "type": "boolean",
+      "default": false,
+      "description": "启用IP白名单：是否限制只有白名单IP可以访问管理后台"
+    },
+    "ipWhitelist": {
+      "type": "text",
+      "description": "IP白名单：允许访问的IP地址列表，一行一个。支持单个IP和CIDR格式。例：192.168.1.1"
+    },
+    "enableIpBlacklist": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用IP黑名单：是否启用IP黑名单功能"
+    },
+    "ipBlacklist": {
+      "type": "text",
+      "description": "IP黑名单：禁止访问的IP地址列表，一行一个。支持单个IP和CIDR格式"
+    },
+    "enableRateLimiting": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用频率限制：是否启用API访问频率限制"
+    },
+    "rateLimitWindow": {
+      "type": "integer",
+      "default": 3600,
+      "min": 60,
+      "max": 86400,
+      "description": "频率限制时间窗口：频率限制的时间窗口（秒）"
+    },
+    "rateLimitMax": {
+      "type": "integer",
+      "default": 1000,
+      "min": 100,
+      "max": 10000,
+      "description": "频率限制最大请求数：时间窗口内的最大请求数"
+    },
+    "enableCsrfProtection": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用CSRF保护：是否启用跨站请求伪造保护"
+    },
+    "enableXssProtection": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用XSS保护：是否启用跨站脚本攻击保护"
+    },
+    "enableClickjackingProtection": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用点击劫持保护：是否启用X-Frame-Options保护"
+    },
+    "enableContentTypeNosniff": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用内容类型保护：是否启用X-Content-Type-Options保护"
+    },
+    "enableReferrerPolicy": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用引用策略：是否设置Referrer-Policy头"
+    },
+    "referrerPolicy": {
+      "type": "enumeration",
+      "enum": ["no-referrer", "no-referrer-when-downgrade", "origin", "origin-when-cross-origin", "same-origin", "strict-origin", "strict-origin-when-cross-origin", "unsafe-url"],
+      "default": "strict-origin-when-cross-origin",
+      "description": "引用策略类型：Referrer-Policy的具体策略"
+    },
+    "enablePermissionsPolicy": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用权限策略：是否设置Permissions-Policy头"
+    },
+    "enableSecurityHeaders": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用安全头：是否启用全套安全HTTP头"
+    },
+    "enableAuditLog": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用审计日志：是否记录用户重要操作的审计日志"
+    },
+    "auditLogRetention": {
+      "type": "integer",
+      "default": 90,
+      "min": 30,
+      "max": 365,
+      "description": "审计日志保留天数：审计日志的保存天数"
+    },
+    "enableLoginNotification": {
+      "type": "boolean",
+      "default": false,
+      "description": "启用登录通知：异地或新设备登录时是否发送邮件通知"
+    },
+    "suspiciousLoginDetection": {
+      "type": "boolean",
+      "default": true,
+      "description": "可疑登录检测：是否检测异常登录行为"
+    },
+    "maxConcurrentSessions": {
+      "type": "integer",
+      "default": 5,
+      "min": 1,
+      "max": 20,
+      "description": "最大并发会话数：单个用户同时登录的最大会话数"
+    },
+    "enableGeoBlocking": {
+      "type": "boolean",
+      "default": false,
+      "description": "启用地理位置限制：是否基于地理位置限制访问"
+    },
+    "allowedCountries": {
+      "type": "text",
+      "description": "允许的国家：允许访问的国家代码列表，一行一个。例：CN,US,JP"
+    },
+    "blockedCountries": {
+      "type": "text",
+      "description": "禁止的国家：禁止访问的国家代码列表，一行一个"
+    }
+  }
+}

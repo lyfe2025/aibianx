@@ -7,7 +7,7 @@ import {
   SimpleMembershipStatus,
   MemberOnlyBadge 
 } from '@/components/molecules'
-import Link from 'next/link'
+import { useModalStore } from '@/stores'
 
 /**
  * 移动端个人中心页面 - ProfilePage
@@ -25,6 +25,8 @@ import Link from 'next/link'
  * 7. 推荐内容 - 个性化推荐
  */
 export default function ProfilePage() {
+  const { openModal } = useModalStore()
+  
   // 模拟用户数据 - 后续集成真实API
   const userData = {
     name: 'AI创业者',
@@ -156,11 +158,13 @@ export default function ProfilePage() {
               
               <div className="membership-actions">
                 {!userData.isMember && (
-                  <Link href="/membership">
-                    <GradientButton size="sm" className="upgrade-btn">
-                      升级会员
-                    </GradientButton>
-                  </Link>
+                  <GradientButton 
+                    size="sm" 
+                    className="upgrade-btn"
+                    onClick={() => openModal('membership')}
+                  >
+                    升级会员
+                  </GradientButton>
                 )}
                 <button className="manage-btn">
                   管理
@@ -224,11 +228,13 @@ export default function ProfilePage() {
                   </ul>
                 </div>
                 
-                <Link href="/membership">
-                  <GradientButton size="md" className="preview-upgrade-btn">
-                    立即升级
-                  </GradientButton>
-                </Link>
+                <GradientButton 
+                  size="md" 
+                  className="preview-upgrade-btn"
+                  onClick={() => openModal('membership')}
+                >
+                  立即升级
+                </GradientButton>
               </div>
             </div>
           )}

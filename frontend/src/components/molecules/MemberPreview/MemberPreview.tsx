@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { GradientButton } from '@/components/ui'
-import Link from 'next/link'
+import { useModalStore } from '@/stores'
 
 /**
  * 移动端会员预览组件 - MemberPreview
@@ -47,6 +47,7 @@ export function MemberPreview({
     variant = 'detailed' 
 }: MemberPreviewProps) {
     const [activeTab, setActiveTab] = useState<'content' | 'benefits'>('content')
+    const { openModal } = useModalStore()
 
     // 会员专享内容预览
     const previewContent: MemberPreviewContent[] = [
@@ -288,11 +289,13 @@ export function MemberPreview({
                     </div>
                 </div>
                 
-                <Link href="/membership">
-                    <GradientButton size="lg" className="upgrade-cta">
-                        立即升级会员
-                    </GradientButton>
-                </Link>
+                <GradientButton 
+                    size="lg" 
+                    className="upgrade-cta"
+                    onClick={() => openModal('membership')}
+                >
+                    立即升级会员
+                </GradientButton>
                 
                 <p className="upgrade-guarantee">
                     💰 30天无理由退款保障

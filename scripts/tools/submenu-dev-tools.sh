@@ -43,9 +43,15 @@ show_dev_tools_menu() {
     echo " 10) 验证备份文件         (检查完整性)"
     echo ""
     
+    echo -e " ${BLUE}🔄 数据还原${NC}"
+    echo " 11) 查看可用备份         (列出所有备份文件)"
+    echo " 12) 还原数据库           (从备份还原数据库)"
+    echo " 13) 还原完整系统         (从备份还原整个系统)"
+    echo ""
+    
     echo -e " ${BLUE}🧪 测试工具${NC}"
-    echo " 11) 完整集成测试         (前端+后端+邮件)"
-    echo " 12) API连接测试          (BillionMail API)"
+    echo " 14) 完整集成测试         (前端+后端+邮件)"
+    echo " 15) API连接测试          (BillionMail API)"
     echo ""
     
     echo -e " ${BLUE}🌐 快捷命令${NC}"
@@ -133,7 +139,95 @@ execute_dev_tools_choice() {
                 return 1
             fi
             ;;
-        11) # 完整集成测试
+        11) # 查看可用备份
+            echo -e "${BLUE}📋 查看可用备份文件...${NC}"
+            echo ""
+            echo -e "${YELLOW}数据库备份：${NC}"
+            find "$PROJECT_ROOT/backups/database-only/" -name "*.sql" 2>/dev/null | sort -r | head -10 || echo "  无数据库备份文件"
+            echo ""
+            echo -e "${YELLOW}系统备份：${NC}"
+            find "$PROJECT_ROOT/backups/" -name "strapi_backup_*.tar.gz" 2>/dev/null | sort -r | head -10 || echo "  无系统备份文件"
+            echo ""
+            read -p "按回车键返回菜单..."
+            return 1
+            ;;
+        12) # 还原数据库
+            echo -e "${BLUE}🗄️ 还原数据库...${NC}"
+            echo ""
+            echo "📋 可用的数据库备份："
+            echo ""
+            db_backups=($(find "$PROJECT_ROOT/backups/database-only/" -name "*.sql" 2>/dev/null | sort -r))
+            if [ ${#db_backups[@]} -eq 0 ]; then
+                echo -e "${RED}❌ 未找到数据库备份文件${NC}"
+                echo ""
+                read -p "按回车键返回菜单..."
+                return 1
+            fi
+            
+            for i in "${!db_backups[@]}"; do
+                echo "  $((i+1))) $(basename "${db_backups[$i]}")"
+            done
+            echo ""
+            echo "请输入要还原的备份编号 (1-${#db_backups[@]})："
+            read -p "选择: " backup_choice
+            
+            if [[ "$backup_choice" =~ ^[0-9]+$ ]] && [ "$backup_choice" -ge 1 ] && [ "$backup_choice" -le ${#db_backups[@]} ]; then
+                selected_backup="${db_backups[$((backup_choice-1))]}"
+                echo -e "${YELLOW}⚠️ 即将还原数据库备份: $(basename "$selected_backup")${NC}"
+                echo -e "${RED}⚠️ 这将覆盖当前数据库的所有数据！${NC}"
+                read -p "确认继续？(y/N): " confirm
+                if [[ "$confirm" =~ ^[Yy]$ ]]; then
+                    exec "$PROJECT_ROOT/scripts/database/restore-database-only.sh" "$selected_backup"
+                else
+                    echo "操作已取消"
+                    read -p "按回车键返回菜单..."
+                    return 1
+                fi
+            else
+                echo -e "${RED}❌ 无效选择${NC}"
+                read -p "按回车键返回菜单..."
+                return 1
+            fi
+            ;;
+        13) # 还原完整系统
+            echo -e "${BLUE}🖥️ 还原完整系统...${NC}"
+            echo ""
+            echo "📋 可用的系统备份："
+            echo ""
+            sys_backups=($(find "$PROJECT_ROOT/backups/" -name "strapi_backup_*.tar.gz" 2>/dev/null | sort -r))
+            if [ ${#sys_backups[@]} -eq 0 ]; then
+                echo -e "${RED}❌ 未找到系统备份文件${NC}"
+                echo ""
+                read -p "按回车键返回菜单..."
+                return 1
+            fi
+            
+            for i in "${!sys_backups[@]}"; do
+                echo "  $((i+1))) $(basename "${sys_backups[$i]}")"
+            done
+            echo ""
+            echo "请输入要还原的备份编号 (1-${#sys_backups[@]})："
+            read -p "选择: " backup_choice
+            
+            if [[ "$backup_choice" =~ ^[0-9]+$ ]] && [ "$backup_choice" -ge 1 ] && [ "$backup_choice" -le ${#sys_backups[@]} ]; then
+                selected_backup="${sys_backups[$((backup_choice-1))]}"
+                echo -e "${YELLOW}⚠️ 即将还原系统备份: $(basename "$selected_backup")${NC}"
+                echo -e "${RED}⚠️ 这将覆盖当前系统的所有数据和配置文件！${NC}"
+                read -p "确认继续？(y/N): " confirm
+                if [[ "$confirm" =~ ^[Yy]$ ]]; then
+                    exec "$PROJECT_ROOT/scripts/backup/restore-strapi.sh" "$selected_backup"
+                else
+                    echo "操作已取消"
+                    read -p "按回车键返回菜单..."
+                    return 1
+                fi
+            else
+                echo -e "${RED}❌ 无效选择${NC}"
+                read -p "按回车键返回菜单..."
+                return 1
+            fi
+            ;;
+        14) # 完整集成测试
             echo -e "${BLUE}🧪 完整集成测试（前端+后端）...${NC}"
             if [ -f "$PROJECT_ROOT/scripts/test-full-integration.sh" ]; then
                 exec "$PROJECT_ROOT/scripts/test-full-integration.sh"
@@ -144,7 +238,7 @@ execute_dev_tools_choice() {
                 return 1
             fi
             ;;
-        12) # API连接测试
+        15) # API连接测试
             echo -e "${BLUE}🧪 测试BillionMail API连接...${NC}"
             if [ -f "$PROJECT_ROOT/scripts/billionmail/test-api.sh" ]; then
                 exec "$PROJECT_ROOT/scripts/billionmail/test-api.sh"
@@ -160,7 +254,7 @@ execute_dev_tools_choice() {
             ;;
         *) # 无效选择
             echo -e "${RED}❌ 无效选择: $choice${NC}"
-            echo "请输入 0-12 之间的数字"
+            echo "请输入 0-15 之间的数字"
             echo ""
             read -p "按回车键继续..." 
             return 1

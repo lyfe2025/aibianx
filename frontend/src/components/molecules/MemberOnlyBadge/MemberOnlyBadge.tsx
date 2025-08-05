@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import { useModalStore } from '@/stores'
 
 /**
  * 移动端会员专享标记组件 - MemberOnlyBadge
@@ -26,6 +26,7 @@ export function MemberOnlyBadge({
     size = 'md', 
     showUpgradeButton = true 
 }: MemberOnlyBadgeProps) {
+    const { openModal } = useModalStore()
     
     return (
         <div className={`member-only-badge ${size} ${className}`}>
@@ -42,11 +43,12 @@ export function MemberOnlyBadge({
             </div>
             
             {showUpgradeButton && (
-                <Link href="/membership" className="upgrade-link">
-                    <button className="upgrade-button">
-                        升级查看
-                    </button>
-                </Link>
+                <button 
+                    className="upgrade-button upgrade-link"
+                    onClick={() => openModal('membership')}
+                >
+                    升级查看
+                </button>
             )}
 
             {/* 移动端专用样式 */}

@@ -79,7 +79,8 @@ run_test "支付方式选择器" "[ -f 'frontend/src/components/molecules/Paymen
 run_test "支付宝组件文件" "[ -f 'frontend/src/components/molecules/AlipayCheckout.tsx' ]"
 run_test "微信支付组件文件" "[ -f 'frontend/src/components/molecules/WechatCheckout.tsx' ]"
 run_test "Stripe组件文件" "[ -f 'frontend/src/components/molecules/StripeCheckout.tsx' ]"
-run_test "会员购买页面" "[ -f 'frontend/src/app/membership/page.tsx' ]"
+# 会员购买功能通过弹窗实现，不需要独立页面
+# run_test "会员购买页面" "[ -f 'frontend/src/app/membership/page.tsx' ]"
 run_test "支付测试页面" "[ -f 'frontend/src/app/payment/test/page.tsx' ]"
 
 # 2. 配置文件测试
@@ -137,7 +138,7 @@ fi
 if curl -s "${FRONTEND_URL}" > /dev/null 2>&1; then
     echo -e "${GREEN}前端服务正在运行${NC}"
     echo "前端页面访问:"
-    echo "  - 会员购买: ${FRONTEND_URL}/membership"
+    echo "  - 会员购买: 通过弹窗实现 (点击升级按钮)"
     echo "  - 支付测试: ${FRONTEND_URL}/payment/test"
 else
     echo -e "${YELLOW}前端服务未运行${NC}"

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Container } from '@/components/ui'
+import { useModalStore } from '@/stores'
 
 interface PaymentError {
   paymentNo: string
@@ -14,6 +15,7 @@ interface PaymentError {
 
 export default function PaymentFailedPage() {
   const searchParams = useSearchParams()
+  const { openModal } = useModalStore()
   const [paymentError, setPaymentError] = useState<PaymentError | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -236,12 +238,12 @@ export default function PaymentFailedPage() {
 
         {/* 操作按钮 */}
         <div className="flex gap-4 justify-center">
-          <Link
-            href="/membership"
+          <button
+            onClick={() => openModal('membership')}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
           >
             重新支付
-          </Link>
+          </button>
           <Link
             href="/"
             className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"

@@ -1,0 +1,128 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "订单",
+    "description": "订单系统 - 管理所有订单信息，包括商品、支付、返佣等"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "orderNo": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 50,
+      "description": "订单号（唯一标识）"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "description": "下单用户"
+    },
+    "orderType": {
+      "type": "enumeration",
+      "enum": [
+        "membership",
+        "course", 
+        "service"
+      ],
+      "required": true,
+      "description": "订单类型：会员/课程/服务"
+    },
+    
+    "productName": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200,
+      "description": "商品名称"
+    },
+    "productType": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "商品类型标识"
+    },
+    "productId": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "商品ID"
+    },
+    "originalPrice": {
+      "type": "decimal",
+      "required": true,
+      "description": "商品原价（单位：分）"
+    },
+    "discountAmount": {
+      "type": "decimal",
+      "default": 0,
+      "description": "优惠金额（单位：分）"
+    },
+    "finalPrice": {
+      "type": "decimal",
+      "required": true,
+      "description": "实付金额（单位：分）"
+    },
+    
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "paid", 
+        "cancelled",
+        "refunded",
+        "expired"
+      ],
+      "default": "pending",
+      "description": "订单状态"
+    },
+    "paymentMethod": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "支付方式：alipay/wechat/stripe等"
+    },
+    
+    "inviterUser": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "description": "邀请人（用于返佣计算，可空）"
+    },
+    "commissionRate": {
+      "type": "decimal",
+      "default": 0,
+      "description": "返佣比例（如0.15表示15%）"
+    },
+    "commissionAmount": {
+      "type": "decimal",
+      "default": 0,
+      "description": "返佣金额（单位：分）"
+    },
+    
+    "paidAt": {
+      "type": "datetime",
+      "description": "支付完成时间"
+    },
+    "expiredAt": {
+      "type": "datetime",
+      "description": "订单过期时间"
+    },
+    "cancelledAt": {
+      "type": "datetime",
+      "description": "订单取消时间"
+    },
+    
+    "customerNote": {
+      "type": "text",
+      "description": "客户备注"
+    },
+    "adminNote": {
+      "type": "text",
+      "description": "管理员备注"
+    }
+  }
+}
