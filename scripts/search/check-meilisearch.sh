@@ -157,7 +157,7 @@ fi
 
 if [[ $STRAPI_HEALTH != *"available"* ]]; then
     echo -e "${YELLOW}2. 需要启动后端服务:${NC}"
-    echo "   ./scripts.sh deploy backend"
+    echo "   ./scripts.sh deploy start"
 fi
 
 echo -e "${GREEN}3. 测试前端搜索:${NC}"

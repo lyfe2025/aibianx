@@ -40,6 +40,7 @@ show_menu() {
     echo "  3) 🛑 停止所有服务        🔴 安全停止所有Docker容器"
     echo "  4) 📦 备份管理           💾 查看/创建/恢复/验证备份文件"
     echo "  5) 🔍 系统状态           📊 检查所有服务运行状态"
+    echo "  9) 🌐 显示所有访问地址    🔗 完整服务状态+动态访问地址"
     echo ""
     
     echo -e "${BLUE}🛠️ 开发工具:${NC}"
@@ -182,6 +183,15 @@ execute_choice() {
             "$SCRIPT_DIR/scripts/billionmail/check-billionmail.sh"
             echo ""
             echo -n -e "${YELLOW}邮件检查完成！按回车键返回主菜单...${NC}"
+            read
+            return 1
+            ;;
+        "9")
+            echo -e "${BLUE}🌐 显示所有服务状态和访问地址...${NC}"
+            echo ""
+            "$SCRIPT_DIR/scripts/tools/show-all-services.sh"
+            echo ""
+            echo -n -e "${YELLOW}状态检查完成！按回车键返回主菜单...${NC}"
             read
             return 1
             ;;
@@ -338,9 +348,12 @@ handle_command_line() {
                 "check")
                     exec "$SCRIPT_DIR/scripts/tools/pre-commit-check.sh" "$@"
                     ;;
+                "services")
+                    exec "$SCRIPT_DIR/scripts/tools/show-all-services.sh" "$@"
+                    ;;
                 *)
                     echo -e "${RED}❌ 未知的工具操作: $action${NC}"
-                    echo "可用操作: status, check"
+                    echo "可用操作: status, check, services"
                     exit 1
                     ;;
             esac
@@ -383,12 +396,12 @@ handle_command_line() {
         *)
             echo -e "${RED}❌ 未知的类别: $category${NC}"
             echo ""
-            echo -e "${BLUE}可用类别:${NC}"
-            echo "  deploy  - 部署管理 (config, start, stop)"
-            echo "  backup  - 备份管理 (list, create, restore, verify)"
-            echo "  tools   - 开发工具 (status, check)"
-            echo "  search  - 搜索引擎 (manage, check)"
-            echo "  email   - 邮件系统 (check, admin)"
+                echo -e "${BLUE}可用类别:${NC}"
+    echo "  deploy  - 部署管理 (config, start, stop)"
+    echo "  backup  - 备份管理 (list, create, restore, verify)"
+    echo "  tools   - 开发工具 (status, check, services)"
+    echo "  search  - 搜索引擎 (manage, check)"
+    echo "  email   - 邮件系统 (check, admin)"
             exit 1
             ;;
     esac

@@ -4,6 +4,9 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+# 加载统一环境配置
+source "${PROJECT_ROOT}/deployment/configure-unified-env.sh"
+
 # 颜色定义
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
