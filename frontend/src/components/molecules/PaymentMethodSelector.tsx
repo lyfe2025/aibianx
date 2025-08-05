@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import { usePaymentMethods } from '@/lib/hooks/usePaymentMethods';
 import Image from 'next/image';

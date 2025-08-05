@@ -16,7 +16,7 @@
 export const NAVIGATION_MENU = [
     {
         id: 'discover',
-        href: '/discover',
+        href: '/',
         translationKey: 'nav.discover',
         exactMatch: true
     },
@@ -27,9 +27,9 @@ export const NAVIGATION_MENU = [
         exactMatch: false
     },
     {
-        id: 'profile',
-        href: '/profile',
-        translationKey: 'nav.profile',
+        id: 'about',
+        href: '/about',
+        translationKey: 'nav.about',
         exactMatch: true
     }
 ] as const

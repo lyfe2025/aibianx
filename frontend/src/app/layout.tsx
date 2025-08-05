@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { BackToTopButton, GlobalCountdownInit, DynamicParticleBackground, ThemeInit } from '@/components/ui'
+import { BackToTopButton, GlobalCountdownInit, DynamicParticleBackground, ThemeInit, ToastProvider } from '@/components/ui'
 import { LayoutController } from '@/components/molecules/LayoutController'
 import {
   LoginModal,
@@ -218,8 +218,10 @@ export default async function RootLayout({
       <body>
         {/* NextAuth Session Provider - 为整个应用提供认证状态 */}
         <AuthProvider>
-          {/* 主题初始化 - 确保主题正确应用 */}
-          <ThemeInit />
+          {/* Toast Provider - 为整个应用提供Toast通知功能 */}
+          <ToastProvider>
+            {/* 主题初始化 - 确保主题正确应用 */}
+            <ThemeInit />
 
           {/* 
             全站粒子背景效果 - DynamicParticleBackground
@@ -252,6 +254,7 @@ export default async function RootLayout({
 
           {/* 全局倒计时初始化 */}
           <GlobalCountdownInit />
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

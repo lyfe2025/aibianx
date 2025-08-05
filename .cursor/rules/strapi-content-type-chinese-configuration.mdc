@@ -1,0 +1,281 @@
+# Strapi 内容类型中文配置专用规则
+
+---
+
+## 🎯 适用场景
+- 新建任何Strapi内容类型时
+- 修复中文字段描述缺失问题时
+- 解决Admin UI重复字段显示问题时
+- 确保中文配置不被覆盖时
+
+---
+
+## 🚨 致命错误预防
+
+### ⚠️ 严重错误类型
+1. **中文配置覆盖错误** - 在修复其他问题时意外覆盖已有的中文配置
+2. **Layout重复字段错误** - UI中字段显示重复，影响用户体验
+3. **配置不完整错误** - 只配置部分字段，遗漏其他字段
+4. **数据库操作错误** - 使用错误的SQL语法或列名
+
+### 🔥 预防机制
+- **全量配置策略**: 始终构建完整的metadatas对象，不使用增量更新
+- **分离操作原则**: metadatas更新与layouts更新分离进行
+- **强制验证步骤**: 每次配置后必须验证结果
+- **备份优先原则**: 重要操作前先备份现有配置
+
+---
+
+## 📋 标准操作流程
+
+### 阶段一：新建内容类型后的标准配置
+
+#### 1.1 数据库表注释配置（强制执行）
+```bash
+# 1. 添加表注释
+psql -U aibianx_dev -d aibianx_dev -c "
+COMMENT ON TABLE [table_name] IS '[中文表描述]';
+"
+
+# 2. 添加字段注释
+psql -U aibianx_dev -d aibianx_dev -c "
+COMMENT ON COLUMN [table_name].[field_name] IS '[中文字段描述]';
+"
+```
+
+#### 1.2 读取Schema提取字段信息
+```bash
+# 读取内容类型schema文件
+cat backend/src/api/[content-type]/content-types/[content-type]/schema.json
+```
+
+#### 1.3 构建完整中文配置
+- 基于schema.json中的description字段构建metadatas
+- 为每个字段提供edit和list两种配置
+- 包含label、description、visible、editable、searchable、sortable等属性
+
+#### 1.4 应用配置到数据库
+```sql
+-- 使用INSERT而非UPDATE，确保配置完整性
+INSERT INTO strapi_core_store_settings (key, value, type)
+VALUES (
+    'plugin_content_manager_configuration_content_types::api::[content-type].[content-type]',
+    '{完整的metadatas和layouts配置}'::jsonb,
+    'object'
+);
+```
+
+### 阶段二：问题修复的标准流程
+
+#### 2.1 中文配置丢失修复
+```bash
+# ✅ 正确方法：只更新metadatas，保持layouts不变
+UPDATE strapi_core_store_settings
+SET value = jsonb_set(
+    value::jsonb,
+    '{metadatas}',
+    '{完整的字段配置}'::jsonb,
+    true
+)
+WHERE key = 'plugin_content_manager_configuration_content_types::api::[content-type].[content-type]';
+```
+
+```bash
+# ❌ 错误方法：使用||操作符会覆盖现有配置
+UPDATE strapi_core_store_settings
+SET value = value::jsonb || '{metadatas: {...}}'::jsonb
+WHERE key = '...';
+```
+
+#### 2.2 重复字段修复
+```bash
+# 第一步：删除现有配置
+DELETE FROM strapi_core_store_settings
+WHERE key = 'plugin_content_manager_configuration_content_types::api::[content-type].[content-type]';
+
+# 第二步：重新插入完整配置
+INSERT INTO strapi_core_store_settings (key, value, type)
+VALUES (
+    'plugin_content_manager_configuration_content_types::api::[content-type].[content-type]',
+    '{完整配置包含metadatas和干净的layouts}'::jsonb,
+    'object'
+);
+```
+
+### 阶段三：强制验证步骤
+
+#### 3.1 中文配置验证
+```sql
+SELECT 
+    value::jsonb->'metadatas'->'[field_name]'->'edit'->>'label' as field_label
+FROM strapi_core_store_settings 
+WHERE key = 'plugin_content_manager_configuration_content_types::api::[content-type].[content-type]';
+```
+
+#### 3.2 重复字段检查
+```sql
+WITH layout_fields AS (
+    SELECT 
+        jsonb_array_elements(
+            jsonb_array_elements(value::jsonb->'layouts'->'edit')
+        ) as field_obj
+    FROM strapi_core_store_settings 
+    WHERE key = 'plugin_content_manager_configuration_content_types::api::[content-type].[content-type]'
+),
+field_names AS (
+    SELECT 
+        field_obj->>'name' as field_name
+    FROM layout_fields
+    WHERE field_obj ? 'name'
+)
+SELECT 
+    field_name, 
+    COUNT(*) as occurrence_count
+FROM field_names 
+GROUP BY field_name
+HAVING COUNT(*) > 1;
+```
+
+#### 3.3 系统重启和缓存清理
+```bash
+# 清理缓存并重新构建
+cd backend
+npm run strapi build --clean
+
+# 重启后端服务
+./scripts.sh deploy stop backend
+./scripts.sh deploy backend
+```
+
+---
+
+## 🛡️ 安全防护措施
+
+### 配置前检查清单
+- [ ] 确认内容类型的英文名称（api::[name].[name]）
+- [ ] 读取schema.json获取完整字段列表
+- [ ] 检查现有配置是否存在（避免覆盖）
+- [ ] 准备完整的metadatas配置（不遗漏任何字段）
+
+### 操作中强制要求
+- [ ] 使用正确的PostgreSQL语法
+- [ ] 操作单个表时不影响其他表配置
+- [ ] 每个字段都包含edit和list配置
+- [ ] layouts配置中避免字段重复
+
+### 操作后验证要求
+- [ ] 验证中文标签显示正确
+- [ ] 验证所有字段都有中文描述
+- [ ] 验证UI中无重复字段
+- [ ] 验证功能完全正常
+
+---
+
+## ⚡ 常用配置模板
+
+### 基础字段配置模板
+```json
+{
+  "[field_name]": {
+    "edit": {
+      "label": "[中文标签]", 
+      "description": "[中文描述]", 
+      "visible": true, 
+      "editable": true
+    },
+    "list": {
+      "label": "[中文标签]", 
+      "searchable": true, 
+      "sortable": true
+    }
+  }
+}
+```
+
+### 系统字段配置模板
+```json
+{
+  "createdAt": {
+    "edit": {"label": "创建时间", "description": "记录创建时间", "visible": true, "editable": false},
+    "list": {"label": "创建时间", "searchable": false, "sortable": true}
+  },
+  "updatedAt": {
+    "edit": {"label": "更新时间", "description": "记录最后更新时间", "visible": true, "editable": false},
+    "list": {"label": "更新时间", "searchable": false, "sortable": true}
+  },
+  "createdBy": {
+    "edit": {"label": "创建者", "description": "创建此记录的用户", "visible": true, "editable": false},
+    "list": {"label": "创建者", "searchable": false, "sortable": true}
+  },
+  "updatedBy": {
+    "edit": {"label": "更新者", "description": "最后更新此记录的用户", "visible": true, "editable": false},
+    "list": {"label": "更新者", "searchable": false, "sortable": true}
+  }
+}
+```
+
+---
+
+## 🚨 紧急修复指南
+
+### 当发现中文配置丢失时
+1. **立即停止其他操作**
+2. **检查影响范围**（哪些表受影响）
+3. **使用"只更新metadatas"方法逐个修复**
+4. **验证修复结果**
+5. **重启系统应用更改**
+
+### 当发现重复字段时
+1. **确认重复字段的具体表**
+2. **备份现有配置**（如果有重要自定义）
+3. **删除并重新创建配置**
+4. **强制清理缓存并重启**
+5. **全面验证所有功能**
+
+---
+
+## 📊 质量保证检查表
+
+### 新建内容类型完成检查
+- [ ] 数据库表和字段都有中文注释
+- [ ] Admin UI所有字段显示中文标签
+- [ ] 所有字段都有中文描述提示
+- [ ] UI布局整洁无重复字段
+- [ ] 功能测试完全正常
+
+### 修复问题完成检查
+- [ ] 目标问题已彻底解决
+- [ ] 未影响其他表的配置
+- [ ] 所有相关表配置完整
+- [ ] 系统重启后配置生效
+- [ ] 用户验收测试通过
+
+---
+
+## 💡 最佳实践建议
+
+1. **预防优于修复**：新建内容类型时立即配置中文，避免后期修复
+2. **全量替代增量**：配置更新时使用完整对象替代，避免遗漏字段
+3. **分离操作原则**：metadatas和layouts分开处理，降低出错风险
+4. **强制验证习惯**：每次操作后立即验证结果，及时发现问题
+5. **文档记录完整**：重要配置变更要记录到项目文档中
+
+---
+
+## 🎯 成功标准
+
+### 技术标准
+- 所有字段100%显示中文标签和描述
+- UI界面0重复字段显示
+- 数据库表和字段100%有中文注释
+- 系统功能100%正常运行
+
+### 用户体验标准
+- 管理员能够直观理解所有字段含义
+- 界面布局整洁美观易用
+- 操作流程顺畅无困惑
+- 系统响应速度正常
+
+---
+
+**使用此规则文件，确保每次内容类型操作都标准化、规范化、无错误！**

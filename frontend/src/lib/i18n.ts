@@ -13,7 +13,7 @@ export const translations: Record<Language, TranslationObject> = {
         nav: {
             discover: '发现',
             weekly: '周刊',
-            profile: '个人中心'
+            about: '关于'
         },
         buttons: {
             login: '登录',
@@ -55,7 +55,7 @@ export const translations: Record<Language, TranslationObject> = {
         nav: {
             discover: 'Discover',
             weekly: 'Weekly',
-            profile: 'Profile'
+            about: 'About'
         },
         buttons: {
             login: 'Login',

@@ -605,6 +605,31 @@ function transformStrapiSiteConfig(strapiConfig: StrapiSiteConfig): SiteConfigDa
 }
 
 /**
+ * 获取默认网站配置
+ */
+function getDefaultSiteConfig(): SiteConfigData {
+    return {
+        siteName: 'AI变现之路',
+        siteDescription: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具',
+        siteUrl: 'https://aibianx.com',
+        twitterHandle: '@aibianx',
+        defaultOgImage: null,
+        primaryKeywords: ['AI变现', 'ChatGPT赚钱', 'AI工具', '人工智能创业'],
+        verificationCodes: {
+            google: '',
+            baidu: '',
+            bing: '',
+            yandex: '',
+        },
+        submissionStatus: {
+            google: 'status_not_submitted',
+            baidu: 'status_not_submitted',
+        },
+        analyticsId: '',
+    }
+}
+
+/**
  * 获取网站配置
  */
 export async function getSiteConfig(): Promise<SiteConfigData> {
@@ -615,7 +640,8 @@ export async function getSiteConfig(): Promise<SiteConfigData> {
         })
 
         if (!response.ok) {
-            throw new Error(`获取网站配置失败: ${response.status}`)
+            console.warn(`网站配置API失败 (${response.status})，使用默认配置`)
+            return getDefaultSiteConfig()
         }
 
         const data: StrapiResponse<StrapiSiteConfig> = await response.json()
@@ -624,33 +650,14 @@ export async function getSiteConfig(): Promise<SiteConfigData> {
         const siteConfig = Array.isArray(data.data) ? data.data[0] : data.data || data
 
         if (!siteConfig) {
-            throw new Error('No site config found')
+            console.warn('未找到网站配置数据，使用默认配置')
+            return getDefaultSiteConfig()
         }
 
         return transformStrapiSiteConfig(siteConfig as StrapiSiteConfig)
     } catch (error) {
         console.error('获取网站配置失败:', error)
-
-        // 返回默认配置
-        return {
-            siteName: 'AI变现之路',
-            siteDescription: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具',
-            siteUrl: 'https://aibianx.com',
-            twitterHandle: '@aibianx',
-            defaultOgImage: null,
-            primaryKeywords: ['AI变现', 'ChatGPT赚钱', 'AI工具', '人工智能创业'],
-            verificationCodes: {
-                google: '',
-                baidu: '',
-                bing: '',
-                yandex: '',
-            },
-            submissionStatus: {
-                google: 'status_not_submitted',
-                baidu: 'status_not_submitted',
-            },
-            analyticsId: '',
-        }
+        return getDefaultSiteConfig()
     }
 }
 

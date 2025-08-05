@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from 'react';
 import { usePaymentMethods } from '@/lib/hooks/usePaymentMethods';
 import { usePayment, PaymentOrder } from '@/lib/hooks/usePayment';

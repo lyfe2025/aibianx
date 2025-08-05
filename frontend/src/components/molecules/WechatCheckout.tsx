@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { usePayment, usePaymentPolling } from '@/lib/hooks/usePayment';
 import Image from 'next/image';
