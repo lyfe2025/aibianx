@@ -101,7 +101,7 @@ graph TB
 #### 方式一：一键部署（推荐）
 ```bash
 # 一键安装并启动完整系统
-bash <(curl -s https://raw.githubusercontent.com/lyfe2025/aibianx/master/scripts/bootstrap.sh)
+bash <(curl -s https://raw.githubusercontent.com/lyfe2025/aibianx/main/scripts/bootstrap.sh)
 ```
 
 #### 方式二：手动部署
@@ -112,6 +112,9 @@ git clone https://github.com/lyfe2025/aibianx.git && cd aibianx
 # 2. 配置和启动系统
 ./scripts.sh deploy config    # 先配置
 ./scripts.sh deploy start     # 再启动
+
+# 3. 查看访问地址
+./scripts.sh tools services   # 获取所有服务地址
 ```
 
 ### ⚙️ **详细部署流程**
@@ -364,6 +367,38 @@ aibianx/
 | 🛠️ **问题解决** | [故障排查](docs/问题解决/) | 常见问题和解决方案 |
 
 </div>
+
+### 🔧 **故障排除**
+
+#### 常见问题解决
+
+<details>
+<summary><b>❓ 缺失系统依赖</b></summary>
+
+**问题**: 提示缺少Git、Docker、Node.js等
+
+**解决方案**:
+```bash
+# 项目内置依赖检查和安装工具
+./scripts.sh tools check      # 检查依赖状态
+./scripts/production/install-environment.sh  # 自动安装
+```
+
+</details>
+
+<details>
+<summary><b>❓ 服务启动失败</b></summary>
+
+**问题**: 部分服务未启动或端口冲突
+
+**解决方案**:
+```bash
+./scripts.sh tools status     # 检查服务状态
+./scripts.sh deploy restart   # 重启服务
+./scripts.sh tools services   # 查看访问地址
+```
+
+</details>
 
 ### 📖 **快速导航**
 
