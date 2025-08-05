@@ -101,7 +101,7 @@ graph TB
 #### 方式一：一键部署（推荐）
 ```bash
 # 一键安装并启动完整系统
-bash <(curl -s https://raw.githubusercontent.com/lyfe2025/aibianx/main/scripts/bootstrap.sh)
+bash <(curl -s https://raw.githubusercontent.com/lyfe2025/aibianx/master/scripts/bootstrap.sh)
 ```
 
 #### 方式二：手动部署
