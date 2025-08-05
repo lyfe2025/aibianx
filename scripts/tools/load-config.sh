@@ -45,6 +45,10 @@ load_config() {
     export SEARCH_PORT="${NEXT_PUBLIC_SEARCH_PORT:-${MEILISEARCH_PORT:-7700}}"
     export SEARCH_PROTOCOL="${NEXT_PUBLIC_SEARCH_PROTOCOL:-${MEILISEARCH_PROTOCOL:-http}}"
 
+    export BILLIONMAIL_DOMAIN="${BILLIONMAIL_DOMAIN:-localhost}"
+    export BILLIONMAIL_PORT="${BILLIONMAIL_PORT:-8080}"
+    export BILLIONMAIL_PROTOCOL="${BILLIONMAIL_PROTOCOL:-http}"
+
     export DB_HOST="${DATABASE_HOST:-localhost}"
     export DB_PORT="${DATABASE_PORT:-5432}"
 
@@ -74,6 +78,15 @@ load_config() {
             port_suffix=":$SEARCH_PORT"
         fi
         echo "${SEARCH_PROTOCOL}://${SEARCH_DOMAIN}${port_suffix}${path}"
+    }
+
+    build_billionmail_url() {
+        local path="${1:-}"
+        local port_suffix=""
+        if [[ ! (("$BILLIONMAIL_PROTOCOL" == "http" && "$BILLIONMAIL_PORT" == "80") || ("$BILLIONMAIL_PROTOCOL" == "https" && "$BILLIONMAIL_PORT" == "443")) ]]; then
+            port_suffix=":$BILLIONMAIL_PORT"
+        fi
+        echo "${BILLIONMAIL_PROTOCOL}://${BILLIONMAIL_DOMAIN}${port_suffix}${path}"
     }
 
     # 导出URL构建函数

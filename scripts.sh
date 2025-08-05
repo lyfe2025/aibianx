@@ -134,6 +134,10 @@ execute_choice() {
             echo ""
             "$SCRIPT_DIR/scripts/deployment/start-dev.sh"
             echo ""
+            echo -e "${CYAN}📋 启动完成！显示所有服务状态和访问地址...${NC}"
+            echo ""
+            "$SCRIPT_DIR/scripts/tools/show-all-services.sh"
+            echo ""
             echo -n -e "${YELLOW}启动完成！按回车键返回主菜单...${NC}"
             read
             return 1
