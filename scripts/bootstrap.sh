@@ -1,6 +1,14 @@
 #!/bin/bash
 # AI变现之路 - 一键部署引导脚本
-# 使用方法: bash <(curl -s https://raw.githubusercontent.com/lyfe2025/aibianx/master/scripts/bootstrap.sh)
+# 
+# 🚀 一键部署命令 (推荐):
+# bash <(curl -fsSL https://raw.githubusercontent.com/lyfe2025/aibianx/master/scripts/bootstrap.sh)
+#
+# 🔄 备用命令 (CDN缓存问题时):
+# bash <(curl -fsSL https://cdn.jsdelivr.net/gh/lyfe2025/aibianx@master/scripts/bootstrap.sh)
+#
+# 📦 Git方式 (100%可靠):
+# git clone https://github.com/lyfe2025/aibianx.git && cd aibianx && ./scripts/bootstrap.sh
 
 set -e
 
@@ -18,6 +26,14 @@ PROJECT_NAME="aibianx"
 PROJECT_URL="https://github.com/lyfe2025/aibianx.git"
 INSTALL_DIR="/opt/$PROJECT_NAME"
 SCRIPT_VERSION="1.0.0"
+
+# 备用下载源配置
+BOOTSTRAP_SOURCES=(
+    "https://raw.githubusercontent.com/lyfe2025/aibianx/master/scripts/bootstrap.sh"
+    "https://cdn.jsdelivr.net/gh/lyfe2025/aibianx@master/scripts/bootstrap.sh"
+    "https://raw.githubusercontent.com/lyfe2025/aibianx/main/scripts/bootstrap.sh"
+    "https://cdn.jsdelivr.net/gh/lyfe2025/aibianx@main/scripts/bootstrap.sh"
+)
 
 # 日志函数
 log_info() {
@@ -40,6 +56,69 @@ log_step() {
     echo ""
     echo -e "${CYAN}🔧 $1${NC}"
     echo "================================"
+}
+
+# 智能下载函数 - 支持多源备用
+smart_download() {
+    local url="$1"
+    local output="$2"
+    local description="$3"
+    
+    log_info "下载 $description..."
+    
+    # 尝试curl下载
+    if command -v curl &> /dev/null; then
+        if curl -fsSL "$url" -o "$output"; then
+            log_success "$description 下载成功 (curl)"
+            return 0
+        fi
+    fi
+    
+    # 尝试wget下载
+    if command -v wget &> /dev/null; then
+        if wget -q "$url" -O "$output"; then
+            log_success "$description 下载成功 (wget)"
+            return 0
+        fi
+    fi
+    
+    log_error "$description 下载失败"
+    return 1
+}
+
+# 自我更新检查
+check_self_update() {
+    log_step "检查脚本更新"
+    
+    # 如果不是通过curl执行的，跳过自我更新
+    if [[ "${BASH_SOURCE[0]}" == "/dev/fd/"* ]] || [[ "${BASH_SOURCE[0]}" == "/proc/self/fd/"* ]]; then
+        log_info "检测到通过管道执行，尝试下载最新版本..."
+        
+        local temp_script="/tmp/bootstrap_latest.sh"
+        local updated=false
+        
+        # 尝试从多个源下载最新版本
+        for source in "${BOOTSTRAP_SOURCES[@]}"; do
+            log_info "尝试从源: $source"
+            if smart_download "$source" "$temp_script" "最新bootstrap脚本"; then
+                # 验证下载的文件
+                if [[ -f "$temp_script" ]] && [[ -s "$temp_script" ]] && head -1 "$temp_script" | grep -q "#!/bin/bash"; then
+                    log_success "✅ 获取到最新版本脚本"
+                    chmod +x "$temp_script"
+                    log_info "🔄 切换到最新版本..."
+                    exec "$temp_script" "$@"
+                else
+                    log_warning "下载的文件格式不正确，尝试下一个源..."
+                    rm -f "$temp_script"
+                fi
+            fi
+        done
+        
+        log_warning "⚠️  无法获取最新版本，使用当前版本继续..."
+        sleep 2
+    else
+        log_info "✅ 使用本地脚本版本: $SCRIPT_VERSION"
+    fi
 }
 
 # 显示欢迎信息
@@ -324,7 +403,64 @@ install_dependencies() {
     fi
 }
 
-# 克隆项目代码
+# 多源项目下载
+download_project_archive() {
+    local method="$1"  # "archive" 或 "git"
+    
+    if [[ "$method" == "archive" ]]; then
+        log_info "尝试快速下载项目压缩包..."
+        
+        local archive_sources=(
+            "https://github.com/lyfe2025/aibianx/archive/refs/heads/master.tar.gz"
+            "https://codeload.github.com/lyfe2025/aibianx/tar.gz/refs/heads/master"
+            "https://api.github.com/repos/lyfe2025/aibianx/tarball/master"
+        )
+        
+        local temp_archive="/tmp/aibianx.tar.gz"
+        
+        for source in "${archive_sources[@]}"; do
+            log_info "尝试从源: $source"
+            if smart_download "$source" "$temp_archive" "项目压缩包"; then
+                log_info "解压项目文件..."
+                if tar -xzf "$temp_archive" -C "/tmp/"; then
+                    # 查找解压后的目录
+                    local extracted_dir=$(find /tmp -maxdepth 1 -name "aibianx-*" -type d | head -1)
+                    if [[ -n "$extracted_dir" ]]; then
+                        sudo mv "$extracted_dir" "$INSTALL_DIR"
+                        sudo chown -R $USER:$USER "$INSTALL_DIR"
+                        rm -f "$temp_archive"
+                        log_success "项目压缩包下载解压完成"
+                        return 0
+                    fi
+                fi
+                rm -f "$temp_archive"
+            fi
+        done
+        
+        log_warning "压缩包下载失败，尝试Git克隆..."
+        return 1
+    fi
+    
+    # Git克隆备用方案
+    log_info "使用Git克隆项目代码..."
+    local git_sources=(
+        "https://github.com/lyfe2025/aibianx.git"
+        "https://github.com/lyfe2025/aibianx"
+    )
+    
+    for source in "${git_sources[@]}"; do
+        log_info "尝试Git源: $source"
+        if git clone "$source" "$INSTALL_DIR"; then
+            log_success "Git克隆成功"
+            return 0
+        fi
+    done
+    
+    log_error "所有下载方式都失败了"
+    return 1
+}
+
+# 克隆项目代码 (增强版)
 clone_project() {
     log_step "拉取项目代码"
     
@@ -338,12 +474,14 @@ clone_project() {
         else
             log_info "使用现有目录，更新代码..."
             cd "$INSTALL_DIR"
-            git pull origin master || {
-                log_error "代码更新失败"
-                exit 1
-            }
-            log_success "代码更新完成"
-            return 0
+            if git pull origin master 2>/dev/null || git pull origin main 2>/dev/null; then
+                log_success "代码更新完成"
+                return 0
+            else
+                log_warning "Git更新失败，将重新下载..."
+                cd ..
+                sudo rm -rf "$INSTALL_DIR"
+            fi
         fi
     fi
     
@@ -352,20 +490,22 @@ clone_project() {
     sudo mkdir -p "$INSTALL_DIR"
     sudo chown $USER:$USER "$INSTALL_DIR"
     
-    # 克隆项目
-    log_info "克隆项目代码..."
-    git clone "$PROJECT_URL" "$INSTALL_DIR" || {
-        log_error "项目克隆失败"
-        exit 1
-    }
+    # 多源下载策略
+    if ! download_project_archive "archive"; then
+        if ! download_project_archive "git"; then
+            log_error "项目下载失败，请检查网络连接"
+            exit 1
+        fi
+    fi
     
     log_success "项目代码拉取完成"
     
     # 设置权限
     log_info "设置文件权限..."
     sudo chown -R $USER:$USER "$INSTALL_DIR"
-    chmod +x "$INSTALL_DIR/scripts.sh"
+    chmod +x "$INSTALL_DIR/scripts.sh" 2>/dev/null || true
     chmod +x "$INSTALL_DIR"/scripts/*/*.sh 2>/dev/null || true
+    chmod +x "$INSTALL_DIR"/scripts/*.sh 2>/dev/null || true
     
     log_success "权限设置完成"
 }
@@ -484,6 +624,7 @@ main() {
     trap handle_error ERR
     
     # 执行部署流程
+    check_self_update "$@"  # 检查脚本自我更新
     show_welcome
     detect_system
     install_dependencies
