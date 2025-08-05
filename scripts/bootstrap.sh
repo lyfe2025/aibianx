@@ -168,9 +168,9 @@ load_project_config() {
             [[ $key =~ ^[[:space:]]*# ]] && continue
             [[ -z $key ]] && continue
             
-            # 移除key和value中的空格
+            # 移除key和value中的空格，并去除value中的行尾注释
             key=$(echo "$key" | tr -d '[:space:]')
-            value=$(echo "$value" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            value=$(echo "$value" | sed 's/^[[:space:]]*//;s/[[:space:]]*#.*//;s/[[:space:]]*$//')
             
             # 导出变量 (如果value包含变量引用，先展开)
             case $key in
