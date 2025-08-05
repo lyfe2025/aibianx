@@ -98,24 +98,56 @@ graph TB
 
 ### 🎯 **30秒快速体验**
 
+> **💡 配置说明**: 所有部署方式都会使用 `deployment/config/deploy.conf` 中的配置。一键部署使用默认配置，手动部署可先修改配置文件。
+
 #### 方式一：一键部署（推荐）
 ```bash
-# 一键安装并启动完整系统
+# 一键安装并启动完整系统 (使用默认配置)
 bash <(curl -s https://raw.githubusercontent.com/lyfe2025/aibianx/master/scripts/bootstrap.sh)
 ```
 
-#### 方式二：手动部署
+**🔧 一键部署执行流程:**
+1. **环境检查** - 自动检查并安装必要依赖 (Git, Docker, Node.js)
+2. **项目克隆** - 从GitHub获取最新代码
+3. **默认配置** - 使用项目默认的 `deploy.conf` 配置
+4. **自动部署** - 依次部署数据库、搜索引擎、邮件系统
+5. **数据恢复** - 自动从备份恢复演示数据
+6. **服务启动** - 启动前端、后端等所有服务
+7. **地址输出** - 显示所有访问地址和状态
+
+#### 方式二：手动部署（可定制配置）
 ```bash
 # 1. 克隆项目
 git clone https://github.com/lyfe2025/aibianx.git && cd aibianx
 
-# 2. 配置和启动系统
-./scripts.sh deploy config    # 先配置
-./scripts.sh deploy start     # 再启动
+# 2. [可选] 修改配置文件
+vim deployment/config/deploy.conf    # 自定义域名、密码、端口等
 
-# 3. 查看访问地址
+# 3. 配置和启动系统
+./scripts.sh deploy config    # 根据配置文件生成环境变量
+./scripts.sh deploy start     # 启动所有服务
+
+# 4. 查看访问地址
 ./scripts.sh tools services   # 获取所有服务地址
 ```
+
+**🎯 手动部署 vs 一键部署的区别:**
+
+| 特性 | 一键部署 | 手动部署 (scripts.sh) |
+|------|----------|----------------------|
+| **配置修改** | ❌ 使用默认配置，不可预先修改 | ✅ 可在部署前修改 `deploy.conf` |
+| **环境检查** | ✅ 自动安装缺失依赖 | ⚠️ 需手动确保依赖完整 |
+| **项目获取** | ✅ 自动从GitHub克隆 | ⚠️ 需手动克隆项目 |
+| **执行控制** | ❌ 一次性完整执行 | ✅ 可分步执行和调试 |
+| **错误处理** | ⚠️ 失败需重新运行 | ✅ 可单独重试失败步骤 |
+| **适用场景** | 🚀 快速体验、演示 | 🔧 生产部署、定制化需求 |
+
+**⚠️ 手动部署注意事项:**
+1. **配置优先**: 部署前务必检查 `deployment/config/deploy.conf` 配置
+2. **步骤顺序**: 必须先执行 `deploy config` 再执行 `deploy start`
+3. **端口冲突**: 确保配置的端口未被占用 (默认: 80, 1337, 7700, 8080)
+4. **权限要求**: 确保有Docker操作权限和端口绑定权限
+5. **备份数据**: 如需恢复数据，确保 `backups/` 目录下有相应备份文件
 
 ### ⚙️ **详细部署流程**
 
@@ -128,9 +160,12 @@ git clone https://github.com/lyfe2025/aibianx.git
 cd aibianx
 ```
 
-#### 📝 **Step 2: 配置文件设置**
+#### 📝 **Step 2: 配置文件设置 (可选)**
+> **📋 重要**: 项目提供完整的默认配置，开发环境可直接使用，生产环境建议修改安全相关配置
+
 编辑唯一配置文件：`deployment/config/deploy.conf`
 
+**🔧 默认配置 (开发环境)**
 ```bash
 # 🌐 基础配置
 DEPLOY_MODE=dev                     # 部署模式: dev | production
@@ -142,10 +177,13 @@ REPO_ORG=lyfe2025                  # GitHub组织/用户名
 PROJECT_NAME=aibianx               # 项目名称
 REPO_URL=https://github.com/${REPO_ORG}/${PROJECT_NAME}.git
 
-# 🔐 安全配置  
-DB_ADMIN_PASSWORD=aibianx_2024     # 数据库管理员密码
+# 🔐 安全配置 (生产环境必须修改)
+DB_NAME=aibianx_dev                # 数据库名称
+DB_USER=aibianx_dev                # 数据库用户
+DB_PASSWORD=                       # 数据库密码 (开发环境可为空)
+DB_ADMIN_PASSWORD=postgres_admin_2024   # PostgreSQL管理员密码
 BILLIONMAIL_USERNAME=admin         # 邮件系统用户名
-BILLIONMAIL_PASSWORD=secure123     # 邮件系统密码
+BILLIONMAIL_PASSWORD=billionmail2024   # 邮件系统密码
 
 # 📦 自动化配置
 BACKUP_VERSION=latest              # 备份版本选择
@@ -159,6 +197,14 @@ BACKEND_PORT=1337                  # 后端端口
 MEILISEARCH_PORT=7700              # 搜索引擎端口
 BILLIONMAIL_PORT=8080              # 邮件系统端口
 ```
+
+**⚠️ 生产环境必须修改的配置:**
+- `DEPLOY_MODE=production` - 启用生产模式
+- `DOMAIN=yourdomain.com` - 设置真实域名
+- `MAIL_DOMAIN=mail.yourdomain.com` - 设置邮件域名
+- `DB_PASSWORD=your_secure_password` - 设置数据库密码
+- `DB_ADMIN_PASSWORD=admin_secure_password` - 管理员密码
+- `BILLIONMAIL_PASSWORD=email_secure_password` - 邮件系统密码
 
 #### 🔧 **Step 3: 系统配置**
 ```bash
@@ -174,6 +220,103 @@ BILLIONMAIL_PORT=8080              # 邮件系统端口
 # 检查系统状态和访问地址
 ./scripts.sh tools status
 ./scripts.sh tools services    # 查看所有服务访问地址
+```
+
+</details>
+
+### 🛠️ **scripts.sh 手动部署详解**
+
+<details>
+<summary><b>📋 点击查看 scripts.sh 详细使用指南</b></summary>
+
+#### 🎯 **交互式菜单模式**
+```bash
+# 启动交互式管理菜单
+./scripts.sh
+
+# 菜单选项说明：
+# 1) 🔧 极简一键配置  - 生成环境变量，恢复备份数据
+# 2) 🚀 启动完整环境  - 启动前端+后端+数据库+搜索+邮件
+# 3) 🛑 停止所有服务  - 安全停止所有Docker容器
+# 5) 🔍 系统状态      - 检查所有服务运行状态
+# 9) 🌐 显示访问地址  - 查看完整的系统访问地址
+```
+
+#### 🚀 **命令行模式 (推荐生产环境)**
+```bash
+# 分步执行部署流程
+./scripts.sh deploy config     # 第1步: 配置环境
+./scripts.sh deploy start      # 第2步: 启动服务
+./scripts.sh tools status      # 第3步: 检查状态
+./scripts.sh tools services    # 第4步: 获取访问地址
+
+# 单独管理特定服务
+./scripts.sh search deploy     # 单独部署搜索引擎
+./scripts.sh email check       # 检查邮件系统状态
+./scripts.sh backup create     # 创建系统备份
+```
+
+#### ⚠️ **scripts.sh 特殊注意事项**
+
+**🔧 配置文件依赖:**
+- 所有命令都依赖 `deployment/config/deploy.conf` 配置
+- 修改配置后需重新执行 `./scripts.sh deploy config`
+- 配置变更会影响所有后续操作
+
+**📋 执行顺序要求:**
+```bash
+# ❌ 错误顺序 - 会导致启动失败
+./scripts.sh deploy start      # 没有先配置环境
+
+# ✅ 正确顺序 - 必须先配置再启动
+./scripts.sh deploy config     # 1. 先生成环境配置
+./scripts.sh deploy start      # 2. 再启动所有服务
+```
+
+**🔒 权限和环境要求:**
+- 需要 Docker 操作权限 (可能需要 sudo 或用户在 docker 组)
+- 端口 80 需要管理员权限 (macOS/Linux)
+- 确保防火墙允许配置的端口访问
+
+**🚨 常见失败情况处理:**
+```bash
+# 端口被占用
+./scripts.sh tools status      # 查看端口占用情况
+sudo lsof -i :80,1337,7700,8080  # 检查具体端口占用
+
+# 服务启动失败
+./scripts.sh deploy stop       # 停止所有服务
+./scripts.sh deploy config     # 重新配置
+./scripts.sh deploy start      # 重新启动
+
+# 数据库连接失败
+./scripts.sh database check    # 检查数据库状态
+./scripts.sh backup restore    # 从备份恢复数据
+```
+
+**📊 状态监控和调试:**
+```bash
+# 实时监控系统状态
+./scripts.sh tools status      # 一次性状态检查
+./scripts.sh monitor start     # 持续监控 (如果可用)
+
+# 查看详细日志
+tail -f logs/backend.log        # 后端日志
+tail -f logs/frontend.log       # 前端日志
+./scripts.sh search logs        # 搜索引擎日志
+```
+
+**🔄 重启和重置:**
+```bash
+# 优雅重启
+./scripts.sh deploy stop       # 停止服务
+./scripts.sh deploy start      # 重新启动
+
+# 完全重置 (谨慎使用)
+./scripts.sh deploy stop       # 停止服务
+./scripts.sh tools clean       # 清理缓存和临时文件
+./scripts.sh deploy config     # 重新配置
+./scripts.sh deploy start      # 重新启动
 ```
 
 </details>
