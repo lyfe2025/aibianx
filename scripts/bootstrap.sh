@@ -34,7 +34,7 @@ PACKAGE="📦"
 # 动态项目信息 (从环境变量或默认值获取，避免硬编码)
 PROJECT_NAME="${PROJECT_NAME:-aibianx}"
 REPO_ORG="${REPO_ORG:-lyfe2025}"
-REPO_URL="${REPO_URL:-https://github.com/${REPO_ORG}/${PROJECT_NAME}.git}"
+REPO_URL="${REPO_URL:-https://github.com/${REPO_ORG}/${PROJECT_NAME}.git}"  # main分支
 
 # 配置文件检查功能
 CONFIG_LOADED=false
