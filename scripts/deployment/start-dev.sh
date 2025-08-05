@@ -32,6 +32,132 @@ fi
 echo "🗄️ 数据库配置:"
 echo "   主机: $DATABASE_HOST:$DATABASE_PORT"
 
+# 配置开发环境变量（清理API密钥配置）
+configure_dev_env_variables() {
+    # 🔧 清理开发环境的API密钥配置（开发模式无需API密钥）
+    if [ -f "backend/.env" ]; then
+        # 清理后端API密钥配置
+        if grep -q "^MEILISEARCH_API_KEY=" backend/.env; then
+            sed -i.bak "s/^MEILISEARCH_API_KEY=.*/MEILISEARCH_API_KEY=/" backend/.env
+            echo "   ✅ 已清理后端 MEILISEARCH_API_KEY (开发模式无需密钥)"
+        fi
+        
+        # 确保后端搜索配置正确 (使用分离配置格式)
+        local backend_updated=false
+        if grep -q "^MEILISEARCH_DOMAIN=" backend/.env; then
+            sed -i.bak "s/^MEILISEARCH_DOMAIN=.*/MEILISEARCH_DOMAIN=localhost/" backend/.env
+            backend_updated=true
+        fi
+        if grep -q "^MEILISEARCH_PORT=" backend/.env; then
+            sed -i.bak "s/^MEILISEARCH_PORT=.*/MEILISEARCH_PORT=7700/" backend/.env
+            backend_updated=true
+        fi
+        if grep -q "^MEILISEARCH_PROTOCOL=" backend/.env; then
+            sed -i.bak "s/^MEILISEARCH_PROTOCOL=.*/MEILISEARCH_PROTOCOL=http/" backend/.env
+            backend_updated=true
+        fi
+        
+        if [ "$backend_updated" = true ]; then
+            echo "   ✅ 已配置后端搜索URL (localhost:7700)"
+        fi
+    fi
+    
+    if [ -f "frontend/.env.local" ]; then
+        # 清理前端API密钥配置
+        if grep -q "^NEXT_PUBLIC_SEARCH_API_KEY=" frontend/.env.local; then
+            sed -i.bak "s/^NEXT_PUBLIC_SEARCH_API_KEY=.*/NEXT_PUBLIC_SEARCH_API_KEY=/" frontend/.env.local
+            echo "   ✅ 已清理前端 NEXT_PUBLIC_SEARCH_API_KEY (开发模式无需密钥)"
+        fi
+        
+        # 确保前端搜索URL配置正确（确保协议、域名、端口分离配置）
+        local need_backup=false
+        if grep -q "^NEXT_PUBLIC_SEARCH_DOMAIN=" frontend/.env.local; then
+            sed -i.bak "s/^NEXT_PUBLIC_SEARCH_DOMAIN=.*/NEXT_PUBLIC_SEARCH_DOMAIN=localhost/" frontend/.env.local
+            need_backup=true
+        fi
+        if grep -q "^NEXT_PUBLIC_SEARCH_PORT=" frontend/.env.local; then
+            sed -i.bak "s/^NEXT_PUBLIC_SEARCH_PORT=.*/NEXT_PUBLIC_SEARCH_PORT=7700/" frontend/.env.local
+            need_backup=true
+        fi
+        if grep -q "^NEXT_PUBLIC_SEARCH_PROTOCOL=" frontend/.env.local; then
+            sed -i.bak "s/^NEXT_PUBLIC_SEARCH_PROTOCOL=.*/NEXT_PUBLIC_SEARCH_PROTOCOL=http/" frontend/.env.local
+            need_backup=true
+        fi
+        
+        if [ "$need_backup" = true ]; then
+            echo "   ✅ 已配置前端搜索URL (localhost:7700)"
+        fi
+    fi
+}
+
+# 自动部署MeiliSearch搜索引擎
+deploy_meilisearch() {
+    echo ""
+    echo "🔍 检查MeiliSearch搜索引擎..."
+    
+    # 检查MeiliSearch容器是否已存在
+    if docker ps -a --format "table {{.Names}}" | grep -q "^meilisearch$"; then
+        # 检查是否正在运行
+        if docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
+            echo "✅ MeiliSearch已运行"
+            echo "   📝 配置开发环境变量..."
+            configure_dev_env_variables
+            return 0
+        else
+            echo "🔄 启动现有MeiliSearch容器..."
+            docker start meilisearch > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                echo "✅ MeiliSearch启动成功"
+                echo "   📝 配置开发环境变量..."
+                configure_dev_env_variables
+                return 0
+            fi
+        fi
+    fi
+    
+    echo "🚀 自动部署MeiliSearch (开发环境模式)..."
+    
+    # 直接部署开发环境，无需交互
+    echo "   🔧 停止现有MeiliSearch容器..."
+    docker stop meilisearch 2>/dev/null && echo "   ✅ 已停止现有容器" || echo "   ℹ️  没有运行中的容器"
+    docker rm meilisearch 2>/dev/null && echo "   ✅ 已删除现有容器" || echo "   ℹ️  没有需要删除的容器"
+    
+    echo "   📦 部署开发环境..."
+    docker run -d \
+        --name meilisearch \
+        -p 7700:7700 \
+        -e MEILI_ENV=development \
+        -v meilisearch_data:/meili_data \
+        --restart unless-stopped \
+        getmeili/meilisearch:latest > /dev/null 2>&1
+    
+    if [ $? -eq 0 ]; then
+        # 等待容器启动
+        local count=0
+        while [ $count -lt 15 ]; do
+            if docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
+                echo "✅ MeiliSearch部署成功"
+                echo "   🌐 Web管理界面: http://localhost:7700"
+                echo "   🔓 开发模式: 无需API密钥"
+                
+                # 🔧 自动配置开发环境变量（清理API密钥）
+                echo "   📝 配置开发环境变量..."
+                configure_dev_env_variables
+                
+                return 0
+            fi
+            sleep 1
+            count=$((count + 1))
+        done
+        echo "⚠️  MeiliSearch容器启动较慢，请稍后检查"
+    else
+        echo "❌ MeiliSearch部署失败，请检查Docker状态"
+    fi
+}
+
+# 调用MeiliSearch部署
+deploy_meilisearch
+
 # 检查PostgreSQL服务
 check_postgresql() {
     if ! command -v psql &> /dev/null; then
@@ -256,8 +382,23 @@ if [ "$AUTO_SYNC_SEARCH" = "true" ]; then
     if [ -f "$(dirname "$0")/../search/quick-reindex.sh" ]; then
         # 创建后台任务同步索引，避免阻塞启动流程
         (
-            sleep 5  # 等待后端完全稳定
-            "$(dirname "$0")/../search/quick-reindex.sh" > logs/search-sync.log 2>&1
+            # 等待MeiliSearch完全启动（最多60秒）
+            echo "$(date '+%Y-%m-%d %H:%M:%S') - 🔍 等待MeiliSearch服务启动..." >> logs/search-sync.log
+            local wait_count=0
+            while [ $wait_count -lt 60 ]; do
+                if curl -s http://localhost:7700/health > /dev/null 2>&1; then
+                    echo "$(date '+%Y-%m-%d %H:%M:%S') - ✅ MeiliSearch服务已就绪" >> logs/search-sync.log
+                    break
+                fi
+                sleep 1
+                wait_count=$((wait_count + 1))
+            done
+            
+            # 额外等待5秒确保后端也完全稳定
+            sleep 5
+            echo "$(date '+%Y-%m-%d %H:%M:%S') - 🚀 开始同步搜索索引..." >> logs/search-sync.log
+            
+            "$(dirname "$0")/../search/quick-reindex.sh" >> logs/search-sync.log 2>&1
             if [ $? -eq 0 ]; then
                 echo "$(date '+%Y-%m-%d %H:%M:%S') - ✅ 搜索索引自动同步完成" >> logs/search-sync.log
             else
@@ -267,6 +408,7 @@ if [ "$AUTO_SYNC_SEARCH" = "true" ]; then
         SEARCH_SYNC_PID=$!
         echo "✅ 搜索索引同步已启动 (后台运行，PID: $SEARCH_SYNC_PID)"
         echo "📝 同步日志: logs/search-sync.log"
+        echo "🔍 MeiliSearch管理: http://localhost:7700"
         
         # 保存搜索同步PID
         mkdir -p .pids

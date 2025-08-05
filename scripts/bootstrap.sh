@@ -515,6 +515,24 @@ clone_project() {
     
     log_success "项目代码拉取完成"
     
+    # 生成环境配置
+    log_info "配置开发环境..."
+    cd "$INSTALL_DIR"
+    
+    # 检查并生成环境配置文件
+    if [ ! -f "backend/.env" ] || [ ! -f "frontend/.env.local" ]; then
+        log_info "生成环境配置文件..."
+        if [ -x "deployment/configure-unified-env.sh" ]; then
+            chmod +x deployment/configure-unified-env.sh
+            ./deployment/configure-unified-env.sh dev
+            log_success "环境配置文件生成完成"
+        else
+            log_warning "环境配置脚本不存在，请手动配置环境变量"
+        fi
+    else
+        log_success "环境配置文件已存在"
+    fi
+    
     # 设置权限
     log_info "设置文件权限..."
     
