@@ -224,18 +224,27 @@ deploy_billionmail() {
     echo ""
     echo "📧 检查BillionMail邮件系统..."
     
-    # 检查BillionMail容器是否已存在
+    # 检查独立BillionMail服务是否已运行 (优先使用独立部署)
+    if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail"; then
+        echo "✅ 检测到独立BillionMail服务正在运行"
+        echo "   🌐 管理界面: http://${DOMAIN}:${BILLIONMAIL_PORT}/billion"
+        echo "   📧 WebMail: http://${DOMAIN}:${BILLIONMAIL_PORT}/roundcube"
+        echo "   📋 使用独立BillionMail，跳过统一部署"
+        return 0
+    fi
+    
+    # 检查统一部署的BillionMail容器是否已存在
     if docker ps -a --format "table {{.Names}}" | grep -q "^aibianx-billionmail-core$"; then
         # 检查是否正在运行
         if docker ps --format "table {{.Names}}" | grep -q "^aibianx-billionmail-core$"; then
-            echo "✅ BillionMail已运行"
+            echo "✅ 统一部署BillionMail已运行"
             echo "   🌐 管理界面: ${BILLIONMAIL_WEB}"
             return 0
         else
-            echo "🔄 启动现有BillionMail容器..."
+            echo "🔄 启动现有统一部署BillionMail容器..."
             docker start aibianx-billionmail-core > /dev/null 2>&1
             if [ $? -eq 0 ]; then
-                echo "✅ BillionMail启动成功"
+                echo "✅ 统一部署BillionMail启动成功"
                 echo "   🌐 管理界面: ${BILLIONMAIL_URL}"
                 return 0
             fi

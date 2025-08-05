@@ -36,39 +36,65 @@
 
 ```mermaid
 graph TB
-    subgraph "🌐 前端层"
+    subgraph "🌐 前端应用层"
         A[Next.js 14 + TypeScript]
         B[纯CSS变量系统]
         C[Zustand状态管理]
+        A1[动态配置系统]
     end
     
-    subgraph "⚙️ 后端层"
+    subgraph "⚙️ 核心后端服务"
         D[Strapi 5.20.0]
         E[RESTful API]
         F[OpenAPI文档]
+        D1[零硬编码架构]
     end
     
-    subgraph "🗄️ 数据层"
-        G[PostgreSQL 14+]
-        H[Redis缓存]
-        I[MeiliSearch搜索]
+    subgraph "🗄️ 统一数据层"
+        G[PostgreSQL 主库]
+        I[MeiliSearch搜索引擎]
+        G1[主要业务数据]
+        I1[全文搜索索引]
     end
     
-    subgraph "📧 服务层"
-        J[BillionMail邮件系统]
-        K[Docker容器编排]
+    subgraph "📧 独立邮件服务"
+        J[BillionMail Core]
+        J1[PostgreSQL 邮件库]
+        J2[Redis 邮件缓存]
+        J3[rspamd 反垃圾]
+        J4[dovecot IMAP/POP3]
+        J5[postfix SMTP]
+        J6[RoundCube WebMail]
+    end
+    
+    subgraph "🛠️ 智能部署层"
+        K[统一配置管理]
+        K1[deploy.conf]
+        K2[动态URL生成]
+        K3[环境自适应]
+        K4[服务冲突检测]
     end
     
     A --> D
     D --> G
-    D --> H
     D --> I
-    D --> J
-    K --> D
-    K --> G
-    K --> H
-    K --> I
-    K --> J
+    
+    J1 --> J
+    J2 --> J
+    J3 --> J
+    J4 --> J
+    J5 --> J
+    J6 --> J
+    
+    K1 --> A1
+    K1 --> D1
+    K2 --> A
+    K2 --> D
+    K3 --> K
+    K4 --> J
+    
+    D -.->|API调用| J
+    A -.->|邮件管理| J6
 ```
 
 </div>
@@ -89,10 +115,17 @@ graph TB
 - **OpenAPI 3.0** - 自动生成API文档
 
 #### 🔧 **基础设施**
-- **Docker Compose** - 容器编排和管理
+- **Docker Compose** - 混合容器编排策略
 - **MeiliSearch** - 高性能全文搜索引擎
-- **BillionMail** - 专业邮件营销系统
+- **BillionMail** - 独立部署的专业邮件营销系统
 - **Redis** - 内存缓存和会话存储
+
+#### 🏗️ **部署架构特色**
+- **🚫 零硬编码设计** - 所有配置从 `deploy.conf` 动态读取
+- **🔧 智能服务检测** - 自动识别现有服务，避免冲突
+- **🌐 动态URL构建** - 根据环境自动生成访问地址
+- **🔄 环境自适应** - 开发/生产环境无缝切换
+- **📦 服务隔离** - 邮件系统独立部署，数据完全隔离
 
 ## 🚀 快速开始
 
@@ -565,6 +598,57 @@ aibianx/
 
 </details>
 
+## 🏗️ 部署架构详解
+
+<div align="center">
+
+### 🚀 **智能混合部署策略**
+
+</div>
+
+我们采用**智能混合部署架构**，结合了服务隔离和统一管理的优势：
+
+#### 📦 **独立邮件服务**
+```bash
+BillionMail/
+├── docker-compose.yml          # 独立的邮件服务编排
+├── postgresql-data/            # 邮件专用数据库
+├── redis-data/                 # 邮件专用缓存
+└── logs/                      # 邮件服务日志
+```
+
+**✅ 优势:**
+- 🔒 **数据隔离** - 邮件数据与主业务数据完全分离
+- 🛡️ **服务稳定** - 邮件服务故障不影响主业务
+- 📦 **独立升级** - 可单独升级邮件系统版本
+- 🔧 **专业配置** - 针对邮件服务的专门优化
+
+#### 🎯 **统一核心服务**
+```bash
+deployment/
+├── docker-compose.unified.yml  # 核心服务编排
+├── config/deploy.conf          # 统一配置文件
+└── configure-unified-env.sh    # 环境变量生成
+```
+
+**✅ 优势:**
+- 🚫 **零硬编码** - 所有配置动态生成
+- 🔄 **环境切换** - 一键切换开发/生产环境
+- 🌐 **智能URL** - 自动生成正确的访问地址
+- 🛡️ **冲突检测** - 自动避免服务冲突
+
+#### 🔧 **智能部署逻辑**
+```mermaid
+flowchart TD
+    A[启动部署] --> B{检测BillionMail}
+    B -->|已运行| C[使用独立邮件服务]
+    B -->|未运行| D[启动统一邮件服务]
+    C --> E[生成动态URL]
+    D --> E
+    E --> F[启动核心服务]
+    F --> G[验证所有服务]
+```
+
 ## 🌟 特色功能
 
 <div align="center">
@@ -604,11 +688,12 @@ aibianx/
 - 🔍 **安全扫描** - 自动化安全检测
 
 #### ⚙️ **智能配置管理**
-- 🚫 **零硬编码架构** - 所有配置动态读取，无硬编码依赖
-- 📦 **单文件配置** - `deploy.conf` 统一管理所有参数
-- 🔄 **环境自适应** - 开发/生产环境自动切换
-- 🌐 **动态URL构建** - 根据域名和端口自动生成访问地址
-- 🔧 **现有工具优先** - 充分利用已有脚本，避免重复开发
+- 🚫 **零硬编码架构** - 完全消除硬编码，所有URL动态生成
+- 📦 **单文件配置** - `deploy.conf` 统一管理所有服务参数
+- 🔄 **环境自适应** - dev/production模式自动切换配置
+- 🌐 **动态URL构建** - 智能生成 `http://domain:port/path` 格式
+- 🛡️ **服务冲突预防** - 自动检测并避免重复服务部署
+- 🔧 **智能服务发现** - 优先使用已运行的独立服务
 
 <details>
 <summary><b>🔧 更多技术特性</b></summary>
