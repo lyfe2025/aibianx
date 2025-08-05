@@ -53,16 +53,39 @@ export default function SubscriptionSection({ className }: SubscriptionSectionPr
         setIsSubmitting(true)
 
         try {
-            // TODO: 处理邮箱订阅逻辑
-            console.log('订阅邮箱:', email)
-            // 模拟API调用
-            await new Promise(resolve => setTimeout(resolve, 1000))
-            setSubmitted(true)
-            setEmail('')
-            // 3秒后重置状态
-            setTimeout(() => setSubmitted(false), 3000)
+            // 调用邮件订阅API
+            const response = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/email-subscription/subscribe`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email.trim(),
+                    source: 'homepage',
+                    tags: ['newsletter', 'weekly'] // 首页订阅包含周刊标签
+                })
+            })
+
+            const result = await response.json()
+
+            if (response.ok) {
+                if (result.status === 'success') {
+                    alert('订阅成功！感谢加入AI变现之路社区，欢迎邮件已发送至您的邮箱')
+                } else if (result.status === 'existing') {
+                    alert('您已经订阅过了，感谢支持！')
+                } else if (result.status === 'resubscribed') {
+                    alert('欢迎回来！您已重新订阅我们的邮件列表')
+                }
+                setSubmitted(true)
+                setEmail('')
+                // 3秒后重置状态
+                setTimeout(() => setSubmitted(false), 3000)
+            } else {
+                alert(result.message || '订阅失败，请稍后重试')
+            }
         } catch (error) {
             console.error('订阅失败:', error)
+            alert('订阅失败，请稍后重试')
         } finally {
             setIsSubmitting(false)
         }

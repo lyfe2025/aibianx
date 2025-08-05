@@ -618,6 +618,56 @@ export interface ApiCommissionCommission extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiEmailSubscriptionEmailSubscription
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'email_subscriptions';
+  info: {
+    description: '\u90AE\u4EF6\u5217\u8868\u8BA2\u9605\u7BA1\u7406 - \u7BA1\u7406\u7528\u6237\u90AE\u4EF6\u5217\u8868\u8BA2\u9605\u72B6\u6001\u548C\u504F\u597D';
+    displayName: '\u90AE\u4EF6\u8BA2\u9605';
+    pluralName: 'email-subscriptions';
+    singularName: 'email-subscription';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    billionmailListIds: Schema.Attribute.JSON;
+    billionmailSubscriberId: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    lastEmailSent: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::email-subscription.email-subscription'
+    > &
+      Schema.Attribute.Private;
+    preferences: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    source: Schema.Attribute.Enumeration<
+      ['homepage', 'sidebar', 'footer', 'popup', 'api']
+    > &
+      Schema.Attribute.Required;
+    status: Schema.Attribute.Enumeration<
+      ['active', 'unsubscribed', 'bounced']
+    > &
+      Schema.Attribute.DefaultTo<'active'>;
+    subscribedAt: Schema.Attribute.DateTime;
+    tags: Schema.Attribute.JSON;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiInvitationInvitation extends Struct.CollectionTypeSchema {
   collectionName: 'invitations';
   info: {
@@ -677,6 +727,60 @@ export interface ApiInvitationInvitation extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiMembershipMembership extends Struct.CollectionTypeSchema {
+  collectionName: 'memberships';
+  info: {
+    description: '\u4F1A\u5458\u670D\u52A1\u7BA1\u7406 - \u7BA1\u7406\u7528\u6237\u4ED8\u8D39\u4F1A\u5458\u6743\u76CA\u548C\u670D\u52A1\u72B6\u6001';
+    displayName: '\u4F1A\u5458\u670D\u52A1';
+    pluralName: 'memberships';
+    singularName: 'membership';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    actualPrice: Schema.Attribute.Integer & Schema.Attribute.Required;
+    autoRenew: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    discountInfo: Schema.Attribute.JSON;
+    endDate: Schema.Attribute.Date;
+    features: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::membership.membership'
+    > &
+      Schema.Attribute.Private;
+    membershipLevel: Schema.Attribute.Enumeration<['basic', 'premium', 'vip']> &
+      Schema.Attribute.Required;
+    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
+    originalPrice: Schema.Attribute.Integer;
+    planName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    planType: Schema.Attribute.Enumeration<['monthly', 'yearly', 'lifetime']> &
+      Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    startDate: Schema.Attribute.Date & Schema.Attribute.Required;
+    status: Schema.Attribute.Enumeration<
+      ['active', 'expired', 'cancelled', 'suspended']
+    > &
+      Schema.Attribute.DefaultTo<'active'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    > &
+      Schema.Attribute.Required;
   };
 }
 
@@ -1172,56 +1276,6 @@ export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-  };
-}
-
-export interface ApiSubscriptionSubscription
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'subscriptions';
-  info: {
-    description: '\u4F1A\u5458\u8BA2\u9605\u7CFB\u7EDF - \u7BA1\u7406\u7528\u6237\u4F1A\u5458\u670D\u52A1\u72B6\u6001\u548C\u6743\u9650';
-    displayName: '\u4F1A\u5458\u8BA2\u9605';
-    pluralName: 'subscriptions';
-    singularName: 'subscription';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    autoRenew: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    endDate: Schema.Attribute.Date;
-    features: Schema.Attribute.JSON;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::subscription.subscription'
-    > &
-      Schema.Attribute.Private;
-    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
-    planName: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 100;
-      }>;
-    planType: Schema.Attribute.Enumeration<['monthly', 'yearly', 'lifetime']> &
-      Schema.Attribute.Required;
-    publishedAt: Schema.Attribute.DateTime;
-    startDate: Schema.Attribute.Date & Schema.Attribute.Required;
-    status: Schema.Attribute.Enumeration<
-      ['active', 'expired', 'cancelled', 'suspended']
-    > &
-      Schema.Attribute.DefaultTo<'active'>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<
-      'manyToOne',
-      'plugin::users-permissions.user'
-    > &
-      Schema.Attribute.Required;
   };
 }
 
@@ -1890,14 +1944,15 @@ declare module '@strapi/strapi' {
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
       'api::commission.commission': ApiCommissionCommission;
+      'api::email-subscription.email-subscription': ApiEmailSubscriptionEmailSubscription;
       'api::invitation.invitation': ApiInvitationInvitation;
+      'api::membership.membership': ApiMembershipMembership;
       'api::order.order': ApiOrderOrder;
       'api::payment-config.payment-config': ApiPaymentConfigPaymentConfig;
       'api::payment.payment': ApiPaymentPayment;
       'api::refund.refund': ApiRefundRefund;
       'api::seo-metrics.seo-metrics': ApiSeoMetricsSeoMetrics;
       'api::site-config.site-config': ApiSiteConfigSiteConfig;
-      'api::subscription.subscription': ApiSubscriptionSubscription;
       'api::system-config.system-config': ApiSystemConfigSystemConfig;
       'api::tag.tag': ApiTagTag;
       'plugin::content-releases.release': PluginContentReleasesRelease;

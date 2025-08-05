@@ -25,6 +25,23 @@ export function useSystemConfig() {
             try {
                 setIsLoading(true)
                 setError(null)
+                
+                // 构建时使用默认配置，避免API连接问题
+                if (typeof window === 'undefined') {
+                    setConfig({
+                        registrationEnabled: true,
+                        emailVerificationEnabled: true,
+                        passwordResetEnabled: true,
+                        verificationCodeLength: 6,
+                        maintenanceMode: false,
+                        oauthAutoRegister: true,
+                        enableUserProfileEdit: true,
+                        enableAccountDeletion: false
+                    })
+                    setIsLoading(false)
+                    return
+                }
+                
                 const configData = await getPublicSystemConfig()
                 setConfig(configData)
             } catch (err) {

@@ -12,6 +12,12 @@ interface ArticleDetailPageProps {
 
 // 生成静态路径（ISR）
 export async function generateStaticParams() {
+    // 构建时返回空数组，避免API连接问题
+    if (process.env.NODE_ENV === 'production' && typeof window === 'undefined') {
+        console.log('构建时跳过文章静态参数生成')
+        return []
+    }
+
     try {
         const { articles } = await getArticles({ pageSize: 100 })
         return articles.map((article) => ({

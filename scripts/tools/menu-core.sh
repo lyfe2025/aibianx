@@ -60,13 +60,20 @@ show_core_menu() {
     echo "  6) 搜索引擎管理         (MeiliSearch)"
     echo "  7) 邮件系统管理         (BillionMail)"
     echo "  8) 数据库管理          (备份+恢复)"
+    echo "  s) 订阅系统迁移         (subscription架构重构)"
     echo ""
     
     # 高级功能入口
     echo -e " ${theme_color}🔧 高级功能${NC}"
     echo "  9) 更多开发工具...      (字段配置+环境管理)"
     echo " 10) 环境管理...         (切换+配置+故障排查)"
-    echo " 11) 生产部署...         (生产环境专用功能)"
+    
+    # 环境特定功能
+    if [ "$env_type" = "production" ]; then
+        echo " 11) 生产部署...         (生产环境专用功能)"
+    else
+        echo " 11) 模拟生产环境...     (1:1生产环境验证)"
+    fi
     echo ""
     
     # 字母命令（保留最重要的）
@@ -127,19 +134,18 @@ execute_core_choice() {
         10) # 环境管理
             exec "$PROJECT_ROOT/scripts/tools/submenu-environment.sh"
             ;;
-        11) # 生产部署
+        11) # 生产部署/模拟生产环境
             if [ "$env_type" = "production" ]; then
                 exec "$PROJECT_ROOT/scripts/tools/submenu-production.sh"
             else
-                echo -e "${YELLOW}⚠️ 当前为开发环境，生产功能已禁用${NC}"
-                echo "请使用 'e' 切换到生产环境"
-                echo ""
-                read -p "按回车键返回主菜单..."
-                return 1
+                exec "$PROJECT_ROOT/scripts/tools/submenu-production-simulation.sh"
             fi
             ;;
         q|Q) # 日志查看
             exec "$PROJECT_ROOT/scripts/tools/quick-logs.sh"
+            ;;
+        s|S) # 订阅系统迁移
+            exec "$PROJECT_ROOT/scripts/tools/subscription-system-clean-setup.sh"
             ;;
         h|H) # 帮助信息
             exec "$PROJECT_ROOT/scripts/tools/show-help.sh"

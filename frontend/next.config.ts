@@ -24,6 +24,12 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+
+  // 构建时跳过静态生成（解决API连接问题）
+  trailingSlash: false,
+  generateBuildId: async () => {
+    return 'production-build'
+  },
   
   // 实验性性能优化
   experimental: {

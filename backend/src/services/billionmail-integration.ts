@@ -6,7 +6,7 @@
 import { BillionMailClient } from '../lib/billionmail-config';
 
 export class BillionMailIntegrationService {
-  private static billionMailClient = new BillionMailClient();
+  public static billionMailClient = new BillionMailClient();
   
   /**
    * 用户注册/OAuth登录时自动订阅

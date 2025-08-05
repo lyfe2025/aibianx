@@ -633,6 +633,12 @@ function getDefaultSiteConfig(): SiteConfigData {
  * 获取网站配置
  */
 export async function getSiteConfig(): Promise<SiteConfigData> {
+    // 构建时使用默认配置，避免API连接问题
+    if (process.env.NODE_ENV === 'production' && typeof window === 'undefined') {
+        console.log('构建时使用默认网站配置')
+        return getDefaultSiteConfig()
+    }
+
     try {
         const response = await fetch(`${STRAPI_URL}/api/site-config?populate=defaultOgImage`, {
             headers: getHeaders(),

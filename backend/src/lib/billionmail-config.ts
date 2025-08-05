@@ -77,6 +77,30 @@ export class BillionMailClient {
   }
 
   /**
+   * 取消订阅联系人
+   */
+  async unsubscribeContact(subscriberId: string): Promise<any> {
+    try {
+      const response = await fetch(`${this.config.apiUrl}/subscribers/${subscriberId}/unsubscribe`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.config.apiKey}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`BillionMail取消订阅失败: ${response.statusText}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('取消订阅失败:', error);
+      throw error;
+    }
+  }
+
+  /**
    * 发送系统邮件（注册确认、密码重置等）
    */
   async sendSystemEmail(templateId: string, email: string, variables: any): Promise<any> {

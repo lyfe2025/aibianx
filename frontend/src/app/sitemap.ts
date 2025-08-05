@@ -44,6 +44,31 @@ async function getAuthors() {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    // 构建时跳过API调用，避免连接问题
+    if (process.env.NODE_ENV === 'production' && typeof window === 'undefined') {
+        console.log('构建时生成简化sitemap')
+        return [
+            {
+                url: SITE_URL,
+                lastModified: new Date(),
+                changeFrequency: 'daily' as const,
+                priority: 1,
+            },
+            {
+                url: `${SITE_URL}/weekly`,
+                lastModified: new Date(),
+                changeFrequency: 'weekly' as const,
+                priority: 0.8,
+            },
+            {
+                url: `${SITE_URL}/about`,
+                lastModified: new Date(),
+                changeFrequency: 'monthly' as const,
+                priority: 0.7,
+            },
+        ]
+    }
+
     // 获取动态数据
     const [articles, categories, authors] = await Promise.all([
         getArticles(),

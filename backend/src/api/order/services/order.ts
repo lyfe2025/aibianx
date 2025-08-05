@@ -43,8 +43,8 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
       throw new Error(`未知的会员产品类型: ${productType}`);
     }
     
-    // 检查是否已有活跃订阅
-    const existingSubscriptions = await strapi.entityService.findMany('api::subscription.subscription', {
+    // 获取用户现有的活跃订阅
+    const existingMemberships = await strapi.entityService.findMany('api::membership.membership', {
       filters: {
         user: user.id,
         status: 'active'
@@ -52,8 +52,8 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
     });
     
     // 如果有活跃订阅，先结束它们
-    for (const subscription of existingSubscriptions) {
-      await strapi.entityService.update('api::subscription.subscription', subscription.id, {
+    for (const membership of existingMemberships) {
+      await strapi.entityService.update('api::membership.membership', membership.id, {
         data: {
           status: 'cancelled',
           endDate: new Date()
@@ -62,20 +62,23 @@ export default factories.createCoreService('api::order.order', ({ strapi }) => (
     }
     
     // 创建新的订阅记录
-    const newSubscription = await strapi.entityService.create('api::subscription.subscription', {
+    const newMembership = await strapi.entityService.create('api::membership.membership', {
       data: {
         user: user.id,
         order: order.id,
         planType: subscriptionData.planType,
         planName: subscriptionData.planName,
+        membershipLevel: subscriptionData.membershipLevel || 'premium',
+        actualPrice: subscriptionData.actualPrice || 0,
+        originalPrice: subscriptionData.originalPrice || 0,
         startDate: new Date(),
         endDate: subscriptionData.endDate,
-        status: 'active',
-        features: subscriptionData.features
+        status: 'active' as const,
+        features: subscriptionData.features as any
       }
     });
     
-    return newSubscription;
+    return newMembership;
   },
 
   /**

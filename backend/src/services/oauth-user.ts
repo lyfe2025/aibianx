@@ -38,7 +38,7 @@ export class OAuthUserService {
 
       // 2. 如果用户不存在，创建新用户
       if (!user) {
-        const userData = this.mapOAuthProfile(profile, account);
+        const userData = await this.mapOAuthProfile(profile, account);
         
         user = await strapi.query('plugin::users-permissions.user').create({
           data: {
@@ -80,12 +80,29 @@ export class OAuthUserService {
   /**
    * OAuth档案信息映射
    */
-  private static mapOAuthProfile(profile: OAuthProfile, account: OAuthAccount) {
+  private static async mapOAuthProfile(profile: OAuthProfile, account: OAuthAccount) {
     const provider = account.provider;
+    
+    // 获取系统用户作为默认邀请人
+    const systemUser = await this.getOrCreateSystemUser();
+    const inviteCode = await this.ensureUniqueInviteCode();
+    
+    const baseData = {
+      hasPassword: false,
+      membershipLevel: 'free', // 默认免费用户
+      inviteCode: inviteCode,
+      invitedBy: systemUser?.id || null, // 默认邀请人为系统用户
+      inviteCount: 0,
+      totalCommission: 0,
+      loginCount: 0,
+      membershipAutoRenew: false,
+      billionmailSubscribed: false
+    };
     
     switch (provider) {
       case 'github':
         return {
+          ...baseData,
           username: profile.login,
           email: profile.email,
           nickname: profile.name,
@@ -93,24 +110,21 @@ export class OAuthUserService {
           providerAccountId: profile.id,
           githubId: profile.id,
           githubUsername: profile.login,
-          hasPassword: false,
           isEmailVerified: true,
-          connectedProviders: ['github'],
-          inviteCode: this.generateInviteCode()
+          connectedProviders: ['github']
         };
         
       case 'google':
         return {
+          ...baseData,
           username: profile.email.split('@')[0],
           email: profile.email,
           nickname: profile.name,
           provider: 'google',
           providerAccountId: profile.sub,
           googleId: profile.sub,
-          hasPassword: false,
           isEmailVerified: profile.email_verified || false,
-          connectedProviders: ['google'],
-          inviteCode: this.generateInviteCode()
+          connectedProviders: ['google']
         };
         
       default:
@@ -152,7 +166,20 @@ export class OAuthUserService {
 
     // 生成邀请码（如果用户没有邀请码）
     if (!user.inviteCode) {
-      updateData.inviteCode = this.generateInviteCode();
+      updateData.inviteCode = await this.ensureUniqueInviteCode();
+    }
+
+    // 设置系统用户为邀请人（如果用户没有邀请人）
+    if (!user.invitedBy) {
+      const systemUser = await this.getOrCreateSystemUser();
+      if (systemUser) {
+        updateData.invitedBy = systemUser.id;
+      }
+    }
+
+    // 设置默认会员等级（如果用户没有会员等级）
+    if (!user.membershipLevel) {
+      updateData.membershipLevel = 'free';
     }
 
     return updateData;
@@ -236,6 +263,50 @@ export class OAuthUserService {
     }
     
     throw new Error('无法生成唯一邀请码');
+  }
+
+  /**
+   * 获取或创建系统用户
+   */
+  private static async getOrCreateSystemUser() {
+    try {
+      // 1. 尝试查找现有系统用户
+      let systemUser = await strapi.query('plugin::users-permissions.user').findOne({
+        where: { username: 'system' }
+      });
+
+      // 2. 如果不存在，创建系统用户
+      if (!systemUser) {
+        const defaultRole = await strapi.query('plugin::users-permissions.role').findOne({
+          where: { type: 'authenticated' }
+        });
+
+        systemUser = await strapi.query('plugin::users-permissions.user').create({
+          data: {
+            username: 'system',
+            email: 'system@aibianx.com',
+            nickname: '系统用户',
+            confirmed: true,
+            blocked: false,
+            membershipLevel: 'vip', // 系统用户设为VIP
+            inviteCode: 'SYSTEM00', // 固定的系统邀请码
+            hasPassword: false, // 系统用户无密码
+            role: defaultRole?.id || 1,
+            provider: 'local',
+            inviteCount: 0,
+            totalCommission: 0,
+            loginCount: 0
+          }
+        });
+        
+        strapi.log.info('创建系统用户成功:', systemUser.id);
+      }
+
+      return systemUser;
+    } catch (error) {
+      strapi.log.error('获取或创建系统用户失败:', error);
+      return null;
+    }
   }
 
   /**

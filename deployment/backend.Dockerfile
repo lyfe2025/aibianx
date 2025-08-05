@@ -11,7 +11,16 @@ RUN apk add --no-cache \
 # 复制package文件
 COPY package*.json ./
 
-# 安装Node.js依赖
+# 配置npm优化网络连接
+RUN npm config set registry https://registry.npmmirror.com && \
+    npm config set fund false && \
+    npm config set audit false && \
+    npm config set fetch-retry-mintimeout 20000 && \
+    npm config set fetch-retry-maxtimeout 120000 && \
+    npm config set fetch-retries 5 && \
+    npm config set fetch-timeout 300000
+
+# 安装Node.js依赖（网络优化版）
 RUN npm ci --only=production && \
     npm cache clean --force
 

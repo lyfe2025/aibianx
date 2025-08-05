@@ -118,7 +118,7 @@ show_usage() {
     echo "  tools        - 开发工具 (status, check-hardcode, pre-commit)"
     echo "  email        - 邮件系统 (deploy, check, admin, test)"
     echo "  backup       - 备份恢复 (full, restore, verify, cleanup)"
-    echo "  production   - 生产环境 (auto-deploy, configure, deploy)"
+    echo "  production   - 生产环境 (auto-deploy, configure, deploy, local-deploy)"
     echo ""
     echo -e "${BLUE}💡 快速示例:${NC}"
     echo "  ./scripts.sh deploy start           # 启动开发环境"
@@ -355,12 +355,15 @@ handle_command_line() {
                 "deploy")
                     exec "$SCRIPT_DIR/scripts/production/deploy-production.sh" "${3:-unified}" "$@"
                     ;;
+                "local-deploy")
+                    exec "$SCRIPT_DIR/scripts/production/local-production-deploy.sh" "$@"
+                    ;;
                 "status")
                     exec "$SCRIPT_DIR/scripts/production/manage-services.sh" status
                     ;;
                 *)
                     echo -e "${RED}❌ 未知的生产操作: $action${NC}"
-                    echo "可用操作: auto-deploy, configure, deploy, status"
+                    echo "可用操作: auto-deploy, configure, deploy, local-deploy, status"
                     echo "更多生产功能请使用交互模式: ./scripts.sh"
                     exit 1
                     ;;

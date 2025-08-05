@@ -60,15 +60,15 @@ export default factories.createCoreService('api::refund.refund', ({ strapi }) =>
    * 取消相关订阅
    */
   async cancelRelatedSubscription(orderId: number) {
-    const subscriptions = await strapi.entityService.findMany('api::subscription.subscription', {
+    const memberships = await strapi.entityService.findMany('api::membership.membership', {
       filters: {
         order: { id: orderId },
         status: 'active'
       }
     });
     
-    const updatePromises = subscriptions.map(subscription =>
-      strapi.entityService.update('api::subscription.subscription', subscription.id, {
+    const updatePromises = memberships.map(membership =>
+      strapi.entityService.update('api::membership.membership', membership.id, {
         data: {
           status: 'cancelled',
           endDate: new Date()
