@@ -1,0 +1,52 @@
+{
+  "name": "backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Strapi application",
+  "scripts": {
+    "build": "strapi build",
+    "console": "strapi console",
+    "deploy": "strapi deploy",
+    "dev": "strapi develop",
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "strapi": "strapi",
+    "upgrade": "npx @strapi/upgrade latest",
+    "upgrade:dry": "npx @strapi/upgrade latest --dry",
+    "script:configure-new-content-types": "strapi script scripts/configure-new-content-types.js",
+    "script:cleanup-old-subscription": "strapi script scripts/cleanup-old-subscription.js"
+  },
+  "dependencies": {
+    "@strapi/plugin-cloud": "5.20.0",
+    "@strapi/plugin-documentation": "^5.20.0",
+    "@strapi/plugin-users-permissions": "5.20.0",
+    "@strapi/strapi": "5.20.0",
+    "@types/nodemailer": "^6.4.17",
+    "alipay-sdk": "^4.14.0",
+    "axios": "^1.11.0",
+    "meilisearch": "^0.51.0",
+    "nodemailer": "^7.0.5",
+    "pg": "^8.8.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "stripe": "^18.4.0",
+    "styled-components": "^6.0.0",
+    "wechatpay-axios-plugin": "^0.9.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "esbuild": "^0.19.12",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=22.x.x",
+    "npm": ">=6.0.0"
+  },
+  "strapi": {
+    "uuid": "3630a1d2-96a5-467a-bb2e-6e6e3a19f26a",
+    "installId": "a907e9847164b9442cf81deb9a7311946b177bf0e520c072e064381e21b8ecbd"
+  }
+}

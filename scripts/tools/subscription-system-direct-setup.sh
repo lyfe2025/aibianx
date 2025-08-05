@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# 获取项目根目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# 加载统一环境配置
+source "${PROJECT_ROOT}/deployment/configure-unified-env.sh"
+
+
 # 订阅系统架构重构 - 直接执行（跳过前置检查）
 # 直接配置新架构，移除旧subscription引用
 
@@ -150,7 +158,7 @@ import { MembershipPurchaseModal } from '@/components/organisms'
 \`\`\`
 
 ## 🔍 验证清单
-- [ ] Admin界面显示中文字段名称: http://localhost:1337/admin
+- [ ] Admin界面显示中文字段名称: ${ADMIN_URL}
 - [ ] 邮件订阅功能正常工作
 - [ ] 会员购买流程正常
 - [ ] BillionMail集成正常
@@ -195,7 +203,7 @@ main() {
     echo ""
     echo -e "${BLUE}📋 接下来请验证:${NC}"
     echo "1. 等待服务启动完成（约1-2分钟）"
-    echo "2. 访问Admin: http://localhost:1337/admin"
+    echo "2. 访问Admin: ${ADMIN_URL}"
     echo "3. 检查新内容类型的中文字段显示"
     echo "4. 测试邮件订阅和会员购买功能"
     echo ""

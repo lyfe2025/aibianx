@@ -495,7 +495,7 @@ wait_for_production_services() {
     echo -e "${BLUE}🔍 等待MeiliSearch搜索引擎...${NC}"
     attempt=0
     while [ $attempt -lt $max_attempts ]; do
-        if curl -s "http://localhost:7700/health" >/dev/null 2>&1; then
+        if curl -s "${MEILISEARCH_URL}/health" >/dev/null 2>&1; then
             echo -e "${GREEN}✅ MeiliSearch搜索引擎已就绪${NC}"
             break
         fi
@@ -508,7 +508,7 @@ wait_for_production_services() {
     echo -e "${BLUE}⚙️  等待Strapi后端API...${NC}"
     attempt=0
     while [ $attempt -lt $max_attempts ]; do
-        if curl -s "http://localhost:1337/api" >/dev/null 2>&1; then
+        if curl -s "${BACKEND_URL}/api" >/dev/null 2>&1; then
             echo -e "${GREEN}✅ Strapi后端API已就绪${NC}"
             break
         fi
@@ -534,7 +534,7 @@ wait_for_production_services() {
     echo -e "${BLUE}📧 等待BillionMail邮件系统...${NC}"
     attempt=0
     while [ $attempt -lt $max_attempts ]; do
-        if curl -s "http://localhost:8080" >/dev/null 2>&1; then
+        if curl -s "${BILLIONMAIL_URL}" >/dev/null 2>&1; then
             echo -e "${GREEN}✅ BillionMail邮件系统已就绪${NC}"
             break
         fi
@@ -567,7 +567,7 @@ verify_production_deployment() {
     
     # 验证后端API
     echo -n "⚙️  后端API: "
-    if curl -s "http://localhost:1337/api" | grep -q "data\|message" 2>/dev/null; then
+    if curl -s "${BACKEND_URL}/api" | grep -q "data\|message" 2>/dev/null; then
         echo -e "${GREEN}✅ 正常${NC}"
     else
         echo -e "${RED}❌ 异常${NC}"
@@ -576,7 +576,7 @@ verify_production_deployment() {
     
     # 验证管理后台
     echo -n "👤 管理后台: "
-    if curl -s "http://localhost:1337/admin" >/dev/null 2>&1; then
+    if curl -s "${ADMIN_URL}" >/dev/null 2>&1; then
         echo -e "${GREEN}✅ 正常${NC}"
     else
         echo -e "${RED}❌ 异常${NC}"
@@ -585,7 +585,7 @@ verify_production_deployment() {
     
     # 验证搜索引擎
     echo -n "🔍 搜索引擎: "
-    if curl -s "http://localhost:7700/health" >/dev/null 2>&1; then
+    if curl -s "${MEILISEARCH_URL}/health" >/dev/null 2>&1; then
         echo -e "${GREEN}✅ 正常${NC}"
     else
         echo -e "${RED}❌ 异常${NC}"
@@ -594,7 +594,7 @@ verify_production_deployment() {
     
     # 验证邮件系统
     echo -n "📧 邮件系统: "
-    if curl -s "http://localhost:8080" >/dev/null 2>&1; then
+    if curl -s "${BILLIONMAIL_URL}" >/dev/null 2>&1; then
         echo -e "${GREEN}✅ 正常${NC}"
     else
         echo -e "${RED}❌ 异常${NC}"

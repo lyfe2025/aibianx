@@ -166,9 +166,9 @@ echo "----------------------------------------"
 if docker ps --format "{{.Names}}" | grep -q "aibianx-" 2>/dev/null; then
     echo "🟢 模拟环境正在运行，进行快速验证..."
     check_item "验证" "前端应用响应" "curl -s http://bianx.local" "warning"
-    check_item "验证" "后端API响应" "curl -s http://localhost:1337/api" "warning"
-    check_item "验证" "搜索引擎响应" "curl -s http://localhost:7700/health" "warning"
-    check_item "验证" "邮件系统响应" "curl -s http://localhost:8080" "warning"
+    check_item "验证" "后端API响应" "curl -s ${BACKEND_URL}/api" "warning"
+    check_item "验证" "搜索引擎响应" "curl -s ${MEILISEARCH_URL}/health" "warning"
+    check_item "验证" "邮件系统响应" "curl -s ${BILLIONMAIL_URL}" "warning"
 else
     echo -e "${YELLOW}⚠️ 模拟环境未运行，建议先启动进行验证${NC}"
 fi

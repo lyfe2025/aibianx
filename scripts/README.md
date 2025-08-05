@@ -367,13 +367,12 @@ psql -U aibianx_dev -d aibianx_dev -c "VACUUM ANALYZE;"
 
 ## 🧠 智能环境管理系统
 
-### 环境自动检测
-系统会自动检测当前环境，并提供相应的菜单和功能：
+### 极简配置管理
+系统采用极简配置设计，通过单一配置文件管理所有设置：
 
 ```bash
-# 环境标记文件
-.development  # 开发环境标记
-.production   # 生产环境标记
+# 唯一配置文件
+deployment/config/deploy.conf  # 统一配置文件，支持开发和生产环境
 ```
 
 ### 自适应菜单

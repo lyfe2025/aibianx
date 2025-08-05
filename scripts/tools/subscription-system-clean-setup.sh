@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# 获取项目根目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# 加载统一环境配置
+source "${PROJECT_ROOT}/deployment/configure-unified-env.sh"
+
+
 # 订阅系统架构重构 - 全新设置（无数据迁移）
 # 直接配置新架构，移除旧subscription引用
 
@@ -21,7 +29,7 @@ check_prerequisites() {
     echo -e "${BLUE}🔍 检查前置条件...${NC}"
     
     # 检查Strapi服务是否运行
-    if ! curl -s http://localhost:1337/admin > /dev/null 2>&1; then
+    if ! url_health_check "${ADMIN_URL}" "Strapi管理后台"; then
         echo -e "${RED}❌ Strapi服务未运行，请先启动后端服务${NC}"
         echo "命令: ./scripts.sh deployment start-backend"
         exit 1
@@ -99,7 +107,7 @@ restart_services() {
         sleep 10
         
         # 检查服务状态
-        if curl -s http://localhost:1337/admin > /dev/null; then
+        if url_health_check "${ADMIN_URL}" "Strapi管理后台"; then
             echo -e "${GREEN}✅ 服务启动成功${NC}"
         else
             echo -e "${YELLOW}⚠️  服务启动中，请稍等...${NC}"
@@ -119,7 +127,7 @@ verify_new_architecture() {
     echo "📡 测试新API端点..."
     
     # 测试邮件订阅API
-    if curl -s -X POST http://localhost:1337/api/email-subscription/subscribe \
+    if curl -s -X POST ${BACKEND_URL}/api/email-subscription/subscribe \
         -H "Content-Type: application/json" \
         -d '{"email":"test@example.com","source":"test"}' > /dev/null; then
         echo -e "${GREEN}✅ 邮件订阅API正常${NC}"
@@ -130,8 +138,8 @@ verify_new_architecture() {
     # 检查Admin界面访问
     echo "🎨 检查Admin界面..."
     echo "请访问以下地址验证新内容类型:"
-    echo "  📧 邮件订阅: http://localhost:1337/admin/content-manager/collection-types/api::email-subscription.email-subscription"
-    echo "  💎 会员服务: http://localhost:1337/admin/content-manager/collection-types/api::membership.membership"
+    echo "  📧 邮件订阅: ${ADMIN_URL}/content-manager/collection-types/api::email-subscription.email-subscription"
+    echo "  💎 会员服务: ${ADMIN_URL}/content-manager/collection-types/api::membership.membership"
 }
 
 # 清理旧文件（可选）
@@ -281,7 +289,7 @@ main() {
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
     echo -e "${BLUE}📋 接下来请验证:${NC}"
-    echo "1. 访问Admin检查字段显示: http://localhost:1337/admin"
+    echo "1. 访问Admin检查字段显示: ${ADMIN_URL}"
     echo "2. 测试邮件订阅功能"
     echo "3. 测试会员购买功能"
     echo "4. 确认BillionMail集成正常"

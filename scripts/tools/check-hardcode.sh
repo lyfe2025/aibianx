@@ -50,6 +50,54 @@ record_issue() {
     HARDCODE_ISSUES="${HARDCODE_ISSUES}[$severity] $file:$line - $issue\n"
 }
 
+# 检查是否应该跳过硬编码检查
+should_skip_hardcode_check() {
+    local file="$1"
+    local content="$2"
+    
+    # 跳过注释行
+    if [[ "$content" =~ ^[[:space:]]*# ]]; then
+        return 0
+    fi
+    
+    # 跳过文档文件
+    if [[ "$file" =~ \.md$ ]]; then
+        return 0
+    fi
+    
+    # 跳过检查工具自身
+    if [[ "$file" =~ check-hardcode\.sh$ ]]; then
+        return 0
+    fi
+    
+    # 跳过修复工具（包含URL映射表是正常的）
+    if [[ "$file" =~ fix-hardcoded-urls\.sh$ ]] || [[ "$file" =~ quick-fix-hardcode\.sh$ ]]; then
+        return 0
+    fi
+    
+    # 跳过配置示例文件
+    if [[ "$file" =~ \.example$ ]] || [[ "$file" =~ \.template$ ]]; then
+        return 0
+    fi
+    
+    # 跳过备份文件
+    if [[ "$file" =~ \.backup\. ]]; then
+        return 0
+    fi
+    
+    # 跳过已经修复的动态变量（不应该被认为是硬编码）
+    if [[ "$content" =~ \$\{.*URL.*\} ]]; then
+        return 0
+    fi
+    
+    # 跳过URL映射表定义（在修复脚本中是正常的）
+    if [[ "$content" =~ URL_REPLACEMENTS ]] || [[ "$content" =~ declare.*-A ]]; then
+        return 0
+    fi
+    
+    return 1
+}
+
 echo -e "${BLUE}📋 检查范围:${NC}"
 echo "   • 脚本文件: scripts/"
 echo "   • 配置文件: deployment/"
@@ -67,8 +115,8 @@ while IFS= read -r line; do
         line_num=$(echo "$line" | cut -d: -f2)
         content=$(echo "$line" | cut -d: -f3-)
         
-        # 跳过注释行、文档和检查工具自身
-        if [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]] || [[ "$file" =~ check-hardcode\.sh$ ]]; then
+        # 排除不应该检测的文件和内容
+        if should_skip_hardcode_check "$file" "$content"; then
             continue
         fi
         
@@ -83,7 +131,7 @@ while IFS= read -r line; do
         line_num=$(echo "$line" | cut -d: -f2)
         content=$(echo "$line" | cut -d: -f3-)
         
-        if [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]] || [[ "$file" =~ check-hardcode\.sh$ ]]; then
+        if should_skip_hardcode_check "$file" "$content"; then
             continue
         fi
         
@@ -103,8 +151,13 @@ for port in "${HARDCODED_PORTS[@]}"; do
             line_num=$(echo "$line" | cut -d: -f2)
             content=$(echo "$line" | cut -d: -f3-)
             
-            # 跳过已经使用变量的情况和注释
-            if [[ "$content" =~ \$.*$port ]] || [[ "$content" =~ ^[[:space:]]*# ]] || [[ "$file" =~ \.md$ ]]; then
+            # 使用统一的排除检查
+            if should_skip_hardcode_check "$file" "$content"; then
+                continue
+            fi
+            
+            # 跳过已经使用变量的情况
+            if [[ "$content" =~ \$.*$port ]]; then
                 continue
             fi
             

@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# 获取项目根目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# 加载统一环境配置
+source "${PROJECT_ROOT}/deployment/configure-unified-env.sh"
+
+
 # AI变现之路 - 生产级健康检查脚本
 # 全面检查生产环境所有服务的健康状态
 
@@ -111,11 +119,11 @@ echo "----------------------------------------"
 # 基础服务健康检查
 health_check "PostgreSQL数据库" "docker exec aibianx-postgres pg_isready -U postgres"
 health_check "Redis缓存" "docker exec aibianx-redis redis-cli ping | grep -q PONG"
-health_check "MeiliSearch搜索引擎" "curl -s http://localhost:7700/health"
-health_check "Strapi后端API" "curl -s http://localhost:1337/api"
+health_check "MeiliSearch搜索引擎" "curl -s ${MEILISEARCH_URL}/health"
+health_check "Strapi后端API" "curl -s ${BACKEND_URL}/api"
 health_check "Next.js前端应用" "curl -s http://bianx.local"
-health_check "BillionMail邮件系统" "curl -s http://localhost:8080"
-health_check "Nginx网关" "curl -s http://localhost:80"
+health_check "BillionMail邮件系统" "curl -s ${BILLIONMAIL_URL}"
+health_check "Nginx网关" "curl -s ${FRONTEND_URL}:80"
 
 echo ""
 echo -e "${CYAN}📊 详细健康检查${NC}"
@@ -124,11 +132,11 @@ echo "=========================================="
 # 详细健康检查
 detailed_health_check "PostgreSQL数据库" "aibianx-postgres" "5432"
 detailed_health_check "Redis缓存" "aibianx-redis" "6379"
-detailed_health_check "MeiliSearch搜索引擎" "aibianx-meilisearch" "7700" "http://localhost:7700/health"
-detailed_health_check "Strapi后端应用" "aibianx-backend" "1337" "http://localhost:1337/api"
+detailed_health_check "MeiliSearch搜索引擎" "aibianx-meilisearch" "7700" "${MEILISEARCH_URL}/health"
+detailed_health_check "Strapi后端应用" "aibianx-backend" "1337" "${BACKEND_URL}/api"
 detailed_health_check "Next.js前端应用" "aibianx-frontend" "3000" "http://bianx.local"
-detailed_health_check "BillionMail核心" "aibianx-billionmail-core" "8080" "http://localhost:8080"
-detailed_health_check "Nginx网关" "aibianx-nginx" "80" "http://localhost:80"
+detailed_health_check "BillionMail核心" "aibianx-billionmail-core" "8080" "${BILLIONMAIL_URL}"
+detailed_health_check "Nginx网关" "aibianx-nginx" "80" "${FRONTEND_URL}:80"
 
 echo -e "${CYAN}📧 邮件系统组件检查${NC}"
 echo "----------------------------------------"

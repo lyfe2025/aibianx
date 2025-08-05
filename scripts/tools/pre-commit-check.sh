@@ -109,10 +109,11 @@ else
 fi
 
 echo "   检查动态配置加载..."
-if source "$PROJECT_ROOT/scripts/tools/load-config.sh" 2>/dev/null; then
+if source "$PROJECT_ROOT/deployment/configure-unified-env.sh" 2>/dev/null; then
     record_success "动态配置加载成功"
     echo "      FRONTEND_URL: $FRONTEND_URL"
-    echo "      BACKEND_API_URL: $BACKEND_API_URL"
+    echo "      BACKEND_URL: $BACKEND_URL"
+    echo "      ADMIN_URL: $ADMIN_URL"
 else
     record_error "动态配置加载失败"
 fi
@@ -122,14 +123,14 @@ echo -e "${BLUE}3️⃣ 服务可用性检查 (可选)${NC}"
 
 if command -v curl > /dev/null 2>&1; then
     echo "   检查后端API可访问性..."
-    if [ -n "$BACKEND_API_URL" ]; then
-        if curl -s --max-time 5 "${BACKEND_API_URL}/articles" > /dev/null 2>&1; then
+    if [ -n "$BACKEND_URL" ]; then
+        if curl -s --max-time 5 "${BACKEND_URL}/api/articles" > /dev/null 2>&1; then
             record_success "后端API正常"
         else
             record_warning "后端API不可访问（可能服务未启动）"
         fi
     else
-        record_warning "BACKEND_API_URL 未设置"
+        record_warning "BACKEND_URL 未设置"
     fi
 
     echo "   检查前端页面可访问性..."
@@ -184,10 +185,10 @@ fi
 
 echo ""
 echo -e "${BLUE}📋 快速修复建议${NC}"
-echo "• 硬编码问题: 查看 .cursor/rules/hardcode-prevention.mdc"
+echo "• 硬编码问题: 运行 ./scripts/tools/check-hardcode.sh"
 echo "• 语法错误: 使用 bash -n script.sh 检查具体语法"
-echo "• 配置问题: 运行 ./deployment/configure-unified-env.sh dev"
-echo "• 服务启动: 运行 ./scripts.sh deploy start"
+echo "• 配置问题: 检查 deployment/config/deploy.conf 和运行 ./deployment/configure-unified-env.sh"
+echo "• 服务启动: 运行 ./scripts.sh 选择选项2启动环境"
 
 # 退出码
 if [ $TOTAL_ERRORS -gt 0 ]; then

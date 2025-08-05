@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./data/database:/var/lib/postgresql/data
       - postgres_socket:/var/run/postgresql
       - ./configs/postgresql:/docker-entrypoint-initdb.d
     ports:
@@ -28,7 +28,7 @@ services:
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
     volumes:
-      - redis_data:/data
+      - ./data/redis:/data
     ports:
       - "6379:6379"
     networks:
@@ -43,7 +43,7 @@ services:
       MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
       MEILI_ENV: production
     volumes:
-      - meilisearch_data:/meili_data
+      - ./data/meilisearch:/meili_data
     ports:
       - "7700:7700"
     networks:
@@ -59,7 +59,7 @@ services:
     env_file:
       - ../backend/.env
     volumes:
-      - uploads_data:/app/public/uploads
+      - ../backend/public/uploads:/app/public/uploads
       - strapi_cache:/app/.cache
     ports:
       - "1337:1337"
@@ -112,7 +112,7 @@ services:
       - REDISPASS=${REDIS_PASSWORD}
     volumes:
       - ./configs/billionmail/rspamd:/etc/rspamd/local.d
-      - rspamd_data:/var/lib/rspamd
+      - ./data/rspamd:/var/lib/rspamd
       - ./data/logs/rspamd:/var/log/rspamd
     depends_on:
       - redis
@@ -136,8 +136,8 @@ services:
     volumes:
       - ./configs/billionmail/dovecot:/etc/dovecot
       - ./data/logs/dovecot:/var/log/mail
-      - ssl_data:/etc/ssl/mail
-      - vmail_data:/var/vmail
+      - ./data/ssl:/etc/ssl/mail
+      - ./data/vmail:/var/vmail
       - postgres_socket:/var/run/postgresql
     ports:
       - "143:143"   # IMAP
@@ -167,8 +167,8 @@ services:
     volumes:
       - ./configs/billionmail/postfix:/etc/postfix/conf
       - ./data/logs/postfix:/var/log/mail
-      - ssl_data:/etc/ssl/mail
-      - postfix_data:/var/spool/postfix
+      - ./data/ssl:/etc/ssl/mail
+      - ./data/postfix:/var/spool/postfix
       - postgres_socket:/var/run/postgresql
     ports:
       - "25:25"     # SMTP
@@ -195,7 +195,7 @@ services:
       - ROUNDCUBEMAIL_DEFAULT_HOST=dovecot
       - ROUNDCUBEMAIL_SMTP_SERVER=postfix
     volumes:
-      - webmail_data:/var/www/html
+      - ./data/webmail:/var/www/html
       - ./configs/billionmail/webmail:/var/roundcube/config
     depends_on:
       - postgres
@@ -222,12 +222,12 @@ services:
       - ADMIN_USERNAME=${BILLIONMAIL_ADMIN_USERNAME}
       - ADMIN_PASSWORD=${BILLIONMAIL_ADMIN_PASSWORD}
     volumes:
-      - ssl_data:/etc/ssl/mail
+      - ./data/ssl:/etc/ssl/mail
       - ./configs/billionmail/core:/opt/billionmail/conf
       - ./data/logs/billionmail:/opt/billionmail/logs
-      - core_data:/opt/billionmail/core/data
+      - ./data/billionmail-core:/opt/billionmail/core/data
       - postgres_socket:/opt/billionmail/postgresql-socket
-      - webmail_data:/opt/billionmail/webmail-data
+      - ./data/webmail:/opt/billionmail/webmail-data
       - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - "8080:8080"  # BillionMail 管理界面
@@ -244,7 +244,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./nginx-unified.conf:/etc/nginx/nginx.conf:ro
-      - ssl_data:/etc/ssl/certs:ro
+      - ./data/ssl:/etc/ssl/certs:ro
     ports:
       - "80:80"
       - "443:443"
@@ -258,18 +258,8 @@ services:
 
 # ===== 数据卷定义 =====
 volumes:
-  postgres_data:
   postgres_socket:
-  redis_data:
-  meilisearch_data:
-  uploads_data:
   strapi_cache:
-  rspamd_data:
-  vmail_data:
-  postfix_data:
-  webmail_data:
-  core_data:
-  ssl_data:
 
 # ===== 网络定义 =====
 networks:

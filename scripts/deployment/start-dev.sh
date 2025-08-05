@@ -9,6 +9,13 @@ echo "========================================="
 # 创建日志目录
 mkdir -p logs
 
+# 获取项目根目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# 加载统一环境配置（优先）
+source "${PROJECT_ROOT}/deployment/configure-unified-env.sh"
+
 # 检查Node.js版本
 if ! command -v node &> /dev/null; then
     echo "❌ Node.js 未安装，请先安装 Node.js 18+"
@@ -17,7 +24,7 @@ fi
 
 echo "✅ Node.js 版本: $(node --version)"
 
-# 加载统一配置
+# 加载兼容的旧配置（保持向后兼容）
 source "$(dirname "$0")/../tools/load-config.sh"
 source "$(dirname "$0")/../tools/load-env.sh"
 load_config
@@ -137,7 +144,7 @@ deploy_meilisearch() {
         while [ $count -lt 15 ]; do
             if docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
                 echo "✅ MeiliSearch部署成功"
-                echo "   🌐 Web管理界面: http://localhost:7700"
+                echo "   🌐 Web管理界面: ${MEILISEARCH_URL}"
                 echo "   🔓 开发模式: 无需API密钥"
                 
                 # 🔧 自动配置开发环境变量（清理API密钥）
@@ -155,8 +162,62 @@ deploy_meilisearch() {
     fi
 }
 
+# 自动部署BillionMail邮件系统
+deploy_billionmail() {
+    echo ""
+    echo "📧 检查BillionMail邮件系统..."
+    
+    # 检查BillionMail容器是否已存在
+    if docker ps -a --format "table {{.Names}}" | grep -q "^aibianx-billionmail-core$"; then
+        # 检查是否正在运行
+        if docker ps --format "table {{.Names}}" | grep -q "^aibianx-billionmail-core$"; then
+            echo "✅ BillionMail已运行"
+            echo "   🌐 管理界面: ${BILLIONMAIL_WEB}"
+            return 0
+        else
+            echo "🔄 启动现有BillionMail容器..."
+            docker start aibianx-billionmail-core > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                echo "✅ BillionMail启动成功"
+                echo "   🌐 管理界面: ${BILLIONMAIL_URL}"
+                return 0
+            fi
+        fi
+    fi
+    
+    echo "🚀 自动部署BillionMail (容器模式)..."
+    
+    # 检查是否有统一配置和Docker Compose文件
+    if [ -f "deployment/.env" ] && [ -f "deployment/docker-compose.unified.yml" ]; then
+        echo "   📦 使用统一容器部署..."
+        cd deployment
+        
+        # 启动BillionMail相关服务
+        docker-compose -f docker-compose.unified.yml up -d billionmail-core postfix dovecot rspamd webmail > /dev/null 2>&1
+        
+        if [ $? -eq 0 ]; then
+            echo "✅ BillionMail部署成功"
+            echo "   🌐 管理界面: ${BILLIONMAIL_WEB}"
+            echo "   📧 WebMail: ${BILLIONMAIL_URL}/webmail"
+            echo "   🔐 管理员: admin / (查看deployment/.env)"
+        else
+            echo "❌ BillionMail部署失败，请检查Docker状态"
+        fi
+        
+        cd ..
+    else
+        echo "⚠️  统一配置文件不存在，跳过BillionMail自动部署"
+        echo "💡 运行 ./scripts/tools/generate-configs.sh 生成配置"
+    fi
+}
+
 # 调用MeiliSearch部署
 deploy_meilisearch
+
+# 调用BillionMail部署 (如果启用)
+if [ "${AUTO_DEPLOY_BILLIONMAIL:-true}" = "true" ]; then
+    deploy_billionmail
+fi
 
 # 检查PostgreSQL服务
 check_postgresql() {
@@ -386,7 +447,7 @@ if [ "$AUTO_SYNC_SEARCH" = "true" ]; then
             echo "$(date '+%Y-%m-%d %H:%M:%S') - 🔍 等待MeiliSearch服务启动..." >> logs/search-sync.log
             local wait_count=0
             while [ $wait_count -lt 60 ]; do
-                if curl -s http://localhost:7700/health > /dev/null 2>&1; then
+                if curl -s ${MEILISEARCH_URL}/health > /dev/null 2>&1; then
                     echo "$(date '+%Y-%m-%d %H:%M:%S') - ✅ MeiliSearch服务已就绪" >> logs/search-sync.log
                     break
                 fi
@@ -408,7 +469,7 @@ if [ "$AUTO_SYNC_SEARCH" = "true" ]; then
         SEARCH_SYNC_PID=$!
         echo "✅ 搜索索引同步已启动 (后台运行，PID: $SEARCH_SYNC_PID)"
         echo "📝 同步日志: logs/search-sync.log"
-        echo "🔍 MeiliSearch管理: http://localhost:7700"
+        echo "🔍 MeiliSearch管理: ${MEILISEARCH_URL}"
         
         # 保存搜索同步PID
         mkdir -p .pids

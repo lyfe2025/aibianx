@@ -1,0 +1,106 @@
+{
+  "collectionName": "components_payment_stripe_configs",
+  "info": {
+    "displayName": "Stripe配置",
+    "description": "Stripe支付相关配置，包含API密钥、Webhook密钥等必要信息"
+  },
+  "options": {},
+  "attributes": {
+    "enabled": {
+      "type": "boolean",
+      "default": false,
+      "required": true,
+      "description": "启用Stripe支付"
+    },
+    
+    "publishableKey": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Stripe可发布密钥（前端使用）"
+    },
+    
+    "secretKey": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Stripe密钥（后端使用）"
+    },
+    
+    "webhookSecret": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Webhook签名密钥"
+    },
+    
+    "apiVersion": {
+      "type": "string",
+      "default": "2023-10-16",
+      "maxLength": 20,
+      "description": "Stripe API版本"
+    },
+    
+    "defaultCurrency": {
+      "type": "enumeration",
+      "enum": ["usd", "eur", "cny", "jpy", "hkd", "sgd"],
+      "default": "usd",
+      "description": "默认货币"
+    },
+    
+    "supportedCurrencies": {
+      "type": "json",
+      "default": ["usd", "eur", "cny"],
+      "description": "支持的货币列表"
+    },
+    
+    "supportedMethods": {
+      "type": "json",
+      "default": {
+        "card": true,
+        "alipay": true,
+        "wechat_pay": false,
+        "paypal": false
+      },
+      "description": "支持的支付方式"
+    },
+    
+    "enableApplePay": {
+      "type": "boolean",
+      "default": false,
+      "description": "启用Apple Pay"
+    },
+    
+    "enableGooglePay": {
+      "type": "boolean", 
+      "default": false,
+      "description": "启用Google Pay"
+    },
+    
+    "automaticPaymentMethods": {
+      "type": "boolean",
+      "default": true,
+      "description": "启用自动支付方式检测"
+    },
+    
+    "webhookEndpoint": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Webhook端点（自动生成：{callbackBaseUrl}/api/payment/stripe/webhook）"
+    },
+    
+    "configStatus": {
+      "type": "enumeration",
+      "enum": ["draft", "configured", "testing", "active"],
+      "default": "draft",
+      "description": "配置状态"
+    },
+    
+    "lastTestedAt": {
+      "type": "datetime",
+      "description": "最后测试时间"
+    },
+    
+    "testResult": {
+      "type": "json",
+      "description": "测试结果详情"
+    }
+  }
+}

@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# 获取项目根目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# 加载统一环境配置
+source "${PROJECT_ROOT}/deployment/configure-unified-env.sh"
+
+
 # MeiliSearch 一键部署脚本
 # AI变现之路项目 - 搜索引擎快速部署
 # 
@@ -74,7 +82,7 @@ if [ "$DEPLOY_MODE" = "1" ]; then
     # ========================================
     # 配置说明：
     # - MEILI_ENV=development: 开发模式，启用Web管理界面
-    # - 端口7700: 映射到本地7700端口，可直接访问 http://localhost:7700
+    # - 端口7700: 映射到本地7700端口，可直接访问 ${MEILISEARCH_URL}
     # - 数据持久化: 使用Docker卷保存搜索数据
     # - 自动重启: 容器异常时自动重启，保证服务稳定性
     # ========================================
