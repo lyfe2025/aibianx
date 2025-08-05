@@ -427,7 +427,14 @@ download_project_archive() {
                     local extracted_dir=$(find /tmp -maxdepth 1 -name "aibianx-*" -type d | head -1)
                     if [[ -n "$extracted_dir" ]]; then
                         sudo mv "$extracted_dir" "$INSTALL_DIR"
-                        sudo chown -R $USER:$USER "$INSTALL_DIR"
+                        
+                        # 智能处理用户组权限 (macOS vs Linux)
+                        if [[ "$DISTRO" == "macos" ]]; then
+                            sudo chown -R $USER:staff "$INSTALL_DIR"
+                        else
+                            sudo chown -R $USER:$USER "$INSTALL_DIR"
+                        fi
+                        
                         rm -f "$temp_archive"
                         log_success "项目压缩包下载解压完成"
                         return 0
@@ -488,7 +495,15 @@ clone_project() {
     # 创建安装目录
     log_info "创建安装目录: $INSTALL_DIR"
     sudo mkdir -p "$INSTALL_DIR"
-    sudo chown $USER:$USER "$INSTALL_DIR"
+    
+    # 智能处理用户组权限 (macOS vs Linux)
+    if [[ "$DISTRO" == "macos" ]]; then
+        # macOS 使用 staff 组
+        sudo chown $USER:staff "$INSTALL_DIR"
+    else
+        # Linux 系统通常用户名和组名相同
+        sudo chown $USER:$USER "$INSTALL_DIR"
+    fi
     
     # 多源下载策略
     if ! download_project_archive "archive"; then
@@ -502,7 +517,16 @@ clone_project() {
     
     # 设置权限
     log_info "设置文件权限..."
-    sudo chown -R $USER:$USER "$INSTALL_DIR"
+    
+    # 智能处理用户组权限 (macOS vs Linux)
+    if [[ "$DISTRO" == "macos" ]]; then
+        # macOS 使用 staff 组
+        sudo chown -R $USER:staff "$INSTALL_DIR"
+    else
+        # Linux 系统通常用户名和组名相同
+        sudo chown -R $USER:$USER "$INSTALL_DIR"
+    fi
+    
     chmod +x "$INSTALL_DIR/scripts.sh" 2>/dev/null || true
     chmod +x "$INSTALL_DIR"/scripts/*/*.sh 2>/dev/null || true
     chmod +x "$INSTALL_DIR"/scripts/*.sh 2>/dev/null || true
