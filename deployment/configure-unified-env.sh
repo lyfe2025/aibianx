@@ -117,6 +117,10 @@ NEXT_PUBLIC_BILLIONMAIL_PROTOCOL=http
 
 # NextAuth配置
 NEXTAUTH_SECRET=aibianx-dev-secret-key-2024
+NEXTAUTH_URL=http://localhost
+
+# 网站URL配置（构建时使用）
+NEXT_PUBLIC_SITE_URL=http://localhost
 EOF
 
     # 后端开发配置
@@ -220,6 +224,9 @@ NEXT_PUBLIC_BILLIONMAIL_PROTOCOL=https
 # NextAuth配置（整合部署）
 NEXTAUTH_SECRET=$nextauth_secret
 NEXTAUTH_URL=https://$DOMAIN
+
+# 网站URL配置（构建时使用）
+NEXT_PUBLIC_SITE_URL=https://$DOMAIN
 EOF
 
     # 后端整合配置

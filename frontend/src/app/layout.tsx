@@ -61,7 +61,7 @@ async function generateRootMetadata(): Promise<Metadata> {
       },
     ],
     creator: siteConfig.siteName,
-    metadataBase: new URL(siteConfig.siteUrl),
+    metadataBase: siteConfig.siteUrl ? new URL(siteConfig.siteUrl) : undefined,
     openGraph: {
       type: 'website',
       locale: 'zh_CN',

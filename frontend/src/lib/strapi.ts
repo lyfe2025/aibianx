@@ -525,16 +525,16 @@ function transformStrapiArticle(strapiArticle: StrapiArticle): ArticleCardData {
                     return `${STRAPI_URL}${strapiArticle.author.avatar.url}`
                 }
 
-                if (strapiArticle.author?.avatar?.formats?.thumbnail?.url) {
-                    return `${STRAPI_URL}${strapiArticle.author.avatar.formats.thumbnail.url}`
+                if ((strapiArticle.author?.avatar as any)?.formats?.thumbnail?.url) {
+                    return `${STRAPI_URL}${(strapiArticle.author?.avatar as any).formats.thumbnail.url}`
                 }
 
-                if (strapiArticle.author?.avatar?.formats?.small?.url) {
-                    return `${STRAPI_URL}${strapiArticle.author.avatar.formats.small.url}`
+                if ((strapiArticle.author?.avatar as any)?.formats?.small?.url) {
+                    return `${STRAPI_URL}${(strapiArticle.author?.avatar as any).formats.small.url}`
                 }
 
-                if (strapiArticle.author?.avatar?.formats?.medium?.url) {
-                    return `${STRAPI_URL}${strapiArticle.author.avatar.formats.medium.url}`
+                if ((strapiArticle.author?.avatar as any)?.formats?.medium?.url) {
+                    return `${STRAPI_URL}${(strapiArticle.author?.avatar as any).formats.medium.url}`
                 }
 
                 return undefined
@@ -608,10 +608,16 @@ function transformStrapiSiteConfig(strapiConfig: StrapiSiteConfig): SiteConfigDa
  * 获取默认网站配置
  */
 function getDefaultSiteConfig(): SiteConfigData {
+    // 构建时使用环境变量配置的URL，确保不为空
+    const defaultUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+                      (process.env.NEXT_PUBLIC_FRONTEND_PROTOCOL && process.env.NEXT_PUBLIC_FRONTEND_DOMAIN
+                       ? `${process.env.NEXT_PUBLIC_FRONTEND_PROTOCOL}://${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN}`
+                       : 'https://aibianx.com')
+    
     return {
         siteName: 'AI变现之路',
         siteDescription: '汇聚AI领域专家实战经验，每周分享最新变现机会与实用工具',
-        siteUrl: 'https://aibianx.com',
+        siteUrl: defaultUrl,
         twitterHandle: '@aibianx',
         defaultOgImage: null,
         primaryKeywords: ['AI变现', 'ChatGPT赚钱', 'AI工具', '人工智能创业'],
@@ -719,7 +725,7 @@ export async function getLatestSeoMetrics(): Promise<SeoMetricsData | null> {
             return null
         }
 
-        return transformStrapiSeoMetrics(result.data[0])
+        return result.data[0] as SeoMetricsData
     } catch (error) {
         console.error('获取SEO监控数据失败:', error)
         return null
