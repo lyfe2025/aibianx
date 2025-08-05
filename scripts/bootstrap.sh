@@ -192,10 +192,16 @@ load_project_config() {
 enter_project() {
     print_step "${GEAR} 进入项目目录"
     
+    # 检查项目目录是否存在
+    if [ ! -d "$PROJECT_NAME" ]; then
+        print_error "项目目录不存在: $PROJECT_NAME"
+        exit 1
+    fi
+    
     if cd "$PROJECT_NAME"; then
         print_success "已进入项目目录: $(pwd)"
     else
-        print_error "无法进入项目目录"
+        print_error "无法进入项目目录: $PROJECT_NAME"
         exit 1
     fi
 }
