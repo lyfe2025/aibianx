@@ -5,24 +5,77 @@
 
 echo "🚀 AI变现之路 - 开发环境启动中..."
 echo "========================================="
+echo "📋 启动流程说明:"
+echo "   1️⃣  检查系统依赖 (Git, Docker, Node.js)"
+echo "   2️⃣  加载环境配置"
+echo "   3️⃣  检查数据库连接"
+echo "   4️⃣  启动/检查搜索引擎"
+echo "   5️⃣  启动/检查邮件系统"
+echo "   6️⃣  启动后端服务 (Strapi)"
+echo "   7️⃣  启动前端服务 (Next.js)"
+echo "   8️⃣  同步搜索索引"
+echo "   9️⃣  显示访问地址"
+echo ""
 
-# 创建日志目录
-mkdir -p logs
+# 创建必要的目录
+echo "📁 创建必要的目录结构..."
+mkdir -p logs .pids
 
 # 获取项目根目录
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-# 加载统一环境配置（优先）
-source "${PROJECT_ROOT}/deployment/configure-unified-env.sh"
+# 颜色定义
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
 
-# 检查Node.js版本
-if ! command -v node &> /dev/null; then
-    echo "❌ Node.js 未安装，请先安装 Node.js 18+"
-    exit 1
+# 步骤1: 检查系统依赖
+echo "1️⃣  检查系统依赖 (Git, Docker, Node.js)..."
+
+# 调用专门的依赖检查脚本进行感知检查
+echo "📋 正在检查系统依赖 (Git, Docker, Docker Compose, Node.js)..."
+if ! "$SCRIPT_DIR/../tools/check-dependencies.sh" >/dev/null 2>&1; then
+    echo ""
+    echo -e "${RED}❌ 系统依赖检查失败${NC}"
+    echo -e "${YELLOW}📋 运行详细检查以查看缺失的依赖:${NC}"
+    echo "   ./scripts/tools/check-dependencies.sh"
+    echo ""
+    
+    # 询问是否使用自动安装
+    if [ -f "$PROJECT_ROOT/scripts/production/install-environment.sh" ]; then
+        echo -e "${CYAN}🤖 是否使用自动安装脚本安装缺失的依赖? (y/n)${NC}"
+        read -p "请输入选择: " -r auto_install_choice
+        
+        if [[ $auto_install_choice =~ ^[Yy]$ ]]; then
+            echo ""
+            echo -e "${BLUE}🚀 启动自动安装...${NC}"
+            "$PROJECT_ROOT/scripts/production/install-environment.sh"
+            
+            # 重新检查依赖
+            echo ""
+            echo -e "${BLUE}🔍 重新检查依赖...${NC}"
+            if ! "$SCRIPT_DIR/../tools/check-dependencies.sh" >/dev/null 2>&1; then
+                echo -e "${RED}❌ 自动安装后仍有依赖缺失，请手动检查${NC}"
+                exit 1
+            fi
+            echo -e "${GREEN}✅ 依赖安装成功！${NC}"
+        else
+            echo -e "${YELLOW}💡 请先安装缺失的依赖，然后重新运行启动脚本${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${YELLOW}💡 请先安装缺失的依赖，然后重新运行启动脚本${NC}"
+        exit 1
+    fi
 fi
 
-echo "✅ Node.js 版本: $(node --version)"
+echo "🎉 所有系统依赖检查完成！"
+
+# 步骤2: 加载环境配置
+echo ""
+echo "2️⃣  加载环境配置..."
+source "${PROJECT_ROOT}/deployment/configure-unified-env.sh"
 
 # 加载兼容的旧配置（保持向后兼容）
 source "$(dirname "$0")/../tools/load-config.sh"
@@ -35,9 +88,13 @@ if ! load_backend_env; then
     exit 1
 fi
 
-# 显示数据库配置
+# 步骤3: 检查数据库连接
+echo ""
+echo "3️⃣  检查数据库连接..."
 echo "🗄️ 数据库配置:"
 echo "   主机: $DATABASE_HOST:$DATABASE_PORT"
+echo "   数据库: $DATABASE_NAME"
+echo "   用户: $DATABASE_USERNAME"
 
 # 配置开发环境变量（清理API密钥配置）
 configure_dev_env_variables() {

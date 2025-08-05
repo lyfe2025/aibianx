@@ -77,7 +77,7 @@ show_menu() {
     fi
     echo "  ⚙️  后端管理: ${protocol}://${domain}:${backend_port}/admin"
     echo "  🔍 搜索管理: http://${domain}:${search_port}"
-    echo "  📧 邮件管理: ${protocol}://${domain}:${email_port}"
+    echo "  📧 邮件管理: ${protocol}://${domain}:${email_port}/billion"
     echo ""
     
     echo -e "${BLUE}📚 快捷操作:${NC}"
@@ -108,10 +108,8 @@ show_help() {
     echo "  🔄 备份版本: latest 或 YYYYMMDD_HHMMSS"
     echo ""
     echo -e "${BLUE}🌐 访问地址:${NC}"
-    echo "  🌐 前端网站: http://localhost"
-    echo "  ⚙️  后端管理: http://localhost:1337/admin"
-    echo "  🔍 搜索管理: http://localhost:7700"
-    echo "  📧 邮件管理: http://localhost:8080"
+    echo "  💡 动态获取所有访问地址: ./scripts.sh tools services"
+    echo "  💡 或在启动后自动显示完整的服务状态和地址"
     echo ""
 }
 
@@ -121,20 +119,51 @@ execute_choice() {
     
     case "$choice" in
         "1")
-            echo -e "${BLUE}🔧 执行极简一键配置...${NC}"
+            echo -e "${CYAN}🔧 开始执行极简一键配置...${NC}"
+            echo -e "${BLUE}📋 配置流程说明:${NC}"
+            echo "   1️⃣  检查系统依赖 (Git, Docker, Node.js)"
+            echo "   2️⃣  读取部署配置文件 (deployment/config/deploy.conf)"
+            echo "   3️⃣  生成统一环境变量 (前端、后端、数据库、搜索、邮件)"
+            echo "   4️⃣  检查并创建必要的目录结构"
+            echo "   5️⃣  从备份恢复数据 (如果配置了备份版本)"
+            echo "   6️⃣  部署搜索引擎 (MeiliSearch)"
+            echo "   7️⃣  部署邮件系统 (BillionMail)"
+            echo "   8️⃣  验证所有配置的完整性"
             echo ""
+            echo -e "${YELLOW}🚀 开始执行配置流程...${NC}"
+            echo "======================================================="
             "$SCRIPT_DIR/scripts/tools/simple-deploy.sh"
+            echo "======================================================="
+            echo -e "${GREEN}✅ 极简一键配置完成！${NC}"
+            echo ""
+            echo -e "${CYAN}📋 正在显示所有服务状态和访问地址...${NC}"
+            echo ""
+            "$SCRIPT_DIR/scripts/tools/show-all-services.sh"
             echo ""
             echo -n -e "${YELLOW}配置完成！按回车键返回主菜单...${NC}"
             read
             return 1
             ;;
         "2")
-            echo -e "${BLUE}🚀 启动完整环境...${NC}"
+            echo -e "${CYAN}🚀 开始启动完整开发环境...${NC}"
+            echo -e "${BLUE}📋 启动流程说明:${NC}"
+            echo "   1️⃣  加载统一环境配置 (deployment/config/deploy.conf)"
+            echo "   2️⃣  检查Node.js版本和依赖"
+            echo "   3️⃣  验证数据库连接 (PostgreSQL)"
+            echo "   4️⃣  检查并启动搜索引擎 (MeiliSearch)"
+            echo "   5️⃣  检查并启动邮件系统 (BillionMail)"
+            echo "   6️⃣  启动后端服务 (Strapi)"
+            echo "   7️⃣  启动前端服务 (Next.js)"
+            echo "   8️⃣  同步搜索索引数据"
+            echo "   9️⃣  验证所有服务状态"
             echo ""
+            echo -e "${YELLOW}🚀 开始执行启动流程...${NC}"
+            echo "======================================================="
             "$SCRIPT_DIR/scripts/deployment/start-dev.sh"
+            echo "======================================================="
+            echo -e "${GREEN}✅ 开发环境启动完成！${NC}"
             echo ""
-            echo -e "${CYAN}📋 启动完成！显示所有服务状态和访问地址...${NC}"
+            echo -e "${CYAN}📋 正在显示所有服务状态和访问地址...${NC}"
             echo ""
             "$SCRIPT_DIR/scripts/tools/show-all-services.sh"
             echo ""
@@ -383,11 +412,24 @@ handle_command_line() {
                     exec "$SCRIPT_DIR/scripts/billionmail/check-billionmail.sh" "$@"
                     ;;
                 "admin")
-                    echo -e "${GREEN}📧 BillionMail管理界面: http://localhost:8080${NC}"
+                    # 动态读取配置
+                    local domain="localhost"
+                    local email_port="8080"
+                    local protocol="http"
+                    if [ -f "deployment/config/deploy.conf" ]; then
+                        domain=$(grep "^DOMAIN=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "localhost")
+                        email_port=$(grep "^BILLIONMAIL_PORT=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080")
+                        deploy_mode=$(grep "^DEPLOY_MODE=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "dev")
+                        if [ "$deploy_mode" = "production" ]; then
+                            protocol="https"
+                        fi
+                    fi
+                    local billionmail_url="${protocol}://${domain}:${email_port}/billion"
+                    echo -e "${GREEN}📧 BillionMail管理界面: ${billionmail_url}${NC}"
                     if command -v open > /dev/null; then
-                        open "http://localhost:8080"
+                        open "$billionmail_url"
                     elif command -v xdg-open > /dev/null; then
-                        xdg-open "http://localhost:8080"
+                        xdg-open "$billionmail_url"
                     fi
                     ;;
                 *)

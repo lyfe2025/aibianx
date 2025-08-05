@@ -20,34 +20,84 @@ NC='\033[0m'
 
 echo -e "${BLUE}🚀 AI变现之路 - 极简一键部署${NC}"
 echo "=================================="
+echo -e "${YELLOW}📋 执行步骤概览:${NC}"
+echo "   1️⃣  检查系统依赖"
+echo "   2️⃣  验证部署配置文件"
+echo "   3️⃣  选择备份版本"
+echo "   4️⃣  恢复数据和文件"
+echo "   5️⃣  生成环境配置"
+echo "   6️⃣  部署搜索引擎"
+echo "   7️⃣  部署邮件系统"
+echo ""
 
-# 检查部署配置文件
+# 步骤1: 检查系统依赖
+echo -e "${CYAN}1️⃣  检查系统依赖...${NC}"
+
+# 调用专门的依赖检查脚本进行感知检查
+echo "📋 正在检查系统依赖 (Git, Docker, Docker Compose, Node.js)..."
+if ! "$SCRIPT_DIR/check-dependencies.sh" >/dev/null 2>&1; then
+    echo ""
+    echo -e "${RED}❌ 系统依赖检查失败${NC}"
+    echo -e "${YELLOW}📋 运行详细检查以查看缺失的依赖:${NC}"
+    echo "   ./scripts/tools/check-dependencies.sh"
+    echo ""
+    
+    # 检查是否存在自动安装脚本
+    if [ -f "$PROJECT_ROOT/scripts/production/install-environment.sh" ]; then
+        echo -e "${CYAN}🤖 发现项目内置的自动安装脚本${NC}"
+        echo -e "${BLUE}💡 推荐先运行自动安装脚本安装缺失的依赖:${NC}"
+        echo "   ./scripts/production/install-environment.sh"
+        echo ""
+        echo -e "${YELLOW}然后重新运行配置脚本:${NC}"
+        echo "   ./scripts/tools/simple-deploy.sh"
+    else
+        echo -e "${YELLOW}💡 请先安装缺失的依赖，然后重新运行配置脚本${NC}"
+    fi
+    exit 1
+fi
+
+echo "🎉 系统依赖检查通过！"
+
+# 步骤2: 检查部署配置文件
+echo ""
+echo -e "${CYAN}2️⃣  验证部署配置文件...${NC}"
 if [ ! -f "$DEPLOY_CONFIG" ]; then
     echo -e "${RED}❌ 部署配置文件不存在: $DEPLOY_CONFIG${NC}"
     echo -e "${YELLOW}💡 请先配置 deployment/config/deploy.conf 文件${NC}"
     exit 1
 fi
 
-echo -e "${GREEN}✅ 加载部署配置: $DEPLOY_CONFIG${NC}"
+echo -e "${GREEN}✅ 配置文件存在: $DEPLOY_CONFIG${NC}"
+echo -e "${BLUE}📖 正在读取配置参数...${NC}"
 
 # 加载部署配置
 source "$DEPLOY_CONFIG"
 
-# 自动选择最新备份版本
+# 步骤3: 备份版本选择
+echo ""
+echo -e "${CYAN}3️⃣  选择备份版本...${NC}"
+echo -e "${BLUE}📦 配置的备份版本: $BACKUP_VERSION${NC}"
+
 if [ "$BACKUP_VERSION" = "latest" ]; then
+    echo -e "${YELLOW}🔍 正在扫描可用的备份目录...${NC}"
     LATEST_BACKUP=$(ls -d "$PROJECT_ROOT/backups/strapi_backup_"* 2>/dev/null | grep -v "\.tar\.gz" | sed 's|.*strapi_backup_||' | sort -r | head -1)
     if [ -n "$LATEST_BACKUP" ]; then
         BACKUP_VERSION="$LATEST_BACKUP"
-        echo -e "${GREEN}🔄 自动选择最新备份版本: $BACKUP_VERSION${NC}"
+        echo -e "${GREEN}✅ 自动选择最新备份版本: $BACKUP_VERSION${NC}"
     else
         echo -e "${RED}❌ 未找到可用的解压后备份目录${NC}"
         echo -e "${YELLOW}💡 请确保备份已解压到 backups/strapi_backup_YYYYMMDD_HHMMSS/ 目录${NC}"
         echo -e "${CYAN}📦 解压命令: tar -xzf backups/strapi_backup_*.tar.gz -C backups/${NC}"
         exit 1
     fi
+else
+    echo -e "${GREEN}✅ 使用指定的备份版本: $BACKUP_VERSION${NC}"
 fi
 
 # 验证必需配置
+echo ""
+echo -e "${CYAN}🔍 验证必需配置参数...${NC}"
+
 if [ -z "$DEPLOY_MODE" ]; then
     echo -e "${RED}❌ DEPLOY_MODE 未配置${NC}"
     exit 1
@@ -63,14 +113,20 @@ if [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$DB_ADMIN_PASSWORD" ]; then
     exit 1
 fi
 
-echo -e "${BLUE}📋 部署模式: $DEPLOY_MODE${NC}"
-echo -e "${BLUE}🌐 域名: $DOMAIN${NC}"
-echo -e "${BLUE}🗄️ 数据库: $DB_NAME ($DB_USER)${NC}"
+echo -e "${GREEN}✅ 配置验证通过${NC}"
+echo -e "${BLUE}📋 当前配置信息:${NC}"
+echo -e "${BLUE}   • 部署模式: $DEPLOY_MODE${NC}"
+echo -e "${BLUE}   • 域名: $DOMAIN${NC}"
+echo -e "${BLUE}   • 数据库: $DB_NAME ($DB_USER)${NC}"
+echo -e "${BLUE}   • 备份版本: $BACKUP_VERSION${NC}"
 
 # 从解压后的备份目录恢复数据和文件
 restore_from_backup() {
+    echo ""
+    echo -e "${CYAN}4️⃣  恢复数据和文件...${NC}"
+    
     if [ "${AUTO_RESTORE_BACKUP:-true}" = "true" ]; then
-        echo -e "${CYAN}📦 从解压后的备份目录恢复数据和文件...${NC}"
+        echo -e "${BLUE}📦 正在从解压后的备份目录恢复数据...${NC}"
         
         # 检查解压后的备份目录是否存在
         local backup_dir="$PROJECT_ROOT/backups/strapi_backup_$BACKUP_VERSION"
@@ -112,7 +168,7 @@ restore_from_backup() {
 
 # 生成所有配置文件
 generate_configs() {
-    echo -e "${CYAN}🔧 生成应用配置文件...${NC}"
+    echo -e "${BLUE}🔧 正在生成前端、后端和部署配置文件...${NC}"
     
     # 创建目录
     mkdir -p "$PROJECT_ROOT/backend" "$PROJECT_ROOT/frontend" "$PROJECT_ROOT/deployment"
@@ -306,6 +362,8 @@ main() {
     restore_from_backup
     
     # 2. 生成配置文件
+    echo ""
+    echo -e "${CYAN}5️⃣  生成环境配置文件...${NC}"
     generate_configs
     
     echo ""
