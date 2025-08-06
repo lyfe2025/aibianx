@@ -75,14 +75,28 @@ echo -e "${BLUE}📦 配置的备份版本: $BACKUP_VERSION${NC}"
 
 if [ "$BACKUP_VERSION" = "latest" ]; then
     echo -e "${YELLOW}🔍 正在扫描可用的备份目录...${NC}"
-    LATEST_BACKUP=$(ls -d "$PROJECT_ROOT/backups/strapi_backup_"* 2>/dev/null | grep -v "\.tar\.gz" | sed 's|.*strapi_backup_||' | sort -r | head -1)
+    # 自动选择最新的备份 (优先完整备份，然后数据库备份，最后旧格式)
+    LATEST_BACKUP_DIR=$(find "$PROJECT_ROOT/backups" -maxdepth 1 -name "complete_backup_*" -type d | sort -r | head -1)
+    if [ -z "$LATEST_BACKUP_DIR" ]; then
+        LATEST_BACKUP_DIR=$(find "$PROJECT_ROOT/backups" -maxdepth 1 -name "db_backup_*" -type d | sort -r | head -1)
+    fi
+    if [ -z "$LATEST_BACKUP_DIR" ]; then
+        LATEST_BACKUP_DIR=$(find "$PROJECT_ROOT/backups" -maxdepth 1 -name "strapi_backup_*" -type d | sort -r | head -1)
+    fi
+    
+    if [ -n "$LATEST_BACKUP_DIR" ]; then
+        LATEST_BACKUP=$(basename "$LATEST_BACKUP_DIR" | sed 's/.*_backup_//')
+    fi
     if [ -n "$LATEST_BACKUP" ]; then
         BACKUP_VERSION="$LATEST_BACKUP"
         echo -e "${GREEN}✅ 自动选择最新备份版本: $BACKUP_VERSION${NC}"
     else
         echo -e "${RED}❌ 未找到可用的解压后备份目录${NC}"
-        echo -e "${YELLOW}💡 请确保备份已解压到 backups/strapi_backup_YYYYMMDD_HHMMSS/ 目录${NC}"
-        echo -e "${CYAN}📦 解压命令: tar -xzf backups/strapi_backup_*.tar.gz -C backups/${NC}"
+        echo -e "${YELLOW}💡 请确保备份已解压到以下格式的目录:${NC}"
+        echo "   - backups/complete_backup_YYYYMMDD_HHMMSS/ (推荐)"
+        echo "   - backups/db_backup_YYYYMMDD_HHMMSS/"
+        echo "   - backups/strapi_backup_YYYYMMDD_HHMMSS/ (兼容旧版)"
+        echo -e "${CYAN}📦 解压命令: tar -xzf backups/*_backup_*.tar.gz -C backups/${NC}"
         exit 1
     fi
 else
@@ -124,14 +138,21 @@ restore_from_backup() {
         echo -e "${BLUE}📦 正在从解压后的备份目录恢复数据...${NC}"
         
         # 检查解压后的备份目录是否存在
-        local backup_dir="$PROJECT_ROOT/backups/strapi_backup_$BACKUP_VERSION"
+        # 按优先级查找备份目录
+    local backup_dir=""
+    for prefix in "complete_backup" "db_backup" "strapi_backup"; do
+        if [ -d "$PROJECT_ROOT/backups/${prefix}_$BACKUP_VERSION" ]; then
+            backup_dir="$PROJECT_ROOT/backups/${prefix}_$BACKUP_VERSION"
+            break
+        fi
+    done
         if [ ! -d "$backup_dir" ]; then
             echo -e "${RED}❌ 解压后的备份目录不存在: $BACKUP_VERSION${NC}"
             echo -e "${YELLOW}💡 可用的解压后目录:${NC}"
-            ls -d "$PROJECT_ROOT/backups/strapi_backup_"* 2>/dev/null | grep -v "\.tar\.gz" | sed 's|.*strapi_backup_||' | sort -r | head -5
+            find "$PROJECT_ROOT/backups" -maxdepth 1 -name "*_backup_*" -type d | sort -r | head -5
             echo ""
             echo -e "${CYAN}📦 如果只有压缩包，请先解压:${NC}"
-            echo -e "${CYAN}   tar -xzf backups/strapi_backup_$BACKUP_VERSION.tar.gz -C backups/${NC}"
+            echo -e "${CYAN}   tar -xzf backups/*_backup_$BACKUP_VERSION.tar.gz -C backups/${NC}"
             exit 1
         fi
         

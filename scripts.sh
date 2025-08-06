@@ -265,7 +265,7 @@ backup_menu() {
             echo -e "${BLUE}📋 可用的备份版本：${NC}"
             echo ""
             echo -e "${YELLOW}解压后的备份目录：${NC}"
-            ls -la backups/ | grep "strapi_backup_" | grep -v ".tar.gz" | sort -r
+            find backups/ -maxdepth 1 -name "*_backup_*" -type d | sort -r
             echo ""
             echo -e "${YELLOW}压缩包备份：${NC}"
             ls -la backups/ | grep ".tar.gz" | sort -r
@@ -276,7 +276,7 @@ backup_menu() {
         "2")
             echo -e "${BLUE}🗄️ 创建完整备份...${NC}"
             echo ""
-            "$SCRIPT_DIR/scripts/backup/backup-strapi.sh"
+            "$SCRIPT_DIR/scripts/backup/backup-databases.sh"
             echo ""
             echo -n -e "${YELLOW}备份完成！按回车键继续...${NC}"
             read
@@ -353,13 +353,13 @@ handle_command_line() {
                     echo -e "${BLUE}📋 可用的备份版本：${NC}"
                     echo ""
                     echo -e "${YELLOW}解压后的备份目录：${NC}"
-                    ls -d backups/strapi_backup_* 2>/dev/null | grep -v ".tar.gz" | sort -r
+                    find backups/ -maxdepth 1 -name "*_backup_*" -type d 2>/dev/null | sort -r
                     echo ""
                     echo -e "${YELLOW}压缩包备份：${NC}"
                     ls backups/*.tar.gz 2>/dev/null | sort -r
                     ;;
                 "create")
-                    exec "$SCRIPT_DIR/scripts/backup/backup-strapi.sh" "$@"
+                    exec "$SCRIPT_DIR/scripts/backup/backup-databases.sh" "$@"
                     ;;
                 "restore")
                     echo -e "${BLUE}🔄 使用配置文件中的备份版本恢复...${NC}"
