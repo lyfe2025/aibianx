@@ -1,11 +1,11 @@
 /**
- * 用户注册API - 集成BillionMail邮件发送
+ * 用户注册API - 邮件发送功能（BillionMail已移除）
  */
 
 import { NextRequest, NextResponse } from 'next/server'
 import { config } from '@/lib/config'
 import { sendAccountVerificationEmail, sendWelcomeEmailForUser } from '@/lib/nextauth-email'
-import { subscribeEmail } from '@/lib/billionmail'
+// import { subscribeEmail } from '@/lib/billionmail' // BillionMail已移除
 
 interface RegisterRequest {
   email: string
@@ -105,21 +105,21 @@ export async function POST(request: NextRequest) {
           .catch(error => ({ type: 'welcome', error: error.message }))
       )
 
-      // 如果选择自动订阅，添加到邮件列表
+      // 如果选择自动订阅，添加到邮件列表 (BillionMail已移除)
       if (autoSubscribe) {
-        emailPromises.push(
-          subscribeEmail({
-            email,
-            name: displayName,
-            tags: ['new-user', 'auto-subscribe'],
-            preferences: {
-              newsletter: true,
-              marketing: false,
-              updates: true
-            }
-          }).then(result => ({ type: 'subscribe', result }))
-            .catch(error => ({ type: 'subscribe', error: error.message }))
-        )
+        // emailPromises.push(
+        //   subscribeEmail({
+        //     email,
+        //     name: displayName,
+        //     tags: ['new-user', 'auto-subscribe'],
+        //     preferences: {
+        //       newsletter: true,
+        //       marketing: false,
+        //       updates: true
+        //     }
+        //   }).then(result => ({ type: 'subscribe', result }))
+        //     .catch(error => ({ type: 'subscribe', error: error.message }))
+        // )
       }
 
       // 等待所有邮件操作完成

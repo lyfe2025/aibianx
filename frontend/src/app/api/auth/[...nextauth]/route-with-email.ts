@@ -1,6 +1,6 @@
 /**
  * NextAuth.js 完整配置 - 支持邮件登录
- * 集成BillionMail发送验证邮件
+ * 邮件发送功能（BillionMail已移除）
  */
 
 import NextAuth from 'next-auth'
@@ -61,10 +61,10 @@ const authOptions: NextAuthOptions = {
             }
         }),
 
-        // 邮箱魔法链接登录（使用BillionMail）
+        // 邮箱魔法链接登录（BillionMail已移除）
         EmailProvider({
             server: {
-                host: 'localhost', // 占位符，实际使用BillionMail
+                host: 'localhost', // 占位符，BillionMail已移除
                 port: 587,
                 auth: {
                     user: 'placeholder',
@@ -275,16 +275,16 @@ const authOptions: NextAuthOptions = {
         async signIn({ user, account, profile, isNewUser }) {
             console.log(`用户登录: ${user.email} 通过 ${account?.provider}`)
             
-            // 如果是新用户，发送欢迎邮件并自动订阅BillionMail
+            // 如果是新用户，发送欢迎邮件（BillionMail已移除）
             if (isNewUser) {
                 try {
                     const { sendWelcomeEmailForUser } = await import('@/lib/nextauth-email')
                     await sendWelcomeEmailForUser(user.email!, user.name || '用户')
                     
-                    // 自动订阅BillionMail（OAuth用户也要订阅）
+                    // 自动订阅功能（BillionMail已移除）
                     if (account?.provider === 'github' || account?.provider === 'google') {
-                        // 调用BillionMail自动订阅逻辑
-                        console.log(`OAuth新用户自动订阅BillionMail: ${user.email}`)
+                        // 调用自动订阅逻辑（BillionMail已移除）
+                        console.log(`OAuth新用户自动订阅功能: ${user.email} (BillionMail已移除)`)
                     }
                 } catch (error) {
                     console.error('❌ 发送欢迎邮件失败:', error)

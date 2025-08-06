@@ -55,7 +55,7 @@ show_menu() {
     echo -e "${BLUE}🛠️ 开发工具:${NC}"
     echo "  6) 📊 代码质量检查        🔎 ESLint+硬编码+环境检查"
     echo "  7) 🔍 搜索引擎管理        🎯 MeiliSearch索引管理"
-    echo "  8) 📧 邮件系统管理        📬 BillionMail服务检查"
+    echo "  8) 📧 邮件系统管理        📬 邮件服务管理（BillionMail已移除）"
     echo ""
     
     # 动态读取端口配置（优先从配置文件读取）
@@ -75,7 +75,7 @@ show_menu() {
         frontend_port=$(grep "^FRONTEND_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "80")
         backend_port=$(grep "^BACKEND_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "1337")
         search_port=$(grep "^MEILISEARCH_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "7700")
-        email_port=$(grep "^BILLIONMAIL_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080")
+        # email_port=$(grep "^BILLIONMAIL_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080") # 已移除BillionMail
     fi
     
 
@@ -128,7 +128,7 @@ execute_choice() {
             echo "   4️⃣  检查并创建必要的目录结构"
             echo "   5️⃣  从备份恢复数据 (如果配置了备份版本)"
             echo "   6️⃣  部署搜索引擎 (MeiliSearch)"
-            echo "   7️⃣  部署邮件系统 (BillionMail)"
+            echo "   7️⃣  部署邮件系统 (BillionMail已移除)"
             echo "   8️⃣  验证所有配置的完整性"
             echo ""
             echo -e "${YELLOW}🚀 开始执行配置流程...${NC}"
@@ -152,7 +152,7 @@ execute_choice() {
             echo "   2️⃣  检查Node.js版本和依赖"
             echo "   3️⃣  验证数据库连接 (PostgreSQL)"
             echo "   4️⃣  检查并启动搜索引擎 (MeiliSearch)"
-            echo "   5️⃣  检查并启动邮件系统 (BillionMail)"
+            echo "   5️⃣  检查并启动邮件系统 (BillionMail已移除)"
             echo "   6️⃣  启动后端服务 (Strapi)"
             echo "   7️⃣  启动前端服务 (Next.js)"
             echo "   8️⃣  同步搜索索引数据"
@@ -214,7 +214,8 @@ execute_choice() {
         "8")
             echo -e "${BLUE}📧 检查邮件系统...${NC}"
             echo ""
-            "$SCRIPT_DIR/scripts/billionmail/check-billionmail.sh"
+            # "$SCRIPT_DIR/scripts/billionmail/check-billionmail.sh" # 已移除BillionMail脚本
+        echo -e "${YELLOW}⚠️  邮件系统已移除，将由自建系统提供${NC}"
             echo ""
             echo -n -e "${YELLOW}邮件检查完成！按回车键返回主菜单...${NC}"
             read
@@ -463,28 +464,29 @@ handle_command_line() {
         "email")
             case "$action" in
                 "check")
-                    exec "$SCRIPT_DIR/scripts/billionmail/check-billionmail.sh" "$@"
+                    # exec "$SCRIPT_DIR/scripts/billionmail/check-billionmail.sh" "$@" # 已移除BillionMail脚本
+echo -e "${YELLOW}⚠️  邮件系统已移除，将由自建系统提供${NC}"
                     ;;
                 "admin")
-                    # 动态读取配置
-                    local domain="localhost"
-                    local email_port="8080"
-                    local protocol="http"
-                    if [ -f "deployment/config/deploy.conf" ]; then
-                        domain=$(grep "^DOMAIN=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "localhost")
-                        email_port=$(grep "^BILLIONMAIL_PORT=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080")
-                        deploy_mode=$(grep "^DEPLOY_MODE=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "dev")
-                        if [ "$deploy_mode" = "production" ]; then
-                            protocol="https"
-                        fi
-                    fi
-                    local billionmail_url="${protocol}://${domain}:${email_port}/billion"
-                    echo -e "${GREEN}📧 BillionMail管理界面: ${billionmail_url}${NC}"
-                    if command -v open > /dev/null; then
-                        open "$billionmail_url"
-                    elif command -v xdg-open > /dev/null; then
-                        xdg-open "$billionmail_url"
-                    fi
+                    # 动态读取配置 (BillionMail已移除)
+                    # local domain="localhost"
+                    # local email_port="8080"
+                    # local protocol="http"
+                    # if [ -f "deployment/config/deploy.conf" ]; then
+                    #     domain=$(grep "^DOMAIN=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "localhost")
+                    #     email_port=$(grep "^BILLIONMAIL_PORT=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080")
+                    #     deploy_mode=$(grep "^DEPLOY_MODE=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "dev")
+                    #     if [ "$deploy_mode" = "production" ]; then
+                    #         protocol="https"
+                    #     fi
+                    # fi
+                    # local billionmail_url="${protocol}://${domain}:${email_port}/billion"
+                    echo -e "${YELLOW}⚠️  BillionMail管理界面已移除，邮件服务将由自建系统提供${NC}"
+                    # if command -v open > /dev/null; then
+                    #     open "$billionmail_url"
+                    # elif command -v xdg-open > /dev/null; then
+                    #     xdg-open "$billionmail_url"
+                    # fi
                     ;;
                 *)
                     echo -e "${RED}❌ 未知的邮件操作: $action${NC}"

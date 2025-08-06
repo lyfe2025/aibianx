@@ -379,66 +379,66 @@ execute_deployment() {
     log_info "等待核心服务初始化..."
     sleep 10
     
-    # 🚀 启动邮件系统 (BillionMail)
-    log_info "启动BillionMail邮件系统..."
-    if [ -f "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh" ]; then
-        # 确保脚本可执行
-        chmod +x "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh"
+    # 🚀 启动邮件系统 (BillionMail已移除)
+    log_info "跳过邮件系统启动 (BillionMail已移除)..."
+    # if [ -f "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh" ]; then
+    #     # 确保脚本可执行
+    #     chmod +x "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh"
+    #     
+    #     # 提示用户BillionMail启动可能需要较长时间
+    #     if [ "$DEPLOY_SILENT" != "true" ]; then
+    #         log_warning "BillionMail首次启动可能需要2-3分钟（PostgreSQL和Redis初始化）"
+    #         echo "选择启动方式:"
+    #         echo "  1) 正常启动（等待完成）"
+    #         echo "  2) 后台启动（继续其他服务）"
+    #         echo "  3) 跳过邮件系统"
+    #         read -p "请选择 [1-3，默认2]: " billionmail_choice
+    #         billionmail_choice=${billionmail_choice:-2}
+    #     else
+    #         # 静默模式默认后台启动
+    #         billionmail_choice=2
+    #     fi
         
-        # 提示用户BillionMail启动可能需要较长时间
-        if [ "$DEPLOY_SILENT" != "true" ]; then
-            log_warning "BillionMail首次启动可能需要2-3分钟（PostgreSQL和Redis初始化）"
-            echo "选择启动方式:"
-            echo "  1) 正常启动（等待完成）"
-            echo "  2) 后台启动（继续其他服务）"
-            echo "  3) 跳过邮件系统"
-            read -p "请选择 [1-3，默认2]: " billionmail_choice
-            billionmail_choice=${billionmail_choice:-2}
-        else
-            # 静默模式默认后台启动
-            billionmail_choice=2
-        fi
-        
-        case "$billionmail_choice" in
-            1)
-                # 正常启动，等待完成
-                log_info "启动BillionMail（等待模式）..."
-                if timeout 300 "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh"; then
-                    log_success "BillionMail邮件系统启动完成"
-                else
-                    log_warning "BillionMail启动超时，切换到后台模式"
-                    billionmail_choice=2
-                fi
-                ;;
-            2)
-                # 后台启动
-                log_info "后台启动BillionMail..."
-                cd "$PROJECT_DIR/BillionMail" 2>/dev/null || true
-                if [ -f "docker-compose.yml" ]; then
-                    # 停止旧容器
-                    docker-compose down > /dev/null 2>&1
-                    # 后台启动
-                    nohup docker-compose up -d > billionmail_startup.log 2>&1 &
-                    local billionmail_pid=$!
-                    log_success "BillionMail正在后台启动中（PID: $billionmail_pid）"
-                    log_info "启动日志: $PROJECT_DIR/BillionMail/billionmail_startup.log"
-                    log_info "状态检查: cd $PROJECT_DIR/BillionMail && docker-compose ps"
-                else
-                    log_warning "BillionMail配置文件不存在"
-                fi
-                cd "$PROJECT_DIR"
-                ;;
-            3)
-                # 跳过邮件系统
-                log_info "跳过BillionMail邮件系统启动"
-                ;;
-            *)
-                log_warning "无效选择，跳过BillionMail启动"
-                ;;
-        esac
-    else
-        log_warning "BillionMail部署脚本不存在，跳过邮件系统启动"
-    fi
+        # case "$billionmail_choice" in
+        #     1)
+        #         # 正常启动，等待完成
+        #         log_info "启动BillionMail（等待模式）..."
+        #         if timeout 300 "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh"; then
+        #             log_success "BillionMail邮件系统启动完成"
+        #         else
+        #             log_warning "BillionMail启动超时，切换到后台模式"
+        #             billionmail_choice=2
+        #         fi
+        #         ;;
+        #     2)
+        #         # 后台启动
+        #         log_info "后台启动BillionMail..."
+        #         cd "$PROJECT_DIR/BillionMail" 2>/dev/null || true
+        #         if [ -f "docker-compose.yml" ]; then
+        #             # 停止旧容器
+        #             docker-compose down > /dev/null 2>&1
+        #             # 后台启动
+        #             nohup docker-compose up -d > billionmail_startup.log 2>&1 &
+        #             local billionmail_pid=$!
+        #             log_success "BillionMail正在后台启动中（PID: $billionmail_pid）"
+        #             log_info "启动日志: $PROJECT_DIR/BillionMail/billionmail_startup.log"
+        #             log_info "状态检查: cd $PROJECT_DIR/BillionMail && docker-compose ps"
+        #         else
+        #             log_warning "BillionMail配置文件不存在"
+        #         fi
+        #         cd "$PROJECT_DIR"
+        #         ;;
+        #     3)
+        #         # 跳过邮件系统
+        #         log_info "跳过BillionMail邮件系统启动"
+        #         ;;
+        #     *)
+        #         log_warning "无效选择，跳过BillionMail启动"
+        #         ;;
+        # esac
+    # else
+    #     log_warning "BillionMail部署脚本不存在，跳过邮件系统启动"
+    # fi
     
     # 等待所有服务完全启动
     log_info "等待所有服务完全初始化..."
@@ -462,16 +462,16 @@ verify_deployment() {
         fi
     done
     
-    # 检查BillionMail容器状态
-    log_info "检查BillionMail邮件系统状态..."
-    cd "$PROJECT_DIR/BillionMail" 2>/dev/null || true
-    if [ -f "docker-compose.yml" ] && docker-compose ps | grep -q "Up"; then
-        log_success "BillionMail邮件系统 - 运行正常"
-    else
-        log_warning "BillionMail邮件系统 - 运行异常或未启动"
-        failed_services+=("billionmail")
-    fi
-    cd "$PROJECT_DIR"
+    # 检查BillionMail容器状态 (已移除)
+    # log_info "检查BillionMail邮件系统状态..."
+    # cd "$PROJECT_DIR/BillionMail" 2>/dev/null || true
+    # if [ -f "docker-compose.yml" ] && docker-compose ps | grep -q "Up"; then
+    #     log_success "BillionMail邮件系统 - 运行正常"
+    # else
+    #     log_warning "BillionMail邮件系统 - 运行异常或未启动"
+    #     failed_services+=("billionmail")
+    # fi
+    # cd "$PROJECT_DIR"
     
     # 检查服务健康状态
     log_info "检查服务健康状态..."
@@ -495,15 +495,15 @@ verify_deployment() {
         log_warning "后端服务 - 响应异常 ($BACKEND_CHECK_URL)"
     fi
     
-    # 检查邮件系统管理界面
-    if [ -n "${BILLIONMAIL_ADMIN_URL:-}" ]; then
-        local billionmail_code=$(curl -s -o /dev/null -w "%{http_code}" "${BILLIONMAIL_ADMIN_URL}" 2>/dev/null || echo "000")
-        if echo "$billionmail_code" | grep -qE "^(200|302|404)$"; then
-            log_success "BillionMail管理界面 - 响应正常 (${BILLIONMAIL_ADMIN_URL})"
-        else
-            log_warning "BillionMail管理界面 - 响应异常 (${BILLIONMAIL_ADMIN_URL})"
-        fi
-    fi
+    # 检查邮件系统管理界面 (BillionMail已移除)
+    # if [ -n "${BILLIONMAIL_ADMIN_URL:-}" ]; then
+    #     local billionmail_code=$(curl -s -o /dev/null -w "%{http_code}" "${BILLIONMAIL_ADMIN_URL}" 2>/dev/null || echo "000")
+    #     if echo "$billionmail_code" | grep -qE "^(200|302|404)$"; then
+    #         log_success "BillionMail管理界面 - 响应正常 (${BILLIONMAIL_ADMIN_URL})"
+    #     else
+    #         log_warning "BillionMail管理界面 - 响应异常 (${BILLIONMAIL_ADMIN_URL})"
+    #     fi
+    # fi
     
     # 报告结果
     if [ ${#failed_services[@]} -eq 0 ]; then

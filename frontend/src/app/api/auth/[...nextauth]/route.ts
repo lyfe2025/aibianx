@@ -235,13 +235,13 @@ const authOptions: NextAuthOptions = {
     async signIn({ user, account, isNewUser }) {
       console.log(`用户登录: ${user.email} 通过 ${account?.provider}`)
       
-      // 如果是新用户，自动订阅BillionMail
+      // 如果是新用户，自动订阅功能（BillionMail已移除）
       if (isNewUser) {
         try {
-          console.log(`新用户自动订阅BillionMail: ${user.email}`)
-          // 这里会在BillionMail集成任务中实现具体逻辑
+          console.log(`新用户自动订阅功能: ${user.email} (BillionMail已移除)`)
+          // 这里会在邮件集成任务中实现具体逻辑
         } catch (error) {
-          console.error('❌ 自动订阅BillionMail失败:', error)
+          console.error('❌ 自动订阅功能失败:', error)
         }
       }
     },

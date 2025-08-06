@@ -51,11 +51,7 @@ if [[ "${DEPLOY_MODE}" == "production" ]]; then
     export FRONTEND_URL="https://${DOMAIN}"
     export BACKEND_URL="https://${DOMAIN}"
     export ADMIN_URL="https://${DOMAIN}/admin"
-    export BILLIONMAIL_URL="https://${MAIL_DOMAIN}:${BILLIONMAIL_PORT}/billion"
-    export BILLIONMAIL_WEB="https://${MAIL_DOMAIN}:${BILLIONMAIL_PORT}/billion"
-    export BILLIONMAIL_API="https://${MAIL_DOMAIN}:${BILLIONMAIL_PORT}/api/v1"
-    export BILLIONMAIL_ADMIN_URL="https://${MAIL_DOMAIN}:${BILLIONMAIL_PORT}/billion"
-    export BILLIONMAIL_WEBMAIL_URL="https://${MAIL_DOMAIN}:${BILLIONMAIL_PORT}/roundcube"
+    # BillionMail已移除，邮件服务将由自建系统提供
     export MEILISEARCH_URL="https://${DOMAIN}:${MEILISEARCH_PORT}"
     export SEARCH_URL="https://${DOMAIN}:${MEILISEARCH_PORT}"
     export BACKEND_ADMIN_URL="https://${DOMAIN}/admin"
@@ -66,11 +62,7 @@ else
     export FRONTEND_URL="http://${DOMAIN}"
     export BACKEND_URL="http://${DOMAIN}:${BACKEND_PORT}"
     export ADMIN_URL="http://${DOMAIN}:${BACKEND_PORT}/admin"
-    export BILLIONMAIL_URL="http://${DOMAIN}:${BILLIONMAIL_PORT}/billion"
-    export BILLIONMAIL_WEB="http://${DOMAIN}:${BILLIONMAIL_PORT}/billion"
-    export BILLIONMAIL_API="http://${DOMAIN}:${BILLIONMAIL_PORT}/api/v1"
-    export BILLIONMAIL_ADMIN_URL="http://${DOMAIN}:${BILLIONMAIL_PORT}/billion"
-    export BILLIONMAIL_WEBMAIL_URL="http://${DOMAIN}:${BILLIONMAIL_PORT}/roundcube"
+    # BillionMail已移除，邮件服务将由自建系统提供
     export MEILISEARCH_URL="http://${DOMAIN}:${MEILISEARCH_PORT}"
     export SEARCH_URL="http://${DOMAIN}:${MEILISEARCH_PORT}"
     export BACKEND_ADMIN_URL="http://${DOMAIN}:${BACKEND_PORT}/admin"
@@ -81,7 +73,7 @@ fi
 # 构建端口变量
 export FRONTEND_PORT="80"
 export BACKEND_PORT="1337"
-export BILLIONMAIL_PORT="8080"
+# BILLIONMAIL_PORT="8080" # 已移除BillionMail
 export MEILISEARCH_PORT="7700"
 export POSTGRES_PORT="5432"
 
@@ -97,8 +89,8 @@ export DOMAIN
 export MAIL_DOMAIN
 export DEPLOY_MODE
 export DB_ADMIN_PASSWORD
-export BILLIONMAIL_USERNAME
-export BILLIONMAIL_PASSWORD
+# export BILLIONMAIL_USERNAME # 已移除BillionMail
+# export BILLIONMAIL_PASSWORD # 已移除BillionMail
 export BACKUP_VERSION
 export AUTO_RESTORE_BACKUP
 export AUTO_DEPLOY_SEARCH
@@ -135,7 +127,7 @@ print_env_summary() {
     echo -e "🌐 前端地址: ${FRONTEND_URL}"
     echo -e "⚙️  后端地址: ${BACKEND_URL}"
     echo -e "🎛️  管理后台: ${ADMIN_URL}"
-    echo -e "📧 邮件系统: ${BILLIONMAIL_WEB}"
+    echo -e "📧 邮件系统: 自建系统（BillionMail已移除）"
     echo -e "🔍 搜索引擎: ${MEILISEARCH_URL}"
     echo -e "${CYAN}===========================================${NC}"
 }

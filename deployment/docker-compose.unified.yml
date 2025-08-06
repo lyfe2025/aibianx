@@ -102,20 +102,9 @@ services:
     networks:
       - integrated-network
 
-  # ===== 邮件系统已改为独立部署 =====
-  # 注意: BillionMail邮件系统已改为独立部署 (./BillionMail/ 目录)
-  # 这样可以避免端口冲突和重复部署问题
-  # 
-  # 独立BillionMail的访问地址:
-  #   管理界面: http://localhost:8080/billion
-  #   WebMail: http://localhost:8080/roundcube
-  # 
-  # 启动独立BillionMail: cd BillionMail && docker-compose up -d
-  # 停止独立BillionMail: cd BillionMail && docker-compose down
-  #
-  # 如需重新启用统一邮件服务，请先停止独立BillionMail:
-  #   cd BillionMail && docker-compose down
-  # 然后取消下面服务的注释并重新部署
+  # ===== 邮件系统已完全移除 =====
+  # 注意: BillionMail邮件系统已完全移除
+  # 邮件服务将由自建系统提供
 
 # 数据卷
 volumes:

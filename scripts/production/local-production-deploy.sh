@@ -93,7 +93,7 @@ generate_production_config() {
     local meili_master_key=$(generate_long_key)
     local postgres_password=$(generate_password)
     local redis_password=$(generate_password)
-    local billionmail_api_key="bm_$(generate_key)"
+    # local billionmail_api_key="bm_$(generate_key)" # 已移除BillionMail
     
     local app_key1=$(generate_key)
     local app_key2=$(generate_key)
@@ -123,10 +123,10 @@ NEXT_PUBLIC_SEARCH_PORT=7700
 NEXT_PUBLIC_SEARCH_PROTOCOL=http
 NEXT_PUBLIC_SEARCH_API_KEY=${meili_master_key}
 
-# BillionMail邮件营销配置（生产部署）
-NEXT_PUBLIC_BILLIONMAIL_DOMAIN=${LOCAL_MAIL_DOMAIN}
-NEXT_PUBLIC_BILLIONMAIL_PORT=8080
-NEXT_PUBLIC_BILLIONMAIL_PROTOCOL=http
+# BillionMail邮件营销配置（生产部署）- 已移除
+# NEXT_PUBLIC_BILLIONMAIL_DOMAIN=${LOCAL_MAIL_DOMAIN}
+# NEXT_PUBLIC_BILLIONMAIL_PORT=8080
+# NEXT_PUBLIC_BILLIONMAIL_PROTOCOL=http
 
 # NextAuth配置（生产级别）
 NEXTAUTH_URL=http://${LOCAL_DOMAIN}
@@ -193,12 +193,12 @@ MEILISEARCH_PORT=7700
 MEILISEARCH_PROTOCOL=http
 MEILISEARCH_API_KEY=${meili_master_key}
 
-# BillionMail邮件营销配置（生产部署）
-BILLIONMAIL_DOMAIN=${LOCAL_MAIL_DOMAIN}
-BILLIONMAIL_PORT=8080
-BILLIONMAIL_PROTOCOL=http
-BILLIONMAIL_API_KEY=${billionmail_api_key}
-BILLIONMAIL_DEFAULT_LIST_ID=1
+# BillionMail邮件营销配置（生产部署）- 已移除
+# BILLIONMAIL_DOMAIN=${LOCAL_MAIL_DOMAIN}
+# BILLIONMAIL_PORT=8080
+# BILLIONMAIL_PROTOCOL=http
+# BILLIONMAIL_API_KEY=${billionmail_api_key}
+# BILLIONMAIL_DEFAULT_LIST_ID=1
 
 # Strapi安全配置（生产级别）
 APP_KEYS=${app_key1},${app_key2},${app_key3},${app_key4}
@@ -225,7 +225,7 @@ PAYPAL_CLIENT_ID=your_paypal_client_id
 PAYPAL_CLIENT_SECRET=your_paypal_client_secret
 PAYPAL_SANDBOX=true
 
-# 邮件配置（使用BillionMail）
+# 邮件配置（BillionMail已移除）
 SMTP_HOST=${LOCAL_MAIL_DOMAIN}
 SMTP_PORT=587
 SMTP_USERNAME=noreply@${LOCAL_DOMAIN}
@@ -262,9 +262,9 @@ REDIS_PASSWORD=${redis_password}
 # MeiliSearch配置（生产级别）
 MEILI_MASTER_KEY=${meili_master_key}
 
-# BillionMail配置（生产级别）
-BILLIONMAIL_ADMIN_USERNAME=admin
-BILLIONMAIL_ADMIN_PASSWORD=admin123
+# BillionMail配置（生产级别）- 已移除
+# BILLIONMAIL_ADMIN_USERNAME=admin
+# BILLIONMAIL_ADMIN_PASSWORD=admin123
 
 # 时区配置
 TZ=Asia/Shanghai
@@ -292,15 +292,15 @@ prepare_production_docker() {
     
     # 创建必要的配置目录结构（和生产环境一致）
     mkdir -p "${PROJECT_ROOT}/deployment/configs/postgresql"
-    mkdir -p "${PROJECT_ROOT}/deployment/configs/billionmail/rspamd"
-    mkdir -p "${PROJECT_ROOT}/deployment/configs/billionmail/dovecot"
-    mkdir -p "${PROJECT_ROOT}/deployment/configs/billionmail/postfix"
-    mkdir -p "${PROJECT_ROOT}/deployment/configs/billionmail/webmail"
-    mkdir -p "${PROJECT_ROOT}/deployment/configs/billionmail/core"
+    # mkdir -p "${PROJECT_ROOT}/deployment/configs/billionmail/rspamd" # 已移除BillionMail
+    # mkdir -p "${PROJECT_ROOT}/deployment/configs/billionmail/dovecot" # 已移除BillionMail
+    # mkdir -p "${PROJECT_ROOT}/deployment/configs/billionmail/postfix" # 已移除BillionMail
+    # mkdir -p "${PROJECT_ROOT}/deployment/configs/billionmail/webmail" # 已移除BillionMail
+    # mkdir -p "${PROJECT_ROOT}/deployment/configs/billionmail/core" # 已移除BillionMail
     mkdir -p "${PROJECT_ROOT}/deployment/data/logs/rspamd"
     mkdir -p "${PROJECT_ROOT}/deployment/data/logs/dovecot"
     mkdir -p "${PROJECT_ROOT}/deployment/data/logs/postfix"
-    mkdir -p "${PROJECT_ROOT}/deployment/data/logs/billionmail"
+    # mkdir -p "${PROJECT_ROOT}/deployment/data/logs/billionmail" # 已移除BillionMail
     
     # 创建Nginx配置（生产级别）
     cat > "${PROJECT_ROOT}/deployment/nginx-unified.conf" << EOF
@@ -341,10 +341,10 @@ http {
         server backend:1337;
     }
     
-    # BillionMail管理界面
-    upstream billionmail {
-        server billionmail-core:8080;
-    }
+    # BillionMail管理界面 (已移除)
+    # upstream billionmail {
+    #     server billionmail-core:8080;
+    # }
     
     # 主站配置
     server {
@@ -397,21 +397,21 @@ http {
         }
     }
     
-    # 邮件系统配置
-    server {
-        listen 80;
-        server_name ${LOCAL_MAIL_DOMAIN};
-        
-        # BillionMail管理界面
-        location / {
-            proxy_pass http://billionmail;
-            proxy_http_version 1.1;
-            proxy_set_header Host \$host;
-            proxy_set_header X-Real-IP \$remote_addr;
-            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto \$scheme;
-        }
-    }
+    # 邮件系统配置 (BillionMail已移除)
+    # server {
+    #     listen 80;
+    #     server_name ${LOCAL_MAIL_DOMAIN};
+    #     
+    #     # BillionMail管理界面 (已移除)
+    #     location / {
+    #         proxy_pass http://billionmail;
+    #         proxy_http_version 1.1;
+    #         proxy_set_header Host \$host;
+    #         proxy_set_header X-Real-IP \$remote_addr;
+    #         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+    #         proxy_set_header X-Forwarded-Proto \$scheme;
+    #     }
+    # }
 }
 EOF
 
@@ -436,7 +436,7 @@ start_production_environment() {
     echo -e "  • MeiliSearch 1.5搜索引擎"
     echo -e "  • Strapi后端应用"
     echo -e "  • Next.js前端应用"
-    echo -e "  • BillionMail邮件系统（7个容器）"
+    # echo -e "  • BillionMail邮件系统（7个容器）" # 已移除BillionMail
     echo -e "  • Nginx统一网关"
     echo ""
     
@@ -645,7 +645,7 @@ show_production_access_info() {
     echo ""
     echo -e "${CYAN}🔐 默认登录信息：${NC}"
     echo -e "  Strapi管理员：${YELLOW}使用初始管理员账户${NC}"
-    echo -e "  BillionMail：${YELLOW}admin / [生成的密码]${NC}"
+    # echo -e "  BillionMail：${YELLOW}admin / [生成的密码]${NC}" # 已移除BillionMail
     echo -e "  MeiliSearch：${YELLOW}使用生成的API密钥${NC}"
     echo ""
     echo -e "${CYAN}🛠️  生产环境管理命令：${NC}"
@@ -664,7 +664,7 @@ show_production_access_info() {
     echo -e "  后端日志：${YELLOW}docker logs aibianx-backend${NC}"
     echo -e "  前端日志：${YELLOW}docker logs aibianx-frontend${NC}"
     echo -e "  数据库日志：${YELLOW}docker logs aibianx-postgres${NC}"
-    echo -e "  邮件系统日志：${YELLOW}docker logs aibianx-billionmail-core${NC}"
+    # echo -e "  邮件系统日志：${YELLOW}docker logs aibianx-billionmail-core${NC}" # 已移除BillionMail
     echo ""
     echo -e "${GREEN}✨ 这是和真实生产环境1:1一致的部署，仅域名不同！${NC}"
 }

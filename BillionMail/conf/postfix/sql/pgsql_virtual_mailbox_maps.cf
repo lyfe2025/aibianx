@@ -1,7 +1,0 @@
-user = billionmail
-password = billionmail_db_2024
-hosts = pgsql
-dbname = billionmail
-
-query = SELECT maildir FROM mailbox WHERE username='%s' AND active = 1
-

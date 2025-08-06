@@ -51,7 +51,7 @@ show_log_menu() {
     
     # 特殊日志
     echo -e " ${GREEN}🔧 系统日志${NC}"
-    echo "  7) 邮件系统日志      (billionmail相关)"
+    echo "  7) 邮件系统日志      (BillionMail已移除)"
     echo "  8) 所有错误日志      (包含ERROR的行)"
     echo "  9) 日志文件概览      (所有日志文件列表)"
     echo ""
@@ -200,7 +200,8 @@ main_menu() {
                 show_latest_hardcode_log
                 ;;
             7) # 邮件系统日志
-                show_log "billionmail-mock.log" "head" "100"
+                # show_log "billionmail-mock.log" "head" "100" # BillionMail已移除
+        echo -e "${YELLOW}⚠️  邮件系统已移除，无相关日志${NC}"
                 ;;
             8) # 所有错误日志
                 show_all_errors

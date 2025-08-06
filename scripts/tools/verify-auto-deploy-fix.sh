@@ -19,33 +19,33 @@ echo ""
 echo -e "${YELLOW}1. 检查一键部署脚本修复...${NC}"
 AUTO_DEPLOY_SCRIPT="$PROJECT_ROOT/scripts/production/auto-deploy.sh"
 
-if grep -q "启动BillionMail邮件系统" "$AUTO_DEPLOY_SCRIPT"; then
-    echo -e "${GREEN}✅ 一键部署脚本已包含BillionMail启动逻辑${NC}"
+if grep -q "启动BillionMail已移除邮件系统" "$AUTO_DEPLOY_SCRIPT"; then
+    echo -e "${GREEN}✅ 一键部署脚本已包含BillionMail已移除启动逻辑${NC}"
 else
-    echo -e "${RED}❌ 一键部署脚本缺少BillionMail启动逻辑${NC}"
+    echo -e "${RED}❌ 一键部署脚本缺少BillionMail已移除启动逻辑${NC}"
 fi
 
-if grep -q "检查BillionMail邮件系统状态" "$AUTO_DEPLOY_SCRIPT"; then
-    echo -e "${GREEN}✅ 一键部署脚本已包含BillionMail状态检查${NC}"
+if grep -q "检查BillionMail已移除邮件系统状态" "$AUTO_DEPLOY_SCRIPT"; then
+    echo -e "${GREEN}✅ 一键部署脚本已包含BillionMail已移除状态检查${NC}"
 else
-    echo -e "${RED}❌ 一键部署脚本缺少BillionMail状态检查${NC}"
+    echo -e "${RED}❌ 一键部署脚本缺少BillionMail已移除状态检查${NC}"
 fi
 
-# 检查BillionMail部署脚本优化
+# 检查BillionMail已移除部署脚本优化
 echo ""
-echo -e "${YELLOW}2. 检查BillionMail部署脚本优化...${NC}"
+echo -e "${YELLOW}2. 检查BillionMail已移除部署脚本优化...${NC}"
 BILLIONMAIL_DEPLOY_SCRIPT="$PROJECT_ROOT/scripts/billionmail/deploy-billionmail.sh"
 
 if grep -q "停止可能存在的旧服务" "$BILLIONMAIL_DEPLOY_SCRIPT"; then
-    echo -e "${GREEN}✅ BillionMail部署脚本已包含旧服务清理${NC}"
+    echo -e "${GREEN}✅ BillionMail已移除部署脚本已包含旧服务清理${NC}"
 else
-    echo -e "${RED}❌ BillionMail部署脚本缺少旧服务清理${NC}"
+    echo -e "${RED}❌ BillionMail已移除部署脚本缺少旧服务清理${NC}"
 fi
 
 if grep -q "retry_count" "$BILLIONMAIL_DEPLOY_SCRIPT"; then
-    echo -e "${GREEN}✅ BillionMail部署脚本已包含重试机制${NC}"
+    echo -e "${GREEN}✅ BillionMail已移除部署脚本已包含重试机制${NC}"
 else
-    echo -e "${RED}❌ BillionMail部署脚本缺少重试机制${NC}"
+    echo -e "${RED}❌ BillionMail已移除部署脚本缺少重试机制${NC}"
 fi
 
 # 检查Docker Compose配置
@@ -63,21 +63,21 @@ else
     echo -e "${RED}❌ Docker Compose统一配置文件不存在${NC}"
 fi
 
-# 检查BillionMail目录
+# 检查BillionMail已移除目录
 echo ""
-echo -e "${YELLOW}4. 检查BillionMail目录结构...${NC}"
-BILLIONMAIL_DIR="$PROJECT_ROOT/BillionMail"
+echo -e "${YELLOW}4. 检查BillionMail已移除目录结构...${NC}"
+BILLIONMAIL_DIR="$PROJECT_ROOT/BillionMail已移除"
 
 if [ -d "$BILLIONMAIL_DIR" ]; then
-    echo -e "${GREEN}✅ BillionMail目录存在${NC}"
+    echo -e "${GREEN}✅ BillionMail已移除目录存在${NC}"
     
     if [ -f "$BILLIONMAIL_DIR/docker-compose.yml" ]; then
-        echo -e "${GREEN}✅ BillionMail Docker Compose配置存在${NC}"
+        echo -e "${GREEN}✅ BillionMail已移除 Docker Compose配置存在${NC}"
     else
-        echo -e "${RED}❌ BillionMail Docker Compose配置不存在${NC}"
+        echo -e "${RED}❌ BillionMail已移除 Docker Compose配置不存在${NC}"
     fi
 else
-    echo -e "${RED}❌ BillionMail目录不存在${NC}"
+    echo -e "${RED}❌ BillionMail已移除目录不存在${NC}"
 fi
 
 # 生成修复总结
@@ -85,9 +85,9 @@ echo ""
 echo -e "${BLUE}📋 修复总结${NC}"
 echo "======================================="
 echo -e "${GREEN}✅ 修复内容:${NC}"
-echo "  1. 一键部署脚本现在会自动启动BillionMail邮件系统"
-echo "  2. 增加了BillionMail服务状态检查和验证"
-echo "  3. 优化了BillionMail启动流程，增加重试机制"
+echo "  1. 一键部署脚本现在会自动启动BillionMail已移除邮件系统"
+echo "  2. 增加了BillionMail已移除服务状态检查和验证"
+echo "  3. 优化了BillionMail已移除启动流程，增加重试机制"
 echo "  4. 改进了服务启动等待时间和错误处理"
 echo ""
 echo -e "${BLUE}🚀 使用方法:${NC}"

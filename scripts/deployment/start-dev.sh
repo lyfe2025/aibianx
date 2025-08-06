@@ -310,11 +310,11 @@ deploy_meilisearch() {
     fi
 }
 
-# 智能部署BillionMail邮件系统 - 增强版
+# 智能部署BillionMail已移除邮件系统 - 增强版
 deploy_billionmail() {
     echo ""
     echo "5️⃣  启动/检查邮件系统..."
-    echo "📧 检查BillionMail邮件系统..."
+    echo "📧 检查BillionMail已移除邮件系统..."
     
     # 🎯 使用快速检查脚本进行状态检测
     local fast_check_script="${PROJECT_ROOT}/scripts/billionmail/check-billionmail-fast.sh"
@@ -329,7 +329,7 @@ deploy_billionmail() {
             billionmail_status=0  # 运行正常
         elif docker ps -a --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
             billionmail_status=1  # 容器存在但未运行
-        elif [ -d "${PROJECT_ROOT}/BillionMail" ]; then
+        elif [ -d "${PROJECT_ROOT}/BillionMail已移除" ]; then
             billionmail_status=2  # 目录存在但容器未创建
         else
             billionmail_status=3  # 未部署
@@ -340,7 +340,7 @@ deploy_billionmail() {
     case $billionmail_status in
         0)
             # 服务完全正常
-            echo "✅ BillionMail邮件系统运行正常"
+            echo "✅ BillionMail已移除邮件系统运行正常"
             echo "   🌐 管理界面: ${BILLIONMAIL_ADMIN_URL}"
             echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
             echo "   📋 服务类型: 独立部署 (推荐)"
@@ -348,26 +348,26 @@ deploy_billionmail() {
             ;;
         1|2)
             # 容器存在但未运行，或容器不存在但目录存在
-            echo "🔧 BillionMail需要启动，正在自动修复..."
+            echo "🔧 BillionMail已移除需要启动，正在自动修复..."
             
             # 使用快速检查脚本的自动修复功能
             if [ -f "$fast_check_script" ]; then
                 if "$fast_check_script" --fix; then
-                    echo "✅ BillionMail自动修复成功"
+                    echo "✅ BillionMail已移除自动修复成功"
                     echo "   🌐 管理界面: ${BILLIONMAIL_ADMIN_URL}"
                     echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
                     echo "   📋 服务类型: 独立部署 (推荐)"
                     return 0
                 else
-                    echo "⚠️  BillionMail自动修复失败，但不影响前后端服务启动"
+                    echo "⚠️  BillionMail已移除自动修复失败，但不影响前后端服务启动"
                     echo "💡 手动修复命令: ./scripts/billionmail/check-billionmail-fast.sh --fix"
                     return 1
                 fi
             else
                 # 后备修复逻辑
                 echo "   🔄 使用后备修复逻辑..."
-                if [ -d "${PROJECT_ROOT}/BillionMail" ]; then
-                    cd "${PROJECT_ROOT}/BillionMail"
+                if [ -d "${PROJECT_ROOT}/BillionMail已移除" ]; then
+                    cd "${PROJECT_ROOT}/BillionMail已移除"
                     
                     # 加载并导出环境变量
                     if [ -f "env_init" ]; then
@@ -385,7 +385,7 @@ deploy_billionmail() {
                     local count=0
                     while [ $count -lt 15 ]; do
                         if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
-                            echo "✅ BillionMail后备修复成功"
+                            echo "✅ BillionMail已移除后备修复成功"
                             echo "   🌐 管理界面: ${BILLIONMAIL_ADMIN_URL}"
                             echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
                             cd "${PROJECT_ROOT}"
@@ -394,7 +394,7 @@ deploy_billionmail() {
                         sleep 2
                         count=$((count + 1))
                     done
-                    echo "⚠️  BillionMail后备修复超时"
+                    echo "⚠️  BillionMail已移除后备修复超时"
                     cd "${PROJECT_ROOT}"
                 fi
                 return 1
@@ -402,14 +402,14 @@ deploy_billionmail() {
             ;;
         3)
             # 未部署
-            echo "⚠️  BillionMail未部署"
+            echo "⚠️  BillionMail已移除未部署"
             echo "💡 部署命令: ./scripts/billionmail/deploy-billionmail.sh"
-            echo "💡 BillionMail是可选服务，不影响前后端服务启动"
+            echo "💡 BillionMail已移除是可选服务，不影响前后端服务启动"
             return 1
             ;;
     esac
     
-    echo "⚠️  BillionMail服务检查完成，状态未知"
+    echo "⚠️  BillionMail已移除服务检查完成，状态未知"
     return 1
 }
 
@@ -431,16 +431,16 @@ else
     echo "💡 手动部署命令: ./scripts/search/deploy-meilisearch.sh"
 fi
 
-# 调用BillionMail部署 (如果启用) - 添加错误处理，不阻断前后端启动
+# 调用BillionMail已移除部署 (如果启用) - 添加错误处理，不阻断前后端启动
 if [ "${AUTO_DEPLOY_BILLIONMAIL:-true}" = "true" ]; then
-    echo "📧 检查BillionMail邮件系统..."
+    echo "📧 检查BillionMail已移除邮件系统..."
     if deploy_billionmail 2>/dev/null; then
-        echo "✅ BillionMail部署检查完成"
+        echo "✅ BillionMail已移除部署检查完成"
     else
-        echo "⚠️  BillionMail部署跳过（不影响前后端服务启动）"
+        echo "⚠️  BillionMail已移除部署跳过（不影响前后端服务启动）"
     fi
 else
-    echo "📧 BillionMail部署已禁用"
+    echo "📧 BillionMail已移除部署已禁用"
 fi
 
 # 检查PostgreSQL服务
@@ -731,7 +731,7 @@ echo ""
 echo "🌐 所有访问地址："
 echo "   🖥️  前端应用: ${FRONTEND_URL} (AI变现之路主站)"
 echo "   ⚙️  后端管理: ${BACKEND_ADMIN_URL} (Strapi管理界面)"
-echo "   📧 邮件营销: ${BILLIONMAIL_ADMIN_URL} (BillionMail管理)"
+echo "   📧 邮件营销: ${BILLIONMAIL_ADMIN_URL} (BillionMail已移除管理)"
 echo "   📬 WebMail: ${BILLIONMAIL_WEBMAIL_URL} (邮件收发)"
 echo "   🔍 搜索管理: ${SEARCH_URL} (MeiliSearch管理)"
 echo "   📡 API示例: ${BACKEND_API_URL}/articles (文章API)"

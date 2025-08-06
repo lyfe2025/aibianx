@@ -1,5 +1,5 @@
 #!/bin/bash
-# AI变现之路 + BillionMail - 整合环境备份验证脚本
+# AI变现之路 - 整合环境备份验证脚本 (BillionMail已移除)
 # 用法: ./scripts/database/verify-integrated-backup.sh <backup_file.tar.gz>
 
 set -e
@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo "🔍 AI变现之路 + BillionMail - 备份验证"
+echo "🔍 AI变现之路 - 备份验证 (BillionMail已移除)"
 echo "==========================================="
 
 # 参数验证
@@ -117,7 +117,7 @@ verify_database_backups() {
     echo -e "${BLUE}🗄️ 验证数据库备份文件...${NC}"
     
     local aibianx_backup="$BACKUP_DIR/aibianx_backup.sql"
-    local billionmail_backup="$BACKUP_DIR/billionmail_backup.sql"
+    # local billionmail_backup="$BACKUP_DIR/billionmail_backup.sql" # 已移除BillionMail
     local verified_count=0
     
     # 验证 AI变现之路数据库备份
@@ -151,23 +151,23 @@ verify_database_backups() {
     
     echo ""
     
-    # 验证 BillionMail 数据库备份
-    if [ -f "$billionmail_backup" ]; then
-        echo -e "${BLUE}🔍 检查 BillionMail 数据库备份...${NC}"
-        
-        local file_size=$(du -sh "$billionmail_backup" | cut -f1)
-        echo "   📁 文件大小: $file_size"
-        
-        # 检查文件头部
-        if head -5 "$billionmail_backup" | grep -q "PostgreSQL database dump"; then
-            echo -e "${GREEN}   ✅ 数据库备份格式正确${NC}"
-            ((verified_count++))
-        else
-            echo -e "${RED}   ❌ 数据库备份格式不正确${NC}"
-        fi
-    else
-        echo -e "${RED}❌ BillionMail 数据库备份文件不存在${NC}"
-    fi
+    # 验证 BillionMail 数据库备份 (已移除)
+    # if [ -f "$billionmail_backup" ]; then
+    #     echo -e "${BLUE}🔍 检查 BillionMail 数据库备份...${NC}"
+    #     
+    #     local file_size=$(du -sh "$billionmail_backup" | cut -f1)
+    #     echo "   📁 文件大小: $file_size"
+    #     
+    #     # 检查文件头部
+    #     if head -5 "$billionmail_backup" | grep -q "PostgreSQL database dump"; then
+    #         echo -e "${GREEN}   ✅ 数据库备份格式正确${NC}"
+    #         ((verified_count++))
+    #     else
+    #         echo -e "${RED}   ❌ 数据库备份格式不正确${NC}"
+    #     fi
+    # else
+    #     echo -e "${RED}❌ BillionMail 数据库备份文件不存在${NC}"
+    # fi
     
     echo ""
     echo -e "${BLUE}📊 数据库验证结果: $verified_count/2 个数据库备份有效${NC}"
@@ -200,31 +200,31 @@ verify_file_backups() {
     
     ((total_files++))
     
-    # 检查 BillionMail 文件备份
-    if [ -d "$BACKUP_DIR/billionmail" ]; then
-        echo -e "${BLUE}🔍 检查 BillionMail 文件备份...${NC}"
-        
-        # 检查邮件数据
-        if [ -d "$BACKUP_DIR/billionmail/vmail" ]; then
-            local vmail_size=$(du -sh "$BACKUP_DIR/billionmail/vmail" 2>/dev/null | cut -f1 || echo "0")
-            echo -e "${GREEN}   ✅ 邮件数据备份存在 ($vmail_size)${NC}"
-        else
-            echo -e "${YELLOW}   ⚠️ 邮件数据备份不存在${NC}"
-        fi
-        
-        # 检查 SSL 证书
-        if [ -d "$BACKUP_DIR/billionmail/ssl" ]; then
-            echo -e "${GREEN}   ✅ SSL 证书备份存在${NC}"
-        else
-            echo -e "${YELLOW}   ⚠️ SSL 证书备份不存在${NC}"
-        fi
-        
-        ((verified_files++))
-    else
-        echo -e "${YELLOW}⚠️ BillionMail 文件备份不存在${NC}"
-    fi
-    
-    ((total_files++))
+    # 检查 BillionMail 文件备份 (已移除)
+    # if [ -d "$BACKUP_DIR/billionmail" ]; then
+    #     echo -e "${BLUE}🔍 检查 BillionMail 文件备份...${NC}"
+    #     
+    #     # 检查邮件数据
+    #     if [ -d "$BACKUP_DIR/billionmail/vmail" ]; then
+    #         local vmail_size=$(du -sh "$BACKUP_DIR/billionmail/vmail" 2>/dev/null | cut -f1 || echo "0")
+    #         echo -e "${GREEN}   ✅ 邮件数据备份存在 ($vmail_size)${NC}"
+    #     else
+    #         echo -e "${YELLOW}   ⚠️ 邮件数据备份不存在${NC}"
+    #     fi
+    #     
+    #     # 检查 SSL 证书
+    #     if [ -d "$BACKUP_DIR/billionmail/ssl" ]; then
+    #         echo -e "${GREEN}   ✅ SSL 证书备份存在${NC}"
+    #     else
+    #         echo -e "${YELLOW}   ⚠️ SSL 证书备份不存在${NC}"
+    #     fi
+    #     
+    #     ((verified_files++))
+    # else
+    #     echo -e "${YELLOW}⚠️ BillionMail 文件备份不存在${NC}"
+    # fi
+    # 
+    # ((total_files++))
     
     echo ""
     echo -e "${BLUE}📊 文件验证结果: $verified_files/$total_files 个文件备份有效${NC}"
