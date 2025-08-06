@@ -346,24 +346,9 @@ execute_deployment() {
         exit 1
     fi
     
-    # 部署BillionMail邮件系统 (必须，根据内存记录)
-    log_info "部署BillionMail邮件系统..."
-    local billionmail_script="$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh"
-    if [ -f "$billionmail_script" ]; then
-        if "$billionmail_script" --silent; then
-            log_success "BillionMail邮件系统部署完成"
-        else
-            log_error "BillionMail邮件系统部署失败"
-            exit 1
-        fi
-    else
-        log_error "BillionMail部署脚本不存在: $billionmail_script"
-        exit 1
-    fi
-    
     # 等待服务启动
     log_info "等待服务初始化..."
-    sleep 15
+    sleep 10
 }
 
 # 验证部署状态
@@ -380,18 +365,6 @@ verify_deployment() {
         else
             log_error "$container - 运行异常"
             failed_services+=("$container")
-        fi
-    done
-    
-    # 检查BillionMail容器状态 (必须，根据内存记录)
-    log_info "检查BillionMail邮件系统状态..."
-    local billionmail_containers=("billionmail-core-billionmail-1" "billionmail-pgsql-billionmail-1" "billionmail-postfix-billionmail-1")
-    for container in "${billionmail_containers[@]}"; do
-        if docker ps --filter "name=$container" --filter "status=running" | grep -q "$container"; then
-            log_success "$container - 运行正常"
-        else
-            log_warning "$container - 可能还在初始化中"
-            # BillionMail容器初始化需要时间，不视为致命错误
         fi
     done
     

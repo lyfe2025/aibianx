@@ -1,24 +1,11 @@
 #!/bin/bash
 
-# ===================================
-# BillionMail Docker部署脚本 v2.0
-# ===================================
-# 与deploy.conf统一配置集成的BillionMail部署脚本
-# 支持开发和生产环境的自动化部署
-
-set -e  # 遇到错误立即退出
-
-# 参数处理
-SILENT_MODE=false
-if [[ "$1" == "--silent" ]]; then
-    SILENT_MODE=true
-fi
-
-# 脚本目录
+# BillionMail Docker部署脚本 - 集成版
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-DEPLOY_CONF_FILE="$PROJECT_ROOT/deployment/config/deploy.conf"
-BILLIONMAIL_DIR="$PROJECT_ROOT/BillionMail"
+
+# 加载动态配置
+source "$SCRIPT_DIR/../tools/load-config.sh"
 
 # 颜色定义
 GREEN='\033[0;32m'
@@ -27,129 +14,135 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-# 日志函数（支持静默模式）
-log_info() { 
-    if [[ "$SILENT_MODE" != "true" ]]; then
-        echo -e "${GREEN}[INFO]${NC} $1"
-    fi
-}
-log_warn() { 
-    if [[ "$SILENT_MODE" != "true" ]]; then
-        echo -e "${YELLOW}[WARN]${NC} $1"
-    fi
-}
-log_error() { echo -e "${RED}[ERROR]${NC} $1"; }  # 错误总是显示
-log_debug() { 
-    if [[ "$SILENT_MODE" != "true" ]]; then
-        echo -e "${BLUE}[DEBUG]${NC} $1"
-    fi
-}
-
-log_info "=== BillionMail邮件系统部署 v2.0 ==="
-log_info "项目根目录: $PROJECT_ROOT"
-log_info "配置文件: $DEPLOY_CONF_FILE"
-log_info "BillionMail目录: $BILLIONMAIL_DIR"
+echo -e "${BLUE}🚀 开始部署BillionMail邮件营销系统 (官方代码集成版)${NC}"
+echo ""
 
 # 检查Docker环境
 if ! command -v docker &> /dev/null; then
-    log_error "Docker未安装，请先安装Docker"
+    echo -e "${RED}❌ Docker未安装，请先安装Docker${NC}"
     exit 1
 fi
 
 if ! command -v docker-compose &> /dev/null; then
-    log_error "Docker Compose未安装，请先安装Docker Compose"
+    echo -e "${RED}❌ Docker Compose未安装，请先安装Docker Compose${NC}"
     exit 1
 fi
 
-log_info "✅ Docker环境检查通过"
+echo -e "${GREEN}✅ Docker环境检查通过${NC}"
 
-# 检查配置文件
-if [[ ! -f "$DEPLOY_CONF_FILE" ]]; then
-    log_error "配置文件不存在: $DEPLOY_CONF_FILE"
+# 使用项目根目录的BillionMail
+BILLIONMAIL_DIR="$PROJECT_ROOT/BillionMail"
+
+if [ ! -d "$BILLIONMAIL_DIR" ]; then
+    echo -e "${RED}❌ BillionMail目录不存在: $BILLIONMAIL_DIR${NC}"
+    echo "请确保已正确克隆BillionMail代码到项目根目录"
     exit 1
 fi
 
-# 检查BillionMail目录
-if [[ ! -d "$BILLIONMAIL_DIR" ]]; then
-    log_error "BillionMail目录不存在，请先运行克隆脚本"
-    exit 1
-fi
-
-# 读取部署配置
-log_info "读取部署配置..."
-source "$DEPLOY_CONF_FILE"
-
-# 生成BillionMail配置
-log_info "生成BillionMail配置..."
-"$SCRIPT_DIR/configure-billionmail-from-deploy.sh"
-
-# 进入BillionMail目录
 cd "$BILLIONMAIL_DIR"
+echo -e "${GREEN}✅ 切换到BillionMail目录: $BILLIONMAIL_DIR${NC}"
 
-# 检查端口冲突
-log_info "检查端口冲突..."
+# 配置环境变量 - 从deploy.conf读取
+echo -e "${YELLOW}🔧 配置BillionMail环境变量...${NC}"
+
+# 创建.env文件，从deploy.conf读取配置
+cat > .env << EOF
+# BillionMail Environment Configuration
+# Auto-generated from deploy.conf
+
+# Admin Configuration
+ADMIN_USERNAME=${BILLIONMAIL_USERNAME:-admin}
+ADMIN_PASSWORD=${BILLIONMAIL_PASSWORD:-billionmail2024}
+SafePath=billion
+
+# Hostname Configuration
+BILLIONMAIL_HOSTNAME=${MAIL_DOMAIN:-localhost}
+
+# Database Configuration
+DBNAME=billionmail
+DBUSER=billionmail
+DBPASS=billionmail_db_2024
+
+# Redis Configuration
+REDISPASS=${BILLIONMAIL_REDIS_PASSWORD:-}
+
+# Mail Ports
+SMTP_PORT=25
+SMTPS_PORT=465
+SUBMISSION_PORT=587
+IMAP_PORT=143
+IMAPS_PORT=993
+POP_PORT=110
+POPS_PORT=995
+REDIS_PORT=127.0.0.1:26379
+SQL_PORT=127.0.0.1:25432
+
+# Management Ports
+HTTP_PORT=${BILLIONMAIL_PORT:-8080}
+HTTPS_PORT=8443
+
+# Timezone
+TZ=Asia/Shanghai
+
+# Network Configuration
+IPV4_NETWORK=172.66.1
+
+# Security Configuration
+FAIL2BAN_INIT=y
+IP_WHITELIST_ENABLE=false
+EOF
+
+echo -e "${GREEN}✅ 环境变量配置完成${NC}"
+
+# 检查端口是否被占用
 BILLIONMAIL_PORT=${BILLIONMAIL_PORT:-8080}
-
-if command -v ss &> /dev/null; then
-    if ss -tlnp | grep -q ":$BILLIONMAIL_PORT"; then
-        log_warn "端口$BILLIONMAIL_PORT已被占用，尝试停止相关服务..."
-        # 尝试停止可能的冲突服务
-        docker-compose down 2>/dev/null || true
-    fi
-elif command -v netstat &> /dev/null; then
-    if netstat -tlnp | grep -q ":$BILLIONMAIL_PORT"; then
-        log_warn "端口$BILLIONMAIL_PORT已被占用，尝试停止相关服务..."
-        docker-compose down 2>/dev/null || true
-    fi
+if ss -tlnp | grep -q ":$BILLIONMAIL_PORT"; then
+    echo -e "${YELLOW}⚠️  端口$BILLIONMAIL_PORT已被占用${NC}"
+    echo "尝试停止可能冲突的服务..."
+    docker-compose down 2>/dev/null || true
+    sleep 3
 fi
 
-# 拉取最新镜像
-log_info "拉取BillionMail Docker镜像..."
-docker-compose pull
+# 创建必要的目录
+echo -e "${YELLOW}📁 创建必要的数据目录...${NC}"
+mkdir -p postgresql-data redis-data logs rspamd-data vmail-data postfix-data webmail-data php-sock ssl ssl-self-signed core-data
 
-# 启动BillionMail服务
-log_info "启动BillionMail Docker服务..."
+# 使用Docker Compose启动服务
+echo -e "${YELLOW}🐳 启动BillionMail Docker服务...${NC}"
 docker-compose up -d
 
 # 等待服务启动
-log_info "等待服务启动..."
+echo -e "${YELLOW}⏳ 等待服务启动完成...${NC}"
 sleep 15
 
 # 检查服务状态
-log_info "检查服务状态..."
+echo -e "${YELLOW}🔍 检查服务状态...${NC}"
 if docker-compose ps | grep -q "Up"; then
-    log_info "✅ BillionMail服务启动成功"
-    
-    # 显示访问信息
+    echo -e "${GREEN}✅ BillionMail服务启动成功${NC}"
     echo ""
-    log_info "=== 服务访问信息 ==="
-    echo "📍 BillionMail管理界面: http://${DOMAIN}:${BILLIONMAIL_PORT}"
-    echo "📍 管理员账号: ${BILLIONMAIL_USERNAME:-admin}"
-    echo "📍 管理员密码: ${BILLIONMAIL_PASSWORD:-billionmail2024}"
-    echo "📍 安全路径: /billion"
+    echo -e "${BLUE}📍 BillionMail访问地址:${NC}"
+    echo "  🌐 管理界面: http://${DOMAIN:-localhost}:${BILLIONMAIL_PORT:-8080}"
+    echo "  📧 邮件域名: ${MAIL_DOMAIN:-localhost}"
+    echo "  🔑 管理员账号: ${BILLIONMAIL_USERNAME:-admin}"
+    echo "  🔒 管理员密码: ${BILLIONMAIL_PASSWORD:-billionmail2024}"
     echo ""
-    
-    # 显示服务状态
-    log_info "=== 服务状态 ==="
-    docker-compose ps
+    echo -e "${BLUE}📊 服务端口信息:${NC}"
+    echo "  HTTP: ${BILLIONMAIL_PORT:-8080}"
+    echo "  SMTP: 25, 465, 587"
+    echo "  IMAP: 143, 993"
+    echo "  POP3: 110, 995"
     echo ""
-    
-    log_info "=== 下一步操作 ==="
-    echo "1. 访问管理界面: http://${DOMAIN}:${BILLIONMAIL_PORT}/billion"
-    echo "2. 使用管理员账号登录"
-    echo "3. 配置SMTP邮件服务商"
-    echo "4. 创建邮件模板和营销活动"
-    echo "5. 集成前端邮件订阅功能"
-    
+    echo -e "${YELLOW}📋 下一步操作:${NC}"
+    echo "  1. 访问管理界面完成邮件域名配置"
+    echo "  2. 配置SMTP邮件服务商"
+    echo "  3. 创建邮件模板和列表"
+    echo "  4. 配置前端邮件订阅集成"
+    echo ""
+    echo -e "${GREEN}🎉 BillionMail部署完成！${NC}"
 else
-    log_error "BillionMail服务启动失败"
-    echo ""
-    log_warn "服务状态:"
-    docker-compose ps
-    echo ""
-    log_warn "服务日志:"
-    docker-compose logs --tail=20
+    echo -e "${RED}❌ BillionMail服务启动失败${NC}"
+    echo "查看详细日志:"
+    echo "  docker-compose logs"
+    echo "  docker-compose ps"
     exit 1
 fi
-
-log_info "✅ BillionMail部署完成！"
