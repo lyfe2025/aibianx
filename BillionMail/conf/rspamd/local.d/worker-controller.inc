@@ -1,5 +1,5 @@
 count = 1;
-password = "$2$jgdwfc18sz8zdpd1q33hyzcsgxtf8qzh$teypo7jneamwx5renti5jjnofur3y55bg1b71fqnxtkgyoueh3py";
+password = "$2$34qkif7aektpaog3tja9xaodtwk3amzz$9ze4antfoy5ydres463qt48puwc7eedsfftnzxwq78tff9zzrwpb";
 secure_ip = "127.0.0.1";
 secure_ip = "::1";
 static_dir = "${WWWDIR}";

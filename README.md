@@ -238,8 +238,8 @@ bash <(curl -s https://raw.githubusercontent.com/lyfe2025/aibianx/master/scripts
 2. **项目克隆** - 从GitHub获取最新代码
 3. **配置生成** - 执行 `./scripts.sh deploy config` (对应菜单选项1)
 4. **服务启动** - 执行 `./scripts.sh deploy start` (对应菜单选项2)
-5. **智能部署** - 按序启动: 数据库 → 搜索引擎 → 邮件系统 → 后端 → 前端
-6. **数据恢复** - 自动从 `deploy.conf` 指定的备份版本恢复演示数据
+5. **智能部署** - 按序启动: 数据库检查创建 → 数据恢复 → 搜索引擎 → 邮件系统 → 后端 → 前端
+6. **数据管理** - 自动检查数据库存在性，不存在则创建并从 `deploy.conf` 指定备份版本恢复数据
 7. **健康检查** - 验证所有服务运行状态和连通性
 8. **地址输出** - 显示所有访问地址和状态面板
 
@@ -316,8 +316,8 @@ REPO_ORG=lyfe2025                  # GitHub组织/用户名
 PROJECT_NAME=aibianx               # 项目名称
 REPO_URL=https://github.com/${REPO_ORG}/${PROJECT_NAME}.git
 
-# 🔐 安全配置 (生产环境必须修改)
-DB_NAME=aibianx_dev                # 数据库名称
+# 🔐 数据库配置 (系统自动创建数据库)
+DB_NAME=aibianx_dev                # 数据库名称 (自动添加环境后缀 _dev/_prod)
 DB_USER=aibianx_dev                # 数据库用户
 DB_PASSWORD=                       # 数据库密码 (开发环境可为空)
 DB_ADMIN_PASSWORD=postgres_admin_2024   # PostgreSQL管理员密码
@@ -802,7 +802,12 @@ flowchart TD
         G3 --> H
         G4 --> H
         
-        H[🗄️ 启动PostgreSQL数据库] --> I[💾 启动Redis缓存]
+        H[🗄️ 启动PostgreSQL数据库] --> H1[🔍 检查数据库是否存在]
+        H1 --> H2{数据库存在?}
+        H2 -->|否| H3[🛠️ 自动创建数据库]
+        H2 -->|是| I[💾 启动Redis缓存]
+        H3 --> H4[📦 恢复指定版本数据]
+        H4 --> I
         I --> J[⚙️ 启动Strapi后端服务]
         J --> K[🌐 启动Next.js前端服务]
     end
@@ -830,6 +835,7 @@ flowchart TD
 - **🔧 两阶段式部署** - 配置阶段完成后再启动服务，确保环境一致性
 - **🤖 智能服务检测** - 自动识别服务状态并选择最优处理策略
 - **🛡️ 故障自动修复** - 检测到问题时自动尝试修复而非直接失败
+- **🗄️ 智能数据库管理** - 自动检查数据库存在性，不存在则创建并恢复指定版本数据
 - **📦 服务隔离管理** - 统一服务群 + 独立邮件服务的混合管理策略
 - **🌐 动态地址生成** - 根据实际运行状态生成准确的访问地址
 
@@ -875,6 +881,7 @@ flowchart TD
 - 🚫 **零硬编码架构** - 完全消除硬编码，所有URL动态生成
 - 📦 **单文件配置** - `deploy.conf` 统一管理所有服务参数
 - 🔄 **环境自适应** - dev/production模式自动切换配置
+- 🗄️ **智能数据库管理** - 自动检查、创建数据库并恢复指定版本数据
 - 🌐 **动态URL构建** - 智能生成 `http://domain:port/path` 格式
 - 🛡️ **服务冲突预防** - 自动检测并避免重复服务部署
 - 🔧 **智能服务发现** - 优先使用已运行的独立服务

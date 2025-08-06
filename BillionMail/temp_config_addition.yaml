@@ -1,0 +1,5 @@
+
+# JWT Configuration  
+jwt:
+  secret: "billionmail_jwt_secret_default_2024"
+  expire: 86400

@@ -250,15 +250,13 @@ execute_choice() {
 # 备份管理菜单
 backup_menu() {
     while true; do
-        echo ""
-        echo -e "${CYAN}📦 备份管理${NC}"
-        echo "========================="
+        echo -e "\n${CYAN}📦 备份管理${NC}\n========================="
         echo "  1) 📋 查看可用备份"
         echo "  2) 🗄️ 创建完整备份"
         echo "  3) 🔄 从备份恢复"
         echo "  4) ✅ 验证备份文件"
-        echo "  0) 🔙 返回主菜单"
-        echo ""
+        echo "  5) ⏰ 定时备份管理"
+        echo -e "  0) 🔙 返回主菜单\n"
         echo -n -e "${YELLOW}请选择: ${NC}"
         read -r backup_choice
     
@@ -301,6 +299,13 @@ backup_menu() {
                 echo -n -e "${YELLOW}验证完成！按回车键继续...${NC}"
                 read
             fi
+            ;;
+        "5")
+            echo -e "${BLUE}⏰ 定时备份管理...${NC}"
+            chmod +x "$SCRIPT_DIR/scripts/backup/manage-cron.sh"
+            "$SCRIPT_DIR/scripts/backup/manage-cron.sh"
+            echo -n -e "${YELLOW}定时备份管理完成！按回车键继续...${NC}"
+            read
             ;;
         "0")
             return 1
@@ -367,9 +372,17 @@ handle_command_line() {
                     fi
                     exec "$SCRIPT_DIR/scripts/backup/verify-backup.sh" "$@"
                     ;;
+                "cron"|"schedule")
+                    chmod +x "$SCRIPT_DIR/scripts/backup/manage-cron.sh"
+                    exec "$SCRIPT_DIR/scripts/backup/manage-cron.sh" "$@"
+                    ;;
+                "scheduled")
+                    chmod +x "$SCRIPT_DIR/scripts/backup/scheduled-backup.sh"
+                    exec "$SCRIPT_DIR/scripts/backup/scheduled-backup.sh" "$@"
+                    ;;
                 *)
                     echo -e "${RED}❌ 未知的备份操作: $action${NC}"
-                    echo "可用操作: list, create, restore, verify"
+                    echo "可用操作: list, create, restore, verify, cron, scheduled"
                     exit 1
                     ;;
             esac
@@ -445,7 +458,7 @@ handle_command_line() {
             echo ""
                 echo -e "${BLUE}可用类别:${NC}"
     echo "  deploy  - 部署管理 (config, start, stop)"
-    echo "  backup  - 备份管理 (list, create, restore, verify)"
+    echo "  backup  - 备份管理 (list, create, restore, verify, cron, scheduled)"
     echo "  tools   - 开发工具 (status, check, services)"
     echo "  search  - 搜索引擎 (manage, check)"
     echo "  email   - 邮件系统 (check, admin)"

@@ -14,9 +14,8 @@ DBNAME=billionmail
 DBUSER=billionmail
 DBPASS=NauF7ysRYyt9HTOiOn4JjIAL3QcRZnzj
 
-# REDIS PASSWORD configuration (无密码配置)
-REDISPASS=""
-REDIS_AUTH_ENABLED=false
+# REDIS PASSWORD configuration
+REDISPASS=zKLnZQr3riFpcS2lEy3MOtfncztaCGKp
 
 
 ## MAIL Ports
@@ -48,6 +47,3 @@ FAIL2BAN_INIT=y
 
 # Console ip whitelist   Disabled:false  Enabled:true
 IP_WHITELIST_ENABLE=false
-# JWT Secret configuration
-JWT_SECRET=billionmail_jwt_secret_default_2024
-JWT_EXPIRE=86400
