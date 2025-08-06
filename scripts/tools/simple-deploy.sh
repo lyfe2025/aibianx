@@ -161,6 +161,40 @@ restore_from_backup() {
     fi
 }
 
+# 修复BillionMail端口配置
+fix_billionmail_ports() {
+    local billionmail_env_file="$PROJECT_ROOT/BillionMail/env_init"
+    
+    if [ ! -f "$billionmail_env_file" ]; then
+        echo "   ⚠️  BillionMail配置文件不存在，跳过端口修复"
+        return 0
+    fi
+    
+    # 从部署配置读取正确的端口
+    local correct_http_port=$(grep "^BILLIONMAIL_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080")
+    local correct_https_port=$((correct_http_port + 443 - 80))  # 8080 -> 8443
+    
+    echo "   📝 修复BillionMail端口配置..."
+    echo "      HTTP端口: 80 -> $correct_http_port"
+    echo "      HTTPS端口: 443 -> $correct_https_port"
+    
+    # 修复HTTP端口
+    if grep -q "^HTTP_PORT=" "$billionmail_env_file"; then
+        sed -i '' "s/^HTTP_PORT=.*/HTTP_PORT=$correct_http_port/" "$billionmail_env_file"
+    else
+        echo "HTTP_PORT=$correct_http_port" >> "$billionmail_env_file"
+    fi
+    
+    # 修复HTTPS端口
+    if grep -q "^HTTPS_PORT=" "$billionmail_env_file"; then
+        sed -i '' "s/^HTTPS_PORT=.*/HTTPS_PORT=$correct_https_port/" "$billionmail_env_file"
+    else
+        echo "HTTPS_PORT=$correct_https_port" >> "$billionmail_env_file"
+    fi
+    
+    echo "   ✅ BillionMail端口配置已修复"
+}
+
 # 生成所有配置文件
 generate_configs() {
     echo -e "${BLUE}🔧 正在生成前端、后端和部署配置文件...${NC}"
@@ -356,7 +390,12 @@ main() {
     # 1. 从解压后的备份恢复数据和文件
     restore_from_backup
     
-    # 2. 生成配置文件
+    # 2. 修复BillionMail端口配置
+    echo ""
+    echo -e "${CYAN}🔧 修复BillionMail端口配置...${NC}"
+    fix_billionmail_ports
+    
+    # 3. 生成配置文件
     echo ""
     echo -e "${CYAN}5️⃣  生成环境配置文件...${NC}"
     generate_configs
