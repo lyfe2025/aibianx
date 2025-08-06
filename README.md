@@ -36,121 +36,190 @@
 
 ```mermaid
 graph TB
-    subgraph "🎯 智能混合部署架构"
-        subgraph "🌐 前端应用层 (统一部署)"
-            A[Next.js 14 + TypeScript]
-            B[纯CSS变量系统]
-            C[Zustand状态管理]
-            A1[动态配置系统]
+    subgraph "🚀 一键部署架构 (bootstrap.sh)"
+        subgraph "📋 第1步: 配置阶段 (scripts.sh deploy config)"
+            K[deploy.conf 统一配置文件]
+            K1[环境变量生成 .env]
+            K2[备份数据恢复]
+            K3[端口冲突检测]
+            K --> K1
+            K --> K2
+            K --> K3
         end
         
-        subgraph "⚙️ 核心后端服务 (统一部署)"
-            D[Strapi 5.20.0]
-            E[RESTful API]
-            F[OpenAPI文档]
-            D1[零硬编码架构]
+        subgraph "🚀 第2步: 启动阶段 (scripts.sh deploy start)"
+            subgraph "🎯 统一部署服务群 (docker-compose.unified.yml)"
+                G[PostgreSQL 主数据库<br/>:5432]
+                H[Redis 缓存服务<br/>:6379]
+                I[MeiliSearch 搜索引擎<br/>:7700]
+                D[Strapi 5.20.0 后端<br/>:1337]
+                A[Next.js 14 前端<br/>:80]
+                
+                G --> D
+                H --> D
+                I --> D
+                D --> A
+            end
+            
+            subgraph "📧 独立部署邮件系统 (BillionMail/docker-compose.yml)"
+                J[BillionMail Core<br/>:8080]
+                J1[PostgreSQL 邮件专用库<br/>:5433]
+                J2[Redis 邮件专用缓存<br/>:6380]
+                J3[rspamd 反垃圾邮件<br/>:11334]
+                J4[dovecot IMAP/POP3<br/>:143/993/110/995]
+                J5[postfix SMTP<br/>:25/587/465]
+                J6[RoundCube WebMail<br/>:8080/roundcube]
+                
+                J1 --> J
+                J2 --> J
+                J3 --> J
+                J4 --> J
+                J5 --> J
+                J6 --> J
+            end
         end
+    end
+    
+    subgraph "🌐 用户访问层"
+        U1[用户浏览器]
+        U2[邮件客户端]
+        U3[管理员后台]
+    end
+    
+    subgraph "🛠️ 智能管理层"
+        S1[scripts.sh 统一入口]
+        S2[智能服务发现]
+        S3[健康状态监控]
+        S4[动态URL生成]
+        S5[自动故障恢复]
         
-        subgraph "🗄️ 统一数据层 (统一部署)"
-            G[PostgreSQL 主库]
-            H[Redis 缓存]
-            I[MeiliSearch搜索引擎]
-            G1[主要业务数据]
-            I1[全文搜索索引]
-        end
+        S1 --> S2
+        S1 --> S3
+        S1 --> S4
+        S1 --> S5
     end
     
-    subgraph "📧 独立邮件服务 (独立部署)"
-        J[BillionMail Core]
-        J1[PostgreSQL 邮件库]
-        J2[Redis 邮件缓存]
-        J3[rspamd 反垃圾]
-        J4[dovecot IMAP/POP3]
-        J5[postfix SMTP]
-        J6[RoundCube WebMail]
-    end
+    %% 配置阶段连接
+    K1 --> G
+    K1 --> H
+    K1 --> I
+    K1 --> D
+    K1 --> A
+    K2 --> G
+    K3 --> J
     
-    subgraph "🛠️ 智能配置管理层"
-        K[deploy.conf 统一配置]
-        K1[环境变量自动生成]
-        K2[动态URL构建]
-        K3[服务冲突检测]
-        K4[环境自适应切换]
-        K5[智能服务发现]
-    end
+    %% 用户访问连接
+    U1 --> A
+    U1 --> J6
+    U2 --> J4
+    U2 --> J5
+    U3 --> D
+    U3 --> J
+    U3 --> I
     
-    %% 核心服务连接
-    A --> D
-    D --> G
-    D --> H
-    D --> I
+    %% 跨服务API连接
+    D -.->|邮件营销API| J
+    A -.->|前端访问邮件界面| J6
+    A -.->|搜索API调用| I
     
-    %% 邮件服务内部连接
-    J1 --> J
-    J2 --> J
-    J3 --> J
-    J4 --> J
-    J5 --> J
-    J6 --> J
-    
-    %% 配置管理连接
-    K --> K1
-    K1 --> A1
-    K1 --> D1
-    K2 --> A
-    K2 --> D
-    K3 --> K
-    K4 --> K
-    K5 --> J
-    
-    %% 跨服务连接
-    D -.->|邮件API调用| J
-    A -.->|邮件管理界面| J6
-    K5 -.->|智能检测| J
+    %% 管理层连接
+    S2 -.->|检测服务状态| G
+    S2 -.->|检测服务状态| H
+    S2 -.->|检测服务状态| I
+    S2 -.->|检测服务状态| D
+    S2 -.->|检测服务状态| A
+    S2 -.->|检测独立邮件服务| J
+    S3 -.->|健康检查| G
+    S3 -.->|健康检查| D
+    S3 -.->|健康检查| I
+    S3 -.->|健康检查| J
+    S4 -.->|生成访问地址| A
+    S4 -.->|生成访问地址| D
+    S4 -.->|生成访问地址| I
+    S4 -.->|生成访问地址| J
     
     %% 样式定义
+    classDef config fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     classDef unified fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
     classDef independent fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    classDef management fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef user fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef management fill:#fce4ec,stroke:#c2185b,stroke-width:2px
     
-    class A,B,C,A1,D,E,F,D1,G,H,I,G1,I1 unified
+    class K,K1,K2,K3 config
+    class G,H,I,D,A unified
     class J,J1,J2,J3,J4,J5,J6 independent
-    class K,K1,K2,K3,K4,K5 management
+    class U1,U2,U3 user
+    class S1,S2,S3,S4,S5 management
 ```
 
 </div>
 
+### 🔧 **架构核心理念**
+
+#### 📋 **一键部署 = 两步式智能配置**
+
+> **核心思路**: 一键部署实际上是 `bootstrap.sh` 自动按序执行 `scripts.sh deploy config` 和 `scripts.sh deploy start`
+
+```mermaid
+flowchart LR
+    A[bootstrap.sh<br/>一键部署] --> B[scripts.sh deploy config<br/>配置生成阶段]
+    B --> C[scripts.sh deploy start<br/>服务启动阶段]
+    C --> D[show-all-services.sh<br/>访问地址输出]
+    
+    style A fill:#fff3e0,stroke:#f57c00
+    style B fill:#e3f2fd,stroke:#1976d2
+    style C fill:#f3e5f5,stroke:#7b1fa2
+    style D fill:#e8f5e8,stroke:#388e3c
+```
+
+#### 🎯 **两阶段部署详解**
+
+| 阶段 | 操作命令 | 主要任务 | 关键脚本 |
+|------|----------|----------|----------|
+| **📋 配置阶段** | `scripts.sh deploy config` | 🔧 环境变量生成<br/>📦 备份数据恢复<br/>🛡️ 端口冲突检测 | `simple-deploy.sh` |
+| **🚀 启动阶段** | `scripts.sh deploy start` | 🎯 统一服务群启动<br/>📧 独立邮件系统启动<br/>🔍 健康检查验证 | `start-dev.sh` |
+
 ### 💻 **技术栈详情**
 
-#### 🎨 **前端技术**
-- **Next.js 14** - React全栈框架，支持SSR/SSG
-- **TypeScript** - 类型安全的JavaScript超集
-- **纯CSS变量系统** - 主题化设计，毛玻璃效果
-- **Zustand** - 轻量级状态管理
-- **响应式设计** - 1440px设计稿精确还原
+#### 🎨 **前端技术栈**
+- **Next.js 14** - React全栈框架，支持SSR/SSG，App Router架构
+- **TypeScript** - 类型安全的JavaScript超集，提升开发效率
+- **纯CSS变量系统** - 主题化设计，毛玻璃效果，深色模式支持
+- **Zustand** - 轻量级状态管理，简单易用
+- **响应式设计** - 1440px设计稿精确还原，完美适配移动端
 
-#### ⚙️ **后端技术**
-- **Strapi 5.20.0** - 无头CMS，TypeScript支持
-- **PostgreSQL 14+** - 企业级关系型数据库
-- **RESTful API** - 标准化API接口
-- **OpenAPI 3.0** - 自动生成API文档
+#### ⚙️ **后端技术栈**
+- **Strapi 5.20.0** - 现代化无头CMS，完整TypeScript支持
+- **PostgreSQL 14+** - 企业级关系型数据库，ACID事务保证
+- **RESTful API** - 标准化API接口，自动生成文档
+- **OpenAPI 3.0** - 交互式API文档，支持在线测试
 
-#### 🔧 **基础设施**
-- **Docker Compose** - 智能混合容器编排策略
-- **MeiliSearch** - 高性能全文搜索引擎 (统一部署)
-- **BillionMail** - 独立部署的专业邮件营销系统 (独立部署)
-- **Redis** - 内存缓存和会话存储 (统一部署)
-- **PostgreSQL** - 分离式数据库架构 (主库 + 邮件库)
+#### 🔧 **基础设施架构**
+- **Docker Compose** - 智能混合容器编排，统一+独立双重策略
+- **MeiliSearch** - 高性能全文搜索引擎，中文分词支持 (统一部署 :7700)
+- **BillionMail** - 专业邮件营销系统，完全独立部署 (独立部署 :8080)
+- **Redis** - 内存缓存和会话存储，高性能数据缓存 (统一部署 :6379)
+- **PostgreSQL** - 双库分离架构，主业务库+邮件专用库
 
 #### 🏗️ **智能混合部署架构特色**
-- **🎯 双重部署策略** - 核心服务统一部署 + 邮件服务独立部署
-- **🚫 零硬编码设计** - 所有配置从 `deploy.conf` 动态读取
-- **🔧 智能服务发现** - 自动识别现有服务，优先使用独立服务
-- **🛡️ 冲突自动预防** - 智能检测并避免端口冲突和重复部署
-- **🌐 动态URL构建** - 根据环境和服务状态自动生成访问地址
-- **🔄 环境自适应** - 开发/生产环境无缝切换
-- **📦 服务隔离** - 邮件系统完全独立，数据和配置完全隔离
-- **⚡ 智能启动检测** - 自动检测服务状态，避免重复启动
+
+##### 🎯 **部署策略优势**
+- **🔄 双重部署策略** - 核心服务统一部署 (简化管理) + 邮件服务独立部署 (服务稳定)
+- **🚫 零硬编码设计** - 所有URL、端口、连接字符串均从 `deploy.conf` 动态生成
+- **🔧 智能服务发现** - 自动识别现有服务状态，优先使用已运行的独立服务
+- **🛡️ 冲突智能预防** - 端口占用检测、服务重复检测、资源冲突预警
+
+##### 🌐 **配置管理特色**
+- **📋 单文件配置** - `deploy.conf` 统一管理所有服务参数和环境变量
+- **🔄 环境自适应** - dev/production模式自动切换配置策略
+- **🌐 动态URL构建** - 智能生成 `protocol://domain:port/path` 格式访问地址
+- **⚡ 智能启动检测** - 健康检查、状态监控、自动重启机制
+
+##### 📦 **服务隔离设计**
+- **🗄️ 数据完全隔离** - 邮件数据与主业务数据使用独立数据库实例
+- **🔧 配置独立管理** - 邮件系统拥有独立的环境配置和Docker编排
+- **📊 监控分离** - 独立的日志系统、健康检查、性能监控
+- **🚀 版本独立** - 邮件系统可独立升级、回滚，不影响主业务
 
 ## 🚀 快速开始
 
@@ -167,11 +236,14 @@ bash <(curl -s https://raw.githubusercontent.com/lyfe2025/aibianx/master/scripts
 **🔧 一键部署执行流程:**
 1. **环境检查** - 自动检查并安装必要依赖 (Git, Docker, Node.js)
 2. **项目克隆** - 从GitHub获取最新代码
-3. **默认配置** - 使用项目默认的 `deploy.conf` 配置
-4. **自动部署** - 依次部署数据库、搜索引擎、邮件系统
-5. **数据恢复** - 自动从备份恢复演示数据
-6. **服务启动** - 启动前端、后端等所有服务
-7. **地址输出** - 显示所有访问地址和状态
+3. **配置生成** - 执行 `./scripts.sh deploy config` (对应菜单选项1)
+4. **服务启动** - 执行 `./scripts.sh deploy start` (对应菜单选项2)
+5. **智能部署** - 按序启动: 数据库 → 搜索引擎 → 邮件系统 → 后端 → 前端
+6. **数据恢复** - 自动从 `deploy.conf` 指定的备份版本恢复演示数据
+7. **健康检查** - 验证所有服务运行状态和连通性
+8. **地址输出** - 显示所有访问地址和状态面板
+
+**💡 一键部署 = bootstrap.sh → scripts.sh deploy config → scripts.sh deploy start**
 
 #### 方式二：手动部署（可定制配置）
 ```bash
@@ -189,16 +261,25 @@ vim deployment/config/deploy.conf    # 自定义域名、密码、端口等
 ./scripts.sh tools services   # 获取所有服务地址
 ```
 
-**🎯 手动部署 vs 一键部署的区别:**
+**🎯 手动部署 vs 一键部署详细对比:**
 
-| 特性 | 一键部署 | 手动部署 (scripts.sh) |
-|------|----------|----------------------|
-| **配置修改** | ❌ 使用默认配置，不可预先修改 | ✅ 可在部署前修改 `deploy.conf` |
-| **环境检查** | ✅ 自动安装缺失依赖 | ⚠️ 需手动确保依赖完整 |
-| **项目获取** | ✅ 自动从GitHub克隆 | ⚠️ 需手动克隆项目 |
-| **执行控制** | ❌ 一次性完整执行 | ✅ 可分步执行和调试 |
-| **错误处理** | ⚠️ 失败需重新运行 | ✅ 可单独重试失败步骤 |
-| **适用场景** | 🚀 快速体验、演示 | 🔧 生产部署、定制化需求 |
+| 对比维度 | 一键部署 (bootstrap.sh) | 手动部署 (scripts.sh) |
+|---------|------------------------|----------------------|
+| **🔧 配置修改** | ❌ 使用默认配置，不可预先修改 | ✅ 可在部署前修改 `deploy.conf` 定制化配置 |
+| **🛠️ 环境检查** | ✅ 自动检查并安装缺失依赖 (Git, Docker, Node.js) | ⚠️ 需手动确保依赖完整 |
+| **📦 项目获取** | ✅ 自动从GitHub克隆最新代码 | ⚠️ 需手动 `git clone` 获取项目 |
+| **🎯 执行流程** | 🚀 bootstrap.sh → scripts.sh config → scripts.sh start | 🔧 手动分步: config → start |
+| **⚙️ 执行控制** | ❌ 一次性完整执行，中途难以干预 | ✅ 可分步执行、单独调试、失败重试 |
+| **🛡️ 错误处理** | ⚠️ 失败需完全重新运行一键部署 | ✅ 可单独重试失败步骤，精准修复 |
+| **📊 状态监控** | ✅ 自动显示最终状态和访问地址 | 🔧 需手动执行 `tools status` 查看状态 |
+| **🎯 适用场景** | 🚀 快速体验、演示、全新环境部署 | 🔧 生产部署、定制需求、开发调试 |
+| **👥 用户群体** | 🆕 新手用户、体验用户、快速演示 | 👨‍💻 开发者、运维人员、生产环境 |
+| **🔄 重复部署** | ⚠️ 每次都重新克隆，覆盖本地修改 | ✅ 保留本地修改，仅更新配置和服务 |
+
+**💡 选择建议:**
+- **🆕 首次体验**: 选择一键部署，30秒快速上手
+- **🔧 生产环境**: 选择手动部署，精确控制每个步骤
+- **👨‍💻 开发调试**: 选择手动部署，便于问题排查和定制配置
 
 **⚠️ 手动部署注意事项:**
 1. **配置优先**: 部署前务必检查 `deployment/config/deploy.conf` 配置
@@ -679,35 +760,78 @@ deployment/
 - 🔧 **智能决策** - 自动选择最优部署策略
 - 🛡️ **故障隔离** - 关键服务故障不会级联影响
 
-#### 🔧 **智能部署逻辑流程**
+#### 🔧 **完整智能部署流程图**
+
 ```mermaid
 flowchart TD
-    A[🚀 启动部署] --> B[📋 读取 deploy.conf]
-    B --> C[🔧 生成环境变量]
-    C --> D{🔍 检测BillionMail}
+    %% 一键部署入口
+    A[🚀 bootstrap.sh 一键部署] --> A1[📦 克隆项目代码]
+    A1 --> A2[🔍 检查系统依赖]
+    A2 --> B
     
-    D -->|✅ 独立运行中| E[📧 使用独立邮件服务]
-    D -->|❌ 未运行| F[🚀 启动独立邮件服务]
+    %% 第一阶段：配置阶段
+    subgraph "📋 第一阶段: 配置阶段 (scripts.sh deploy config)"
+        B[📋 读取 deploy.conf] --> C[🔧 生成统一环境变量]
+        C --> C1[📦 恢复指定备份版本数据]
+        C1 --> C2[🛡️ 端口冲突检测修复]
+        C2 --> C3[🔧 修复BillionMail端口配置]
+        C3 --> C4[🧹 清理rspamd数据目录]
+    end
     
-    E --> G[📍 记录邮件访问地址]
-    F --> H{💡 启动是否成功?}
-    H -->|✅ 成功| G
-    H -->|❌ 失败| I[⚠️ 跳过邮件服务]
+    %% 第二阶段：服务启动阶段
+    subgraph "🚀 第二阶段: 服务启动阶段 (scripts.sh deploy start)"
+        C4 --> D{🔍 智能检测MeiliSearch}
+        D -->|✅ 健康运行| E1[📍 使用现有搜索服务]
+        D -->|⚠️ 运行但不健康| E2[🔄 重启搜索服务]
+        D -->|❌ 已停止| E3[▶️ 启动搜索服务]
+        D -->|❓ 未部署| E4[🚀 部署搜索服务]
+        
+        E1 --> F
+        E2 --> F
+        E3 --> F
+        E4 --> F
+        
+        F{🔍 智能检测BillionMail} 
+        F -->|✅ 健康运行| G1[📧 使用独立邮件服务]
+        F -->|⚠️ 容器存在未运行| G2[🔧 自动修复邮件服务]
+        F -->|❌ 目录存在容器未创建| G3[🚀 重新创建邮件容器]
+        F -->|❓ 未部署| G4[⚠️ 跳过邮件服务]
+        
+        G1 --> H
+        G2 --> H
+        G3 --> H
+        G4 --> H
+        
+        H[🗄️ 启动PostgreSQL数据库] --> I[💾 启动Redis缓存]
+        I --> J[⚙️ 启动Strapi后端服务]
+        J --> K[🌐 启动Next.js前端服务]
+    end
     
-    G --> J[🌐 生成动态访问URL]
-    I --> J
-    J --> K[🗄️ 启动数据库服务]
-    K --> L[🔍 启动搜索引擎]
-    L --> M[⚙️ 启动后端服务]
-    M --> N[🌐 启动前端服务]
-    N --> O[📊 验证所有服务状态]
-    O --> P[🎯 输出访问地址面板]
+    %% 验证和输出阶段
+    K --> L[📊 验证所有服务健康状态]
+    L --> M[🌐 生成动态访问URL]
+    M --> N[🎯 输出完整访问地址面板]
+    N --> O[✅ 部署完成]
     
-    style E fill:#c8e6c9
-    style F fill:#ffecb3
-    style I fill:#ffcdd2
-    style P fill:#e1f5fe
+    %% 样式定义
+    style A fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style E1 fill:#c8e6c9,stroke:#388e3c
+    style E2 fill:#ffecb3,stroke:#f57c00
+    style E3 fill:#ffecb3,stroke:#f57c00
+    style E4 fill:#ffcdd2,stroke:#d32f2f
+    style G1 fill:#c8e6c9,stroke:#388e3c
+    style G2 fill:#ffecb3,stroke:#f57c00
+    style G3 fill:#ffecb3,stroke:#f57c00
+    style G4 fill:#ffcdd2,stroke:#d32f2f
+    style O fill:#e1f5fe,stroke:#0277bd
 ```
+
+**🎯 智能部署核心特色:**
+- **🔧 两阶段式部署** - 配置阶段完成后再启动服务，确保环境一致性
+- **🤖 智能服务检测** - 自动识别服务状态并选择最优处理策略
+- **🛡️ 故障自动修复** - 检测到问题时自动尝试修复而非直接失败
+- **📦 服务隔离管理** - 统一服务群 + 独立邮件服务的混合管理策略
+- **🌐 动态地址生成** - 根据实际运行状态生成准确的访问地址
 
 ## 🌟 特色功能
 
