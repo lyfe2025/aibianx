@@ -103,25 +103,62 @@ auto_fix_billionmail() {
             fi
             
             # 清理可能存在的问题容器
+            echo "   🧹 清理旧容器..."
             docker-compose down > /dev/null 2>&1
             
-            # 创建和启动容器
-            docker-compose up -d > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
-                # 等待启动
+            # 创建和启动容器（显示进度）
+            echo "   🚀 启动BillionMail容器（可能需要1-2分钟）..."
+            echo "   💡 首次启动需要初始化PostgreSQL和Redis，请耐心等待..."
+            
+            # 使用后台启动，但显示关键信息
+            docker-compose up -d
+            local compose_exit_code=$?
+            
+            if [ $compose_exit_code -eq 0 ]; then
+                echo "   ⏳ 等待容器完全启动..."
+                
+                # 分阶段检查：先检查基础服务，再检查应用服务
                 local count=0
+                local max_wait=60  # 增加到120秒
+                
+                # 第一阶段：等待PostgreSQL和Redis启动
+                echo "   📦 第1阶段：等待数据库服务启动..."
+                while [ $count -lt 30 ]; do
+                    local postgres_ready=$(docker-compose ps | grep "billionmail-pgsql" | grep -c "Up")
+                    local redis_ready=$(docker-compose ps | grep "billionmail-redis" | grep -c "Up")
+                    
+                    if [ "$postgres_ready" -eq 1 ] && [ "$redis_ready" -eq 1 ]; then
+                        echo "   ✅ 数据库服务已启动"
+                        break
+                    fi
+                    
+                    echo "   ⏳ 等待数据库初始化... ($count/30)"
+                    sleep 3
+                    count=$((count + 1))
+                done
+                
+                # 第二阶段：等待应用服务启动
+                echo "   📦 第2阶段：等待应用服务启动..."
+                count=0
                 while [ $count -lt 30 ]; do
                     if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
+                        # 再等待一下确保服务完全启动
+                        sleep 5
                         echo "✅ BillionMail创建和启动成功"
                         return 0
                     fi
                     sleep 2
                     count=$((count + 1))
                 done
+                
                 echo "⚠️  BillionMail启动超时，但容器可能仍在初始化中"
+                echo "💡 可以运行以下命令检查状态："
+                echo "   cd BillionMail && docker-compose logs"
                 return 1
             else
                 echo "❌ BillionMail创建失败"
+                echo "💡 可以运行以下命令查看详细错误："
+                echo "   cd BillionMail && docker-compose logs"
                 return 1
             fi
             ;;
