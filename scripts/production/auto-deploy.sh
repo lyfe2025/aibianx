@@ -346,9 +346,22 @@ execute_deployment() {
         exit 1
     fi
     
-    # 等待服务启动
-    log_info "等待服务初始化..."
+    # 等待核心服务启动
+    log_info "等待核心服务初始化..."
     sleep 10
+    
+    # 🚀 启动邮件系统 (BillionMail)
+    log_info "启动BillionMail邮件系统..."
+    if "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh"; then
+        log_success "BillionMail邮件系统启动完成"
+    else
+        log_warning "BillionMail邮件系统启动失败，请稍后手动启动"
+        log_info "手动启动命令: $PROJECT_DIR/scripts.sh email start"
+    fi
+    
+    # 等待所有服务完全启动
+    log_info "等待所有服务完全初始化..."
+    sleep 15
 }
 
 # 验证部署状态
@@ -367,6 +380,17 @@ verify_deployment() {
             failed_services+=("$container")
         fi
     done
+    
+    # 检查BillionMail容器状态
+    log_info "检查BillionMail邮件系统状态..."
+    cd "$PROJECT_DIR/BillionMail" 2>/dev/null || true
+    if [ -f "docker-compose.yml" ] && docker-compose ps | grep -q "Up"; then
+        log_success "BillionMail邮件系统 - 运行正常"
+    else
+        log_warning "BillionMail邮件系统 - 运行异常或未启动"
+        failed_services+=("billionmail")
+    fi
+    cd "$PROJECT_DIR"
     
     # 检查服务健康状态
     log_info "检查服务健康状态..."
@@ -388,6 +412,16 @@ verify_deployment() {
         log_success "后端服务 - 响应正常 ($BACKEND_CHECK_URL)"
     else
         log_warning "后端服务 - 响应异常 ($BACKEND_CHECK_URL)"
+    fi
+    
+    # 检查邮件系统管理界面
+    if [ -n "${BILLIONMAIL_ADMIN_URL:-}" ]; then
+        local billionmail_code=$(curl -s -o /dev/null -w "%{http_code}" "${BILLIONMAIL_ADMIN_URL}" 2>/dev/null || echo "000")
+        if echo "$billionmail_code" | grep -qE "^(200|302|404)$"; then
+            log_success "BillionMail管理界面 - 响应正常 (${BILLIONMAIL_ADMIN_URL})"
+        else
+            log_warning "BillionMail管理界面 - 响应异常 (${BILLIONMAIL_ADMIN_URL})"
+        fi
     fi
     
     # 报告结果

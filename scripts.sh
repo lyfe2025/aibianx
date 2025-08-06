@@ -276,7 +276,17 @@ backup_menu() {
         "2")
             echo -e "${BLUE}🗄️ 创建完整备份...${NC}"
             echo ""
-            "$SCRIPT_DIR/scripts/backup/backup-databases.sh"
+            # 检查备份脚本是否存在
+            if [ -f "$SCRIPT_DIR/scripts/backup/backup-databases.sh" ]; then
+                "$SCRIPT_DIR/scripts/backup/backup-databases.sh"
+            else
+                echo -e "${RED}❌ 备份脚本不存在: $SCRIPT_DIR/scripts/backup/backup-databases.sh${NC}"
+                echo -e "${YELLOW}请确保项目已完整克隆或部署${NC}"
+                echo ""
+                echo -n -e "${YELLOW}按回车键继续...${NC}"
+                read
+                continue
+            fi
             echo ""
             echo -n -e "${YELLOW}备份完成！按回车键继续...${NC}"
             read
@@ -359,26 +369,56 @@ handle_command_line() {
                     ls backups/*.tar.gz 2>/dev/null | sort -r
                     ;;
                 "create")
-                    exec "$SCRIPT_DIR/scripts/backup/backup-databases.sh" "$@"
+                    if [ -f "$SCRIPT_DIR/scripts/backup/backup-databases.sh" ]; then
+                        exec "$SCRIPT_DIR/scripts/backup/backup-databases.sh" "$@"
+                    else
+                        echo -e "${RED}❌ 备份脚本不存在: $SCRIPT_DIR/scripts/backup/backup-databases.sh${NC}"
+                        echo -e "${YELLOW}请确保项目已完整克隆或部署${NC}"
+                        exit 1
+                    fi
                     ;;
                 "restore")
                     echo -e "${BLUE}🔄 使用配置文件中的备份版本恢复...${NC}"
-                    exec "$SCRIPT_DIR/scripts/tools/simple-deploy.sh"
+                    if [ -f "$SCRIPT_DIR/scripts/tools/simple-deploy.sh" ]; then
+                        exec "$SCRIPT_DIR/scripts/tools/simple-deploy.sh"
+                    else
+                        echo -e "${RED}❌ 恢复脚本不存在: $SCRIPT_DIR/scripts/tools/simple-deploy.sh${NC}"
+                        echo -e "${YELLOW}请确保项目已完整克隆或部署${NC}"
+                        exit 1
+                    fi
                     ;;
                 "verify")
                     if [ $# -eq 0 ]; then
                         echo -e "${RED}❌ 请提供备份文件路径${NC}"
                         exit 1
                     fi
-                    exec "$SCRIPT_DIR/scripts/backup/verify-backup.sh" "$@"
+                    if [ -f "$SCRIPT_DIR/scripts/backup/verify-backup.sh" ]; then
+                        exec "$SCRIPT_DIR/scripts/backup/verify-backup.sh" "$@"
+                    else
+                        echo -e "${RED}❌ 验证脚本不存在: $SCRIPT_DIR/scripts/backup/verify-backup.sh${NC}"
+                        echo -e "${YELLOW}请确保项目已完整克隆或部署${NC}"
+                        exit 1
+                    fi
                     ;;
                 "cron"|"schedule")
-                    chmod +x "$SCRIPT_DIR/scripts/backup/manage-cron.sh"
-                    exec "$SCRIPT_DIR/scripts/backup/manage-cron.sh" "$@"
+                    if [ -f "$SCRIPT_DIR/scripts/backup/manage-cron.sh" ]; then
+                        chmod +x "$SCRIPT_DIR/scripts/backup/manage-cron.sh"
+                        exec "$SCRIPT_DIR/scripts/backup/manage-cron.sh" "$@"
+                    else
+                        echo -e "${RED}❌ 定时备份脚本不存在: $SCRIPT_DIR/scripts/backup/manage-cron.sh${NC}"
+                        echo -e "${YELLOW}请确保项目已完整克隆或部署${NC}"
+                        exit 1
+                    fi
                     ;;
                 "scheduled")
-                    chmod +x "$SCRIPT_DIR/scripts/backup/scheduled-backup.sh"
-                    exec "$SCRIPT_DIR/scripts/backup/scheduled-backup.sh" "$@"
+                    if [ -f "$SCRIPT_DIR/scripts/backup/scheduled-backup.sh" ]; then
+                        chmod +x "$SCRIPT_DIR/scripts/backup/scheduled-backup.sh"
+                        exec "$SCRIPT_DIR/scripts/backup/scheduled-backup.sh" "$@"
+                    else
+                        echo -e "${RED}❌ 计划备份脚本不存在: $SCRIPT_DIR/scripts/backup/scheduled-backup.sh${NC}"
+                        echo -e "${YELLOW}请确保项目已完整克隆或部署${NC}"
+                        exit 1
+                    fi
                     ;;
                 *)
                     echo -e "${RED}❌ 未知的备份操作: $action${NC}"

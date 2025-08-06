@@ -107,17 +107,42 @@ fi
 echo -e "${YELLOW}📁 创建必要的数据目录...${NC}"
 mkdir -p postgresql-data redis-data logs rspamd-data vmail-data postfix-data webmail-data php-sock ssl ssl-self-signed core-data
 
+# 停止可能存在的旧服务
+echo -e "${YELLOW}🛑 停止可能存在的旧服务...${NC}"
+docker-compose down 2>/dev/null || true
+sleep 3
+
 # 使用Docker Compose启动服务
 echo -e "${YELLOW}🐳 启动BillionMail Docker服务...${NC}"
-docker-compose up -d
+if docker-compose up -d; then
+    echo -e "${GREEN}✅ Docker服务启动命令执行成功${NC}"
+else
+    echo -e "${RED}❌ Docker服务启动命令执行失败${NC}"
+    exit 1
+fi
 
 # 等待服务启动
 echo -e "${YELLOW}⏳ 等待服务启动完成...${NC}"
-sleep 15
+sleep 20
 
-# 检查服务状态
+# 多次检查服务状态，确保稳定启动
 echo -e "${YELLOW}🔍 检查服务状态...${NC}"
-if docker-compose ps | grep -q "Up"; then
+local retry_count=0
+local max_retries=3
+local services_up=false
+
+while [ $retry_count -lt $max_retries ]; do
+    if docker-compose ps | grep -q "Up"; then
+        services_up=true
+        break
+    else
+        retry_count=$((retry_count + 1))
+        echo -e "${YELLOW}⏳ 服务尚未完全启动，等待重试 ($retry_count/$max_retries)...${NC}"
+        sleep 10
+    fi
+done
+
+if [ "$services_up" = true ]; then
     echo -e "${GREEN}✅ BillionMail服务启动成功${NC}"
     echo ""
     echo -e "${BLUE}📍 BillionMail访问地址:${NC}"

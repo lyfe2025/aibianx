@@ -171,11 +171,39 @@ restore_from_backup() {
             fi
         fi
         
-        # 恢复上传文件
-        if [ -d "$backup_dir/uploads" ] && [ "$(ls -A "$backup_dir/uploads" 2>/dev/null)" ]; then
-            echo "   📁 恢复上传文件..."
+        # 恢复Strapi静态资源
+        echo "   📁 恢复Strapi静态资源..."
+        if [ -d "$backup_dir/uploads" ]; then
+            # 确保目标目录存在
             mkdir -p "$PROJECT_ROOT/backend/public/uploads"
-            cp -r "$backup_dir/uploads/"* "$PROJECT_ROOT/backend/public/uploads/" 2>/dev/null || true
+            
+            # 检查备份目录是否有实际文件
+            local backup_file_count=$(find "$backup_dir/uploads" -type f ! -name ".gitkeep" | wc -l 2>/dev/null || echo "0")
+            
+            if [ "$backup_file_count" -gt 0 ]; then
+                # 使用tar保持权限和目录结构，兼容性更好
+                if (cd "$backup_dir" && tar cf - uploads) | (cd "$PROJECT_ROOT/backend/public" && tar xf -) 2>/dev/null; then
+                    local restored_count=$(find "$PROJECT_ROOT/backend/public/uploads" -type f ! -name ".gitkeep" | wc -l 2>/dev/null || echo "0")
+                    local restored_size=$(du -sh "$PROJECT_ROOT/backend/public/uploads" 2>/dev/null | cut -f1 || echo "未知")
+                    echo -e "      ✅ Strapi静态资源恢复完成 ($restored_count 个文件, $restored_size)"
+                    
+                    # 验证恢复完整性
+                    local backup_size=$(du -sh "$backup_dir/uploads" 2>/dev/null | cut -f1 || echo "未知")
+                    echo -e "      ℹ️  备份目录: $backup_size → 恢复目录: $restored_size"
+                else
+                    echo -e "      ⚠️  使用tar恢复失败，尝试使用cp方式..."
+                    cp -r "$backup_dir/uploads/"* "$PROJECT_ROOT/backend/public/uploads/" 2>/dev/null || true
+                    echo -e "      ✅ 使用cp方式恢复完成"
+                fi
+            else
+                echo -e "      ℹ️  备份中无实际文件，仅恢复目录结构"
+                # 确保.gitkeep文件存在以保持目录结构
+                touch "$PROJECT_ROOT/backend/public/uploads/.gitkeep"
+            fi
+        else
+            echo -e "      ⚠️  备份中未找到uploads目录，创建默认结构"
+            mkdir -p "$PROJECT_ROOT/backend/public/uploads"
+            touch "$PROJECT_ROOT/backend/public/uploads/.gitkeep"
         fi
         
         echo -e "${GREEN}✅ 备份恢复完成${NC}"
