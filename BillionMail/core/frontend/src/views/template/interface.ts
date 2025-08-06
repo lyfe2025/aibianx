@@ -7,6 +7,8 @@ export interface Template {
 	create_time: number
 	update_time: number
 	chat_id:string
+	isEdit?:boolean
+	edit_name?:string
 }
 
 export interface TemplateParams {

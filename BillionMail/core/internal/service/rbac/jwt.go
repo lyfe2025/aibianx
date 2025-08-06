@@ -213,10 +213,10 @@ func (s *JWTService) JWTAuthMiddleware(r *ghttp.Request) {
 	}
 
 	// Update Session
-	err = r.Session.Set("UserLogin", true)
+	err = r.Session.Set("SignedToken", tokenString)
 
 	if err != nil {
-		g.Log().Warning(r.GetCtx(), "set UserLogin failed ", err)
+		g.Log().Warning(r.GetCtx(), "Save SignedToken failed ", err)
 	}
 
 	r.Middleware.Next()

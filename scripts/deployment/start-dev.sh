@@ -431,16 +431,29 @@ else
     echo "💡 手动部署命令: ./scripts/search/deploy-meilisearch.sh"
 fi
 
-# 调用BillionMail部署 (如果启用) - 添加错误处理，不阻断前后端启动
-if [ "${AUTO_DEPLOY_BILLIONMAIL:-true}" = "true" ]; then
+# 调用BillionMail部署 (如果启用) - 使用新的deploy.conf配置
+if [ "${AUTO_DEPLOY_EMAIL:-true}" = "true" ]; then
     echo "📧 检查BillionMail邮件系统..."
-    if deploy_billionmail 2>/dev/null; then
+    
+    # 使用新的部署脚本
+    billionmail_deploy_script="${PROJECT_ROOT}/scripts/billionmail/deploy-billionmail.sh"
+    if [ -f "$billionmail_deploy_script" ]; then
+        echo "   🚀 使用专用部署脚本..."
+        if "$billionmail_deploy_script" --silent 2>/dev/null; then
+            echo "✅ BillionMail部署成功"
+        else
+            echo "⚠️  BillionMail部署失败（不影响前后端服务启动）"
+            echo "💡 手动部署命令: ./scripts/billionmail/deploy-billionmail.sh"
+        fi
+    elif deploy_billionmail 2>/dev/null; then
         echo "✅ BillionMail部署检查完成"
     else
         echo "⚠️  BillionMail部署跳过（不影响前后端服务启动）"
+        echo "💡 手动部署命令: ./scripts/billionmail/deploy-billionmail.sh"
     fi
 else
-    echo "📧 BillionMail部署已禁用"
+    echo "📧 BillionMail部署已禁用 (AUTO_DEPLOY_EMAIL=false)"
+    echo "💡 启用命令: 在deploy.conf中设置 AUTO_DEPLOY_EMAIL=true"
 fi
 
 # 检查PostgreSQL服务

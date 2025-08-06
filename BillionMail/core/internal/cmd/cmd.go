@@ -291,7 +291,7 @@ var (
 			var rspamdProxy *httputil.ReverseProxy
 			rspamdProxyMutex := sync.Mutex{}
 			s.BindHandler("/rspamd/*any", func(r *ghttp.Request) {
-				if !r.Session.MustGet("UserLogin", false).Bool() {
+				if _, err := rbac2.JWT().ParseToken(r.Session.MustGet("SignedToken", "").String()); err != nil {
 					r.Response.WriteHeader(403)
 					r.Response.Write([]byte("Access denied"))
 					return

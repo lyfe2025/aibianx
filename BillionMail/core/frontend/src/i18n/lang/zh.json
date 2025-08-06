@@ -92,7 +92,10 @@
 			"bcc": "BCC",
 			"forward": "邮件转发",
 			"logout": "退出",
-			"service": "服务"
+			"service": "服务",
+			"logs": "日志",
+			"operation_logs": "操作日志",
+			"error_logs": "错误日志"
 		}
 	},
 	"login": {
@@ -134,6 +137,7 @@
 		"opened": "已打开",
 		"clicked": "已点击",
 		"bounced": "已退回",
+		"delayedQueue": "延迟队列",
 		"mailProviders": "邮件提供商",
 		"sendStats": "发送统计",
 		"provider": {
@@ -165,6 +169,72 @@
 				"status": "状态",
 				"relay": "中继",
 				"details": "详情"
+			}
+		},
+		"sendQueue": {
+			"title": "发送队列",
+			"breadcrumb": "发送队列",
+			"buttons": {
+				"refresh": "刷新队列",
+				"quickClear": "快速清理",
+				"paramConfig": "队列参数配置",
+				"resend": "重新发送",
+				"batchDelete": "批量删除",
+				"batchResend": "重新发送"
+			},
+			"table": {
+				"columns": {
+					"sender": "发件人",
+					"recipient": "收件人",
+					"arrivalTime": "入队时间",
+					"messageSize": "邮件大小",
+					"delayReason": "延迟原因",
+					"action": "操作"
+				}
+			},
+			"confirm": {
+				"quickClear": {
+					"title": "快速清理",
+					"content": "确认快速清理队列吗？"
+				},
+				"resend": {
+					"title": "重新发送",
+					"content": "确认重新发送队列吗？"
+				},
+				"delete": {
+					"title": "删除队列",
+					"content": "确认删除该队列吗？"
+				},
+				"batchDelete": {
+					"title": "批量删除",
+					"content": "确认删除 {count} 个发送队列吗？"
+				},
+				"batchResend": {
+					"title": "批量重新发送",
+					"content": "确认重新发送 {count} 个发送队列吗？"
+				}
+			},
+			"paramConfig": {
+				"title": "队列参数配置",
+				"fields": {
+					"bounceQueueLifetime": "退回队列生存时间",
+					"maximalQueueLifetime": "最大队列生存时间",
+					"minimalBackoffTime": "最小退避时间",
+					"maximalBackoffTime": "最大退避时间",
+					"queueRunDelay": "队列运行延迟",
+					"triggerTimeout": "触发超时"
+				}
+			},
+			"queueLogs": {
+				"title": "队列日志"
+			}
+		},
+		"api": {
+			"loading": {
+				"resendQueue": "正在重新发送队列中，请稍候...",
+				"deleteQueue": "正在删除队列中，请稍候...",
+				"setQueueConfig": "正在设置队列参数中，请稍候...",
+				"clearQueue": "正在清理队列中，请稍候..."
 			}
 		}
 	},
@@ -304,6 +374,15 @@
 				"type": "类型",
 				"createdAt": "创建时间"
 			},
+			"types": {
+				"drag": "拖拽",
+				"html": "HTML",
+				"ai": "AI"
+			},
+			"edit": {
+				"confirm": "确认",
+				"cancel": "取消"
+			},
 			"search": {
 				"namePlaceholder": "搜索模板名称"
 			},
@@ -338,14 +417,25 @@
 		}
 	},
 	"template": {
+		"template": "模板",
 		"createTpl": {
 			"sourceUrl": "引用域名",
 			"useAiTools": "使用人工智能工具帮您自动生成邮件内容，提升工作您的效率",
-			"create":"创建"
+			"create": "创建",
+			"notices": {
+				"domainListEmpty": "请先为BillionMail创建第一个用于发件的域名",
+				"aiConfigurationInvalid": "当前并未配置AI大模型，您无法使用AI模型创建邮件模板",
+				"invalidBrandDomain": "请先为域名创建品牌信息"
+			},
+			"buttons": {
+				"createNow": "立即创建",
+				"configureNow": "立即配置"
+			}
 		},
 		"ai": {
 			"title": "AI 模板",
 			"welcomeMessage": "您可以说：创建一份欢迎用户加入{domain}的欢迎邮件",
+			"greeting": "让我们创建一个漂亮的邮件模板。",
 			"brandName": "BillionMail",
 			"buttons": {
 				"regenerate": "重新生成",
@@ -354,7 +444,7 @@
 				"edit": "编辑",
 				"copy": "复制",
 				"copied": "已复制",
-				"apply":"应用模板"
+				"apply": "应用模板"
 			},
 			"tips": {
 				"saveShortcut": "通过 [Ctrl + s] 保存您的修改"
@@ -362,7 +452,7 @@
 			"loading": {
 				"message": "加载中... 请稍后"
 			},
-			"send":"发送"
+			"send": "发送"
 		}
 	},
 	"contacts": {
@@ -539,6 +629,63 @@
 					"redirectLink": "订阅已存在的跳转链接"
 				}
 			}
+		},
+		"suspend": {
+			"title": "异常邮箱",
+			"buttons": {
+				"scanInvalidDomains": "扫描无效域名",
+				"scanLogs": "扫描日志",
+				"autoBlockFailedEmails": "自动阻止失败邮件"
+			},
+			"search": {
+				"emailPlaceholder": "请输入邮箱地址"
+			},
+			"columns": {
+				"email": "邮箱",
+				"description": "描述",
+				"status": "状态",
+				"addTime": "添加时间"
+			},
+			"status": {
+				"invalid": "无效",
+				"checking": "检查中"
+			},
+			"confirm": {
+				"clear": {
+					"title": "清空",
+					"content": "这将清空该类型下的所有数据，是否继续？"
+				},
+				"delete": {
+					"title": "删除",
+					"content": "确定要删除 [{email}] 吗？"
+				}
+			},
+			"scan": {
+				"title": "扫描无效域名",
+				"confirmText": "扫描",
+				"form": {
+					"group": "分组",
+					"method": "方法",
+					"groupRequired": "请选择分组"
+				},
+				"methods": {
+					"noOperation": "无操作",
+					"addToExceptionTable": "添加到异常防护表",
+					"deleteFromGroup": "从分组中删除异常邮箱"
+				}
+			},
+			"scanLogs": {
+				"title": "扫描日志",
+				"none": "无"
+			},
+			"api": {
+				"loading": {
+					"deleting": "正在删除，请稍候...",
+					"scanning": "正在扫描，请稍候...",
+					"clearing": "正在清理，请稍候...",
+					"setting": "正在设置，请稍候..."
+				}
+			}
 		}
 	},
 	"domain": {
@@ -573,7 +720,7 @@
 			"urlsPlacement": "请输入域名，例如：http://billionmail.com",
 			"aRecord": "A记录",
 			"aRecordPlaceholder": "请输入A记录，例如：mailAapanelCom",
-			"quota": "域名配额",    
+			"quota": "域名配额",
 			"mailboxCount": "邮箱数量",
 			"globalCatch": "Catch All",
 			"globalCatchPlaceholder": "捕获不存在的邮件，转发至此邮件",
@@ -585,8 +732,8 @@
 				"dnsSetup": "需要在您的DNS服务提供商控制台添加A记录",
 				"cloudflare": "如果使用CloudFlare，请在添加记录时选择【仅DNS】"
 			},
-			"createBrandInfo":"自动创建品牌信息",
-			"modelNotice":"要使用此功能，您需要先进行大模型配置",
+			"createBrandInfo": "自动创建品牌信息",
+			"modelNotice": "要使用此功能，您需要先进行大模型配置",
 			"integrateImmediately": "立即配置",
 			"modelDescription": "AI驱动的信息导入会自动分析并从邮件域名创建品牌信息。创建后，您可以根据需要进行修改",
 			"extractBrand": "提取品牌和颜色",
@@ -595,12 +742,12 @@
 			"customLogo": "使用自定义徽标（可选）",
 			"specifyDomain": "指定域名",
 			"addMoreUrls": "添加更多URL",
-			"maxUrl":"最多只能填写3个URL",
-			"createImmediately":"立即创建",
-			"brandInfo":"品牌信息",
-			"noBrandInfo":"暂无品牌信息",
-			"fillDomain":"请填写域名",
-			"fillValidDomain":"请填写正确的域名"
+			"maxUrl": "最多只能填写3个URL",
+			"createImmediately": "立即创建",
+			"brandInfo": "品牌信息",
+			"noBrandInfo": "暂无品牌信息",
+			"fillDomain": "请填写域名",
+			"fillValidDomain": "请填写正确的域名"
 		},
 		"dns": {
 			"title": "DNS 记录",
@@ -769,7 +916,7 @@
 			},
 			"common": {
 				"daysAgo": "天前",
-				"noBrandInfo":"当前域名没有品牌信息."
+				"noBrandInfo": "当前域名没有品牌信息."
 			}
 		},
 		"api": {
@@ -786,7 +933,10 @@
 	"mailbox": {
 		"title": "邮箱管理",
 		"actions": {
-			"add": "添加邮箱"
+			"add": "添加邮箱",
+			"batchAdd": "批量添加",
+			"batchDelete": "批量删除",
+			"exportAll": "导出全部"
 		},
 		"search": {
 			"usernamePlaceholder": "搜索用户名"
@@ -797,7 +947,7 @@
 		"columns": {
 			"username": "用户名",
 			"password": "密码",
-			"loginInfo": "登录信息",
+			"loginInfo": "登录信息（WebMail / SMTP）",
 			"quota": "配额",
 			"type": "类型",
 			"status": "状态"
@@ -809,21 +959,32 @@
 		"form": {
 			"addTitle": "添加邮箱",
 			"editTitle": "编辑邮箱",
+			"batchAddTitle": "批量添加",
+			"exportTitle": "导出邮箱",
+			"importTitle": "导入邮箱",
 			"emailAddress": "邮箱地址",
 			"password": "密码",
 			"passwordPlaceholder": "请输入您的邮箱密码",
 			"quota": "配额",
 			"userType": "用户类型",
-			"status": "状态"
+			"status": "状态",
+			"domain": "域名",
+			"prefix": "邮箱前缀",
+			"count": "邮箱数量"
 		},
 		"validation": {
 			"emailRequired": "请输入邮箱地址",
 			"passwordLength": "密码长度少于8位，请重新输入",
-			"passwordFormat": "密码必须包含至少一个大写字母、一个小写字母和数字，请重新输入"
+			"passwordFormat": "密码必须包含至少一个大写字母、一个小写字母和数字，请重新输入",
+			"domainRequired": "请选择域名",
+			"prefixRequired": "请输入邮箱前缀",
+			"countRequired": "请输入邮箱数量",
+			"fileRequired": "请选择上传文件"
 		},
 		"delete": {
 			"title": "删除邮箱",
-			"confirm": "确定要删除邮箱【{name}】吗？"
+			"confirm": "确定要删除邮箱【{name}】吗？",
+			"batchConfirm": "确定删除{count}个邮箱？"
 		},
 		"loginInfo": {
 			"template": "WebMail: {webmail}\n用户名: {username}\n密码: {password}\nPOP service [ Address: {mx} Port: 110/995 ]\nIMAP service [ Address: {mx} Port: 143/993 ]\nSMTP service [ Address: {mx} Port: 25/465/587 ]"
@@ -832,7 +993,9 @@
 			"loading": {
 				"creating": "正在创建邮箱，请稍候...",
 				"updating": "正在更新邮箱，请稍候...",
-				"deleting": "正在删除邮箱，请稍候..."
+				"deleting": "正在删除邮箱，请稍候...",
+				"exporting": "正在导出邮箱，请稍候...",
+				"importing": "正在导入邮箱，请稍候..."
 			}
 		}
 	},
@@ -1057,24 +1220,41 @@
 				"clearing": "正在清空，请稍候..."
 			}
 		},
-		"aiModel":{
-			"modelId":"模型ID",
-			"modelAlias":"模型别名",
-			"modelFeature":"模型功能",
-			"contentLength":"最大上下文长度",
-			"supplierTitle":"服务商标题",
-			"supplierName":"服务商名称",
-			"cancel":"取消",
-			"confirm":"确认",
-			"aPIKey":"API密钥",
-			"apiPath":"API地址",
-			"check":"检查",
-			"getKey":"点击获取API密钥",
-			"example":"示例",
-			"saveAPI":"保存API",
-			"model":"模型",
-			"byDefault":"默认从/models获取所有模型",
-			"addModel":"添加模型"
+		"aiModel": {
+			"modelId": "模型ID",
+			"modelAlias": "模型别名",
+			"modelFeature": "模型功能",
+			"contentLength": "最大上下文长度",
+			"supplierTitle": "服务商标题",
+			"supplierName": "服务商名称",
+			"cancel": "取消",
+			"confirm": "确认",
+			"aPIKey": "API密钥",
+			"apiPath": "API地址",
+			"check": "检查",
+			"getKey": "点击获取API密钥",
+			"example": "示例",
+			"saveAPI": "保存API",
+			"model": "模型",
+			"byDefault": "默认从/models获取所有模型",
+			"addModel": "添加模型"
+		}
+	},
+	"logs": {
+		"title": "日志",
+		"table": {
+			"columns": {
+				"username": "用户名",
+				"type": "类型",
+				"operatingTime": "操作时间",
+				"details": "详情"
+			}
+		},
+		"filter": {
+			"all": "全部"
+		},
+		"search": {
+			"placeholder": "请输入详情/IP搜索"
 		}
 	},
 	"api": {

@@ -7,7 +7,6 @@ const route: RouteRecordRaw = {
 	name: 'MarketLayout',
 	component: Layout,
 	meta: {
-		sort: 2,
 		key: 'market',
 		title: 'Email Marketing',
 		titleKey: 'layout.menu.market',

@@ -23,35 +23,36 @@ func NewSpintaxParser() *SpintaxParser {
 // Supported format: {option1|option2|option3}
 // Example: "Hello {{FirstName}}, I {want|thought|hope} to contact you..."
 func (p *SpintaxParser) ParseSpintax(content string) string {
-	// Match {option1|option2|option3} format
-	spintaxRegex := regexp.MustCompile(`\{([^}]+)\}`)
-
-	return spintaxRegex.ReplaceAllStringFunc(content, func(match string) string {
-		// Extract content inside braces
-		optionsStr := match[1 : len(match)-1]
-
-		options := strings.Split(optionsStr, "|")
-
-		for i, option := range options {
-			options[i] = strings.TrimSpace(option)
-		}
-
-		validOptions := make([]string, 0)
-		for _, option := range options {
-			if option != "" {
-				validOptions = append(validOptions, option)
-			}
-		}
-
-		// If no valid options exist, return the original text
-		if len(validOptions) == 0 {
-			return match
-		}
-
-		// Randomly select an option
-		selectedIndex := p.random.Intn(len(validOptions))
-		return validOptions[selectedIndex]
-	})
+	return content
+	//// Match {option1|option2|option3} format
+	//spintaxRegex := regexp.MustCompile(`\{([^}]+)\}`)
+	//
+	//return spintaxRegex.ReplaceAllStringFunc(content, func(match string) string {
+	//	// Extract content inside braces
+	//	optionsStr := match[1 : len(match)-1]
+	//
+	//	options := strings.Split(optionsStr, "|")
+	//
+	//	for i, option := range options {
+	//		options[i] = strings.TrimSpace(option)
+	//	}
+	//
+	//	validOptions := make([]string, 0)
+	//	for _, option := range options {
+	//		if option != "" {
+	//			validOptions = append(validOptions, option)
+	//		}
+	//	}
+	//
+	//	// If no valid options exist, return the original text
+	//	if len(validOptions) == 0 {
+	//		return match
+	//	}
+	//
+	//	// Randomly select an option
+	//	selectedIndex := p.random.Intn(len(validOptions))
+	//	return validOptions[selectedIndex]
+	//})
 }
 
 // ParseSpintaxWithSeed Parse Spintax with a specified seed (used for testing or reproducible results)

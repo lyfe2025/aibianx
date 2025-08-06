@@ -145,7 +145,7 @@ function copyContent() {
 	}
 
 	:deep(pre) {
-		background: var(--color-menu-1);
+		background: #333;
 		margin: 0;
 		padding: 10px;
 		font-size: 14px;

@@ -32,8 +32,7 @@ services:
         - "${REDIS_PORT:-127.0.0.1:26379}:6379"
       environment:
         - TZ=${TZ}
-        - REDISPASS=""
-        - REDIS_AUTH_ENABLED=false
+        - REDISPASS=${REDISPASS}
       sysctls:
         - net.core.somaxconn=4096
       networks:
@@ -53,7 +52,7 @@ services:
         - ./conf/rspamd/local.d:/etc/rspamd/local.d
         - ./conf/rspamd/statistic.conf:/etc/rspamd/statistic.conf
         - ./conf/rspamd/rspamd.conf:/etc/rspamd/rspamd.conf 
-        - rspamd-data-volume:/var/lib/rspamd
+        - ./rspamd-data:/var/lib/rspamd
         - ./logs/rspamd:/var/log/rspamd
       restart: always
       networks:
@@ -171,7 +170,7 @@ services:
             - webmail
 
     core-billionmail:
-      image: billionmail/core:4.0.1
+      image: billionmail/core:4.1.0
       hostname: core-manage
       depends_on:
         - pgsql-billionmail
@@ -194,14 +193,6 @@ services:
       environment:
         - TZ=${TZ}
         - FAIL2BAN_INIT=${FAIL2BAN_INIT:-y}
-        - DBNAME=${DBNAME}
-        - DBUSER=${DBUSER}
-        - DBPASS=${DBPASS}
-        - REDISPASS=""
-        - REDIS_AUTH_ENABLED=false
-        - BILLIONMAIL_HOSTNAME=${BILLIONMAIL_HOSTNAME}
-        - JWT_SECRET=${JWT_SECRET}
-        - JWT_EXPIRE=${JWT_EXPIRE}
       cap_add:
         - NET_BIND_SERVICE
         - NET_ADMIN
@@ -224,8 +215,4 @@ networks:
       driver: default
       config:
         - subnet: ${IPV4_NETWORK:-172.66.1}.0/24
-
-volumes:
-  rspamd-data-volume:
-    driver: local
 

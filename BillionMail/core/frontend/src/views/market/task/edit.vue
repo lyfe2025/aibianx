@@ -160,11 +160,11 @@ import { useGlobalStore } from '@/store'
 import { useElementBounding } from '@vueuse/core'
 import { confirm, Message } from '@/utils'
 import { addTask, sendTestEmail } from '@/api/modules/market/task'
+import { Template } from '../template/interface'
 
 import FromSelect from './components/FromSelect.vue'
 import GroupSelect from './components/GroupSelect.vue'
 import TemplateSelect from './components/TemplateSelect.vue'
-import { Template } from '../template/interface'
 
 const { t } = useI18n()
 const globalStore = useGlobalStore()

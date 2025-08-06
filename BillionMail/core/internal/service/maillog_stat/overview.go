@@ -145,6 +145,12 @@ func (o *Overview) overviewDashboard(campaignID int64, domain string, startTime,
 	return aggregate
 }
 
+// overviewDashboard dashboard data
+func (o *Overview) OverviewDashboard(campaignID int64, domain string, startTime, endTime int64) map[string]interface{} {
+	aggregate := o.overviewDashboard(campaignID, domain, startTime, endTime)
+	return aggregate
+}
+
 // Obtain the number of deferred queues with a 1-minute cache
 func (o *Overview) getPostfixDeferredQueueCount(ctx context.Context) (int, error) {
 	cache := gcache.New()

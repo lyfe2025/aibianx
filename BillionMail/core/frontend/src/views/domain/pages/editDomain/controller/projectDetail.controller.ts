@@ -18,10 +18,9 @@ export async function getProjectDetail(domainStr: string) {
 	} = getEditDomainStoreData()
 	if (hasGotProjectDetail.value) return
 	try {
-		const res = (await instance.post(
-			'/askai/project/get_base_info',
-			{ domain: domainStr }
-		)) as Record<string, any>
+		const res = (await instance.post('/askai/project/get_base_info', {
+			domain: domainStr,
+		})) as Record<string, any>
 		project_name.value = res.project_name
 		primary_logo.value = res.primary_logo
 		favicon.value = res.favicon
@@ -170,7 +169,7 @@ export async function uploadImage(
 	image_tag: string
 ) {
 	try {
-		const res = await instance.post(
+		await instance.post(
 			'/askai/project/upload_image',
 			{
 				domain,
@@ -181,7 +180,7 @@ export async function uploadImage(
 			},
 			instanceOptions
 		)
-		console.log(res)
+		// console.log(res)
 	} catch (error) {
 		console.warn(error)
 		return ''

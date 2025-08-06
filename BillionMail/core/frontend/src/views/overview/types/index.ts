@@ -17,6 +17,7 @@ export type MailDashboard = {
 	open_rate: number
 	opened: number
 	sends: number
+	delayed_queue: number
 }
 
 export type MailProvider = {
@@ -75,13 +76,11 @@ export type OpenRateData = {
 interface RateItem {
 	label: string
 	value: number
+	unit: string
 }
 
-// 定义rateKey
-export type RateKey = 'delivery' | 'open' | 'click' | 'bounce'
-
 // 定义rate数据
-export type RateData = Record<RateKey, RateItem>
+export type RateData = Record<string, RateItem>
 
 export type Failed = {
 	postfix_message_id: string

@@ -43,7 +43,7 @@
 
 <script lang="ts" setup>
 import { FormRules } from 'naive-ui'
-import { getByteUnit, getNumber } from '@/utils'
+import { getByteUnit, getNumber, getRandomPassword } from '@/utils'
 import { useModal } from '@/hooks/modal/useModal'
 import { createMailbox, updateMailbox } from '@/api/modules/mailbox'
 import type { MailBox } from '../interface'
@@ -157,38 +157,6 @@ const getParams = () => {
 		isAdmin: form.isAdmin,
 		active: form.active,
 	}
-}
-
-/**
- * @description Generate a random password that contains lowercase letters, uppercase letters and numbers
- * @param len Password length, default is 8
- */
-function getRandomPassword(len = 16) {
-	// Ensure the password length is at least 3 to include all required character types
-	len = Math.max(len, 3)
-
-	const lowerChars = 'abcdefghijklmnopqrstuvwxyz'
-	const upperChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-	const numbers = '0123456789'
-	const allChars = lowerChars + upperChars + numbers
-
-	// Ensure at least one lowercase letter, one uppercase letter and one number
-	let pwd = ''
-	pwd += lowerChars.charAt(Math.floor(Math.random() * lowerChars.length))
-	pwd += upperChars.charAt(Math.floor(Math.random() * upperChars.length))
-	pwd += numbers.charAt(Math.floor(Math.random() * numbers.length))
-
-	// Generate remaining random characters
-	for (let i = 3; i < len; i++) {
-		const index = Math.floor(Math.random() * allChars.length)
-		pwd += allChars[index]
-	}
-
-	// Shuffle password characters to avoid fixed patterns
-	return pwd
-		.split('')
-		.sort(() => Math.random() - 0.5)
-		.join('')
 }
 
 const [Modal, modalApi] = useModal({

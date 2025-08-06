@@ -158,6 +158,9 @@ func (c *ControllerV1) Logout(ctx context.Context, req *v1.LogoutReq) (res *v1.L
 	// Destroy the session
 	_ = g.RequestFromCtx(ctx).Session.RemoveAll()
 
+	// reset the safe path pass
+	_ = g.RequestFromCtx(ctx).Session.Set("safe_path_pass", true)
+
 	res.Success = true
 	res.Code = 0
 	res.Msg = "Logout successful"

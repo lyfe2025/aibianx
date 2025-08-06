@@ -144,8 +144,8 @@ func (e *TemplateEngine) RenderEmailTemplateWithAPI(ctx context.Context, content
 		"API":            apiAttribs,
 	}
 
-	// use template engine to render
-	result, err := e.view.ParseContent(ctx, content, templateData)
+	// use template engine to render with error recovery
+	result, err := e.renderWithErrorRecovery(ctx, content, templateData)
 	if err != nil {
 		return "", err
 	}
@@ -165,13 +165,13 @@ func (e *TemplateEngine) renderWithErrorRecovery(ctx context.Context, content st
 		return result, nil
 	}
 
-	//// Rendering failed. Uninitialized variables were encountered during cleanup.
-	//cleanedContent := e.cleanUndefinedVariables(content)
-	//result, err = e.view.ParseContent(ctx, cleanedContent, templateData)
-	//if err != nil {
-	//
-	//	return content, nil
-	//}
+	// Rendering failed. Uninitialized variables were encountered during cleanup.
+	cleanedContent := e.cleanUndefinedVariables(content)
+	result, err = e.view.ParseContent(ctx, cleanedContent, templateData)
+	if err != nil {
+
+		return content, nil
+	}
 
 	return result, nil
 }

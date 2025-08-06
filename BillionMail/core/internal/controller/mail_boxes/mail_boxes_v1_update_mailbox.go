@@ -6,11 +6,13 @@ import (
 	"billionmail-core/internal/service/mail_boxes"
 	"billionmail-core/internal/service/public"
 	"context"
+	"strings"
 )
 
 func (c *ControllerV1) UpdateMailbox(ctx context.Context, req *v1.UpdateMailboxReq) (res *v1.UpdateMailboxRes, err error) {
 	res = &v1.UpdateMailboxRes{}
-
+	req.FullName = strings.TrimSpace(req.FullName)
+	req.LocalPart = strings.TrimSpace(req.LocalPart)
 	mailbox := &v1.Mailbox{
 		Username:  req.LocalPart + "@" + req.Domain,
 		Password:  req.Password, // If empty, password won't be updated

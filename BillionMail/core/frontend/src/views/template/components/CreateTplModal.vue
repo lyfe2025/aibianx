@@ -1,42 +1,99 @@
 <template>
-	<n-modal v-model:show="show" preset="card" draggable :close-on-esc="false" :mask-closable="false" segmented
-		class="w-110" title="">
+	<n-modal
+		v-model:show="show"
+		preset="card"
+		draggable
+		:close-on-esc="false"
+		:mask-closable="false"
+		segmented
+		class="w-110"
+		title="">
 		<div class="wrapper">
 			<div class="creation-methods">
-				<div v-for="(item, index) in computedMethodsList" :key="index"
-					:class="['choose-item', { active: choosedMethod == item }]" @click="choosedMethod = item">
+				<div
+					v-for="(item, index) in computedMethodsList"
+					:key="index"
+					:class="['choose-item', { active: choosedMethod == item }]"
+					@click="choosedMethod = item">
 					<span class="item-label">{{ item }}</span>
 				</div>
 			</div>
 			<div :class="['url-source', { hidden: choosedMethod !== 'AI' }]">
-				<span class="label">{{ $t("template.createTpl.sourceUrl") }}</span>
-				<n-select v-model:value="sourceDomain" class="flex-1" label-field="domain" value-field="domain"
-					:options="domainListHasBrandInfo" :disabled="canNotUse">
+				<span class="label">{{ $t('template.createTpl.sourceUrl') }}</span>
+				<n-select
+					v-model:value="sourceDomain"
+					class="flex-1"
+					label-field="domain"
+					value-field="domain"
+					:options="domainListHasBrandInfo"
+					:disabled="canNotUse"
+					:render-label="renderLabel">
 				</n-select>
 			</div>
-			<div class="desc">
-				{{ $t("template.createTpl.useAiTools") }}
+			<div v-if="noticeShowFlag == 'normal'" class="desc">
+				{{ $t('template.createTpl.useAiTools') }}
+			</div>
+			<div v-else-if="noticeShowFlag == 'domain-list-empty'">
+				{{ $t('template.createTpl.notices.domainListEmpty') }},
+				<n-button text type="primary" @click="jumpToDomainCreate">{{
+					$t('template.createTpl.buttons.createNow')
+				}}</n-button>
+			</div>
+			<div v-else-if="noticeShowFlag == 'ai-configuration-invalid'">
+				{{ $t('template.createTpl.notices.aiConfigurationInvalid') }},
+				<n-popover trigger="hover" placement="right">
+					<template #trigger>
+						<n-button text type="primary" @click="jumpToAiSettings">{{
+							$t('template.createTpl.buttons.configureNow')
+						}}</n-button>
+					</template>
+					<n-image :src="aiModelNotice" width="600"></n-image>
+				</n-popover>
+			</div>
+			<div v-else-if="noticeShowFlag == 'invalid-brand-domain'">
+				{{ $t('template.createTpl.notices.invalidBrandDomain') }},
+				<n-popover trigger="hover" placement="right">
+					<template #trigger>
+						<n-button text type="primary" @click="jumpToDomainEdit">{{
+							$t('template.createTpl.buttons.createNow')
+						}}</n-button>
+					</template>
+					<n-image :src="brandInfoNotice" width="600"></n-image>
+				</n-popover>
 			</div>
 		</div>
 
 		<template #footer>
 			<div class="flex justify-end">
-				<n-button type="primary" :disabled="canNotUse" @click="createTemplate">{{
-					$t("template.createTpl.create") }}</n-button>
+				<n-button
+					type="primary"
+					:disabled="
+						canNotUse ||
+						['domain-list-empty', 'ai-configuration-invalid', 'invalid-brand-domain'].includes(
+							noticeShowFlag
+						)
+					"
+					@click="createTemplate"
+					>{{ $t('template.createTpl.create') }}</n-button
+				>
 			</div>
 		</template>
 	</n-modal>
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
 import { instance } from '@/api'
 import { createAiTemplate } from '../pages/AITemplate/controller'
 import { useGlobalStore } from '@/store'
+import { checkAiConfiguration } from '@/api/modules/domain'
+import aiModelNotice from '@/assets/images/template/model-notice.png'
+import brandInfoNotice from '@/assets/images/template/create-brand-info.png'
+import { SelectOption } from 'naive-ui'
 // import { TemplateStore } from '../pages/AITemplate/dto'
 
 // const store = inject<TemplateStore>('modelStore')!
 const props = defineProps<{
-	onlyAi?: boolean,
+	onlyAi?: boolean
 }>()
 const globalStore = useGlobalStore()
 const router = useRouter()
@@ -46,17 +103,41 @@ const sourceDomain = ref('')
 const show = ref(false)
 const emits = defineEmits(['confirmType', 'hasCreateTpl'])
 const domainList = ref<any>([])
+const aiConfigurationStatus = ref(false)
 
 const computedMethodsList = computed(() => {
 	if (props.onlyAi) {
-		return ["AI"]
+		return ['AI']
 	} else {
 		return methodsList.value
 	}
 })
 
+/**
+ * @description Calculate the display of prompt information based on AI configuration, domain name list and other information
+ */
+const noticeShowFlag = computed(() => {
+	if (domainListHasBrandInfo.value.length == 0) {
+		return 'domain-list-empty'
+	}
+
+	if (!aiConfigurationStatus.value) {
+		return 'ai-configuration-invalid'
+	}
+
+	const domainInfo = domainList.value.find((item: any) => item.domain == sourceDomain.value)
+	if (domainInfo && domainInfo.hasbrandinfo !== 1) {
+		return 'invalid-brand-domain'
+	}
+
+	return 'normal'
+})
+
+/**
+ * @description Calculate the list of domain names for dropdown options
+ */
 const domainListHasBrandInfo = computed(() => {
-	return domainList.value.filter((item: any) => item.hasbrandinfo == 1)
+	return [...domainList.value].sort((a, b) => b.hasbrandinfo - a.hasbrandinfo)
 })
 
 /**
@@ -72,8 +153,11 @@ const canNotUse = computed(() => {
 /**
  * @description open modal
  */
-function open() {
-	getDomainList()
+async function open() {
+	const res = (await checkAiConfiguration()) as Record<string, any>
+	aiConfigurationStatus.value = res.is_configured
+	await getDomainList()
+
 	if (globalStore.domainSource) {
 		globalStore.domainSource = sourceDomain.value
 	}
@@ -101,6 +185,55 @@ async function createTemplate() {
 		emits('confirmType', choosedMethod.value)
 	}
 }
+
+/**
+ * @description Jump to domain and open domain create modal
+ */
+function jumpToDomainCreate() {
+	router.push({
+		name: 'Domain',
+		query: {
+			init: 'init-domain',
+		},
+	})
+}
+
+/**
+ * @description Jump to ai settings
+ */
+function jumpToAiSettings() {
+	router.push({
+		name: 'AiModel',
+	})
+}
+
+/**
+ * @description Jump to domain edit
+ */
+function jumpToDomainEdit() {
+	router.push({
+		name: 'EditDomain',
+		params: {
+			domain: sourceDomain.value,
+		},
+	})
+}
+
+/**
+ * @description Render select label
+ */
+function renderLabel(option: SelectOption) {
+	if (option.hasbrandinfo) {
+		return (
+			<div>
+				<i class="i-domain:brand-info w-4 h-4 mr-1.25"></i> <span>{option.domain}</span>
+			</div>
+		)
+	} else {
+		return <span>{option.domain}</span>
+	}
+}
+
 defineExpose({
 	open,
 	close,
@@ -130,7 +263,6 @@ async function getDomainList() {
 		globalStore.domainSource = domainListHasBrandInfo.value[0].domain
 	}
 }
-
 </script>
 
 <style scoped lang="scss">

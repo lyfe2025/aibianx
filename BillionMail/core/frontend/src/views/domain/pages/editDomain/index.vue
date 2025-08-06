@@ -7,7 +7,10 @@
 
 		<!-- Content tabs -->
 		<div class="content-tabs">
-			<div v-for="(item, index) in menuList" :key="index" :class="['tab-item', { active: activeTab == item }]"
+			<div
+				v-for="(item, index) in menuList"
+				:key="index"
+				:class="['tab-item', { active: activeTab == item }]"
 				@click="switchToTab(item)">
 				<span>{{ getTabLabel(item) }}</span>
 			</div>
@@ -65,13 +68,13 @@ const menuList = ref([
 	// 'AI Settings',
 ])
 
-const dynamicMenuList = computed(() => {
-	if (createdBrandInfo.value) {
-		return menuList.value
-	} else {
-		return menuList.value.filter(item => item == 'Domain Configuration')
-	}
-})
+// const dynamicMenuList = computed(() => {
+// 	if (createdBrandInfo.value) {
+// 		return menuList.value
+// 	} else {
+// 		return menuList.value.filter(item => item == 'Domain Configuration')
+// 	}
+// })
 
 const activeTab = ref('Domain Configuration')
 
@@ -144,13 +147,13 @@ onBeforeRouteLeave(resetAllApiStatus)
  * @description Switch to tab
  */
 function switchToTab(tab: string) {
-	if(tab == "Domain Configuration"){
+	if (tab == 'Domain Configuration') {
 		activeTab.value = tab
 	} else {
-		if(createdBrandInfo.value){
+		if (createdBrandInfo.value) {
 			activeTab.value = tab
-		}else{
-			Message.info(t("domain.edit.common.noBrandInfo"))
+		} else {
+			Message.info(t('domain.edit.common.noBrandInfo'))
 		}
 	}
 }

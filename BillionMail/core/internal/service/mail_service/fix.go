@@ -223,7 +223,7 @@ func FixRspamdDKIMSigningConfig(ctx context.Context) {
 	defer dk.Close()
 
 	// Restart the Rspamd container to apply the changes
-	err = dk.RestartContainer(ctx, consts.SERVICES.Rspamd)
+	err = dk.RestartContainerByName(ctx, consts.SERVICES.Rspamd)
 
 	if err != nil {
 		g.Log().Warning(ctx, "Failed to restart Rspamd container: %v", err)
@@ -300,7 +300,7 @@ func FixDovecotSSLConfig(ctx context.Context) {
 	defer dk.Close()
 
 	// Restart the Dovecot container to apply the changes
-	err = dk.RestartContainer(ctx, consts.SERVICES.Dovecot)
+	err = dk.RestartContainerByName(ctx, consts.SERVICES.Dovecot)
 
 	if err != nil {
 		g.Log().Warning(ctx, "Failed to restart Dovecot container: %v", err)

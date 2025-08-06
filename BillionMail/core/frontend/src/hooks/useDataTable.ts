@@ -6,19 +6,19 @@ type TableParams = {
 	[key: string]: any
 }
 
-interface UseDataTableOptions<T> {
-	params: T
+interface UseDataTableOptions<T, K> {
+	params: K
 	loading?: boolean
 	immediate?: boolean
 	autoRefresh?: boolean
 	refreshInterval?: number
-	rowKey?: DataTableCreateRowKey
+	rowKey?: DataTableCreateRowKey<T>
 	fetchFn: (params: any) => Promise<unknown>
-	useParams?: (params: T) => TableParams
+	useParams?: (params: K) => TableParams
 }
 
 export const useDataTable = <T = DataTableRowData, K = TableParams>(
-	options: UseDataTableOptions<K>
+	options: UseDataTableOptions<T, K>
 ) => {
 	const {
 		params,
@@ -26,7 +26,7 @@ export const useDataTable = <T = DataTableRowData, K = TableParams>(
 		useParams,
 		loading = true,
 		immediate = true,
-		rowKey = row => row.id as DataTableRowKey,
+		rowKey = (row: any) => row.id,
 	} = options
 
 	const loadingRef = ref(loading)
@@ -70,10 +70,6 @@ export const useDataTable = <T = DataTableRowData, K = TableParams>(
 	const fetchTable = (resetPage = false) => debouncedFetch(resetPage)
 	const resetTable = () => fetchTable(true)
 
-	const onUpdateCheckedRowKeys = (keys: DataTableRowKey[]) => {
-		tableKeys.value = keys
-	}
-
 	const onUpdatePage = (page: number) => {
 		tableParams.value.page = page
 	}
@@ -104,7 +100,18 @@ export const useDataTable = <T = DataTableRowData, K = TableParams>(
 			data: tableData.value,
 			loading: loadingRef.value,
 			checkedRowKeys: tableKeys.value,
-			onUpdateCheckedRowKeys,
+			onUpdateCheckedRowKeys: (keys: DataTableRowKey[]) => {
+				tableKeys.value = keys
+			},
+		})),
+
+		batchProps: computed(() => ({
+			rowKey,
+			data: tableData.value,
+			checkedRowKeys: tableKeys.value,
+			onUpdateCheckedRowKeys: (keys: DataTableRowKey[]) => {
+				tableKeys.value = keys
+			},
 		})),
 
 		pageProps: computed(() => ({

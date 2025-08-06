@@ -79,7 +79,12 @@ func init() {
                 create_time INTEGER NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW()),
                 update_time INTEGER NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW()),
                 active SMALLINT NOT NULL DEFAULT 0,
-    			add_type SMALLINT NOT NULL DEFAULT 0,	
+    			add_type SMALLINT NOT NULL DEFAULT 0,
+				sends_count INTEGER NOT NULL DEFAULT 0,
+				delivered_count INTEGER NOT NULL DEFAULT 0,
+				bounced_count INTEGER NOT NULL DEFAULT 0,
+				deferred_count INTEGER NOT NULL DEFAULT 0,
+				stats_update_time INTEGER NOT NULL DEFAULT 0,
                 FOREIGN KEY (template_id) REFERENCES email_templates(id)
             )`,
 
@@ -168,6 +173,7 @@ func init() {
 			`CREATE INDEX IF NOT EXISTS idx_recipient_info_is_sent ON recipient_info(is_sent)`,
 			`CREATE INDEX IF NOT EXISTS idx_recipient_info_message_id ON recipient_info(message_id)`,
 			`CREATE INDEX IF NOT EXISTS idx_recipient_info_task_sent ON recipient_info(task_id, is_sent)`,
+			`CREATE INDEX IF NOT EXISTS idx_email_tasks_task_process ON email_tasks(task_process)`,
 		}
 
 		for _, sql := range batchMailSQLList {
@@ -204,6 +210,13 @@ func init() {
 
 		//email_templates
 		_ = AddColumnIfNotExists("email_templates", "chat_id", "VARCHAR(255)", "''", false)
+
+		// email_tasks
+		_ = AddColumnIfNotExists("email_tasks", "sends_count", "INTEGER", "0", true)
+		_ = AddColumnIfNotExists("email_tasks", "delivered_count", "INTEGER", "0", true)
+		_ = AddColumnIfNotExists("email_tasks", "bounced_count", "INTEGER", "0", true)
+		_ = AddColumnIfNotExists("email_tasks", "deferred_count", "INTEGER", "0", true)
+		_ = AddColumnIfNotExists("email_tasks", "stats_update_time", "INTEGER", "0", true)
 
 		// unsubscribe_records
 		_ = DropForeignKeyIfExists("unsubscribe_records", "group_id")

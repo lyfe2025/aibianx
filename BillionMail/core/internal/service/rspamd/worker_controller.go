@@ -66,7 +66,7 @@ static_dir = "${WWWDIR}";`)
 	}
 
 	// Restart the RSPAMD container
-	err = dk.RestartContainer(context.Background(), consts.SERVICES.Rspamd)
+	err = dk.RestartContainerByName(context.Background(), consts.SERVICES.Rspamd)
 
 	return
 }

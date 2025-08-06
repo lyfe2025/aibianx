@@ -1,14 +1,13 @@
 package operation_log
 
 import (
+	"billionmail-core/api/operation_log/v1"
 	"billionmail-core/internal/model/entity"
 	"billionmail-core/internal/service/public"
 	"context"
 	"github.com/gogf/gf/v2/frame/g"
 	"strconv"
 	"time"
-
-	"billionmail-core/api/operation_log/v1"
 )
 
 func (c *ControllerV1) GetOperationLog(ctx context.Context, req *v1.GetOperationLogReq) (res *v1.GetOperationLogRes, err error) {
@@ -19,8 +18,7 @@ func (c *ControllerV1) GetOperationLog(ctx context.Context, req *v1.GetOperation
 
 	// add keyword fuzzy search (log, ip fields)
 	if req.Keyword != "" {
-		model = model.WhereLike("log", "%"+req.Keyword+"%").
-			WhereOrLike("ip", "%"+req.Keyword+"%")
+		model = model.Where("(log LIKE ? OR ip LIKE ?)", "%"+req.Keyword+"%", "%"+req.Keyword+"%")
 	}
 
 	// type filter

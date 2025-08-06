@@ -4,6 +4,7 @@ import (
 	"billionmail-core/internal/consts"
 	"billionmail-core/internal/service/public"
 	"context"
+	"strings"
 
 	"billionmail-core/api/mail_boxes/v1"
 	"billionmail-core/internal/service/mail_boxes"
@@ -11,7 +12,9 @@ import (
 
 func (c *ControllerV1) AddMailbox(ctx context.Context, req *v1.AddMailboxReq) (res *v1.AddMailboxRes, err error) {
 	res = &v1.AddMailboxRes{}
-
+	// 处理参数中的多余空格 FullName  LocalPart
+	req.FullName = strings.TrimSpace(req.FullName)
+	req.LocalPart = strings.TrimSpace(req.LocalPart)
 	mailbox := &v1.Mailbox{
 		Username:  req.LocalPart + "@" + req.Domain,
 		Password:  req.Password,

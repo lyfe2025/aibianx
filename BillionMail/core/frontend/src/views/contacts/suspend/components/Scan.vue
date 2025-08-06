@@ -1,5 +1,5 @@
 <template>
-	<modal title="Scan Invalid Domains" width="480" confirm-text="Scan">
+	<modal :title="$t('contacts.suspend.scan.title')" width="480" confirm-text="Scan">
 		<div class="pt-12px">
 			<bt-form ref="formRef" :form="form" :rules="rules">
 				<n-form-item label="Group" path="group_id">
@@ -8,13 +8,17 @@
 				<n-form-item label="Method">
 					<n-radio-group v-model:value="form.oper">
 						<div class="h-32px flex items-center">
-							<n-radio :value="1">no-operation</n-radio>
+							<n-radio :value="1">{{ $t('contacts.suspend.scan.methods.noOperation') }}</n-radio>
 						</div>
 						<div class="h-32px flex items-center">
-							<n-radio :value="2">Added to the exception prevention table</n-radio>
+							<n-radio :value="2">{{
+								$t('contacts.suspend.scan.methods.addToExceptionTable')
+							}}</n-radio>
 						</div>
 						<div class="h-32px flex items-center">
-							<n-radio :value="3">The abnormal mailbox is deleted from the group</n-radio>
+							<n-radio :value="3">{{
+								$t('contacts.suspend.scan.methods.deleteFromGroup')
+							}}</n-radio>
 						</div>
 					</n-radio-group>
 				</n-form-item>
@@ -27,9 +31,11 @@
 import { FormRules, SelectOption } from 'naive-ui'
 import { isObject } from '@/utils'
 import { useModal } from '@/hooks/modal/useModal'
+import { scanGroup } from '@/api/modules/contacts/suspend'
 import { getGroupAll } from '@/api/modules/contacts/group'
 import type { Group } from '../../group/types/base'
-import { scanGroup } from '@/api/modules/contacts/suspend'
+
+const { t } = useI18n()
 
 const formRef = useTemplateRef('formRef')
 
@@ -43,7 +49,7 @@ const rules: FormRules = {
 		trigger: 'change',
 		validator: () => {
 			if (!form.group_id) {
-				return new Error('Please select group')
+				return new Error(t('contacts.suspend.scan.form.groupRequired'))
 			}
 			return true
 		},

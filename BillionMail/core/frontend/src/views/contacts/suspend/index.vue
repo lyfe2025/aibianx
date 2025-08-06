@@ -2,11 +2,11 @@
 	<div>
 		<bt-table-layout>
 			<template #toolsLeft>
-				<n-button type="primary" @click="handleShowScan">Scan Invalid Domains</n-button>
-				<n-button @click="handleShowScanLogs">Scan Logs</n-button>
+				<n-button type="primary" @click="handleShowScan">{{ $t('contacts.suspend.buttons.scanInvalidDomains') }}</n-button>
+				<n-button @click="handleShowScanLogs">{{ $t('contacts.suspend.buttons.scanLogs') }}</n-button>
 				<n-button @click="handleClear">{{ $t('common.actions.clear') }}</n-button>
 				<div class="ml-8px">
-					<span class="mr-12px">Auto block failed emails</span>
+					<span class="mr-12px">{{ $t('contacts.suspend.buttons.autoBlockFailedEmails') }}</span>
 					<n-switch v-model:value="autoScan" @update:value="handleUpdateAutoScan"></n-switch>
 				</div>
 			</template>
@@ -14,7 +14,7 @@
 				<bt-search
 					v-model:value="tableParams.keyword"
 					:width="240"
-					placeholder="Please enter email"
+					:placeholder="$t('contacts.suspend.search.emailPlaceholder')"
 					@search="resetTable">
 				</bt-search>
 			</template>
@@ -89,8 +89,8 @@ const handleShowScanLogs = () => {
 
 const handleClear = () => {
 	confirm({
-		title: 'Clear',
-		content: `This will clear all data under that type, do you continue?`,
+		title: t('contacts.suspend.confirm.clear.title'),
+		content: t('contacts.suspend.confirm.clear.content'),
 		onConfirm: async () => {
 			await clearSuspend()
 			fetchTable()
@@ -114,20 +114,20 @@ const { tableParams, tableProps, pageProps, fetchTable, resetTable } = useDataTa
 const columns = ref<DataTableColumns<Suspend>>([
 	{
 		key: 'recipient',
-		title: 'Email',
+		title: t('contacts.suspend.columns.email'),
 	},
 	{
 		key: 'description',
-		title: 'Description',
+		title: t('contacts.suspend.columns.description'),
 	},
 	{
 		key: 'state',
-		title: 'Status',
-		render: row => (row.state || row.count >= 3 ? 'Invalid' : 'Checking'),
+		title: t('contacts.suspend.columns.status'),
+		render: row => (row.state || row.count >= 3 ? t('contacts.suspend.status.invalid') : t('contacts.suspend.status.checking')),
 	},
 	{
 		key: 'create_time',
-		title: 'Add Time',
+		title: t('contacts.suspend.columns.addTime'),
 		render: row => formatTime(row.create_time),
 	},
 	{
@@ -152,8 +152,8 @@ const columns = ref<DataTableColumns<Suspend>>([
 
 const handleDelete = (row: Suspend) => {
 	confirm({
-		title: 'Delete',
-		content: `Are you sure you want to delete [${row.recipient}]`,
+		title: t('contacts.suspend.confirm.delete.title'),
+		content: t('contacts.suspend.confirm.delete.content', { email: row.recipient }),
 		onConfirm: async () => {
 			await deleteSuspend({ id: row.id })
 			fetchTable()

@@ -112,7 +112,7 @@ const iconMap: Record<string, VNodeChild> = {
 	smtp: <i class="i-custom:smtp"></i>,
 	settings: <i class="i-mdi-settings-outline"></i>,
 	template: <i class="i-mdi-settings-outline"></i>,
-	rspamd: <i class="i-mdi-settings-outline"></i>,
+	logs: <i class="i-icon-park-outline:log"></i>,
 	logout: <i class="i-mdi-logout"></i>,
 }
 

@@ -1,5 +1,5 @@
 <template>
-	<modal title="Scan Logs" width="820" :footer="false">
+	<modal :title="$t('contacts.suspend.scanLogs.title')" width="820" :footer="false">
 		<div class="pt-12px mb-8px">
 			<n-button type="primary" @click="getLogs(true)">
 				{{ $t('common.actions.refresh') }}
@@ -12,13 +12,15 @@
 </template>
 
 <script lang="ts" setup>
-import { getScanLogs } from '@/api/modules/contacts/suspend'
-import { useModal } from '@/hooks/modal/useModal'
 import { isString } from '@/utils'
+import { useModal } from '@/hooks/modal/useModal'
+import { getScanLogs } from '@/api/modules/contacts/suspend'
+
+const { t } = useI18n()
 
 const loading = ref(false)
 
-const content = ref(`None`)
+const content = ref(t('contacts.suspend.scanLogs.none'))
 
 let timer: number | null = null
 
@@ -98,7 +100,7 @@ const [Modal] = useModal({
 		if (isOpen) {
 			getLogs(true)
 		} else {
-			content.value = `None`
+			content.value = t('contacts.suspend.scanLogs.none')
 			stopAutoRefresh()
 		}
 	},

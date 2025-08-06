@@ -15,8 +15,11 @@
 				</n-data-table>
 			</template>
 			<template #pageRight>
-				<bt-table-page v-model:page="tableParams.page" v-model:page-size="tableParams.page_size"
-					:item-count="tableTotal" @refresh="getTableData">
+				<bt-table-page
+					v-model:page="tableParams.page"
+					v-model:page-size="tableParams.page_size"
+					:item-count="tableTotal"
+					@refresh="getTableData">
 				</bt-table-page>
 			</template>
 			<template #modal>
@@ -56,6 +59,7 @@ const { tableParams, tableList, loading, tableTotal, getTableData } = useTableDa
 })
 
 const router = useRouter()
+const route = useRoute()
 
 // Table columns
 const columns = ref<DataTableColumns<MailDomain>>([
@@ -70,12 +74,9 @@ const columns = ref<DataTableColumns<MailDomain>>([
 			// <i class="i-domain:brand-info w-5 h-5 mr-1.25"></i>
 			return (
 				<>
-					<div class="flex items-center">
+					<div class="inline-flex items-center">
 						{row.hasbrandinfo == 1 && <i class="i-domain:brand-info w-4 h-4 mr-1.25"></i>}
-						<NButton
-							text
-							type="primary"
-							onClick={() => handleEdit(row)}>
+						<NButton text type="primary" onClick={() => handleEdit(row)}>
 							{row.domain}
 						</NButton>
 					</div>
@@ -263,19 +264,17 @@ const handleSetDefault = (row: MailDomain) => {
 
 // Handle edit
 const handleEdit = (row: MailDomain) => {
-
 	/* formModalApi.setState({
 		row,
 		isEdit: true,
 	})
 	formModalApi.open() */
 
-
 	router.push({
-		name: "EditDomain",
+		name: 'EditDomain',
 		params: {
-			domain: row.domain
-		}
+			domain: row.domain,
+		},
 	})
 }
 
@@ -292,6 +291,15 @@ const handleDelete = (row: MailDomain) => {
 		},
 	})
 }
+
+// Whether should open create modal automic
+const initDomainFlag = ref('')
+onMounted(() => {
+	initDomainFlag.value = route.query.init as string
+	if (initDomainFlag.value === 'init-domain') {
+		handleAddDomain()
+	}
+})
 </script>
 
 <style lang="scss" scoped>

@@ -136,6 +136,11 @@ func Start(ctx context.Context) (err error) {
 		abnormal_recipient.AbnormalRecipientAutoStat(context.Background())
 	})
 
+	// Regularly update the success and failure data of marketing tasks
+	gtimer.Add(1*time.Minute, func() {
+		batch_mail.UpdateTaskJoinMailstat(ctx)
+	})
+
 	g.Log().Debug(ctx, "All timers started successfully")
 	return nil
 }
