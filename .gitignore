@@ -207,20 +207,20 @@ deployment/logs/
 deployment/ssl/
 deployment/backups/
 
-# BillionMail 邮件系统数据
-BillionMail/logs/
-BillionMail/data/
-BillionMail/core-data/
-BillionMail/postfix-data/
-BillionMail/postgresql-data/
-BillionMail/postgresql-socket/
-BillionMail/redis-data/
-BillionMail/rspamd-data/
-BillionMail/vmail-data/
-BillionMail/webmail-data/
-BillionMail/php-sock/
-BillionMail/ssl/
-BillionMail/ssl-self-signed/
+# BillionMail 邮件系统数据（已移除忽略规则，现在全部纳入版本控制）
+# BillionMail/logs/
+# BillionMail/data/
+# BillionMail/core-data/
+# BillionMail/postfix-data/
+# BillionMail/postgresql-data/
+# BillionMail/postgresql-socket/
+# BillionMail/redis-data/
+# BillionMail/rspamd-data/
+# BillionMail/vmail-data/
+# BillionMail/webmail-data/
+# BillionMail/php-sock/
+# BillionMail/ssl/
+# BillionMail/ssl-self-signed/
 
 # Docker 卷和持久化数据
 postgres-data/
