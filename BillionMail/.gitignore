@@ -1,41 +1,91 @@
-# BillionMail 原始忽略规则已移除 - 现在所有文件都纳入版本控制
-# 仅保留必要的IDE和临时文件忽略
+# =====================================
+# BillionMail 邮件系统 - Git忽略配置
+# =====================================
+# 此配置确保运行时数据不被提交，但保留必要的配置文件
+
+# ===== IDE 和编辑器 =====
 *.iml
 .idea/
 idea/*
 .vscode/*
 .cursor/
 
-# 保留敏感配置文件的忽略（这些应该通过模板文件管理）
+# ===== 敏感配置文件 =====
+# 这些文件包含密码、密钥等敏感信息
 .env
 billionmail.conf
 DBPASS_file.pl
 
-# 以下文件现在都将被Git跟踪：
-# test/* - 测试文件
-# config/* - 配置文件
-# temp/ - 临时文件
-# ssl/* - SSL证书
-# logs/ - 日志文件  
-# backup/ - 备份文件
-# vmail-data/ - 邮件数据
-# postfix-data/ - Postfix数据
-# rspamd-data/ - Rspamd数据
-# postgresql-data/ - PostgreSQL数据
-# postgresql-socket/ - PostgreSQL套接字
-# redis-data/ - Redis数据
-# php-sock/ - PHP套接字
-# webmail-data/ - Webmail数据
-# core-data/ - 核心数据
-# conf/postfix/conf/vmail_ssl.map
-# conf/postfix/conf/vmail_ssl.map.db
-# conf/postfix/conf/extra.cf
-# conf/postfix/sql/
-# conf/core/fail2ban/
-# conf/dovecot/conf.d/dovecot-sql.conf.ext
-# conf/dovecot/conf.d/extra.cf
-# conf/rspamd/local.d/dkim_signing.conf
-# conf/rspamd/local.d/redis.conf
-# ssl-self-signed/cert.pem
-# ssl-self-signed/key.pem
-# core/billionmail*
+# ===== 运行时数据目录 =====
+# PostgreSQL 数据库运行时文件
+postgresql-data/
+postgresql-socket/
+
+# Redis 缓存数据
+redis-data/
+
+# 邮件存储数据
+vmail-data/
+
+# Postfix 邮件队列和运行时数据
+postfix-data/
+
+# Rspamd 反垃圾邮件数据
+rspamd-data/
+
+# PHP 套接字文件
+php-sock/
+
+# Webmail 运行时数据（除了程序文件）
+webmail-data/logs/
+webmail-data/temp/
+webmail-data/vendor/
+
+# 核心应用运行时数据
+core-data/
+
+# ===== 日志文件 =====
+logs/
+*.log
+log/
+
+# ===== SSL 证书 =====
+# 自签名证书（运行时生成）
+ssl-self-signed/
+
+# Let's Encrypt 证书（运行时生成）
+ssl/
+
+# ===== 临时文件 =====
+temp/
+tmp/
+*.tmp
+*.temp
+*.bak
+
+# ===== 备份文件 =====
+backup/
+*.backup
+*.dump
+*.sql
+
+# ===== 编译产物 =====
+# Go 编译产物
+core/billionmail
+core/billionmail.exe
+
+# ===== 操作系统文件 =====
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ===== Docker 相关 =====
+# Docker volumes 映射的数据（如果有）
+volumes/
+
+# ===== 测试和开发 =====
+# 测试文件和开发临时文件
+test/
+testing/
+debug/
