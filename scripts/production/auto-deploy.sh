@@ -297,13 +297,42 @@ pre_deploy_check() {
         exit 1
     fi
     
-    # 检查端口占用
-    local required_ports=("80" "443" "1337" "5432" "7700")
-    for port in "${required_ports[@]}"; do
-        if netstat -tuln 2>/dev/null | grep -q ":$port "; then
-            log_warning "端口 $port 已被占用"
+    # 使用增强的端口冲突检测工具
+    log_info "检查端口占用情况..."
+    if [ -f "$PROJECT_DIR/scripts/tools/check-port-conflicts.sh" ]; then
+        if ! "$PROJECT_DIR/scripts/tools/check-port-conflicts.sh" check; then
+            log_warning "发现端口冲突"
+            
+            if [ "$DEPLOY_SILENT" != "true" ]; then
+                echo "是否自动清理端口冲突? [Y/n]"
+                read -r response
+                if [[ ! "$response" =~ ^[Nn]$ ]]; then
+                    if "$PROJECT_DIR/scripts/tools/check-port-conflicts.sh" auto-clean; then
+                        log_success "端口冲突清理完成"
+                    else
+                        log_error "端口冲突清理失败"
+                        exit 1
+                    fi
+                else
+                    log_error "存在端口冲突，请手动处理或重新运行"
+                    exit 1
+                fi
+            else
+                # 静默模式自动清理
+                log_info "静默模式，自动清理端口冲突..."
+                if "$PROJECT_DIR/scripts/tools/check-port-conflicts.sh" auto-clean; then
+                    log_success "端口冲突清理完成"
+                else
+                    log_error "端口冲突清理失败"
+                    exit 1
+                fi
+            fi
+        else
+            log_success "端口检查通过"
         fi
-    done
+    else
+        log_warning "端口检测工具不存在，跳过端口检查"
+    fi
     
     # 检查磁盘空间
     local available_space=$(df . | awk 'NR==2 {print $4}')
@@ -352,11 +381,32 @@ execute_deployment() {
     
     # 🚀 启动邮件系统 (BillionMail)
     log_info "启动BillionMail邮件系统..."
-    if "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh"; then
-        log_success "BillionMail邮件系统启动完成"
+    if [ -f "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh" ]; then
+        # 确保脚本可执行
+        chmod +x "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh"
+        
+        # 尝试启动邮件系统
+        if "$PROJECT_DIR/scripts/billionmail/deploy-billionmail.sh"; then
+            log_success "BillionMail邮件系统启动完成"
+        else
+            log_warning "BillionMail邮件系统启动失败，尝试备用方案..."
+            
+            # 备用启动方案
+            cd "$PROJECT_DIR/BillionMail" 2>/dev/null || true
+            if [ -f "docker-compose.yml" ]; then
+                log_info "使用备用方案启动邮件系统..."
+                if docker-compose down 2>/dev/null && sleep 3 && docker-compose up -d; then
+                    log_success "邮件系统备用启动成功"
+                else
+                    log_warning "邮件系统启动失败，将在验证阶段继续尝试"
+                fi
+            else
+                log_warning "BillionMail配置文件不存在，跳过邮件系统启动"
+            fi
+            cd "$PROJECT_DIR"
+        fi
     else
-        log_warning "BillionMail邮件系统启动失败，请稍后手动启动"
-        log_info "手动启动命令: $PROJECT_DIR/scripts.sh email start"
+        log_warning "BillionMail部署脚本不存在，跳过邮件系统启动"
     fi
     
     # 等待所有服务完全启动

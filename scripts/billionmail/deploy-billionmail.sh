@@ -127,9 +127,9 @@ sleep 20
 
 # 多次检查服务状态，确保稳定启动
 echo -e "${YELLOW}🔍 检查服务状态...${NC}"
-local retry_count=0
-local max_retries=3
-local services_up=false
+retry_count=0
+max_retries=3
+services_up=false
 
 while [ $retry_count -lt $max_retries ]; do
     if docker-compose ps | grep -q "Up"; then
