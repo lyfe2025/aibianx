@@ -1,37 +1,41 @@
-# IntelliJ project files
+# BillionMail 原始忽略规则已移除 - 现在所有文件都纳入版本控制
+# 仅保留必要的IDE和临时文件忽略
 *.iml
 .idea/
 idea/*
 .vscode/*
 .cursor/
-test/*
-config/*
-temp/
-ssl/*
-bm
+
+# 保留敏感配置文件的忽略（这些应该通过模板文件管理）
 .env
 billionmail.conf
 DBPASS_file.pl
-logs/
-backup/
-vmail-data/
-postfix-data/
-rspamd-data/
-postgresql-data/
-postgresql-socket/
-redis-data/
-php-sock/
-webmail-data/
-core-data/
-conf/postfix/conf/vmail_ssl.map
-conf/postfix/conf/vmail_ssl.map.db
-conf/postfix/conf/extra.cf
-conf/postfix/sql/
-conf/core/fail2ban/
-conf/dovecot/conf.d/dovecot-sql.conf.ext
-conf/dovecot/conf.d/extra.cf
-conf/rspamd/local.d/dkim_signing.conf
-conf/rspamd/local.d/redis.conf
-ssl-self-signed/cert.pem
-ssl-self-signed/key.pem
-core/billionmail*
+
+# 以下文件现在都将被Git跟踪：
+# test/* - 测试文件
+# config/* - 配置文件
+# temp/ - 临时文件
+# ssl/* - SSL证书
+# logs/ - 日志文件  
+# backup/ - 备份文件
+# vmail-data/ - 邮件数据
+# postfix-data/ - Postfix数据
+# rspamd-data/ - Rspamd数据
+# postgresql-data/ - PostgreSQL数据
+# postgresql-socket/ - PostgreSQL套接字
+# redis-data/ - Redis数据
+# php-sock/ - PHP套接字
+# webmail-data/ - Webmail数据
+# core-data/ - 核心数据
+# conf/postfix/conf/vmail_ssl.map
+# conf/postfix/conf/vmail_ssl.map.db
+# conf/postfix/conf/extra.cf
+# conf/postfix/sql/
+# conf/core/fail2ban/
+# conf/dovecot/conf.d/dovecot-sql.conf.ext
+# conf/dovecot/conf.d/extra.cf
+# conf/rspamd/local.d/dkim_signing.conf
+# conf/rspamd/local.d/redis.conf
+# ssl-self-signed/cert.pem
+# ssl-self-signed/key.pem
+# core/billionmail*
