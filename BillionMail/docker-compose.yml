@@ -52,7 +52,7 @@ services:
         - ./conf/rspamd/local.d:/etc/rspamd/local.d
         - ./conf/rspamd/statistic.conf:/etc/rspamd/statistic.conf
         - ./conf/rspamd/rspamd.conf:/etc/rspamd/rspamd.conf 
-        - ./rspamd-data:/var/lib/rspamd
+        - rspamd-data-volume:/var/lib/rspamd
         - ./logs/rspamd:/var/log/rspamd
       restart: always
       networks:
@@ -215,4 +215,8 @@ networks:
       driver: default
       config:
         - subnet: ${IPV4_NETWORK:-172.66.1}.0/24
+
+volumes:
+  rspamd-data-volume:
+    driver: local
 
