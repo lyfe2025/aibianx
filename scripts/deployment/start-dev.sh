@@ -154,129 +154,282 @@ configure_dev_env_variables() {
     fi
 }
 
-# 自动部署MeiliSearch搜索引擎
+# 智能部署MeiliSearch搜索引擎 - 增强版
 deploy_meilisearch() {
     echo ""
+    echo "4️⃣  启动/检查搜索引擎..."
     echo "🔍 检查MeiliSearch搜索引擎..."
     
-    # 检查MeiliSearch容器是否已存在
-    if docker ps -a --format "table {{.Names}}" | grep -q "^meilisearch$"; then
-        # 检查是否正在运行
-        if docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
-            echo "✅ MeiliSearch已运行"
+    # 🎯 使用快速检查脚本进行状态检测
+    local fast_check_script="${PROJECT_ROOT}/scripts/search/check-meilisearch-fast.sh"
+    local meilisearch_status=3  # 默认为不存在
+    
+    if [ -f "$fast_check_script" ]; then
+        "$fast_check_script" --silent
+        meilisearch_status=$?
+    else
+        # 后备检查方法
+        if curl -s "${MEILISEARCH_URL}/health" 2>/dev/null | grep -q "available"; then
+            meilisearch_status=0
+        elif docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
+            meilisearch_status=1
+        elif docker ps -a --format "table {{.Names}}" | grep -q "^meilisearch$"; then
+            meilisearch_status=2
+        else
+            meilisearch_status=3
+        fi
+    fi
+    
+    # 根据状态码处理
+    case $meilisearch_status in
+        0)
+            # 服务完全正常
+            echo "✅ MeiliSearch服务运行正常"
+            echo "   🌐 Web管理界面: ${MEILISEARCH_URL}"
+            echo "   🔓 开发模式: 无需API密钥"
+            echo "   📝 配置开发环境变量..."
+            configure_dev_env_variables
+            return 0
+            ;;
+        1)
+            # 容器运行但服务异常，尝试重启
+            echo "⚠️  容器运行但服务异常，尝试重启..."
+            docker restart meilisearch > /dev/null 2>&1
+            
+            # 等待重启后的健康检查
+            echo "   ⏳ 等待服务重启..."
+            local restart_count=0
+            while [ $restart_count -lt 15 ]; do
+                if curl -s "${MEILISEARCH_URL}/health" 2>/dev/null | grep -q "available"; then
+                    echo "✅ MeiliSearch重启成功"
+                    echo "   🌐 Web管理界面: ${MEILISEARCH_URL}"
+                    configure_dev_env_variables
+                    return 0
+                fi
+                sleep 1
+                restart_count=$((restart_count + 1))
+            done
+            echo "❌ MeiliSearch重启后仍无响应，将重新部署..."
+            ;;
+        2)
+            # 容器已停止，尝试启动
+            echo "🔄 容器已停止，尝试启动..."
+            docker start meilisearch > /dev/null 2>&1
+            
+            # 等待启动后的健康检查
+            echo "   ⏳ 等待容器启动..."
+            local start_count=0
+            while [ $start_count -lt 15 ]; do
+                if curl -s "${MEILISEARCH_URL}/health" 2>/dev/null | grep -q "available"; then
+                    echo "✅ MeiliSearch启动成功"
+                    echo "   🌐 Web管理界面: ${MEILISEARCH_URL}"
+                    configure_dev_env_variables
+                    return 0
+                fi
+                sleep 1
+                start_count=$((start_count + 1))
+            done
+            echo "❌ MeiliSearch启动后无响应，将重新部署..."
+            ;;
+        3)
+            # 容器不存在，需要部署
+            echo "🚀 容器不存在，准备部署..."
+            ;;
+    esac
+    
+    # 🚀 智能部署：使用专用部署脚本进行全新部署
+    echo "🚀 调用专用部署脚本进行全新部署..."
+    
+    # 使用静默模式调用专用部署脚本
+    if [ -f "${PROJECT_ROOT}/scripts/search/deploy-meilisearch.sh" ]; then
+        echo "   📦 执行MeiliSearch专用部署脚本..."
+        if "${PROJECT_ROOT}/scripts/search/deploy-meilisearch.sh" --silent; then
+            echo "✅ 专用部署脚本执行成功"
             echo "   📝 配置开发环境变量..."
             configure_dev_env_variables
             return 0
         else
-            echo "🔄 启动现有MeiliSearch容器..."
-            docker start meilisearch > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
-                echo "✅ MeiliSearch启动成功"
-                echo "   📝 配置开发环境变量..."
-                configure_dev_env_variables
-                return 0
-            fi
+            echo "❌ 专用部署脚本执行失败"
+            return 1
         fi
-    fi
-    
-    echo "🚀 自动部署MeiliSearch (开发环境模式)..."
-    
-    # 直接部署开发环境，无需交互
-    echo "   🔧 停止现有MeiliSearch容器..."
-    docker stop meilisearch 2>/dev/null && echo "   ✅ 已停止现有容器" || echo "   ℹ️  没有运行中的容器"
-    docker rm meilisearch 2>/dev/null && echo "   ✅ 已删除现有容器" || echo "   ℹ️  没有需要删除的容器"
-    
-    echo "   📦 部署开发环境..."
-    docker run -d \
-        --name meilisearch \
-        -p 7700:7700 \
-        -e MEILI_ENV=development \
-        -v meilisearch_data:/meili_data \
-        --restart unless-stopped \
-        getmeili/meilisearch:latest > /dev/null 2>&1
-    
-    if [ $? -eq 0 ]; then
-        # 等待容器启动
-        local count=0
-        while [ $count -lt 15 ]; do
-            if docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
-                echo "✅ MeiliSearch部署成功"
-                echo "   🌐 Web管理界面: ${MEILISEARCH_URL}"
-                echo "   🔓 开发模式: 无需API密钥"
-                
-                # 🔧 自动配置开发环境变量（清理API密钥）
-                echo "   📝 配置开发环境变量..."
-                configure_dev_env_variables
-                
-                return 0
-            fi
-            sleep 1
-            count=$((count + 1))
-        done
-        echo "⚠️  MeiliSearch容器启动较慢，请稍后检查"
     else
-        echo "❌ MeiliSearch部署失败，请检查Docker状态"
+        # 后备方案：内置部署逻辑
+        echo "   📦 使用内置部署逻辑..."
+        
+        # 清理可能存在的问题容器
+        echo "   🧹 清理现有容器..."
+        docker stop meilisearch 2>/dev/null && echo "   ✅ 已停止现有容器" || echo "   ℹ️  没有运行中的容器"
+        docker rm meilisearch 2>/dev/null && echo "   ✅ 已删除现有容器" || echo "   ℹ️  没有需要删除的容器"
+        
+        echo "   📦 部署开发环境..."
+        docker run -d \
+            --name meilisearch \
+            -p 7700:7700 \
+            -e MEILI_ENV=development \
+            -v meilisearch_data:/meili_data \
+            --restart unless-stopped \
+            getmeili/meilisearch:latest > /dev/null 2>&1
+        
+        if [ $? -eq 0 ]; then
+            # 🕐 智能等待：使用健康检查而不是简单的容器检查
+            echo "   ⏳ 等待MeiliSearch服务启动..."
+            local deploy_count=0
+            while [ $deploy_count -lt 30 ]; do
+                # 使用健康检查API而不是docker ps
+                if curl -s "${MEILISEARCH_URL}/health" 2>/dev/null | grep -q "available"; then
+                    echo ""
+                    echo "✅ MeiliSearch内置部署成功"
+                    echo "   🌐 Web管理界面: ${MEILISEARCH_URL}"
+                    echo "   🔓 开发模式: 无需API密钥"
+                    echo "   💾 数据持久化: meilisearch_data Docker卷"
+                    
+                    # 🔧 自动配置开发环境变量（清理API密钥）
+                    echo "   📝 配置开发环境变量..."
+                    configure_dev_env_variables
+                    
+                    return 0
+                fi
+                
+                # 每5秒显示一次进度
+                if [ $((deploy_count % 5)) -eq 0 ]; then
+                    echo -n "."
+                fi
+                
+                sleep 1
+                deploy_count=$((deploy_count + 1))
+            done
+            echo ""
+            echo "❌ MeiliSearch部署超时，但容器可能仍在启动中"
+            echo "💡 请稍后手动检查: curl ${MEILISEARCH_URL}/health"
+            return 1
+        else
+            echo "❌ MeiliSearch容器创建失败，请检查Docker状态"
+            echo "💡 调试命令: docker logs meilisearch"
+            return 1
+        fi
     fi
 }
 
-# 自动部署BillionMail邮件系统（统一使用独立部署方案）
+# 智能部署BillionMail邮件系统 - 增强版
 deploy_billionmail() {
     echo ""
+    echo "5️⃣  启动/检查邮件系统..."
     echo "📧 检查BillionMail邮件系统..."
     
-    # 只检查独立BillionMail服务 (统一使用独立部署方案)
-    if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
-        echo "✅ BillionMail邮件系统正在运行"
-        echo "   🌐 管理界面: http://${DOMAIN:-localhost}:8080/billion"
-        echo "   📧 WebMail: http://${DOMAIN:-localhost}:8080/roundcube"
-        echo "   📋 服务类型: 独立部署 (推荐)"
-        return 0
-    fi
+    # 🎯 使用快速检查脚本进行状态检测
+    local fast_check_script="${PROJECT_ROOT}/scripts/billionmail/check-billionmail-fast.sh"
+    local billionmail_status=3  # 默认为未部署
     
-    # 如果没有运行，尝试启动独立BillionMail
-    if [ -d "BillionMail" ] && [ -f "BillionMail/docker-compose.yml" ]; then
-        echo "🚀 启动BillionMail邮件系统..."
-        cd BillionMail
-        
-        # 清理可能存在的冲突容器
-        docker-compose down > /dev/null 2>&1
-        
-        # 启动独立BillionMail
-        docker-compose up -d > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            # 等待服务启动
-            echo "   ⏳ 等待BillionMail服务启动..."
-            local count=0
-            while [ $count -lt 10 ]; do
-                if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
-                    echo "   ✅ BillionMail启动成功"
-                    echo "   🌐 管理界面: http://${DOMAIN:-localhost}:8080/billion"
-                    echo "   📧 WebMail: http://${DOMAIN:-localhost}:8080/roundcube"
-                    echo "   📋 服务类型: 独立部署 (推荐)"
-                    cd ..
-                    return 0
-                fi
-                sleep 1
-                count=$((count + 1))
-            done
-            echo "   ⚠️  BillionMail容器启动较慢，服务可能仍在初始化中"
-            cd ..
-            return 0
-        else
-            echo "   ❌ BillionMail启动失败"
-            cd ..
-        fi
+    if [ -f "$fast_check_script" ]; then
+        "$fast_check_script" --silent
+        billionmail_status=$?
     else
-        echo "⚠️  BillionMail目录不存在"
-        echo "💡 请运行: ./scripts/billionmail/deploy-billionmail.sh"
+        # 后备检查方法
+        if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
+            billionmail_status=0  # 运行正常
+        elif docker ps -a --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
+            billionmail_status=1  # 容器存在但未运行
+        elif [ -d "${PROJECT_ROOT}/BillionMail" ]; then
+            billionmail_status=2  # 目录存在但容器未创建
+        else
+            billionmail_status=3  # 未部署
+        fi
     fi
     
-    echo "⚠️  BillionMail服务未运行，但不影响前后端服务启动"
+    # 根据状态码处理
+    case $billionmail_status in
+        0)
+            # 服务完全正常
+            echo "✅ BillionMail邮件系统运行正常"
+            echo "   🌐 管理界面: ${BILLIONMAIL_ADMIN_URL}"
+            echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
+            echo "   📋 服务类型: 独立部署 (推荐)"
+            return 0
+            ;;
+        1|2)
+            # 容器存在但未运行，或容器不存在但目录存在
+            echo "🔧 BillionMail需要启动，正在自动修复..."
+            
+            # 使用快速检查脚本的自动修复功能
+            if [ -f "$fast_check_script" ]; then
+                if "$fast_check_script" --fix; then
+                    echo "✅ BillionMail自动修复成功"
+                    echo "   🌐 管理界面: ${BILLIONMAIL_ADMIN_URL}"
+                    echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
+                    echo "   📋 服务类型: 独立部署 (推荐)"
+                    return 0
+                else
+                    echo "⚠️  BillionMail自动修复失败，但不影响前后端服务启动"
+                    echo "💡 手动修复命令: ./scripts/billionmail/check-billionmail-fast.sh --fix"
+                    return 1
+                fi
+            else
+                # 后备修复逻辑
+                echo "   🔄 使用后备修复逻辑..."
+                if [ -d "${PROJECT_ROOT}/BillionMail" ]; then
+                    cd "${PROJECT_ROOT}/BillionMail"
+                    
+                    # 加载并导出环境变量
+                    if [ -f "env_init" ]; then
+                        echo "   📝 加载环境变量..."
+                        set -a  # 自动导出变量
+                        source env_init
+                        set +a
+                        echo "   ✅ 环境变量已加载: TZ=$TZ, HTTP_PORT=$HTTP_PORT"
+                    fi
+                    
+                    # 启动容器
+                    docker-compose up -d > /dev/null 2>&1
+                    
+                    # 等待启动
+                    local count=0
+                    while [ $count -lt 15 ]; do
+                        if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
+                            echo "✅ BillionMail后备修复成功"
+                            echo "   🌐 管理界面: ${BILLIONMAIL_ADMIN_URL}"
+                            echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
+                            cd "${PROJECT_ROOT}"
+                            return 0
+                        fi
+                        sleep 2
+                        count=$((count + 1))
+                    done
+                    echo "⚠️  BillionMail后备修复超时"
+                    cd "${PROJECT_ROOT}"
+                fi
+                return 1
+            fi
+            ;;
+        3)
+            # 未部署
+            echo "⚠️  BillionMail未部署"
+            echo "💡 部署命令: ./scripts/billionmail/deploy-billionmail.sh"
+            echo "💡 BillionMail是可选服务，不影响前后端服务启动"
+            return 1
+            ;;
+    esac
+    
+    echo "⚠️  BillionMail服务检查完成，状态未知"
     return 1
 }
 
-# 调用MeiliSearch部署
-deploy_meilisearch
+# 🎯 智能化MeiliSearch部署控制
+# 用户可以通过环境变量控制是否自动部署搜索引擎
+AUTO_DEPLOY_MEILISEARCH=${AUTO_DEPLOY_MEILISEARCH:-true}
+
+if [ "$AUTO_DEPLOY_MEILISEARCH" = "true" ]; then
+    echo "🔍 自动部署MeiliSearch已启用"
+    if deploy_meilisearch; then
+        echo "✅ MeiliSearch部署检查完成"
+    else
+        echo "⚠️  MeiliSearch部署失败，但不影响前后端服务启动"
+        echo "💡 稍后可手动部署: ./scripts/search/deploy-meilisearch.sh"
+    fi
+else
+    echo "🔍 MeiliSearch自动部署已禁用"
+    echo "💡 设置 AUTO_DEPLOY_MEILISEARCH=true 启用自动部署"
+    echo "💡 手动部署命令: ./scripts/search/deploy-meilisearch.sh"
+fi
 
 # 调用BillionMail部署 (如果启用) - 添加错误处理，不阻断前后端启动
 if [ "${AUTO_DEPLOY_BILLIONMAIL:-true}" = "true" ]; then

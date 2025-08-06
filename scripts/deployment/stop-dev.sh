@@ -107,6 +107,24 @@ if docker ps | grep -q "aibianx-redis"; then
     echo "✅ 缓存服务已停止"
 fi
 
+# 停止BillionMail邮件系统
+if docker ps | grep -q "billionmail"; then
+    echo "🔄 停止BillionMail邮件系统..."
+    # 检查BillionMail目录
+    if [ -d "BillionMail" ]; then
+        cd BillionMail
+        docker-compose down > /dev/null 2>&1 || true
+        cd ..
+        echo "✅ BillionMail邮件系统已停止"
+    else
+        # 直接停止容器
+        docker ps --format "table {{.Names}}" | grep billionmail | xargs -r docker stop 2>/dev/null || true
+        echo "✅ BillionMail容器已停止"
+    fi
+else
+    echo "💡 BillionMail邮件系统未运行"
+fi
+
 # 停止开发过程中可能启动的其他容器
 echo "🔄 停止其他临时容器..."
 docker ps --format "table {{.Names}}\t{{.Image}}" | grep -E "(cranky_ride|hungry_mccarthy)" | awk '{print $1}' | xargs -r docker stop 2>/dev/null || true
@@ -138,6 +156,7 @@ check_port_status 80 "前端"
 check_port_status 5432 "数据库"
 check_port_status 6379 "缓存"
 check_port_status 7700 "搜索引擎"
+check_port_status 8080 "邮件系统"
 
 echo ""
 echo "✅ 开发环境已完全停止"

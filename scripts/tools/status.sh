@@ -62,34 +62,75 @@ fi
 
 echo ""
 
-# 检查MeiliSearch搜索引擎
+# 🔍 智能检查MeiliSearch搜索引擎状态
 echo ""
 echo -e "${CYAN}🔍 MeiliSearch搜索引擎:${NC}"
-if docker ps | grep meilisearch > /dev/null 2>&1; then
+
+# 检查Docker容器状态
+if docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
     echo -e "   ${GREEN}✅ Docker容器运行中${NC}"
-    HEALTH=$(curl -s "${FRONTEND_URL}":7700/health 2>/dev/null)
+    
+    # 🎯 使用统一配置的URL进行健康检查
+    search_health_url="${SEARCH_URL}/health"
+    if [ -z "$SEARCH_URL" ]; then
+        search_health_url="http://localhost:7700/health"
+    fi
+    
+    HEALTH=$(curl -s "$search_health_url" 2>/dev/null)
     if [[ $HEALTH == *"available"* ]]; then
-        echo -e "   ${GREEN}✅ 服务健康正常${NC}"
-        # 检查索引
-        INDEXES=$(curl -s "${FRONTEND_URL}":7700/indexes 2>/dev/null)
+        echo -e "   ${GREEN}✅ 服务健康正常 (${search_health_url})${NC}"
+        
+        # 检查索引状态
+        indexes_url="${SEARCH_URL}/indexes"
+        if [ -z "$SEARCH_URL" ]; then
+            indexes_url="http://localhost:7700/indexes"
+        fi
+        
+        INDEXES=$(curl -s "$indexes_url" 2>/dev/null)
         if [[ $INDEXES == *"articles"* ]]; then
             echo -e "   ${GREEN}✅ articles索引已创建${NC}"
-            # 检查文档数量
-            STATS=$(curl -s "${FRONTEND_URL}":7700/indexes/articles/stats 2>/dev/null)
-            DOC_COUNT=$(echo $STATS | grep -o '"numberOfDocuments":[0-9]*' | cut -d':' -f2)
+            
+            # 检查索引统计信息
+            stats_url="${SEARCH_URL}/indexes/articles/stats"
+            if [ -z "$SEARCH_URL" ]; then
+                stats_url="http://localhost:7700/indexes/articles/stats"
+            fi
+            
+            STATS=$(curl -s "$stats_url" 2>/dev/null)
+            DOC_COUNT=$(echo "$STATS" | grep -o '"numberOfDocuments":[0-9]*' | cut -d':' -f2)
+            
             if [ ! -z "$DOC_COUNT" ] && [ "$DOC_COUNT" -gt 0 ]; then
                 echo -e "   ${GREEN}✅ 索引文档: ${DOC_COUNT}篇文章${NC}"
+                echo -e "   ${GREEN}✅ 搜索功能: 完全就绪${NC}"
             else
-                echo -e "   ${YELLOW}⚠️  索引文档: 0篇文章（需要同步）${NC}"
+                echo -e "   ${YELLOW}⚠️  索引文档: 0篇文章（需要同步数据）${NC}"
+                echo -e "   ${CYAN}💡 同步命令: ./scripts.sh search reindex${NC}"
             fi
         else
             echo -e "   ${YELLOW}⚠️  articles索引未创建${NC}"
+            echo -e "   ${CYAN}💡 创建命令: ./scripts/search/deploy-meilisearch.sh${NC}"
         fi
+        
+        # 显示管理界面信息
+        if [ -z "$SEARCH_URL" ]; then
+            echo -e "   ${BLUE}🌐 管理界面: http://localhost:7700${NC}"
+        else
+            echo -e "   ${BLUE}🌐 管理界面: ${SEARCH_URL}${NC}"
+        fi
+        
     else
-        echo -e "   ${RED}❌ 服务健康异常${NC}"
+        echo -e "   ${RED}❌ 服务健康异常 (无法访问 $search_health_url)${NC}"
+        echo -e "   ${CYAN}💡 重启命令: docker restart meilisearch${NC}"
     fi
 else
-    echo -e "   ${RED}❌ Docker容器未运行${NC}"
+    # 检查是否有停止的容器
+    if docker ps -a --format "table {{.Names}}" | grep -q "^meilisearch$"; then
+        echo -e "   ${YELLOW}⚠️  Docker容器已停止${NC}"
+        echo -e "   ${CYAN}💡 启动命令: docker start meilisearch${NC}"
+    else
+        echo -e "   ${RED}❌ Docker容器未创建${NC}"
+        echo -e "   ${CYAN}💡 部署命令: ./scripts/search/deploy-meilisearch.sh${NC}"
+    fi
 fi
 
 # 检查端口占用情况
