@@ -7,8 +7,8 @@ services:
     container_name: aibianx-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - ./data/database:/var/lib/postgresql/data
@@ -42,6 +42,11 @@ services:
     environment:
       MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
       MEILI_ENV: ${MEILI_ENV}
+      MEILI_HTTP_ADDR: ${MEILI_HTTP_ADDR}
+      MEILI_DB_PATH: ${MEILI_DB_PATH}
+      MEILI_DUMP_DIR: ${MEILI_DUMP_DIR}
+      MEILI_SNAPSHOT_DIR: ${MEILI_SNAPSHOT_DIR}
+      MEILI_LOG_LEVEL: ${MEILI_LOG_LEVEL}
     volumes:
       - ./data/meilisearch:/meili_data
     ports:
