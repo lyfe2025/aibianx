@@ -4,7 +4,6 @@
  */
 
 import { factories } from '@strapi/strapi';
-import { BillionMailIntegrationService } from '../../../services/billionmail-integration';
 
 // 会员特权配置工具函数
 function getMembershipFeatures(level: string) {
@@ -102,9 +101,9 @@ export default factories.createCoreController('api::membership.membership', ({ s
         }
       });
 
-      // 发送会员升级通知邮件
+      // 记录会员升级通知信息
       const userInfo = await strapi.entityService.findOne('plugin::users-permissions.user', user);
-      await BillionMailIntegrationService.sendMembershipUpgradeEmail(userInfo, membershipLevel);
+      strapi.log.info(`会员升级通知: ${userInfo.email} -> ${membershipLevel}`);
 
       strapi.log.info(`用户 ${user} 会员服务创建成功: ${membershipLevel} - ${planType}`);
 

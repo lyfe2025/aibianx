@@ -41,7 +41,7 @@ export function EmailSubscribeForm({ className }: EmailSubscribeFormProps) {
         }
 
         try {
-            // 使用BillionMail订阅API
+            // 使用Strapi邮件订阅API
             const result = await subscribe({
                 email: email.trim(),
                 name: '', // 可以后续添加姓名字段

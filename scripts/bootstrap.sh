@@ -276,13 +276,7 @@ deploy_project() {
             if ./scripts.sh deploy start; then
                 print_success "项目部署完成！"
                 
-                # 步骤3: 修复BillionMail部署问题 (如果存在)
-                print_info "步骤3: 检查并修复BillionMail邮件系统..."
-                if [ -f "scripts/billionmail/fix-billionmail-deployment.sh" ]; then
-                    ./scripts/billionmail/fix-billionmail-deployment.sh
-                else
-                    print_warning "BillionMail修复脚本不存在，跳过邮件系统检查"
-                fi
+
             else
                 print_warning "启动过程中出现问题，但核心服务可能已运行"
                 print_info "您可以手动检查状态: ./scripts.sh tools status"
@@ -318,12 +312,11 @@ show_access_info() {
         local frontend_port="${FRONTEND_PORT:-80}"
         local backend_port="${BACKEND_PORT:-1337}"
         local search_port="${MEILISEARCH_PORT:-7700}"
-        local email_port="${BILLIONMAIL_PORT:-8080}"
         
         echo -e "${BLUE}  🌐 前端网站:     http://${domain}:${frontend_port}${NC}"
         echo -e "${BLUE}  ⚙️ 后端管理:     http://${domain}:${backend_port}/admin${NC}"
         echo -e "${BLUE}  🔍 搜索引擎:     http://${domain}:${search_port}${NC}"
-        echo -e "${BLUE}  📧 邮件系统:     http://${domain}:${email_port}/billion${NC}"
+        echo -e "${BLUE}  📧 邮件管理:     http://${domain}:${backend_port}/admin (Strapi邮件系统)${NC}"
     fi
     
     echo ""
@@ -331,7 +324,7 @@ show_access_info() {
     echo -e "${BLUE}  ./scripts.sh tools status    # 检查系统状态${NC}"
     echo -e "${BLUE}  ./scripts.sh tools services  # 查看所有服务${NC}"
     echo -e "${BLUE}  ./scripts.sh deploy stop     # 停止所有服务${NC}"
-    echo -e "${BLUE}  ./scripts.sh deploy restart  # 重启所有服务${NC}"
+    echo -e "${BLUE}  ./scripts.sh deploy start     # 重启所有服务${NC}"
     echo ""
     echo -e "${YELLOW}📖 更多帮助:${NC}"
     echo -e "${BLUE}  ./scripts.sh --help          # 查看完整帮助${NC}"

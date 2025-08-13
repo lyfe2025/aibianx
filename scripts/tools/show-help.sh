@@ -61,7 +61,7 @@ show_complete_help() {
     echo ""
     
     echo -e "${GREEN}邮件系统:${NC}"
-    echo "  ./scripts.sh email deploy           # 部署BillionMail"
+    echo "  ./scripts.sh email check            # 检查邮件服务状态"
     echo "  ./scripts.sh email check            # 检查邮件服务"
     echo "  ./scripts.sh email admin            # 管理界面"
     echo "  ./scripts.sh email test             # API测试"
@@ -106,8 +106,7 @@ show_complete_help() {
         echo "• API示例: ${BACKEND_API_URL}/articles (文章API)"
         echo "• 后端管理: ${BACKEND_ADMIN_URL}"
         echo "• 搜索引擎: ${SEARCH_URL}"
-        echo "• 邮件管理: ${BILLIONMAIL_ADMIN_URL}"
-        echo "• WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
+        echo "• 邮件管理: ${BACKEND_ADMIN_URL} (Strapi邮件系统)"
     else
         echo "⚠️  配置文件未找到，无法显示服务地址"
         echo "   请运行 './scripts.sh deploy start' 启动服务"

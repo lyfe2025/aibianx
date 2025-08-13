@@ -58,7 +58,7 @@ check_item "使用统一生产配置" "grep -q 'aibianx-integrated' '$PROJECT_RO
 check_item "PostgreSQL服务定义" "grep -q 'postgres:17-alpine' '$PROJECT_ROOT/deployment/docker-compose.unified.yml'"
 check_item "Redis服务定义" "grep -q 'redis:7.4-alpine' '$PROJECT_ROOT/deployment/docker-compose.unified.yml'"
 check_item "MeiliSearch服务定义" "grep -q 'getmeili/meilisearch:v1.5' '$PROJECT_ROOT/deployment/docker-compose.unified.yml'"
-check_item "BillionMail服务定义" "grep -q 'billionmail/core:4.0.1' '$PROJECT_ROOT/deployment/docker-compose.unified.yml'"
+check_item "邮件系统集成" "grep -q 'email-subscription' '$PROJECT_ROOT/backend/src/api/' && echo '邮件系统已集成到Strapi'"
 
 echo ""
 echo -e "${CYAN}⚙️ 环境配置一致性检查${NC}"
@@ -86,7 +86,7 @@ if docker ps --format "{{.Names}}" | grep -q "aibianx-" 2>/dev/null; then
     check_item "MeiliSearch容器运行" "docker ps --format '{{.Names}}' | grep -q 'aibianx-meilisearch'"
     check_item "后端容器运行" "docker ps --format '{{.Names}}' | grep -q 'aibianx-backend'"
     check_item "前端容器运行" "docker ps --format '{{.Names}}' | grep -q 'aibianx-frontend'"
-    check_item "BillionMail核心容器运行" "docker ps --format '{{.Names}}' | grep -q 'aibianx-billionmail-core'"
+    check_item "邮件系统集成检查" "curl -s http://localhost:1337/api/email-subscriptions >/dev/null && echo '邮件系统API正常'"
     check_item "Nginx网关容器运行" "docker ps --format '{{.Names}}' | grep -q 'aibianx-nginx'"
 else
     echo -e "${YELLOW}⚠️ 模拟环境容器未运行，请先启动模拟环境${NC}"
@@ -128,7 +128,7 @@ if [ -f "$PROJECT_ROOT/.env" ]; then
     check_item "PostgreSQL密码配置" "grep -q 'POSTGRES_PASSWORD=' '$PROJECT_ROOT/.env' && [ \$(grep 'POSTGRES_PASSWORD=' '$PROJECT_ROOT/.env' | cut -d'=' -f2 | wc -c) -gt 10 ]"
     check_item "Redis密码配置" "grep -q 'REDIS_PASSWORD=' '$PROJECT_ROOT/.env' && [ \$(grep 'REDIS_PASSWORD=' '$PROJECT_ROOT/.env' | cut -d'=' -f2 | wc -c) -gt 10 ]"
     check_item "MeiliSearch主密钥" "grep -q 'MEILI_MASTER_KEY=' '$PROJECT_ROOT/.env' && [ \$(grep 'MEILI_MASTER_KEY=' '$PROJECT_ROOT/.env' | cut -d'=' -f2 | wc -c) -gt 20 ]"
-    check_item "BillionMail管理员配置" "grep -q 'BILLIONMAIL_ADMIN_USERNAME=admin' '$PROJECT_ROOT/.env'"
+    check_item "邮件系统配置检查" "grep -q 'SMTP_' '$PROJECT_ROOT/backend/.env' && echo 'SMTP配置存在'"
 else
     echo -e "${YELLOW}⚠️ Docker环境配置文件不存在，请先启动模拟环境${NC}"
 fi

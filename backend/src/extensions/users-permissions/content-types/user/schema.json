@@ -3,7 +3,7 @@
   "collectionName": "up_users",
   "info": {
     "name": "user",
-    "description": "扩展的用户表 - 支持多认证方式、会员系统、邀请返佣、BillionMail集成",
+    "description": "扩展的用户表 - 支持多认证方式、会员系统、邀请返佣、邮件营销集成",
     "singularName": "user",
     "pluralName": "users",
     "displayName": "用户"

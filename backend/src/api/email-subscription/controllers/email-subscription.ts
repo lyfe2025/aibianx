@@ -1,10 +1,9 @@
 /**
  * 邮件订阅控制器
- * 专门处理邮件列表订阅，与BillionMail集成
+ * 专门处理邮件列表订阅管理
  */
 
 import { factories } from '@strapi/strapi';
-import { BillionMailIntegrationService } from '../../../services/billionmail-integration';
 
 export default factories.createCoreController('api::email-subscription.email-subscription', ({ strapi }) => ({
   /**
@@ -62,13 +61,6 @@ export default factories.createCoreController('api::email-subscription.email-sub
         where: { email }
       });
 
-      // 调用BillionMail服务添加订阅者
-      const billionmailResult = await BillionMailIntegrationService.billionMailClient.addSubscriber(
-        email,
-        user?.nickname || user?.username || email.split('@')[0],
-        ['newsletter', ...tags]
-      );
-
       // 创建邮件订阅记录
       const subscriptionData = {
         email,
@@ -77,8 +69,8 @@ export default factories.createCoreController('api::email-subscription.email-sub
         tags,
         status: 'active' as const,
         subscribedAt: new Date(),
-        billionmailSubscriberId: billionmailResult.success ? billionmailResult.id : null,
-        billionmailListIds: [process.env.BILLIONMAIL_DEFAULT_LIST_ID || 'newsletter']
+        billionmailSubscriberId: null, // 暂时保留字段兼容性
+        billionmailListIds: ['newsletter'] // 默认列表
       };
 
       const subscription = await strapi.entityService.create('api::email-subscription.email-subscription', {
@@ -90,7 +82,7 @@ export default factories.createCoreController('api::email-subscription.email-sub
         await strapi.entityService.update('plugin::users-permissions.user', user.id, {
           data: {
             billionmailSubscribed: true,
-            billionmailSubscriberId: billionmailResult.success ? billionmailResult.id : null,
+            billionmailSubscriberId: null,
             billionmailListIds: subscriptionData.billionmailListIds
           }
         });
@@ -100,10 +92,10 @@ export default factories.createCoreController('api::email-subscription.email-sub
 
       return ctx.send({
         status: 'success',
-        message: '订阅成功！感谢加入AI变现之路社区，欢迎邮件已发送至您的邮箱',
+        message: '订阅成功！感谢加入AI变现之路社区',
         data: { 
           email,
-          billionmailSuccess: billionmailResult.success 
+          subscriptionId: subscription.id
         }
       });
 
@@ -149,12 +141,8 @@ export default factories.createCoreController('api::email-subscription.email-sub
         });
       }
 
-      // 从BillionMail中取消订阅
-      if (subscription.billionmailSubscriberId) {
-        await BillionMailIntegrationService.billionMailClient.unsubscribeContact(
-          subscription.billionmailSubscriberId
-        );
-      }
+      // 记录取消订阅日志
+      strapi.log.info(`用户取消邮件订阅: ${email}`);
 
       return ctx.send({
         status: 'success',

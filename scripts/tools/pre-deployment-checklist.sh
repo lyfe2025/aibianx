@@ -121,12 +121,9 @@ echo ""
 echo -e "${CYAN}📧 邮件系统配置检查${NC}"
 echo "----------------------------------------"
 
-# 邮件系统配置检查
-check_item "邮件" "BillionMail镜像可用" "docker pull billionmail/core:4.0.1"
-check_item "邮件" "Postfix镜像可用" "docker pull billionmail/postfix:1.5"
-check_item "邮件" "Dovecot镜像可用" "docker pull billionmail/dovecot:1.4"
-check_item "邮件" "Rspamd镜像可用" "docker pull billionmail/rspamd:1.1"
-check_item "邮件" "邮件配置目录存在" "[ -d '$PROJECT_ROOT/deployment/configs/billionmail' ] || mkdir -p '$PROJECT_ROOT/deployment/configs/billionmail'"
+# 邮件系统配置检查 (已集成到Strapi)
+check_item "邮件" "邮件订阅API存在" "[ -d '$PROJECT_ROOT/backend/src/api/email-subscription' ]"
+check_item "邮件" "SMTP配置检查" "grep -q 'SMTP' '$PROJECT_ROOT/backend/.env' || echo 'SMTP配置待配置'"
 
 echo ""
 echo -e "${CYAN}🏗️ 应用构建检查${NC}"
@@ -168,7 +165,7 @@ if docker ps --format "{{.Names}}" | grep -q "aibianx-" 2>/dev/null; then
     check_item "验证" "前端应用响应" "curl -s http://bianx.local" "warning"
     check_item "验证" "后端API响应" "curl -s ${BACKEND_URL}/api" "warning"
     check_item "验证" "搜索引擎响应" "curl -s ${MEILISEARCH_URL}/health" "warning"
-    check_item "验证" "邮件系统响应" "curl -s ${BILLIONMAIL_URL}" "warning"
+    check_item "验证" "邮件系统API响应" "curl -s ${BACKEND_URL}/api/email-subscriptions" "warning"
 else
     echo -e "${YELLOW}⚠️ 模拟环境未运行，建议先启动进行验证${NC}"
 fi

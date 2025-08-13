@@ -17,10 +17,10 @@
     "script:cleanup-old-subscription": "strapi script scripts/cleanup-old-subscription.js"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "5.21.0",
-    "@strapi/plugin-documentation": "^5.21.0",
-    "@strapi/plugin-users-permissions": "5.21.0",
-    "@strapi/strapi": "5.21.0",
+    "@strapi/plugin-cloud": "5.22.0",
+    "@strapi/plugin-documentation": "^5.22.0",
+    "@strapi/plugin-users-permissions": "5.22.0",
+    "@strapi/strapi": "5.22.0",
     "@types/nodemailer": "^6.4.17",
     "alipay-sdk": "^4.14.0",
     "axios": "^1.11.0",

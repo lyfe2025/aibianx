@@ -3,8 +3,6 @@
  * 根据架构文档实现邀请码注册、一级返佣计算和邀请人升级检查
  */
 
-import { BillionMailIntegrationService } from './billionmail-integration';
-
 export class InviteCommissionService {
   /**
    * 处理用户注册时的邀请码
@@ -46,8 +44,8 @@ export class InviteCommissionService {
         // 5. 更新邀请人统计
         await this.updateInviterStats(invitation.inviter.id, 'registered');
 
-        // 6. 发送BillionMail欢迎邮件（带优惠信息）
-        await BillionMailIntegrationService.handleInvitedUserSubscription(user, inviteCode);
+        // 6. 记录邀请用户订阅信息
+        strapi.log.info(`邀请用户订阅处理: ${user.email} via ${inviteCode}`);
 
         strapi.log.info(`邀请码注册处理成功: ${user.email} via ${inviteCode}`);
       }
@@ -108,13 +106,9 @@ export class InviteCommissionService {
         // 更新邀请人统计
         await this.updateInviterStats(payer.invitedBy, 'purchased');
 
-        // 发送返佣通知邮件
+        // 记录返佣通知信息
         const inviter = await strapi.entityService.findOne('plugin::users-permissions.user', payer.invitedBy);
-        await BillionMailIntegrationService.sendInviteNotificationEmail(
-          inviter.email,
-          payer.email,
-          commissionAmount
-        );
+        strapi.log.info(`返佣通知: ${inviter.email} 获得 ${commissionAmount} 元返佣，来自 ${payer.email}`);
 
         strapi.log.info(`一级返佣处理成功: ${commissionAmount}分 for ${inviter.email}`);
       }
@@ -149,7 +143,7 @@ export class InviteCommissionService {
 
       if (shouldUpgrade) {
         await this.upgradeUserMembership(newMember.invitedBy, newLevel);
-        await BillionMailIntegrationService.sendMembershipUpgradeEmail(inviter, newLevel);
+        strapi.log.info(`邀请人升级通知: ${inviter.email} -> ${newLevel}`);
         
         strapi.log.info(`邀请人升级成功: ${inviter.email} -> ${newLevel}`);
       }

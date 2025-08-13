@@ -15,11 +15,7 @@ find "${PROJECT_ROOT}/scripts" -name "*.sh" -type f -exec grep -l "http://localh
     cp "$file" "$file.backup.$(date +%s)"
     
     # 执行替换
-    sed -i.tmp 's|http://localhost:8080/billion|${BILLIONMAIL_WEB}|g' "$file"
-    sed -i.tmp 's|http://localhost:8080/api/v1|${BILLIONMAIL_API}|g' "$file"
-    sed -i.tmp 's|http://localhost:8080/roundcube|${BILLIONMAIL_URL}/roundcube|g' "$file"
-    sed -i.tmp 's|http://localhost:8080/webmail|${BILLIONMAIL_URL}/webmail|g' "$file"
-    sed -i.tmp 's|http://localhost:8080|${BILLIONMAIL_URL}|g' "$file"
+
     sed -i.tmp 's|http://localhost:7700|${MEILISEARCH_URL}|g' "$file"
     sed -i.tmp 's|http://localhost:1337/admin|${ADMIN_URL}|g' "$file"
     sed -i.tmp 's|http://localhost:1337|${BACKEND_URL}|g' "$file"

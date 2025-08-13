@@ -1,5 +1,5 @@
 /**
- * 密码重置API - 集成BillionMail邮件发送
+ * 密码重置API - 集成Strapi邮件发送
  */
 
 import { NextRequest, NextResponse } from 'next/server'

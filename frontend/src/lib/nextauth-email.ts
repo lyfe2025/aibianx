@@ -1,9 +1,9 @@
 /**
- * NextAuth 邮件发送集成 - 使用 BillionMail
+ * NextAuth 邮件发送集成 - 使用 Strapi 邮件系统
  * 为NextAuth提供邮件验证功能
  */
 
-import { subscribeEmail, sendVerificationCode, sendWelcomeEmail } from '@/lib/billionmail'
+import { subscribeEmail, sendVerificationCode, sendWelcomeEmail } from '@/lib/strapi-email'
 
 /**
  * 为NextAuth发送验证邮件
@@ -28,7 +28,7 @@ export async function sendVerificationRequest({
     const token = urlObj.searchParams.get('token')
     const verificationCode = token ? token.substring(0, 6) : generateVerificationCode()
     
-    // 使用BillionMail发送验证邮件
+    // 使用Strapi邮件系统发送验证邮件
     const result = await sendVerificationCode(email, 'NextAuth用户', {
       templateId: 'nextauth_login_verification',
       variables: {

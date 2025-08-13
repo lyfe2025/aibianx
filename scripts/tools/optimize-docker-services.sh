@@ -29,8 +29,8 @@ analyze_current_services() {
     docker ps --format "  {{.Names}}\t{{.Status}}" | grep "aibianx-" || echo "  无"
     
     echo ""
-    echo "🟢 BillionMail独立服务 (billionmail-*):"
-    docker ps --format "  {{.Names}}\t{{.Status}}" | grep "billionmail" || echo "  无"
+    echo "🟢 邮件系统状态 (已集成到Strapi):"
+    echo "  邮件功能已集成到后端服务中"
     
     echo ""
     echo "🟡 MeiliSearch服务:"
@@ -69,7 +69,7 @@ propose_optimization() {
     echo -e "${GREEN}🎯 方案：分离架构 + 端口隔离${NC}"
     echo ""
     echo "📋 架构设计:"
-    echo "  🟢 BillionMail系统: 独立部署，使用专用数据库"
+    echo "  🟢 邮件系统: 已集成到Strapi，使用统一数据库"
     echo "     - PostgreSQL: 端口 25432"
     echo "     - Redis: 端口 26379"
     echo "     - 管理界面: 端口 8080"
@@ -86,7 +86,7 @@ propose_optimization() {
     
     echo -e "${BLUE}✅ 优势:${NC}"
     echo "  • 数据完全隔离，安全性高"
-    echo "  • BillionMail不受项目重启影响"
+    echo "  • 邮件系统与主项目统一管理"
     echo "  • 资源利用合理，无重复服务"
     echo "  • 维护简单，故障隔离"
     echo ""

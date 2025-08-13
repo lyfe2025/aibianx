@@ -45,9 +45,7 @@ load_config() {
     export SEARCH_PORT="${NEXT_PUBLIC_SEARCH_PORT:-${MEILISEARCH_PORT:-7700}}"
     export SEARCH_PROTOCOL="${NEXT_PUBLIC_SEARCH_PROTOCOL:-${MEILISEARCH_PROTOCOL:-http}}"
 
-    export BILLIONMAIL_DOMAIN="${BILLIONMAIL_DOMAIN:-localhost}"
-    export BILLIONMAIL_PORT="${BILLIONMAIL_PORT:-8080}"
-    export BILLIONMAIL_PROTOCOL="${BILLIONMAIL_PROTOCOL:-http}"
+
 
     export DB_HOST="${DATABASE_HOST:-localhost}"
     export DB_PORT="${DATABASE_PORT:-5432}"
@@ -80,20 +78,12 @@ load_config() {
         echo "${SEARCH_PROTOCOL}://${SEARCH_DOMAIN}${port_suffix}${path}"
     }
 
-    build_billionmail_url() {
-        local path="${1:-}"
-        local port_suffix=""
-        if [[ ! (("$BILLIONMAIL_PROTOCOL" == "http" && "$BILLIONMAIL_PORT" == "80") || ("$BILLIONMAIL_PROTOCOL" == "https" && "$BILLIONMAIL_PORT" == "443")) ]]; then
-            port_suffix=":$BILLIONMAIL_PORT"
-        fi
-        echo "${BILLIONMAIL_PROTOCOL}://${BILLIONMAIL_DOMAIN}${port_suffix}${path}"
-    }
+
 
     # 导出URL构建函数
     export -f build_frontend_url
     export -f build_backend_url  
     export -f build_search_url
-    export -f build_billionmail_url
 
     # 构建常用URL
     export FRONTEND_URL=$(build_frontend_url)
@@ -103,8 +93,7 @@ load_config() {
     export BACKEND_DOCS_URL=$(build_backend_url "/documentation")
     export SEARCH_URL=$(build_search_url)
     export SEARCH_HEALTH_URL=$(build_search_url "/health")
-    export BILLIONMAIL_ADMIN_URL=$(build_billionmail_url "/billion")
-    export BILLIONMAIL_WEBMAIL_URL=$(build_billionmail_url "/roundcube")
+
 
     # 数据库工具函数
     build_psql_command() {
@@ -133,8 +122,7 @@ load_config() {
         echo "   • 后端服务: $BACKEND_URL"
         echo "   • 后端管理: $BACKEND_ADMIN_URL"
         echo "   • 搜索引擎: $SEARCH_URL"
-        echo "   • 邮件管理: $BILLIONMAIL_ADMIN_URL"
-        echo "   • WebMail: $BILLIONMAIL_WEBMAIL_URL"
+        echo "   • 邮件管理: $BACKEND_ADMIN_URL (Strapi邮件系统)"
         echo "   • 数据库: $DB_HOST:$DB_PORT"
     fi
 }

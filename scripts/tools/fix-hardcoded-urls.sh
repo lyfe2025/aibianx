@@ -32,8 +32,6 @@ echo -e "${YELLOW}📦 创建备份目录: ${BACKUP_DIR}${NC}"
 
 # 需要修复的文件列表（根据检查结果）
 declare -a FILES_TO_FIX=(
-    "scripts/billionmail/validate-config.sh"
-    "scripts/billionmail/quick-test-email.sh"
     "scripts/tools/subscription-system-clean-setup.sh"
     "scripts/tools/subscription-system-direct-setup.sh"
     "scripts/tools/pre-deployment-checklist.sh"
@@ -44,11 +42,7 @@ declare -a FILES_TO_FIX=(
 
 # 硬编码URL替换映射表
 declare -A URL_REPLACEMENTS=(
-    ["http://localhost:8080/billion"]='${BILLIONMAIL_WEB}'
-    ["http://localhost:8080/api/v1"]='${BILLIONMAIL_API}'
-    ["http://localhost:8080/roundcube"]='${BILLIONMAIL_URL}/roundcube'
-    ["http://localhost:8080/webmail"]='${BILLIONMAIL_URL}/webmail'
-    ["http://localhost:8080"]='${BILLIONMAIL_URL}'
+
     ["http://localhost:7700"]='${MEILISEARCH_URL}'
     ["http://localhost:1337/admin"]='${ADMIN_URL}'
     ["http://localhost:1337"]='${BACKEND_URL}'

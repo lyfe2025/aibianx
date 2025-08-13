@@ -117,11 +117,11 @@ configure_field_description "inviteCount" "已邀请人数" "用户已发出的�
 configure_field_description "totalCommission" "累计返佣金额" "用户获得的总返佣金额"
 
 echo ""
-echo "📧 配置BillionMail集成字段..."
+echo "📧 配置邮件系统集成字段..."
 
-configure_field_description "billionmailSubscribed" "BillionMail订阅状态" "是否已订阅邮件营销"
-configure_field_description "billionmailSubscriberId" "BillionMail订阅者ID" "在BillionMail系统中的订阅者ID"
-configure_field_description "billionmailListIds" "邮件列表ID" "订阅的邮件列表ID集合"
+configure_field_description "emailSubscribed" "邮件订阅状态" "是否已订阅邮件营销"
+configure_field_description "emailSubscriberId" "邮件订阅者ID" "在邮件系统中的订阅者ID"
+configure_field_description "emailListIds" "邮件列表ID" "订阅的邮件列表ID集合"
 
 echo ""
 echo "📊 配置系统字段..."

@@ -210,38 +210,9 @@ restore_from_backup() {
     fi
 }
 
-# 修复BillionMail端口配置
-fix_billionmail_ports() {
-    local billionmail_env_file="$PROJECT_ROOT/BillionMail/env_init"
-    
-    if [ ! -f "$billionmail_env_file" ]; then
-        echo "   ⚠️  BillionMail配置文件不存在，跳过端口修复"
-        return 0
-    fi
-    
-    # 从部署配置读取正确的端口
-    local correct_http_port=$(grep "^BILLIONMAIL_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080")
-    local correct_https_port=$((correct_http_port + 443 - 80))  # 8080 -> 8443
-    
-    echo "   📝 修复BillionMail端口配置..."
-    echo "      HTTP端口: 80 -> $correct_http_port"
-    echo "      HTTPS端口: 443 -> $correct_https_port"
-    
-    # 修复HTTP端口
-    if grep -q "^HTTP_PORT=" "$billionmail_env_file"; then
-        sed -i '' "s/^HTTP_PORT=.*/HTTP_PORT=$correct_http_port/" "$billionmail_env_file"
-    else
-        echo "HTTP_PORT=$correct_http_port" >> "$billionmail_env_file"
-    fi
-    
-    # 修复HTTPS端口
-    if grep -q "^HTTPS_PORT=" "$billionmail_env_file"; then
-        sed -i '' "s/^HTTPS_PORT=.*/HTTPS_PORT=$correct_https_port/" "$billionmail_env_file"
-    else
-        echo "HTTPS_PORT=$correct_https_port" >> "$billionmail_env_file"
-    fi
-    
-    echo "   ✅ BillionMail端口配置已修复"
+# 邮件系统已集成到Strapi，无需单独配置端口
+configure_email_system() {
+    echo "   ℹ️  邮件营销系统已集成到Strapi后台，无需单独配置"
 }
 
 # 生成所有配置文件
@@ -296,7 +267,7 @@ generate_configs() {
 FRONTEND_PORT=$(grep "^FRONTEND_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "80")
 BACKEND_PORT=$(grep "^BACKEND_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "1337")
 MEILISEARCH_PORT=$(grep "^MEILISEARCH_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "7700")
-BILLIONMAIL_PORT=$(grep "^BILLIONMAIL_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "8080")
+# 邮件系统已集成到Strapi，无需单独端口
 
 # 生成后端配置
 cat > "$PROJECT_ROOT/backend/.env" << EOF
@@ -343,10 +314,7 @@ MEILISEARCH_PORT=$MEILISEARCH_PORT
 MEILISEARCH_PROTOCOL=$CURRENT_PROTOCOL
 MEILISEARCH_API_KEY=
 
-# 邮件系统
-BILLIONMAIL_DOMAIN=$DOMAIN
-BILLIONMAIL_PORT=$BILLIONMAIL_PORT
-BILLIONMAIL_PROTOCOL=$CURRENT_PROTOCOL
+# 邮件系统已集成到Strapi
 
 # 运行环境
 NODE_ENV=$NODE_ENV
@@ -376,10 +344,7 @@ NEXT_PUBLIC_SEARCH_PORT=$MEILISEARCH_PORT
 NEXT_PUBLIC_SEARCH_PROTOCOL=$CURRENT_PROTOCOL
 NEXT_PUBLIC_SEARCH_API_KEY=
 
-# 邮件系统
-NEXT_PUBLIC_BILLIONMAIL_DOMAIN=$DOMAIN
-NEXT_PUBLIC_BILLIONMAIL_PORT=$BILLIONMAIL_PORT
-NEXT_PUBLIC_BILLIONMAIL_PROTOCOL=$CURRENT_PROTOCOL
+# 邮件系统已集成到Strapi
 
 # 认证配置
 NEXTAUTH_SECRET=nextauth_secret_key_2024
@@ -411,17 +376,14 @@ MEILI_MASTER_KEY=
 FRONTEND_PORT=$FRONTEND_PORT
 BACKEND_PORT=$BACKEND_PORT
 MEILISEARCH_PORT=$MEILISEARCH_PORT
-BILLIONMAIL_PORT=$BILLIONMAIL_PORT
+# 邮件系统已集成到Strapi
 
 # NextAuth配置
 NEXTAUTH_SECRET=nextauth_secret_key_2024_$(date +%s)
 NEXT_PUBLIC_SITE_URL=$CURRENT_PROTOCOL://$DOMAIN
 NEXTAUTH_URL=$CURRENT_PROTOCOL://$DOMAIN
 
-# 邮件系统
-BILLIONMAIL_ADMIN_USERNAME=${BILLIONMAIL_USERNAME:-admin}
-BILLIONMAIL_ADMIN_PASSWORD=${BILLIONMAIL_PASSWORD:-billionmail2024}
-BILLIONMAIL_HOSTNAME=$MAIL_DOMAIN
+# 邮件系统已集成到Strapi
 
 # 系统配置
 TZ=Asia/Shanghai
@@ -439,10 +401,10 @@ main() {
     # 1. 从解压后的备份恢复数据和文件
     restore_from_backup
     
-    # 2. 修复BillionMail端口配置
+    # 2. 配置邮件系统
     echo ""
-    echo -e "${CYAN}🔧 修复BillionMail端口配置...${NC}"
-    fix_billionmail_ports
+    echo -e "${CYAN}🔧 配置邮件系统...${NC}"
+    configure_email_system
     
     # 3. 生成配置文件
     echo ""

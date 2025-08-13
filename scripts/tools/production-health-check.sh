@@ -122,7 +122,7 @@ health_check "Redis缓存" "docker exec aibianx-redis redis-cli ping | grep -q P
 health_check "MeiliSearch搜索引擎" "curl -s ${MEILISEARCH_URL}/health"
 health_check "Strapi后端API" "curl -s ${BACKEND_URL}/api"
 health_check "Next.js前端应用" "curl -s http://bianx.local"
-health_check "BillionMail邮件系统" "curl -s ${BILLIONMAIL_URL}"
+health_check "Strapi邮件系统API" "curl -s ${BACKEND_URL}/api/email-subscriptions"
 health_check "Nginx网关" "curl -s ${FRONTEND_URL}:80"
 
 echo ""
@@ -135,7 +135,7 @@ detailed_health_check "Redis缓存" "aibianx-redis" "6379"
 detailed_health_check "MeiliSearch搜索引擎" "aibianx-meilisearch" "7700" "${MEILISEARCH_URL}/health"
 detailed_health_check "Strapi后端应用" "aibianx-backend" "1337" "${BACKEND_URL}/api"
 detailed_health_check "Next.js前端应用" "aibianx-frontend" "3000" "http://bianx.local"
-detailed_health_check "BillionMail核心" "aibianx-billionmail-core" "8080" "${BILLIONMAIL_URL}"
+detailed_health_check "Strapi邮件API" "aibianx-backend" "1337" "${BACKEND_URL}/api/email-subscriptions"
 detailed_health_check "Nginx网关" "aibianx-nginx" "80" "${FRONTEND_URL}:80"
 
 echo -e "${CYAN}📧 邮件系统组件检查${NC}"

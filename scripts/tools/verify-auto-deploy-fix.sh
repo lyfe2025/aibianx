@@ -19,33 +19,21 @@ echo ""
 echo -e "${YELLOW}1. 检查一键部署脚本修复...${NC}"
 AUTO_DEPLOY_SCRIPT="$PROJECT_ROOT/scripts/production/auto-deploy.sh"
 
-if grep -q "启动BillionMail已移除邮件系统" "$AUTO_DEPLOY_SCRIPT"; then
-    echo -e "${GREEN}✅ 一键部署脚本已包含BillionMail已移除启动逻辑${NC}"
+if grep -q "邮件营销系统已集成到Strapi" "$AUTO_DEPLOY_SCRIPT"; then
+    echo -e "${GREEN}✅ 一键部署脚本已更新为Strapi邮件系统集成${NC}"
 else
-    echo -e "${RED}❌ 一键部署脚本缺少BillionMail已移除启动逻辑${NC}"
+    echo -e "${RED}❌ 一键部署脚本需要更新邮件系统说明${NC}"
 fi
 
-if grep -q "检查BillionMail已移除邮件系统状态" "$AUTO_DEPLOY_SCRIPT"; then
-    echo -e "${GREEN}✅ 一键部署脚本已包含BillionMail已移除状态检查${NC}"
-else
-    echo -e "${RED}❌ 一键部署脚本缺少BillionMail已移除状态检查${NC}"
-fi
-
-# 检查BillionMail已移除部署脚本优化
+# 检查邮件系统集成状态
 echo ""
-echo -e "${YELLOW}2. 检查BillionMail已移除部署脚本优化...${NC}"
-BILLIONMAIL_DEPLOY_SCRIPT="$PROJECT_ROOT/scripts/billionmail/deploy-billionmail.sh"
+echo -e "${YELLOW}2. 检查邮件系统集成状态...${NC}"
+EMAIL_API_PATH="$PROJECT_ROOT/backend/src/api/email-subscription"
 
-if grep -q "停止可能存在的旧服务" "$BILLIONMAIL_DEPLOY_SCRIPT"; then
-    echo -e "${GREEN}✅ BillionMail已移除部署脚本已包含旧服务清理${NC}"
+if [ -d "$EMAIL_API_PATH" ]; then
+    echo -e "${GREEN}✅ 邮件订阅系统已集成到Strapi${NC}"
 else
-    echo -e "${RED}❌ BillionMail已移除部署脚本缺少旧服务清理${NC}"
-fi
-
-if grep -q "retry_count" "$BILLIONMAIL_DEPLOY_SCRIPT"; then
-    echo -e "${GREEN}✅ BillionMail已移除部署脚本已包含重试机制${NC}"
-else
-    echo -e "${RED}❌ BillionMail已移除部署脚本缺少重试机制${NC}"
+    echo -e "${RED}❌ 邮件订阅系统API不存在${NC}"
 fi
 
 # 检查Docker Compose配置
@@ -63,32 +51,28 @@ else
     echo -e "${RED}❌ Docker Compose统一配置文件不存在${NC}"
 fi
 
-# 检查BillionMail已移除目录
+# 检查邮件系统清理状态
 echo ""
-echo -e "${YELLOW}4. 检查BillionMail已移除目录结构...${NC}"
-BILLIONMAIL_DIR="$PROJECT_ROOT/BillionMail已移除"
+echo -e "${YELLOW}4. 检查邮件系统清理状态...${NC}"
 
-if [ -d "$BILLIONMAIL_DIR" ]; then
-    echo -e "${GREEN}✅ BillionMail已移除目录存在${NC}"
-    
-    if [ -f "$BILLIONMAIL_DIR/docker-compose.yml" ]; then
-        echo -e "${GREEN}✅ BillionMail已移除 Docker Compose配置存在${NC}"
-    else
-        echo -e "${RED}❌ BillionMail已移除 Docker Compose配置不存在${NC}"
-    fi
+# 检查是否还有遗留的BillionMail引用
+BILLIONMAIL_REFERENCES=$(grep -r "BillionMail\|billionmail" "$PROJECT_ROOT/scripts" 2>/dev/null | wc -l)
+
+if [ "$BILLIONMAIL_REFERENCES" -eq 0 ]; then
+    echo -e "${GREEN}✅ 脚本中已清理所有BillionMail引用${NC}"
 else
-    echo -e "${RED}❌ BillionMail已移除目录不存在${NC}"
+    echo -e "${YELLOW}⚠️ 脚本中仍有 $BILLIONMAIL_REFERENCES 处BillionMail引用${NC}"
 fi
 
 # 生成修复总结
 echo ""
 echo -e "${BLUE}📋 修复总结${NC}"
 echo "======================================="
-echo -e "${GREEN}✅ 修复内容:${NC}"
-echo "  1. 一键部署脚本现在会自动启动BillionMail已移除邮件系统"
-echo "  2. 增加了BillionMail已移除服务状态检查和验证"
-echo "  3. 优化了BillionMail已移除启动流程，增加重试机制"
-echo "  4. 改进了服务启动等待时间和错误处理"
+echo -e "${GREEN}✅ 邮件系统集成状态:${NC}"
+echo "  1. 一键部署脚本已更新为Strapi邮件系统集成"
+echo "  2. 邮件订阅功能已集成到Strapi后台"
+echo "  3. 移除了独立邮件系统的部署复杂性"
+echo "  4. 简化了邮件营销管理流程"
 echo ""
 echo -e "${BLUE}🚀 使用方法:${NC}"
 echo "  一键部署: ./scripts/production/auto-deploy.sh [domain] [mail-domain]"

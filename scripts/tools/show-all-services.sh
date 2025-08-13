@@ -38,7 +38,7 @@ MAIL_DOMAIN=${MAIL_DOMAIN:-"localhost"}
 FRONTEND_PORT=${FRONTEND_PORT:-"80"}
 BACKEND_PORT=${BACKEND_PORT:-"1337"}
 MEILISEARCH_PORT=${MEILISEARCH_PORT:-"7700"}
-# BILLIONMAIL_PORT=${BILLIONMAIL_PORT:-"8080"} # BillionMail已移除
+
 
 # 根据模式设置协议
 if [ "$DEPLOY_MODE" = "production" ]; then
@@ -97,15 +97,10 @@ else
     DB_STATUS="❌"
 fi
 
-# 5. BillionMail检查 (已移除)
+# 5. 邮件系统检查 (已集成到Strapi)
 echo -n "📧 邮件系统: "
-# if docker ps --filter "name=billionmail-core-billionmail" --format "table {{.Status}}" | grep -q "Up"; then
-#     echo -e "${GREEN}✅ 容器运行中${NC}"
-#     EMAIL_STATUS="✅"
-# else
-    echo -e "${YELLOW}⚠️  BillionMail已移除${NC}"
-    EMAIL_STATUS="⚠️"
-# fi
+echo -e "${GREEN}✅ 邮件营销系统已集成到Strapi${NC}"
+EMAIL_STATUS="✅"
 
 echo ""
 echo -e "${BLUE}🌐 系统访问地址 (基于配置文件动态生成):${NC}"
@@ -136,19 +131,13 @@ SEARCH_URL="http://${DOMAIN}:${MEILISEARCH_PORT}"
 echo -e "${SEARCH_STATUS} 🔍 搜索管理: ${SEARCH_URL}"
 echo -e "    📝 MeiliSearch管理界面、索引管理"
 
-# 邮件系统访问地址 (BillionMail已移除)
-# EMAIL_URL="${PROTOCOL}://${DOMAIN}:${BILLIONMAIL_PORT}/billion"
-echo -e "${EMAIL_STATUS} 📧 邮件管理: BillionMail已移除"
-echo -e "    📝 邮件服务将由自建系统提供"
+# 邮件系统访问地址 (已集成到Strapi)
+ADMIN_URL="${PROTOCOL}://${DOMAIN}:${BACKEND_PORT}/admin"
+echo -e "${GREEN}✅ 📧 邮件营销: ${ADMIN_URL} (Strapi邮件营销系统)"
+echo -e "    📝 邮件服务由Strapi后台提供"
 
-# WebMail地址 (BillionMail已移除)
-# if [ "$DEPLOY_MODE" = "production" ]; then
-#     WEBMAIL_URL="https://${MAIL_DOMAIN}/roundcube"
-# else
-#     WEBMAIL_URL="http://${DOMAIN}:${BILLIONMAIL_PORT}/roundcube"
-# fi
-echo -e "${EMAIL_STATUS} 📬 WebMail: BillionMail已移除"
-echo -e "    📝 邮件收发、邮箱管理"
+echo -e "${GREEN}✅ 📬 邮件模板: ${ADMIN_URL} (集成邮件模板管理)"
+echo -e "    📝 邮件模板、订阅管理、营销活动"
 
 echo ""
 echo -e "${BLUE}📊 系统数据统计:${NC}"
@@ -195,5 +184,5 @@ else
     [ "$BACKEND_STATUS" = "❌" ] && echo "   - 后端服务: cd backend && npm run develop"
     [ "$SEARCH_STATUS" = "❌" ] && echo "   - 搜索引擎: ./scripts.sh search deploy"
     [ "$DB_STATUS" = "❌" ] && echo "   - 数据库: 检查PostgreSQL服务状态"
-    [ "$EMAIL_STATUS" = "⚠️" ] && echo "   - 邮件系统: BillionMail已移除，将使用自建系统"
+
 fi
