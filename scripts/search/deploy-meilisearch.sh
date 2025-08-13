@@ -126,13 +126,8 @@ if [ "$DEPLOY_MODE" = "1" ]; then
             fi
         fi
         
-        if [ -f "frontend/.env.local" ]; then
-            # 注释掉或设置为空的API密钥
-            if grep -q "^NEXT_PUBLIC_SEARCH_API_KEY=" frontend/.env.local; then
-                sed -i.bak "s/^NEXT_PUBLIC_SEARCH_API_KEY=.*/NEXT_PUBLIC_SEARCH_API_KEY=/" frontend/.env.local
-                echo "   ✅ 已清理前端 NEXT_PUBLIC_SEARCH_API_KEY (开发模式无需密钥)"
-            fi
-        fi
+        # 前端通过后端API访问搜索引擎，开发模式下也无需配置API密钥
+        echo "   💡 前端搜索功能通过后端API代理访问"
     else
         echo -e "${RED}❌ 部署失败${NC}"
         exit 1
@@ -201,22 +196,8 @@ elif [ "$DEPLOY_MODE" = "2" ]; then
             echo "   ⚠️  backend/.env 文件不存在"
         fi
         
-        # 🔧 自动更新前端环境变量
-        echo -e "${YELLOW}📝 自动更新前端环境变量...${NC}"
-        if [ -f "frontend/.env.local" ]; then
-            # 更新或添加NEXT_PUBLIC_SEARCH_API_KEY
-            if grep -q "^NEXT_PUBLIC_SEARCH_API_KEY=" frontend/.env.local; then
-                # 存在则更新
-                sed -i.bak "s/^NEXT_PUBLIC_SEARCH_API_KEY=.*/NEXT_PUBLIC_SEARCH_API_KEY=$MASTER_KEY/" frontend/.env.local
-                echo "   ✅ 已更新前端 NEXT_PUBLIC_SEARCH_API_KEY"
-            else
-                # 不存在则添加
-                echo "NEXT_PUBLIC_SEARCH_API_KEY=$MASTER_KEY" >> frontend/.env.local
-                echo "   ✅ 已添加前端 NEXT_PUBLIC_SEARCH_API_KEY"
-            fi
-        else
-            echo "   ⚠️  frontend/.env.local 文件不存在"
-        fi
+        # 📋 前端通过后端API访问搜索引擎，无需直接配置API密钥
+        echo -e "${CYAN}💡 前端搜索功能通过后端API代理访问，无需配置API密钥${NC}"
     else
         echo -e "${RED}❌ 部署失败${NC}"
         exit 1
