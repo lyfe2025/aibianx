@@ -49,9 +49,15 @@ backend/uploads/
 *.sql
 *.dump
 
-# 数据库备份
+# 数据库备份（临时备份文件，不包括项目备份目录）
 backup/
 *.backup
+
+# 重要：确保项目备份目录不被忽略
+!backups/
+!backups/**
+!backups/**/static/
+!backups/**/static/**
 
 # ===== 环境变量和配置 =====
 # 环境变量文件
@@ -123,8 +129,11 @@ build/
 dist/
 coverage/
 
-# 静态文件生成
+# 静态文件生成（但不影响备份目录）
 static/
+# 备份中的 static 目录例外
+!backups/*/static/
+!backups/*/static/**
 public/generated/
 
 # Webpack
@@ -233,5 +242,7 @@ postgres-data/
 redis-data/
 uploads-data/
 
-# 环境配置备份文件
+# 环境配置备份文件（但不影响 backups/ 目录）
 *.backup.*
+# 重要：项目备份目录例外（确保备份数据被版本控制）
+!backups/*.backup.*
