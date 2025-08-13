@@ -1,0 +1,18 @@
+
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22" viewBox="0 0 22 22">
+	<defs>
+		<linearGradient id="linearGradient0:0:0" gradientTransform="matrix(22 0 0 22 0 0)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+			<stop offset="0" stop-color="rgb(59, 130, 246)"/>
+			<stop offset="1" stop-color="rgb(139, 92, 246)"/>
+		</linearGradient>
+	</defs>
+	<path d="M11 0C4.92487 0 0 4.92487 0 11L0 11.0165C0 17.0916 4.90837 22 10.9835 22L11 22C17.0751 22 22 17.0916 22 11.0165L22 11C22 4.92487 17.0916 0 11.0165 0L11 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)" fill="url(#linearGradient0:0:0)"/>
+	<defs>
+		<clipPath id="clipPath0:0:1">
+			<path d="M0 0L10 0L10 10L0 10L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 6 6)"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clipPath0:0:1)">
+		<path d="M6.37204 -0.294628C6.53476 -0.457345 6.79858 -0.457345 6.96129 -0.294628C7.12401 -0.131911 7.12401 0.131911 6.96129 0.294628L2.37796 4.87796Q2.31936 4.93657 2.24278 4.96828Q2.16621 5 2.08333 5Q2.00045 5 1.92388 4.96828Q1.84731 4.93657 1.78871 4.87796L-0.294628 2.79463C-0.457345 2.63191 -0.457345 2.36809 -0.294628 2.20537C-0.131911 2.04265 0.131911 2.04265 0.294628 2.20537L2.08333 3.99408L6.37204 -0.294628Z" fill-rule="evenodd" transform="matrix(1 0 0 1 7.66667 8.5)" fill="rgb(255, 255, 255)"/>
+	</g>
+</svg>

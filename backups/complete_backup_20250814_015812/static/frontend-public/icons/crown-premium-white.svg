@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+	<defs>
+		<mask id="mask4453204007" style="mask-type:alpha">
+			<path d="M0 0L16 0L16 16L0 16L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)" fill="rgb(0, 0, 0)"/>
+		</mask>
+	</defs>
+	<g mask="url(#mask4453204007)">
+		<path d="M0 11.3333L13.3333 11.3333L13.3333 12.6667L0 12.6667L0 11.3333ZM0 2L3.33333 4L6.66668 0L10 4L13.3333 2L13.3333 10L0 10L0 2Z" fill-rule="nonzero" transform="matrix(1 0 0 1 1.3366 1.3333)" fill="rgb(255, 255, 255)"/>
+	</g>
+</svg>

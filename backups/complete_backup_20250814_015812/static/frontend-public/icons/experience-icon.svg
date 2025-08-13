@@ -1,0 +1,49 @@
+
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48.6143" height="67" viewBox="0 0 48.6143 67">
+	<defs>
+		<clipPath id="clipPath0:0:0">
+			<path d="M0 0L48.6144 0L48.6144 67L0 67L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -5.24521e-05 0)"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clipPath0:0:0)">
+		<defs>
+			<mask id="mask0:0:1" style="mask-type:alpha">
+				<path d="M0 0L48.6144 0L48.6144 64.8191L0 64.8191L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -4.673e-05 3.27128)" fill="rgb(0, 0, 0)"/>
+			</mask>
+		</defs>
+		<g mask="url(#mask0:0:1)">
+			<defs>
+				<mask id="mask0:0:2" style="mask-type:alpha">
+					<path d="M0 0L49.1665 0L49.1665 64.8191L0 64.8191L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -0.276144 5.45214)" fill="rgb(0, 0, 0)"/>
+				</mask>
+			</defs>
+			<g mask="url(#mask0:0:2)">
+				<defs>
+					<mask id="mask0:0:3" style="mask-type:alpha">
+						<path d="M0 0L49.1206 0L49.1206 64.8189L0 64.8189L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -0.207205 7.63281)" fill="rgb(0, 0, 0)"/>
+					</mask>
+				</defs>
+				<g mask="url(#mask0:0:3)">
+					<defs>
+						<mask id="mask0:0:4" style="mask-type:alpha">
+							<path d="M0 0L49.1206 0L49.1206 49.1206L0 49.1206L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -0.161245 9.81367)" fill="rgb(0, 0, 0)"/>
+						</mask>
+					</defs>
+					<g mask="url(#mask0:0:4)">
+						<defs>
+							<mask id="mask0:0:5" style="mask-type:alpha">
+								<path d="M0 0L49.1206 0L49.1206 49.1206L0 49.1206L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -0.115284 11.9945)" fill="rgb(0, 0, 0)"/>
+							</mask>
+						</defs>
+						<g mask="url(#mask0:0:5)">
+							<rect width="4.6050563" height="15.350186" rx="0.76750946" ry="0.76750946" stroke-width="3.0700378" stroke-linejoin="round" transform="matrix(1 0 0 1 6.02479 42.6949)" stroke="rgb(59, 130, 246)" fill="transparent"/>
+							<rect width="4.6050563" height="24.560379" rx="0.76750946" ry="0.76750946" stroke-width="3.0700378" stroke-linejoin="round" transform="matrix(1 0 0 1 27.5151 33.4847)" stroke="rgb(59, 130, 246)" fill="transparent"/>
+							<rect width="4.6050563" height="35.305367" rx="0.76750946" ry="0.76750946" stroke-width="3.0700378" stroke-linejoin="round" transform="matrix(1 0 0 1 38.2603 22.7397)" stroke="rgb(59, 130, 246)" fill="transparent"/>
+							<rect width="4.6050563" height="42.980564" rx="0.76750946" ry="0.76750946" stroke-width="3.0700378" stroke-linejoin="round" transform="matrix(1 0 0 1 16.7699 15.0646)" stroke="rgb(59, 130, 246)" fill="transparent"/>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>

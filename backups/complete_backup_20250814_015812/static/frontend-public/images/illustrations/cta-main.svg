@@ -1,0 +1,24 @@
+
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="232.4751" height="74" viewBox="0 0 232.4751 74">
+	<defs>
+		<clipPath id="clipPath0:0:0">
+			<path d="M0 0L232.475 0L232.475 74L0 74L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -0.000236928 0)"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clipPath0:0:0)">
+		<defs>
+			<linearGradient id="linearGradient0:0:1" gradientTransform="matrix(4.26382 4.26382 -4.26382 4.26382 3.01498 -1.24884)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+				<stop offset="0" stop-color="rgb(59, 130, 246)"/>
+				<stop offset="1" stop-color="rgb(139, 92, 246)"/>
+			</linearGradient>
+		</defs>
+		<rect width="6.029953" height="6.029953" rx="3.0149765" ry="3.0149765" transform="matrix(1 0 0 1 15.7381 0.00123581)" fill="url(#linearGradient0:0:1)" opacity="0.6"/>
+		<defs>
+			<linearGradient id="linearGradient0:0:2" gradientTransform="matrix(3.55318 3.55318 -3.55318 3.55318 2.51248 -1.0407)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+				<stop offset="0" stop-color="rgb(59, 130, 246)"/>
+				<stop offset="1" stop-color="rgb(139, 92, 246)"/>
+			</linearGradient>
+		</defs>
+		<rect width="5.0249605" height="5.0249605" rx="2.5124803" ry="2.5124803" transform="matrix(1 0 0 1 227.45 68.9739)" fill="url(#linearGradient0:0:2)" opacity="0.6"/>
+	</g>
+</svg>

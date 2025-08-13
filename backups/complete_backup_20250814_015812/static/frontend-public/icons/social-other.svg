@@ -1,0 +1,39 @@
+
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="18" viewBox="0 0 16 18">
+	<defs>
+		<clipPath id="clipPath0:0:0">
+			<path d="M0 0L16 0L16 18L0 18L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clipPath0:0:0)">
+		<defs>
+			<clipPath id="clipPath0:0:1">
+				<path d="M0 0L16 0L16 18.2656L0 18.2656L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 -0.1328)"/>
+			</clipPath>
+		</defs>
+		<g clip-path="url(#clipPath0:0:1)">
+			<defs>
+				<mask id="mask0:0:2" style="mask-type:alpha">
+					<path d="M0 0L15.9825 0L15.9825 18.2657L0 18.2657L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0.0262513 -0.133079)" fill="rgb(0, 0, 0)"/>
+				</mask>
+			</defs>
+			<g mask="url(#mask0:0:2)">
+				<defs>
+					<mask id="mask0:0:3" style="mask-type:alpha">
+						<path d="M0 0L15.9825 0L15.9825 15.9825L0 15.9825L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0.0437522 -0.133079)" fill="rgb(0, 0, 0)"/>
+					</mask>
+				</defs>
+				<g mask="url(#mask0:0:3)">
+					<defs>
+						<mask id="mask0:0:4" style="mask-type:alpha">
+							<path d="M0 0L15.9825 0L15.9825 15.9825L0 15.9825L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0.0612531 -0.133079)" fill="rgb(0, 0, 0)"/>
+						</mask>
+					</defs>
+					<g mask="url(#mask0:0:4)">
+						<path d="M6.49289 0C2.90713 0 0 2.90713 0 6.49289C0 10.0787 2.90713 12.9858 6.49289 12.9858C10.0787 12.9858 12.9858 10.0787 12.9858 6.49289C12.9858 2.90713 10.0787 0 6.49289 0ZM9.48961 7.4918L6.49289 7.4918C6.35497 7.4918 6.23725 7.44303 6.13973 7.34551C6.04219 7.24798 5.99344 7.13026 5.99344 6.99234L5.99344 2.49727C5.99344 2.35935 6.04219 2.24163 6.13973 2.1441C6.23725 2.04658 6.35497 1.99781 6.49289 1.99781C6.63081 1.99781 6.74853 2.04658 6.84605 2.1441C6.94358 2.24163 6.99234 2.35935 6.99234 2.49727L6.99234 6.49289L9.48961 6.49289C9.62753 6.49289 9.74525 6.54166 9.84277 6.63918C9.9403 6.7367 9.98906 6.85442 9.98906 6.99234C9.98906 7.13026 9.9403 7.24798 9.84277 7.34551C9.74525 7.44303 9.62753 7.4918 9.48961 7.4918Z" fill-rule="nonzero" transform="matrix(1 0 0 1 1.55961 1.36528)" fill="rgb(107, 114, 128)"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>

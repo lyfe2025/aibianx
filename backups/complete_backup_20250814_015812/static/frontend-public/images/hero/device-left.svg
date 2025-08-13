@@ -1,0 +1,128 @@
+
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="142.875" height="362" viewBox="0 0 142.875 362">
+	<defs>
+		<clipPath id="clipPath0:0:0">
+			<path d="M0 0L142.875 0L142.875 362L0 362L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clipPath0:0:0)">
+		<defs>
+			<filter id="filter0:0:1" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feComponentTransfer in="SourceAlpha" result="componentTransfer0:0:2">
+					<feFuncR type="linear" slope="0" intercept="0.23137255"/>
+					<feFuncG type="linear" slope="0" intercept="0.50980395"/>
+					<feFuncB type="linear" slope="0" intercept="0.96470588"/>
+					<feFuncA type="linear" slope="10000" intercept="0"/>
+				</feComponentTransfer>
+				<feComponentTransfer in="componentTransfer0:0:2" result="componentTransfer0:0:3">
+					<feFuncA type="linear" slope="0.29803923" intercept="0"/>
+				</feComponentTransfer>
+				<feGaussianBlur stdDeviation="15" in="componentTransfer0:0:3" result="gaussianBlur0:0:4"/>
+				<feMerge>
+					<feMergeNode in="gaussianBlur0:0:4"/>
+					<feMergeNode in="SourceGraphic"/>
+				</feMerge>
+			</filter>
+		</defs>
+		<g filter="url(#filter0:0:1)">
+			<defs>
+				<linearGradient id="linearGradient0:0:5" gradientTransform="matrix(99.7232 199.459 -199.459 99.7232 120.383 -8.5524)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+					<stop offset="0.25" stop-color="rgb(59, 130, 246)" stop-opacity="0.2"/>
+					<stop offset="0.75" stop-color="rgb(139, 92, 246)" stop-opacity="0.2"/>
+				</linearGradient>
+			</defs>
+			<rect width="87.979202" height="272.46628" rx="19.999702" ry="19.999702" transform="matrix(0.941971 0.335695 0 1 30.0017 29.9996)" fill="url(#linearGradient0:0:5)"/>
+			<path d="M0 19.3182C0 8.64906 5.58591 0 12.4765 0L75.5027 0C82.3935 0 87.9792 8.64906 87.9792 19.3182L87.9792 253.148C87.9792 263.818 82.3935 272.466 75.5027 272.466L12.4765 272.466C5.58591 272.466 0 263.818 0 253.148L0 19.3182ZM12.4765 0.965912C5.93044 0.965912 0.623824 9.18252 0.623824 19.3182L0.623824 253.148C0.623824 263.284 5.93044 271.5 12.4765 271.5L75.5027 271.5C82.0485 271.5 87.3554 263.284 87.3554 253.148L87.3554 19.3182C87.3554 9.18252 82.0485 0.965912 75.5027 0.965912L12.4765 0.965912Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 30.0017 29.9996)" fill="rgb(255, 255, 255)" fill-opacity="0.1"/>
+			<defs>
+				<mask id="mask0:0:6" style="mask-type:alpha">
+					<path d="M12.4765 0C5.58592 0 0 8.64907 0 19.3182L0 253.148C0 263.818 5.58592 272.466 12.4765 272.466L75.5027 272.466C82.3935 272.466 87.9792 263.818 87.9792 253.148L87.9792 19.3182C87.9792 8.64907 82.3935 0 75.5027 0L12.4765 0Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 30.0038 29.9996)" fill="rgb(0, 0, 0)"/>
+				</mask>
+			</defs>
+			<g mask="url(#mask0:0:6)">
+				<defs>
+					<filter id="filter0:0:7" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+						<feComponentTransfer in="SourceAlpha" result="componentTransfer0:0:8">
+							<feFuncR type="linear" slope="0" intercept="0"/>
+							<feFuncG type="linear" slope="0" intercept="0"/>
+							<feFuncB type="linear" slope="0" intercept="0"/>
+							<feFuncA type="linear" slope="10000" intercept="0"/>
+						</feComponentTransfer>
+						<feComponentTransfer in="componentTransfer0:0:8" result="componentTransfer0:0:9">
+							<feFuncA type="linear" slope="0.49803922" intercept="0"/>
+						</feComponentTransfer>
+						<feOffset dx="0" dy="2" in="componentTransfer0:0:9" result="offset0:0:10"/>
+						<feGaussianBlur stdDeviation="5" in="offset0:0:10" result="gaussianBlur0:0:11"/>
+						<feMerge>
+							<feMergeNode in="gaussianBlur0:0:11"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
+				</defs>
+				<g filter="url(#filter0:0:7)">
+					<path d="M4.32413 6.97928L4.85718 9.38604L6.16635 9.38604L3.91261 0L2.26228 0L0 9.38604L1.26653 9.38604L1.82731 6.97928L4.32413 6.97928ZM2.18339 5.38466L3.032 1.69035L3.13648 1.69035L3.95739 5.38466L2.18339 5.38466Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 59.2159 231.381)" fill="rgb(255, 255, 255)"/>
+					<path d="M0 0L0 9.38604L1.23031 9.38604L1.23031 0L0 0Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 65.7084 233.695)" fill="rgb(255, 255, 255)"/>
+					<path d="M6.44567 3.60849L6.44567 5.15027L7.3625 5.15027L7.3625 2.23179L6.1045 2.23179C6.35827 1.69035 6.56719 1.21493 6.7335 0.812158L5.84224 0.108945C5.69302 0.51173 5.43925 1.1225 5.08317 1.94786C5.05547 2.01389 5.02135 2.10963 4.95953 2.23179L3.82517 2.23179L4.34756 1.74317C4.17488 1.21493 3.96378 0.633879 3.72922 0L2.90833 0.581053C3.10877 1.16212 3.29211 1.70355 3.44994 2.23179L1.86779 2.23179L2.33048 1.75638C2.17484 1.33709 1.98083 0.878187 1.75482 0.363163L1.64178 0.108945L0.793193 0.769242C1.0469 1.3635 1.24734 1.85212 1.38807 2.23179L0.164191 2.23179L0.164191 5.15027L1.10018 5.15027L1.10018 3.60849L6.44567 3.60849ZM4.43502 7.6924L6.15571 6.05817L6.15571 4.69136L1.4222 4.69136L1.4222 6.05817L4.56721 6.05817L3.38805 7.12454L3.38805 7.6924L0 7.6924L0 9.09877L3.38805 9.09877L3.38805 10.1685C3.38805 10.8189 3.36248 10.8321 2.91688 10.8849L2.22599 10.9542L2.52237 12.4663L3.1258 12.3739C4.17488 12.156 4.36677 12.0338 4.40938 10.6274L4.40938 9.09877L7.53736 9.09877L7.53736 7.6924L4.43502 7.6924Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 68.0037 232.879)" fill="rgb(255, 255, 255)"/>
+					<path d="M0.307048 0L0.307048 1.52857L5.89558 1.52857C5.87855 2.31431 5.85297 3.43681 5.80818 4.88285C5.77406 6.32892 5.73781 7.49101 5.71223 8.34604C5.6589 9.39927 5.5118 9.60066 4.74207 9.68315L3.84226 9.76573L4.14931 11.3207L5.09178 11.2249C6.29645 11.116 6.68241 10.6967 6.75059 8.9535C6.77835 8.21071 6.8295 6.38504 6.89133 3.48964L6.97879 0L0.307048 0ZM0.953143 2.97461C1.2751 3.31466 1.67809 3.77356 2.1749 4.35462C2.67384 4.92247 3.07471 5.39788 3.37109 5.78743L3.86147 4.315C3.55443 3.94854 3.17913 3.51604 2.71644 3.01753C2.25375 2.51571 1.86998 2.12283 1.55438 1.81249L0.953143 2.97461ZM0.394508 9.66992C2.14933 8.57389 3.88705 7.38534 5.61629 6.1143L5.49477 5.39788L5.37107 4.62533C3.87002 5.7742 2.07896 6.9529 0 8.18096L0.394508 9.66992Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 76.1469 236.698)" fill="rgb(255, 255, 255)"/>
+				</g>
+				<defs>
+					<filter id="filter0:0:12" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+						<feComponentTransfer in="SourceAlpha" result="componentTransfer0:0:13">
+							<feFuncR type="linear" slope="0" intercept="0.23137255"/>
+							<feFuncG type="linear" slope="0" intercept="0.50980395"/>
+							<feFuncB type="linear" slope="0" intercept="0.96470588"/>
+							<feFuncA type="linear" slope="10000" intercept="0"/>
+						</feComponentTransfer>
+						<feComponentTransfer in="componentTransfer0:0:13" result="componentTransfer0:0:14">
+							<feFuncA type="linear" slope="0.29803923" intercept="0"/>
+						</feComponentTransfer>
+						<feOffset dx="0" dy="8" in="componentTransfer0:0:14" result="offset0:0:15"/>
+						<feGaussianBlur stdDeviation="7.5" in="offset0:0:15" result="gaussianBlur0:0:16"/>
+						<feMerge>
+							<feMergeNode in="gaussianBlur0:0:16"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
+				</defs>
+				<g filter="url(#filter0:0:12)">
+					<defs>
+						<linearGradient id="linearGradient0:0:17" gradientTransform="matrix(24.9308 49.8649 -49.8649 24.9308 30.0957 -2.13807)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+							<stop offset="0.25" stop-color="rgb(59, 130, 246)"/>
+							<stop offset="0.75" stop-color="rgb(139, 92, 246)"/>
+						</linearGradient>
+					</defs>
+					<path d="M10.9974 0C4.9237 0 0 4.9237 0 10.9974L0 57.1193C0 63.193 4.90721 68.1167 10.9809 68.1167L10.9974 68.1167C17.0711 68.1167 21.9948 63.193 21.9948 57.1193L21.9948 10.9974C21.9948 4.9237 17.0876 0 11.0139 0L10.9974 0Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 61.0825 143.25)" fill="url(#linearGradient0:0:17)"/>
+					<defs>
+						<mask id="mask0:0:18" style="mask-type:alpha">
+							<path d="M0 0L19.9624 0L19.9624 30.9092L0 30.9092L0 0Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 62.042 162.195)" fill="rgb(0, 0, 0)"/>
+						</mask>
+					</defs>
+					<g mask="url(#mask0:0:18)">
+						<defs>
+							<mask id="mask0:0:19" style="mask-type:alpha">
+								<path d="M0 0L19.9624 0L19.9624 30.9092L0 30.9092L0 0Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 62.0441 162.195)" fill="rgb(0, 0, 0)"/>
+							</mask>
+						</defs>
+						<g mask="url(#mask0:0:19)">
+							<defs>
+								<mask id="mask0:0:20" style="mask-type:alpha">
+									<path d="M0 0L19.9624 0L19.9624 30.9092L0 30.9092L0 0Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 62.0462 162.195)" fill="rgb(0, 0, 0)"/>
+								</mask>
+							</defs>
+							<g mask="url(#mask0:0:20)">
+								<defs>
+									<mask id="mask0:0:21" style="mask-type:alpha">
+										<path d="M0 0L19.9624 0L19.9624 30.9092L0 30.9092L0 0Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 62.0484 162.195)" fill="rgb(0, 0, 0)"/>
+									</mask>
+								</defs>
+								<g mask="url(#mask0:0:21)">
+									<path d="M6.65415 5.15154C6.65415 5.8497 6.56687 6.51822 6.39233 7.15715C6.22393 7.77364 5.98638 8.31932 5.67967 8.79424C5.37295 9.26914 5.02053 9.63696 4.62238 9.8977C4.20973 10.168 3.77797 10.3031 3.32707 10.3031C2.87617 10.3031 2.44439 10.168 2.03176 9.8977C1.63361 9.63696 1.28117 9.26914 0.974457 8.79424C0.667742 8.31932 0.430187 7.77364 0.261789 7.15715C0.0872624 6.51822 -8.42806e-07 5.8497 6.10502e-12 5.15154C-8.42806e-07 4.45337 0.0872624 3.78483 0.261789 3.14592C0.430187 2.52943 0.667742 1.98373 0.974457 1.50882C1.28117 1.03391 1.63361 0.666089 2.03176 0.405347C2.44439 0.135115 2.87617 -1.30498e-06 3.32707 9.45283e-12C3.77797 -1.30498e-06 4.20973 0.135115 4.62238 0.405347C5.02053 0.666089 5.37295 1.03391 5.67967 1.50882C5.98638 1.98373 6.22393 2.52943 6.39233 3.14592C6.56687 3.78483 6.65415 4.45337 6.65415 5.15154ZM4.9906 5.15154C4.9906 4.44022 4.82819 3.8331 4.50338 3.33017C4.17856 2.82722 3.78645 2.57576 3.32707 2.57576C2.86767 2.57576 2.47557 2.82722 2.15076 3.33017C1.82593 3.8331 1.66353 4.44022 1.66353 5.15154C1.66353 5.86283 1.82593 6.46997 2.15076 6.9729C2.47557 7.47583 2.86767 7.72729 3.32707 7.72729C3.78645 7.72729 4.17856 7.47583 4.50338 6.9729C4.82819 6.46997 4.9906 5.86283 4.9906 5.15154Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 68.3164 174.731)" fill="rgb(107, 114, 128)"/>
+									<path d="M8.76954 2.57576C7.94509 2.57576 7.14635 2.77783 6.3733 3.18193C5.62589 3.57268 4.93451 4.13486 4.2992 4.86846C3.67068 5.59421 3.12865 6.45094 2.6731 7.4386C2.21193 8.43846 1.86296 9.52192 1.62624 10.689L0.832687 10.3031L1.62624 9.91711C1.86296 11.0842 2.21192 12.1677 2.67309 13.1675C3.12864 14.1551 3.67068 15.0119 4.2992 15.7377C4.93453 16.4713 5.6259 17.0335 6.37336 17.4242C7.14641 17.8283 7.94515 18.0304 8.7696 18.0304C9.59405 18.0304 10.3928 17.8283 11.1658 17.4242C11.9132 17.0335 12.6046 16.4712 13.2399 15.7377C13.8684 15.0119 14.4105 14.1551 14.866 13.1675C15.3272 12.1677 15.6762 11.0842 15.9129 9.91721L16.7064 10.3031L15.9129 10.689C15.6762 9.52192 15.3272 8.43846 14.866 7.4386C14.4105 6.45094 13.8684 5.59423 13.2399 4.86848C12.6046 4.13485 11.9132 3.57268 11.1658 3.18194C10.3927 2.77783 9.59398 2.57576 8.76954 2.57576ZM8.76954 0C9.77614 0 10.7523 0.247173 11.6979 0.741519C12.6124 1.21955 13.4579 1.90693 14.2344 2.80367C15.0019 3.68976 15.6636 4.73575 16.2198 5.94163C16.7836 7.16403 17.2103 8.4892 17.4999 9.91721C17.5522 10.1744 17.5522 10.4317 17.4999 10.689C17.2103 12.1169 16.7836 13.4421 16.2198 14.6645C15.6636 15.8704 15.0019 16.9164 14.2344 17.8024C13.4579 18.6992 12.6124 19.3866 11.698 19.8646C10.7524 20.3589 9.7762 20.6062 8.7696 20.6062C7.763 20.6062 6.78684 20.3589 5.8412 19.8646C4.9268 19.3866 4.0813 18.6992 3.3047 17.8024C2.53734 16.9164 1.87555 15.8704 1.31935 14.6645C0.755533 13.4421 0.328795 12.1169 0.0391403 10.689C-0.0130471 10.4317 -0.0130468 10.1744 0.0391415 9.91711C0.3288 8.48918 0.755539 7.16399 1.31936 5.94161C1.87557 4.73573 2.53734 3.68974 3.3047 2.80366C4.08128 1.90692 4.92677 1.21954 5.84117 0.741513C6.78677 0.247169 7.76287 0 8.76954 0Z" fill-rule="nonzero" transform="matrix(0.941971 0.335695 0 1 63.19 167.753)" fill="rgb(107, 114, 128)"/>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>

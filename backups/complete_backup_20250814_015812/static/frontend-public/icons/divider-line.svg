@@ -1,0 +1,11 @@
+
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="862.375" height="1" viewBox="0 0 862.375 1">
+	<defs>
+		<linearGradient id="linearGradient0:0:0" gradientTransform="matrix(862.375 0 0 1 0 0)" gradientUnits="userSpaceOnUse" x1="0" y1="0.5" x2="1" y2="0.5">
+			<stop offset="0" stop-color="rgb(59, 130, 246)" stop-opacity="0"/>
+			<stop offset="0.5" stop-color="rgb(59, 130, 246)"/>
+			<stop offset="1" stop-color="rgb(139, 92, 246)" stop-opacity="0"/>
+		</linearGradient>
+	</defs>
+	<rect width="862.375" height="1" transform="matrix(1 0 0 1 0 0)" fill="url(#linearGradient0:0:0)" opacity="0.5677"/>
+</svg>

@@ -1,0 +1,32 @@
+
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
+	<defs>
+		<clipPath id="clipPath0:0:0">
+			<path d="M0 0L32 0L32 32L0 32L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clipPath0:0:0)">
+		<defs>
+			<mask id="mask0:0:1" style="mask-type:alpha">
+				<path d="M0 0L32 0L32 32L0 32L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)" fill="rgb(0, 0, 0)"/>
+			</mask>
+		</defs>
+		<g mask="url(#mask0:0:1)">
+			<defs>
+				<mask id="mask0:0:2" style="mask-type:alpha">
+					<path d="M0 0L32 0L32 32L0 32L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)" fill="rgb(0, 0, 0)"/>
+				</mask>
+			</defs>
+			<g mask="url(#mask0:0:2)">
+				<defs>
+					<mask id="mask0:0:3" style="mask-type:alpha">
+						<path d="M0 0L32 0L32 32L0 32L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)" fill="rgb(0, 0, 0)"/>
+					</mask>
+				</defs>
+				<g mask="url(#mask0:0:3)">
+					<path d="M19.0582 0C16.0526 0 14.0582 1.84625 13.0007 3.18749C11.9457 1.84438 9.94883 0 6.9432 0C3.15445 0 0.0400683 3.15875 0.00069332 7.04061C-0.0330568 10.4287 1.16507 13.5575 3.66381 16.6031C4.83693 18.0331 6.96381 20.3194 11.8757 23.6538C12.2147 23.8861 12.5897 24.0023 13.0007 24.0023C13.4117 24.0023 13.7867 23.8861 14.1257 23.6538C19.0376 20.3194 21.1645 18.0331 22.3376 16.6031C24.8376 13.5569 26.0345 10.4281 26.0007 7.04061C25.9613 3.15875 22.8469 0 19.0582 0ZM13.0007 22L13.0007 8.97376C13.0007 7.74688 13.3276 6.55125 13.8888 5.46C14.0758 5.12136 14.2808 4.80776 14.5088 4.5092C14.7368 4.21061 14.9854 3.93027 15.2545 3.66813C16.3876 2.5625 17.6669 2 19.0582 2C21.7551 2 23.9719 4.27 24.0001 7.06251C24.0632 13.6006 18.4776 18.2819 13.0007 22Z" fill-rule="nonzero" transform="matrix(1 0 0 1 2.99931 4)" fill="rgb(249, 115, 22)"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>

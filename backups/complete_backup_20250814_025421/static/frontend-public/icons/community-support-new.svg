@@ -1,0 +1,42 @@
+
+<svg mexport="1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="32" viewBox="0 0 24 32">
+	<defs>
+		<clipPath id="clipPath0:0:0">
+			<path d="M0 0L24 0L24 32L0 32L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 0 0)"/>
+		</clipPath>
+	</defs>
+	<g clip-path="url(#clipPath0:0:0)">
+		<defs>
+			<clipPath id="clipPath0:0:1">
+				<path d="M0 0L24.2726 0L24.2726 32L0 32L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -0.136306 0)"/>
+			</clipPath>
+		</defs>
+		<g clip-path="url(#clipPath0:0:1)">
+			<defs>
+				<mask id="mask0:0:2" style="mask-type:alpha">
+					<path d="M0 0L24.2499 0L24.2499 31.9999L0 31.9999L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -0.102274 -8.86815e-05)" fill="rgb(0, 0, 0)"/>
+				</mask>
+			</defs>
+			<g mask="url(#mask0:0:2)">
+				<defs>
+					<mask id="mask0:0:3" style="mask-type:alpha">
+						<path d="M0 0L24.2499 0L24.2499 24.2499L0 24.2499L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -0.0795861 -8.67742e-05)" fill="rgb(0, 0, 0)"/>
+					</mask>
+				</defs>
+				<g mask="url(#mask0:0:3)">
+					<defs>
+						<mask id="mask0:0:4" style="mask-type:alpha">
+							<path d="M0 0L24.2499 0L24.2499 24.2499L0 24.2499L0 0Z" fill-rule="nonzero" transform="matrix(1 0 0 1 -0.0568982 -8.48668e-05)" fill="rgb(0, 0, 0)"/>
+						</mask>
+					</defs>
+					<g mask="url(#mask0:0:4)">
+						<rect width="2.2734303" height="7.5781016" rx="0.37890506" ry="0.37890506" stroke-width="1.5156202" stroke-linejoin="round" transform="matrix(1 0 0 1 2.97434 15.1561)" stroke="rgb(59, 130, 246)" fill="transparent"/>
+						<rect width="2.2734303" height="12.124962" rx="0.37890506" ry="0.37890506" stroke-width="1.5156202" stroke-linejoin="round" transform="matrix(1 0 0 1 13.5837 10.6092)" stroke="rgb(59, 130, 246)" fill="transparent"/>
+						<rect width="2.2734303" height="17.429634" rx="0.37890506" ry="0.37890506" stroke-width="1.5156202" stroke-linejoin="round" transform="matrix(1 0 0 1 18.8884 5.30459)" stroke="rgb(59, 130, 246)" fill="transparent"/>
+						<rect width="2.2734303" height="21.218683" rx="0.37890506" ry="0.37890506" stroke-width="1.5156202" stroke-linejoin="round" transform="matrix(1 0 0 1 8.27901 1.51554)" stroke="rgb(59, 130, 246)" fill="transparent"/>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>
