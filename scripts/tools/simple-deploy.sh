@@ -171,29 +171,40 @@ restore_from_backup() {
             fi
         fi
         
-        # 恢复Strapi静态资源
-        echo "   📁 恢复Strapi静态资源..."
-        if [ -d "$backup_dir/uploads" ]; then
-            # 确保目标目录存在
-            mkdir -p "$PROJECT_ROOT/backend/public/uploads"
-            
-            # 检查备份目录是否有实际文件
-            local backup_file_count=$(find "$backup_dir/uploads" -type f ! -name ".gitkeep" | wc -l 2>/dev/null || echo "0")
-            
+        # 恢复静态资源文件（支持新旧备份格式）
+        echo "   📁 恢复静态资源..."
+        
+        # 1. 恢复后台上传文件
+        echo "      📁 恢复后台上传文件..."
+        mkdir -p "$PROJECT_ROOT/backend/public/uploads"
+        
+        # 支持新格式 (static/backend-uploads) 和旧格式 (uploads)
+        local backend_upload_source=""
+        if [ -d "$backup_dir/static/backend-uploads" ]; then
+            backend_upload_source="$backup_dir/static/backend-uploads"
+            echo -e "      ℹ️  使用新格式备份: static/backend-uploads"
+        elif [ -d "$backup_dir/uploads" ]; then
+            backend_upload_source="$backup_dir/uploads"
+            echo -e "      ℹ️  使用旧格式备份: uploads"
+        fi
+        
+        if [ -n "$backend_upload_source" ] && [ -d "$backend_upload_source" ]; then
+            local backup_file_count=$(find "$backend_upload_source" -type f ! -name ".gitkeep" 2>/dev/null | wc -l)
             if [ "$backup_file_count" -gt 0 ]; then
-                # 使用tar保持权限和目录结构，兼容性更好
-                if (cd "$backup_dir" && tar cf - uploads) | (cd "$PROJECT_ROOT/backend/public" && tar xf -) 2>/dev/null; then
+                # 使用cp命令直接恢复，简单可靠
+                if cp -r "$backend_upload_source/"* "$PROJECT_ROOT/backend/public/uploads/" 2>/dev/null; then
                     local restored_count=$(find "$PROJECT_ROOT/backend/public/uploads" -type f ! -name ".gitkeep" | wc -l 2>/dev/null || echo "0")
                     local restored_size=$(du -sh "$PROJECT_ROOT/backend/public/uploads" 2>/dev/null | cut -f1 || echo "未知")
-                    echo -e "      ✅ Strapi静态资源恢复完成 ($restored_count 个文件, $restored_size)"
+                    echo -e "      ✅ 后台上传文件恢复完成 ($restored_count 个文件, $restored_size)"
                     
                     # 验证恢复完整性
-                    local backup_size=$(du -sh "$backup_dir/uploads" 2>/dev/null | cut -f1 || echo "未知")
+                    local backup_size=$(du -sh "$backend_upload_source" 2>/dev/null | cut -f1 || echo "未知")
                     echo -e "      ℹ️  备份目录: $backup_size → 恢复目录: $restored_size"
                 else
-                    echo -e "      ⚠️  使用tar恢复失败，尝试使用cp方式..."
-                    cp -r "$backup_dir/uploads/"* "$PROJECT_ROOT/backend/public/uploads/" 2>/dev/null || true
-                    echo -e "      ✅ 使用cp方式恢复完成"
+                    echo -e "      ⚠️ 文件恢复失败"
+                    echo -e "      📋 源目录: $backend_upload_source"
+                    echo -e "      📋 目标目录: $PROJECT_ROOT/backend/public/uploads"
+                    echo -e "      💡 请检查目录权限和磁盘空间"
                 fi
             else
                 echo -e "      ℹ️  备份中无实际文件，仅恢复目录结构"
@@ -201,9 +212,33 @@ restore_from_backup() {
                 touch "$PROJECT_ROOT/backend/public/uploads/.gitkeep"
             fi
         else
-            echo -e "      ⚠️  备份中未找到uploads目录，创建默认结构"
+            echo -e "      ⚠️  备份中未找到上传文件目录，创建默认结构"
             mkdir -p "$PROJECT_ROOT/backend/public/uploads"
             touch "$PROJECT_ROOT/backend/public/uploads/.gitkeep"
+        fi
+        
+        # 2. 恢复前端静态资源（新格式才有）
+        if [ -d "$backup_dir/static/frontend-public" ]; then
+            echo "      📁 恢复前端静态资源..."
+            local frontend_static_source="$backup_dir/static/frontend-public"
+            local frontend_static_target="$PROJECT_ROOT/frontend/public"
+            
+            local frontend_file_count=$(find "$frontend_static_source" -type f 2>/dev/null | wc -l)
+            if [ "$frontend_file_count" -gt 0 ]; then
+                # 在自动部署模式下，直接恢复前端静态资源
+                mkdir -p "$frontend_static_target"
+                if cp -r "$frontend_static_source/"* "$frontend_static_target/" 2>/dev/null; then
+                    local frontend_restored_count=$(find "$frontend_static_target" -type f 2>/dev/null | wc -l)
+                    local frontend_restored_size=$(du -sh "$frontend_static_target" 2>/dev/null | cut -f1 || echo "未知")
+                    echo -e "      ✅ 前端静态资源恢复完成 ($frontend_restored_count 个文件, $frontend_restored_size)"
+                else
+                    echo -e "      ⚠️  前端静态资源恢复失败"
+                fi
+            else
+                echo -e "      ℹ️  备份中无前端静态资源"
+            fi
+        else
+            echo -e "      ℹ️  旧格式备份，跳过前端静态资源恢复"
         fi
         
         echo -e "${GREEN}✅ 备份恢复完成${NC}"

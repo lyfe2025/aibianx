@@ -69,9 +69,10 @@ show_development_menu() {
     echo ""
     echo -e "${BLUE}🛠️ 开发工具:${NC}"
     echo "  6) 📊 代码质量检查        🔎 ESLint+硬编码+环境检查"
-    echo "  7) 🔍 搜索引擎管理        🎯 MeiliSearch索引管理"
-    echo "  8) 📧 邮件系统管理        📬 Strapi集成邮件订阅系统"
-    echo "  9) 🌐 显示所有访问地址    🔗 查看完整的系统访问地址和服务状态"
+    echo "  7) 🔍 搜索引擎部署        🚀 部署MeiliSearch容器服务"
+    echo "  8) 🎯 搜索引擎管理        📋 MeiliSearch索引管理"
+    echo "  9) 📧 邮件系统管理        📬 Strapi集成邮件订阅系统"
+    echo " 10) 🌐 显示所有访问地址    🔗 查看完整的系统访问地址和服务状态"
     echo ""
     echo -e "${BLUE}📚 快捷操作:${NC}"
     echo "  e) 🔄 切换到生产环境      🚀 修改 deploy.conf 中的 DEPLOY_MODE"
@@ -90,9 +91,11 @@ show_production_menu() {
     echo ""
     echo -e "${RED}🔧 生产运维:${NC}"
     echo "  6) 🏗️ 重建生产镜像        🔨 重新构建 Docker 镜像"
-    echo "  7) 🔍 查看容器日志        📋 实时查看服务日志"
-    echo "  8) 📧 邮件系统状态        📬 生产邮件服务状态"
-    echo "  9) 🌐 显示生产地址        🔗 查看生产环境访问地址"
+    echo "  7) 🔍 搜索引擎部署        🚀 部署MeiliSearch容器服务"
+    echo "  8) 🎯 搜索引擎管理        📋 生产搜索引擎管理"
+    echo "  9) 📋 查看容器日志        📊 实时查看服务日志"
+    echo " 10) 📧 邮件系统状态        📬 生产邮件服务状态"
+    echo " 11) 🌐 显示生产地址        🔗 查看生产环境访问地址"
     echo ""
     echo -e "${RED}📚 快捷操作:${NC}"
     echo "  e) 🔄 切换到开发环境      🛠️ 修改 deploy.conf 中的 DEPLOY_MODE"
@@ -150,7 +153,9 @@ execute_choice() {
             echo "======================================================="
             echo -e "${GREEN}✅ 极简一键配置完成！${NC}"
             echo ""
-            echo -e "${CYAN}📋 正在显示所有服务状态和访问地址...${NC}"
+            echo -e "${CYAN}📋 等待服务完全稳定后显示状态...${NC}"
+            echo "⏳ 稍等 3 秒确保服务完全启动..."
+            sleep 3
             echo ""
             "$SCRIPT_DIR/scripts/tools/show-all-services.sh"
             echo ""
@@ -200,7 +205,9 @@ execute_choice() {
             fi
             
             echo ""
-            echo -e "${CYAN}📋 正在显示所有服务状态和访问地址...${NC}"
+            echo -e "${CYAN}📋 等待服务完全稳定后显示状态...${NC}"
+            echo "⏳ 稍等 3 秒确保服务完全启动..."
+            sleep 3
             echo ""
             "$SCRIPT_DIR/scripts/tools/show-all-services.sh"
             echo ""
@@ -239,7 +246,21 @@ execute_choice() {
             return 1
             ;;
         "7")
-            echo -e "${BLUE}🔍 打开搜索引擎管理...${NC}"
+            echo -e "${BLUE}🔍 开始部署搜索引擎...${NC}"
+            echo ""
+            if [ -f "$SCRIPT_DIR/scripts/search/deploy-meilisearch.sh" ]; then
+                chmod +x "$SCRIPT_DIR/scripts/search/deploy-meilisearch.sh"
+                "$SCRIPT_DIR/scripts/search/deploy-meilisearch.sh"
+            else
+                echo -e "${RED}❌ 搜索引擎部署脚本不存在${NC}"
+            fi
+            echo ""
+            echo -n -e "${YELLOW}搜索引擎部署完成！按回车键返回主菜单...${NC}"
+            read
+            return 1
+            ;;
+        "8")
+            echo -e "${BLUE}🎯 打开搜索引擎管理...${NC}"
             echo ""
             "$SCRIPT_DIR/scripts/search/manage-meilisearch.sh"
             echo ""
@@ -247,7 +268,7 @@ execute_choice() {
             read
             return 1
             ;;
-        "8")
+        "9")
             echo -e "${BLUE}📧 邮件营销系统管理...${NC}"
             echo ""
             echo -e "${GREEN}✅ 邮件营销系统已集成到Strapi后台${NC}"
@@ -258,7 +279,7 @@ execute_choice() {
             read
             return 1
             ;;
-        "9")
+        "10")
             echo -e "${BLUE}🌐 显示所有服务状态和访问地址...${NC}"
             echo ""
             "$SCRIPT_DIR/scripts/tools/show-all-services.sh"
@@ -368,23 +389,85 @@ backup_menu() {
             read
             ;;
         "3")
-            echo -e "${BLUE}🔄 使用配置文件中的备份版本恢复...${NC}"
+            echo -e "${BLUE}🔄 完整备份恢复...${NC}"
             echo ""
-            "$SCRIPT_DIR/scripts/tools/simple-deploy.sh"
+            echo -e "${CYAN}📋 恢复选项:${NC}"
+            echo "  1) 🤖 自动选择最新备份恢复"
+            echo "  2) 📁 指定备份目录恢复"
+            echo "  3) 📦 指定压缩包恢复"
+            echo "  4) ⚙️ 使用配置文件恢复（一键部署）"
             echo ""
-            echo -n -e "${YELLOW}恢复完成！按回车键继续...${NC}"
+            echo -n -e "${YELLOW}请选择恢复方式 (1-4): ${NC}"
+            read -r restore_choice
+            
+            case "$restore_choice" in
+                "1")
+                    echo -e "${BLUE}🤖 自动选择最新备份恢复...${NC}"
+                    "$SCRIPT_DIR/scripts/backup/restore-complete.sh"
+                    ;;
+                "2")
+                    echo -n -e "${YELLOW}请输入备份目录路径: ${NC}"
+                    read -r backup_dir
+                    if [ -n "$backup_dir" ]; then
+                        echo -e "${BLUE}📁 指定目录恢复...${NC}"
+                        "$SCRIPT_DIR/scripts/backup/restore-complete.sh" "$backup_dir"
+                    fi
+                    ;;
+                "3")
+                    echo -n -e "${YELLOW}请输入压缩包路径: ${NC}"
+                    read -r backup_file
+                    if [ -n "$backup_file" ]; then
+                        echo -e "${BLUE}📦 压缩包恢复...${NC}"
+                        "$SCRIPT_DIR/scripts/backup/restore-complete.sh" "$backup_file"
+                    fi
+                    ;;
+                "4")
+                    echo -e "${BLUE}⚙️ 使用配置文件中的备份版本恢复...${NC}"
+                    "$SCRIPT_DIR/scripts/tools/simple-deploy.sh"
+                    ;;
+                *)
+                    echo -e "${RED}❌ 无效选择${NC}"
+                    ;;
+            esac
+            echo ""
+            echo -n -e "${YELLOW}恢复操作完成！按回车键继续...${NC}"
             read
             ;;
         "4")
-            echo -n -e "${YELLOW}请输入备份文件路径: ${NC}"
-            read -r backup_file
-            if [ -n "$backup_file" ]; then
-                echo ""
-                "$SCRIPT_DIR/scripts/backup/verify-backup.sh" "$backup_file"
-                echo ""
-                echo -n -e "${YELLOW}验证完成！按回车键继续...${NC}"
-                read
-            fi
+            echo -e "${BLUE}✅ 验证备份文件...${NC}"
+            echo ""
+            echo -e "${CYAN}📋 验证选项:${NC}"
+            echo "  1) 🤖 自动选择最新备份验证"
+            echo "  2) 📁 指定路径验证"
+            echo ""
+            echo -n -e "${YELLOW}请选择验证方式 (1-2): ${NC}"
+            read -r verify_choice
+            
+            case "$verify_choice" in
+                "1")
+                    # 自动找到最新备份
+                    latest_backup=$(find backups/ -maxdepth 1 -name "*_backup_*" -type d | sort -r | head -1)
+                    if [ -n "$latest_backup" ]; then
+                        echo -e "${BLUE}🤖 验证最新备份: $(basename "$latest_backup")${NC}"
+                        "$SCRIPT_DIR/scripts/backup/verify-backup.sh" "$latest_backup"
+                    else
+                        echo -e "${RED}❌ 未找到可用备份${NC}"
+                    fi
+                    ;;
+                "2")
+                    echo -n -e "${YELLOW}请输入备份文件路径: ${NC}"
+                    read -r backup_file
+                    if [ -n "$backup_file" ]; then
+                        "$SCRIPT_DIR/scripts/backup/verify-backup.sh" "$backup_file"
+                    fi
+                    ;;
+                *)
+                    echo -e "${RED}❌ 无效选择${NC}"
+                    ;;
+            esac
+            echo ""
+            echo -n -e "${YELLOW}验证完成！按回车键继续...${NC}"
+            read
             ;;
         "5")
             echo -e "${BLUE}⏰ 定时备份管理...${NC}"
@@ -454,11 +537,30 @@ handle_command_line() {
                     fi
                     ;;
                 "restore")
-                    echo -e "${BLUE}🔄 使用配置文件中的备份版本恢复...${NC}"
+                    if [ $# -eq 0 ]; then
+                        echo -e "${BLUE}🔄 自动选择最新备份恢复...${NC}"
+                        if [ -f "$SCRIPT_DIR/scripts/backup/restore-complete.sh" ]; then
+                            exec "$SCRIPT_DIR/scripts/backup/restore-complete.sh"
+                        else
+                            echo -e "${RED}❌ 恢复脚本不存在: $SCRIPT_DIR/scripts/backup/restore-complete.sh${NC}"
+                            exit 1
+                        fi
+                    else
+                        echo -e "${BLUE}🔄 指定备份恢复: $1${NC}"
+                        if [ -f "$SCRIPT_DIR/scripts/backup/restore-complete.sh" ]; then
+                            exec "$SCRIPT_DIR/scripts/backup/restore-complete.sh" "$1"
+                        else
+                            echo -e "${RED}❌ 恢复脚本不存在: $SCRIPT_DIR/scripts/backup/restore-complete.sh${NC}"
+                            exit 1
+                        fi
+                    fi
+                    ;;
+                "restore-auto")
+                    echo -e "${BLUE}🔄 使用配置文件中的备份版本恢复（一键部署）...${NC}"
                     if [ -f "$SCRIPT_DIR/scripts/tools/simple-deploy.sh" ]; then
                         exec "$SCRIPT_DIR/scripts/tools/simple-deploy.sh"
                     else
-                        echo -e "${RED}❌ 恢复脚本不存在: $SCRIPT_DIR/scripts/tools/simple-deploy.sh${NC}"
+                        echo -e "${RED}❌ 一键部署脚本不存在: $SCRIPT_DIR/scripts/tools/simple-deploy.sh${NC}"
                         echo -e "${YELLOW}请确保项目已完整克隆或部署${NC}"
                         exit 1
                     fi
@@ -498,7 +600,11 @@ handle_command_line() {
                     ;;
                 *)
                     echo -e "${RED}❌ 未知的备份操作: $action${NC}"
-                    echo "可用操作: list, create, restore, verify, cron, scheduled"
+                    echo "可用操作: list, create, restore, restore-auto, verify, cron, scheduled"
+                    echo ""
+                    echo -e "${BLUE}恢复操作说明:${NC}"
+                    echo "  restore       - 完整备份恢复（自动选择最新或指定路径）"
+                    echo "  restore-auto  - 一键部署恢复（使用配置文件中的备份版本）"
                     exit 1
                     ;;
             esac
@@ -523,6 +629,16 @@ handle_command_line() {
             ;;
         "search")
             case "$action" in
+                "deploy")
+                    echo -e "${BLUE}🔍 部署MeiliSearch搜索引擎...${NC}"
+                    if [ -f "$SCRIPT_DIR/scripts/search/deploy-meilisearch.sh" ]; then
+                        chmod +x "$SCRIPT_DIR/scripts/search/deploy-meilisearch.sh"
+                        exec "$SCRIPT_DIR/scripts/search/deploy-meilisearch.sh" "$@"
+                    else
+                        echo -e "${RED}❌ 搜索引擎部署脚本不存在: $SCRIPT_DIR/scripts/search/deploy-meilisearch.sh${NC}"
+                        exit 1
+                    fi
+                    ;;
                 "manage")
                     exec "$SCRIPT_DIR/scripts/search/manage-meilisearch.sh" "$@"
                     ;;
@@ -531,7 +647,7 @@ handle_command_line() {
                     ;;
                 *)
                     echo -e "${RED}❌ 未知的搜索操作: $action${NC}"
-                    echo "可用操作: manage, check"
+                    echo "可用操作: deploy, manage, check"
                     exit 1
                     ;;
             esac
@@ -578,7 +694,7 @@ handle_command_line() {
     echo "  deploy  - 部署管理 (config, start, stop)"
     echo "  backup  - 备份管理 (list, create, restore, verify, cron, scheduled)"
     echo "  tools   - 开发工具 (status, check, services)"
-    echo "  search  - 搜索引擎 (manage, check)"
+    echo "  search  - 搜索引擎 (deploy, manage, check)"
     echo "  email   - 邮件营销系统 (check, status, admin, manage)"
             exit 1
             ;;

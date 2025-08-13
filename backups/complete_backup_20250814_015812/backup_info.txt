@@ -1,0 +1,37 @@
+AI变现之路项目 - 完整项目备份信息
+====================================
+
+备份时间: Thu Aug 14 01:58:13 CST 2025
+备份版本: complete_backup_20250814_015812
+备份类型: 完整项目备份
+Node.js版本: v24.4.0
+项目路径: /Volumes/wwx/dev/WebProjects/aibianx
+
+备份内容:
+📊 数据库备份:
+  - Strapi主业务数据库: ✅ 已备份 (1.2M)
+
+📁 重要文件备份:
+  - 配置文件: ✅ 已备份 (deploy.conf, package.json等)
+  
+📷 静态资源备份:
+  - 后台上传文件: ✅ 已备份 (2 个文件, 8.0K)
+  - 前端静态资源: ✅ 已备份 (252 个文件,  46M)
+  - 构建文件: ⚠️ 无构建文件
+
+⚠️ 自动重建内容 (无需备份):
+  - Redis缓存: 会话数据、临时缓存 (服务启动时自动重建)
+  - MeiliSearch索引: 全文搜索数据 (首次访问时自动同步)
+  - Node.js依赖: node_modules (npm install重新安装)
+  - Docker镜像: 容器镜像 (Docker自动拉取)
+
+总大小: 107M
+
+还原命令:
+./scripts.sh backup restore
+
+注意事项:
+- 使用 ./scripts.sh backup verify "/Volumes/wwx/dev/WebProjects/aibianx/backups/complete_backup_20250814_015812" 验证备份完整性
+- 还原前请确保停止所有服务
+- 数据库还原会覆盖现有数据，请谨慎操作
+

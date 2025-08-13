@@ -5,6 +5,34 @@
 echo "🛑 停止开发环境..."
 echo "========================="
 
+# 加载统一环境配置（获取端口等配置）
+if [ -f "$(dirname "$0")/../../deployment/configure-unified-env.sh" ]; then
+    # shellcheck disable=SC1091
+    source "$(dirname "$0")/../../deployment/configure-unified-env.sh" 2>/dev/null || true
+fi
+
+# 兜底端口（若未从配置加载则使用默认）
+BACKEND_PORT=${BACKEND_PORT:-1337}
+FRONTEND_PORT=${FRONTEND_PORT:-3000}
+MEILISEARCH_PORT=${MEILISEARCH_PORT:-7700}
+POSTGRES_PORT=${POSTGRES_PORT:-5432}
+REDIS_PORT=${REDIS_PORT:-6379}
+
+# 通用按端口杀进程函数
+kill_by_port() {
+    local port=$1
+    local label=$2
+    if lsof -Pi :"$port" -sTCP:LISTEN -t >/dev/null 2>&1; then
+        echo "🔄 按端口停止 $label (端口: $port)..."
+        lsof -Pi :"$port" -sTCP:LISTEN -t | xargs -r kill 2>/dev/null || true
+        sleep 1
+        # 强制
+        if lsof -Pi :"$port" -sTCP:LISTEN -t >/dev/null 2>&1; then
+            lsof -Pi :"$port" -sTCP:LISTEN -t | xargs -r kill -9 2>/dev/null || true
+        fi
+    fi
+}
+
 # 停止后端服务
 if [ -f "logs/backend.pid" ]; then
     BACKEND_PID=$(cat logs/backend.pid)
@@ -32,6 +60,8 @@ if [ -f "logs/backend.pid" ]; then
     rm -f .pids/backend.pid
 else
     echo "⚠️  未找到后端PID文件"
+    # 按端口兜底
+    kill_by_port "$BACKEND_PORT" "后端服务"
 fi
 
 # 停止前端服务
@@ -61,6 +91,8 @@ if [ -f "logs/frontend.pid" ]; then
     rm -f .pids/frontend.pid
 else
     echo "⚠️  未找到前端PID文件"
+    # 按端口兜底
+    kill_by_port "$FRONTEND_PORT" "前端服务"
 fi
 
 # 停止搜索索引同步服务
@@ -94,7 +126,7 @@ if docker ps | grep -q "meilisearch"; then
     echo "✅ 搜索引擎已停止"
 fi
 
-# 停止项目相关的PostgreSQL和Redis
+# 停止项目相关的PostgreSQL和Redis（如是容器形式）
 if docker ps | grep -q "aibianx-postgres"; then
     echo "🔄 停止数据库服务 (PostgreSQL)..."
     docker stop aibianx-postgres 2>/dev/null || true
@@ -134,12 +166,12 @@ check_port_status() {
     fi
 }
 
-# 检查主要端口状态
-check_port_status 1337 "后端"
-check_port_status 80 "前端"
-check_port_status 5432 "数据库"
-check_port_status 6379 "缓存"
-check_port_status 7700 "搜索引擎"
+# 检查主要端口状态（以配置为准）
+check_port_status "$BACKEND_PORT" "后端"
+check_port_status "$FRONTEND_PORT" "前端"
+check_port_status "$POSTGRES_PORT" "数据库"
+check_port_status "$REDIS_PORT" "缓存"
+check_port_status "$MEILISEARCH_PORT" "搜索引擎"
 
 echo ""
 echo "✅ 开发环境已完全停止"

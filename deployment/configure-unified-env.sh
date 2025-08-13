@@ -48,37 +48,53 @@ fi
 echo -e "${BLUE}🔧 加载配置文件: ${CONFIG_FILE}${NC}"
 source "${CONFIG_FILE}"
 
+# 构建端口变量（优先使用配置文件的值；为空时才使用默认值）
+export FRONTEND_PORT="${FRONTEND_PORT:-80}"
+export BACKEND_PORT="${BACKEND_PORT:-1337}"
+export MEILISEARCH_PORT="${MEILISEARCH_PORT:-7700}"
+export POSTGRES_PORT="${POSTGRES_PORT:-5432}"
+
+# MeiliSearch 环境配置
+export MEILI_ENV="${MEILI_ENV:-development}"
+
 # 构建基础URL变量
 if [[ "${DEPLOY_MODE}" == "production" ]]; then
-    # 生产环境使用HTTPS
-    export FRONTEND_URL="https://${DOMAIN}"
-    export BACKEND_URL="https://${DOMAIN}"
-    export ADMIN_URL="https://${DOMAIN}/admin"
-    # 邮件系统已集成到Strapi
-    export MEILISEARCH_URL="https://${DOMAIN}:${MEILISEARCH_PORT}"
-    export SEARCH_URL="https://${DOMAIN}:${MEILISEARCH_PORT}"
-    export BACKEND_ADMIN_URL="https://${DOMAIN}/admin"
-    export BACKEND_API_URL="https://${DOMAIN}/api"
-    export BACKEND_DOCS_URL="https://${DOMAIN}/documentation"
+    export FRONTEND_PROTOCOL="https"
+    export BACKEND_PROTOCOL="https"
+    export SEARCH_PROTOCOL="https"
 else
-    # 开发环境使用HTTP
-    export FRONTEND_URL="http://${DOMAIN}"
-    export BACKEND_URL="http://${DOMAIN}:${BACKEND_PORT}"
-    export ADMIN_URL="http://${DOMAIN}:${BACKEND_PORT}/admin"
-    # 邮件系统已集成到Strapi
-    export MEILISEARCH_URL="http://${DOMAIN}:${MEILISEARCH_PORT}"
-    export SEARCH_URL="http://${DOMAIN}:${MEILISEARCH_PORT}"
-    export BACKEND_ADMIN_URL="http://${DOMAIN}:${BACKEND_PORT}/admin"
-    export BACKEND_API_URL="http://${DOMAIN}:${BACKEND_PORT}/api"
-    export BACKEND_DOCS_URL="http://${DOMAIN}:${BACKEND_PORT}/documentation"
+    export FRONTEND_PROTOCOL="http"
+    export BACKEND_PROTOCOL="http"
+    export SEARCH_PROTOCOL="http"
 fi
 
-# 构建端口变量
-export FRONTEND_PORT="80"
-export BACKEND_PORT="1337"
-# 邮件系统端口 = BACKEND_PORT (已集成到Strapi)
-export MEILISEARCH_PORT="7700"
-export POSTGRES_PORT="5432"
+default_port_for_protocol() {
+    local proto="$1"
+    if [[ "$proto" == "https" ]]; then
+        echo 443
+    else
+        echo 80
+    fi
+}
+
+build_url() {
+    local proto="$1"; local host="$2"; local port="$3"; local path="$4"
+    local def_port=$(default_port_for_protocol "$proto")
+    local port_suffix=""
+    if [[ -n "$port" && "$port" != "$def_port" ]]; then
+        port_suffix=":$port"
+    fi
+    echo "${proto}://${host}${port_suffix}${path}"
+}
+
+export FRONTEND_URL=$(build_url "$FRONTEND_PROTOCOL" "$DOMAIN" "$FRONTEND_PORT" "")
+export BACKEND_URL=$(build_url "$BACKEND_PROTOCOL" "$DOMAIN" "$BACKEND_PORT" "")
+export ADMIN_URL=$(build_url "$BACKEND_PROTOCOL" "$DOMAIN" "$BACKEND_PORT" "/admin")
+export BACKEND_ADMIN_URL="$ADMIN_URL"
+export BACKEND_API_URL=$(build_url "$BACKEND_PROTOCOL" "$DOMAIN" "$BACKEND_PORT" "/api")
+export BACKEND_DOCS_URL=$(build_url "$BACKEND_PROTOCOL" "$DOMAIN" "$BACKEND_PORT" "/documentation")
+export MEILISEARCH_URL=$(build_url "$SEARCH_PROTOCOL" "$DOMAIN" "$MEILISEARCH_PORT" "")
+export SEARCH_URL="$MEILISEARCH_URL"
 
 # 构建数据库连接URL
 export DATABASE_URL="postgresql://aibianx_dev:${DB_ADMIN_PASSWORD}@localhost:${POSTGRES_PORT}/aibianx_dev"

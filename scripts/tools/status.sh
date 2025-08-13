@@ -28,8 +28,8 @@ if [ -f "logs/backend.pid" ]; then
         echo -e "   ${RED}❌ 进程已停止 (PID文件存在但进程不存在)${NC}"
     fi
 else
-    if lsof -Pi :1337 -sTCP:LISTEN -t >/dev/null 2>&1; then
-        echo -e "   ${YELLOW}⚠️  端口1337被占用但无PID文件${NC}"
+    if lsof -Pi :"${BACKEND_PORT:-1337}" -sTCP:LISTEN -t >/dev/null 2>&1; then
+        echo -e "   ${YELLOW}⚠️  端口${BACKEND_PORT:-1337}被占用但无PID文件${NC}"
     else
         echo -e "   ${RED}❌ 未运行${NC}"
     fi
@@ -53,8 +53,8 @@ if [ -f "logs/frontend.pid" ]; then
         echo -e "   ${RED}❌ 进程已停止 (PID文件存在但进程不存在)${NC}"
     fi
 else
-    if lsof -Pi :80 -sTCP:LISTEN -t >/dev/null 2>&1; then
-        echo -e "   ${YELLOW}⚠️  端口80被占用但无PID文件${NC}"
+    if lsof -Pi :"${FRONTEND_PORT:-80}" -sTCP:LISTEN -t >/dev/null 2>&1; then
+        echo -e "   ${YELLOW}⚠️  端口${FRONTEND_PORT:-80}被占用但无PID文件${NC}"
     else
         echo -e "   ${RED}❌ 未运行${NC}"
     fi
@@ -148,10 +148,10 @@ check_port() {
     fi
 }
 
-check_port 1337 "后端Strapi"
-check_port 80 "前端Next.js"
-check_port 7700 "MeiliSearch"
-check_port 5432 "PostgreSQL"
+check_port "${BACKEND_PORT:-1337}" "后端Strapi"
+check_port "${FRONTEND_PORT:-80}" "前端Next.js"
+check_port "${MEILISEARCH_PORT:-7700}" "MeiliSearch"
+check_port "${POSTGRES_PORT:-5432}" "PostgreSQL"
 
 echo ""
 

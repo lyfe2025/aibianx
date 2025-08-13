@@ -25,6 +25,7 @@ fi
 
 # 加载配置
 source "$PROJECT_ROOT/scripts/tools/load-config.sh"
+load_config  # 调用配置加载函数
 
 echo -e "${CYAN}🚀 AI变现之路 - 完整服务状态检查 (邮件系统已集成到Strapi)${NC}"
 echo "=================================================="
@@ -54,7 +55,7 @@ echo -e "${BLUE}📊 服务状态检查:${NC}"
 
 # 1. 前端服务检查
 echo -n "🌐 前端服务 (Next.js): "
-if curl -s -f "${FRONTEND_URL}" > /dev/null 2>&1; then
+if curl -s --max-time 3 "${FRONTEND_URL}" | grep -q "html\|AI变现之路" > /dev/null 2>&1; then
     echo -e "${GREEN}✅ 运行正常${NC}"
     FRONTEND_STATUS="✅"
 else
@@ -64,7 +65,7 @@ fi
 
 # 2. 后端服务检查
 echo -n "⚙️  后端服务 (Strapi): "
-if curl -s -f "${BACKEND_URL}/api/articles" > /dev/null 2>&1; then
+if curl -s --max-time 3 "${BACKEND_API_URL}/articles" | grep -q "data\|error\|{" > /dev/null 2>&1; then
     echo -e "${GREEN}✅ 运行正常${NC}"
     BACKEND_STATUS="✅"
 else
@@ -74,7 +75,7 @@ fi
 
 # 3. 搜索引擎检查
 echo -n "🔍 MeiliSearch搜索: "
-if curl -s -f "${MEILISEARCH_URL}/health" > /dev/null 2>&1; then
+if curl -s --max-time 3 "${SEARCH_HEALTH_URL}" | grep -q "available" > /dev/null 2>&1; then
     echo -e "${GREEN}✅ 运行正常${NC}"
     SEARCH_STATUS="✅"
 else

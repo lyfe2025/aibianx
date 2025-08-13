@@ -438,8 +438,8 @@ check_port() {
 }
 
 echo "🔍 检查端口占用..."
-check_port 1337 "strapi"
-check_port 80 "next"
+check_port "$BACKEND_PORT" "strapi"
+check_port "$FRONTEND_PORT" "next"
 
 # 清除缓存
 echo "🧹 清除Strapi缓存..."
@@ -459,7 +459,7 @@ echo ""
 
 # 启动后端服务
 echo "🔄 启动Strapi后端服务..."
-npm run develop > ../logs/backend.log 2>&1 &
+PORT="$BACKEND_PORT" npm run develop > ../logs/backend.log 2>&1 &
 BACKEND_PID=$!
 # 创建PID目录并保存PID文件
 mkdir -p ../.pids
@@ -512,7 +512,7 @@ fi
 # 启动前端服务
 echo "🔄 启动Next.js前端服务..."
 cd frontend
-npm run dev > ../logs/frontend.log 2>&1 &
+PORT="$FRONTEND_PORT" npm run dev > ../logs/frontend.log 2>&1 &
 FRONTEND_PID=$!
 # 创建PID目录并保存PID文件
 mkdir -p ../.pids
@@ -569,16 +569,15 @@ if [ "$AUTO_SYNC_SEARCH" = "true" ]; then
     if [ -f "$(dirname "$0")/../search/quick-reindex.sh" ]; then
         # 创建后台任务同步索引，避免阻塞启动流程
         (
-            # 等待MeiliSearch完全启动（最多60秒）
             echo "$(date '+%Y-%m-%d %H:%M:%S') - 🔍 等待MeiliSearch服务启动..." >> logs/search-sync.log
-            local wait_count=0
-            while [ $wait_count -lt 60 ]; do
+            count=0
+            while [ $count -lt 60 ]; do
                 if curl -s ${MEILISEARCH_URL}/health > /dev/null 2>&1; then
                     echo "$(date '+%Y-%m-%d %H:%M:%S') - ✅ MeiliSearch服务已就绪" >> logs/search-sync.log
                     break
                 fi
                 sleep 1
-                wait_count=$((wait_count + 1))
+                count=$((count + 1))
             done
             
             # 额外等待5秒确保后端也完全稳定
