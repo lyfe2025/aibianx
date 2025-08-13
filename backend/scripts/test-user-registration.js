@@ -134,7 +134,7 @@ async function testUserRegistration() {
         console.log(`   - 累计佣金: ¥${userData.totalCommission || 0}`);
         console.log(`   - 登录次数: ${userData.loginCount || 0}`);
         console.log(`   - 自动续费: ${userData.membershipAutoRenew ? '是' : '否'}`);
-        console.log(`   - 邮件订阅: ${userData.billionmailSubscribed ? '是' : '否'}`);
+        console.log(`   - 邮件订阅: ${userData.emailSubscribed ? '是' : '否'}`);
         
       } catch (error) {
         console.error(`❌ 获取用户详情失败: ${user.email} - ${error.message}`);

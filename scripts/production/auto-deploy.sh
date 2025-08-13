@@ -268,10 +268,8 @@ validate_configuration() {
     fi
     
     # 检查Docker Compose文件
-    if [ ! -f "$PROJECT_DIR/deployment/docker-compose.unified.yml" ]; then
-        if [ ! -f "$PROJECT_DIR/deployment/docker-compose.yml" ]; then
-            errors+=("Docker Compose配置文件不存在")
-        fi
+    if [ ! -f "$PROJECT_DIR/deployment/docker-compose.yml" ]; then
+        errors+=("Docker Compose配置文件不存在")
     fi
     
     # 报告验证结果
@@ -350,11 +348,8 @@ execute_deployment() {
     
     cd "$PROJECT_DIR"
     
-    # 选择Docker Compose文件
+    # 使用标准Docker Compose文件
     local compose_file="deployment/docker-compose.yml"
-    if [ -f "deployment/docker-compose.unified.yml" ]; then
-        compose_file="deployment/docker-compose.unified.yml"
-    fi
     
     log_info "使用配置文件: $compose_file"
     

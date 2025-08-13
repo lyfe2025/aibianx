@@ -11,8 +11,12 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 if [ -f "${PROJECT_ROOT}/deployment/configure-unified-env.sh" ]; then
     source "${PROJECT_ROOT}/deployment/configure-unified-env.sh"
 else
-    # 后备配置
-    SEARCH_URL="http://localhost:7700"
+    # 后备配置 - 使用动态构建
+    DOMAIN="${DOMAIN:-localhost}"
+    MEILISEARCH_PORT="${MEILISEARCH_PORT:-7700}"
+    PROTOCOL="${PROTOCOL:-http}"
+    MEILISEARCH_URL="${PROTOCOL}://${DOMAIN}:${MEILISEARCH_PORT}"
+    SEARCH_URL="$MEILISEARCH_URL"
 fi
 
 # 返回码定义

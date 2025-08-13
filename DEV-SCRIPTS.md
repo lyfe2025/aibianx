@@ -159,37 +159,33 @@ chmod +x scripts.sh
 
 ## 🆕 **新增功能系统**
 
-### 📧 **邮件营销系统** [[memory:4882756]]
+### 📧 **集成邮件订阅系统**
 
 #### 核心功能
-- ✅ **订阅管理** - 一键订阅/取消订阅新闻简报
-- ✅ **模板系统** - 丰富的邮件模板库，支持个性化定制
-- ✅ **SMTP配置** - 多服务器支持，自动健康检查
-- ✅ **批量发送** - 高性能批量邮件发送和统计
-- ✅ **标签管理** - 灵活的订阅者分类和精准推送
+- ✅ **订阅管理** - 一键订阅/取消订阅，集成在Strapi后台
+- ✅ **订阅者管理** - 完整的订阅者信息和偏好设置
+- ✅ **标签系统** - 灵活的订阅者分类和标签管理
+- ✅ **统计分析** - 详细的订阅数据统计和分析
+- ✅ **API集成** - 完整的邮件订阅API接口
 
 #### API端点
 ```bash
-# 邮件订阅
-POST /api/email-subscription/subscribe
-POST /api/email-subscription/unsubscribe
-GET  /api/email-subscription/status
+# 邮件订阅管理
+POST /api/email-subscription/subscribe    # 邮件订阅
+POST /api/email-subscription/unsubscribe  # 取消订阅
+GET  /api/email-subscription/stats        # 订阅统计
 
-# 邮件发送
-POST /api/email-service/send
-POST /api/email-service/send-bulk
-GET  /api/email-service/stats
-
-# SMTP配置
-GET  /api/smtp-config
-POST /api/smtp-config/test
+# Strapi内容管理
+GET  /api/email-subscriptions             # 获取所有订阅者
+POST /api/email-subscriptions             # 创建订阅者
+PUT  /api/email-subscriptions/:id         # 更新订阅者信息
+DELETE /api/email-subscriptions/:id       # 删除订阅者
 ```
 
 #### 数据模型
-- **EmailSubscription** - 订阅者信息和状态管理
-- **EmailTemplate** - 邮件模板和变量配置
-- **EmailTag** - 订阅者分类标签
-- **SmtpConfig** - SMTP服务器配置和健康状态
+- **EmailSubscription** - 邮件订阅者管理，包含邮箱、状态、来源、标签、偏好设置
+- **User** - 用户表增加emailSubscribed字段，关联邮件订阅状态
+- **JSON字段支持** - tags、preferences、emailListIds等使用JSON字段灵活存储
 
 ### 🔐 **用户认证系统**
 

@@ -96,7 +96,7 @@ export class OAuthUserService {
       totalCommission: 0,
       loginCount: 0,
       membershipAutoRenew: false,
-      billionmailSubscribed: false
+      emailSubscribed: false
     };
     
     switch (provider) {
@@ -190,8 +190,8 @@ export class OAuthUserService {
    */
   private static async handleNewOAuthUser(user: any, provider: string) {
     try {
-      // 1. 触发BillionMail自动订阅
-      await strapi.service('api::billionmail.billionmail').autoSubscribeOnAuth(user, 'oauth_signin');
+      // 1. 触发邮件订阅（使用本地邮件系统）
+      await this.handleEmailSubscription(user, 'oauth_signin');
       
       // 2. 记录登录统计
       await this.updateLoginStats(user.id);
@@ -199,6 +199,43 @@ export class OAuthUserService {
       strapi.log.info(`新OAuth用户后续处理完成: ${user.email} via ${provider}`);
     } catch (error) {
       strapi.log.error(`新OAuth用户后续处理失败: ${error.message}`);
+    }
+  }
+
+  /**
+   * 处理邮件订阅（本地邮件系统）
+   */
+  private static async handleEmailSubscription(user: any, source: string) {
+    try {
+      // 检查是否已存在订阅记录
+      const existingSubscription = await strapi.entityService.findMany('api::email-subscription.email-subscription', {
+        filters: { email: user.email }
+      });
+
+      if (existingSubscription.length === 0) {
+        // 创建新的邮件订阅记录
+        await strapi.entityService.create('api::email-subscription.email-subscription', {
+          data: {
+            email: user.email,
+            user: user.id,
+            source: 'api', // OAuth登录来源
+            tags: ['oauth_signup', source],
+            status: 'active',
+            subscribedAt: new Date()
+          } as any
+        });
+
+        // 更新用户的邮件订阅状态
+        await strapi.entityService.update('plugin::users-permissions.user', user.id, {
+          data: {
+            emailSubscribed: true
+          } as any
+        });
+
+        strapi.log.info(`OAuth用户自动订阅邮件成功: ${user.email}`);
+      }
+    } catch (error) {
+      strapi.log.error(`OAuth用户邮件订阅失败: ${error.message}`);
     }
   }
 

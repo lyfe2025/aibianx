@@ -73,7 +73,7 @@ if docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
     # 🎯 使用统一配置的URL进行健康检查
     search_health_url="${SEARCH_URL}/health"
     if [ -z "$SEARCH_URL" ]; then
-        search_health_url="http://localhost:7700/health"
+        search_health_url="${MEILISEARCH_URL}/health"
     fi
     
     HEALTH=$(curl -s "$search_health_url" 2>/dev/null)
@@ -83,7 +83,7 @@ if docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
         # 检查索引状态
         indexes_url="${SEARCH_URL}/indexes"
         if [ -z "$SEARCH_URL" ]; then
-            indexes_url="http://localhost:7700/indexes"
+            indexes_url="${MEILISEARCH_URL}/indexes"
         fi
         
         INDEXES=$(curl -s "$indexes_url" 2>/dev/null)
@@ -93,7 +93,7 @@ if docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
             # 检查索引统计信息
             stats_url="${SEARCH_URL}/indexes/articles/stats"
             if [ -z "$SEARCH_URL" ]; then
-                stats_url="http://localhost:7700/indexes/articles/stats"
+                stats_url="${MEILISEARCH_URL}/indexes/articles/stats"
             fi
             
             STATS=$(curl -s "$stats_url" 2>/dev/null)
@@ -113,7 +113,7 @@ if docker ps --format "table {{.Names}}" | grep -q "^meilisearch$"; then
         
         # 显示管理界面信息
         if [ -z "$SEARCH_URL" ]; then
-            echo -e "   ${BLUE}🌐 管理界面: http://localhost:7700${NC}"
+            echo -e "   ${BLUE}🌐 管理界面: ${MEILISEARCH_URL}${NC}"
         else
             echo -e "   ${BLUE}🌐 管理界面: ${SEARCH_URL}${NC}"
         fi

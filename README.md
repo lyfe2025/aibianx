@@ -61,21 +61,17 @@ graph TB
                 D --> A
             end
             
-            subgraph "📧 独立部署邮件系统 (BillionMail/docker-compose.yml)"
-                J[BillionMail Core<br/>:8080]
-                J1[PostgreSQL 邮件专用库<br/>:5433]
-                J2[Redis 邮件专用缓存<br/>:6380]
-                J3[rspamd 反垃圾邮件<br/>:11334]
-                J4[dovecot IMAP/POP3<br/>:143/993/110/995]
-                J5[postfix SMTP<br/>:25/587/465]
-                J6[RoundCube WebMail<br/>:8080/roundcube]
+            subgraph "📧 集成邮件订阅系统 (Strapi集成)"
+                J[邮件订阅管理<br/>集成到Strapi Admin]
+                J1[邮件订阅API<br/>subscription/unsubscribe]
+                J2[SMTP配置<br/>环境变量配置]
+                J3[订阅者管理<br/>tags/preferences]
+                J4[邮件发送<br/>统计和分析]
                 
                 J1 --> J
                 J2 --> J
                 J3 --> J
                 J4 --> J
-                J5 --> J
-                J6 --> J
             end
         end
     end
@@ -117,9 +113,9 @@ graph TB
     U3 --> J
     U3 --> I
     
-    %% 跨服务API连接
-    D -.->|邮件营销API| J
-    A -.->|前端访问邮件界面| J6
+    %% 集成服务API连接
+    D -.->|邮件订阅API| J
+    A -.->|邮件订阅表单| J1
     A -.->|搜索API调用| I
     
     %% 管理层连接
@@ -128,15 +124,15 @@ graph TB
     S2 -.->|检测服务状态| I
     S2 -.->|检测服务状态| D
     S2 -.->|检测服务状态| A
-    S2 -.->|检测独立邮件服务| J
+    S2 -.->|检测邮件订阅功能| J
     S3 -.->|健康检查| G
     S3 -.->|健康检查| D
     S3 -.->|健康检查| I
-    S3 -.->|健康检查| J
+    S3 -.->|API健康检查| J
     S4 -.->|生成访问地址| A
     S4 -.->|生成访问地址| D
     S4 -.->|生成访问地址| I
-    S4 -.->|生成访问地址| J
+    S4 -.->|生成管理地址| J
     
     %% 样式定义
     classDef config fill:#fff3e0,stroke:#f57c00,stroke-width:2px
@@ -147,7 +143,7 @@ graph TB
     
     class K,K1,K2,K3 config
     class G,H,I,D,A unified
-    class J,J1,J2,J3,J4,J5,J6 independent
+    class J,J1,J2,J3,J4 unified
     class U1,U2,U3 user
     class S1,S2,S3,S4,S5 management
 ```
@@ -197,16 +193,16 @@ flowchart LR
 #### 🔧 **基础设施架构**
 - **Docker Compose** - 智能混合容器编排，统一+独立双重策略
 - **MeiliSearch** - 高性能全文搜索引擎，中文分词支持 (统一部署 :7700)
-- **BillionMail** - 专业邮件营销系统，完全独立部署 (独立部署 :8080)
+- **邮件订阅系统** - 完全集成到Strapi，通过内置API管理订阅和发送
 - **Redis** - 内存缓存和会话存储，高性能数据缓存 (统一部署 :6379)
-- **PostgreSQL** - 双库分离架构，主业务库+邮件专用库
+- **PostgreSQL** - 统一数据库架构，主业务数据和邮件订阅数据统一管理
 
 #### 🏗️ **智能混合部署架构特色**
 
 ##### 🎯 **部署策略优势**
-- **🔄 双重部署策略** - 核心服务统一部署 (简化管理) + 邮件服务独立部署 (服务稳定)
+- **🔄 统一部署策略** - 所有服务统一编排部署，简化管理和维护
 - **🚫 零硬编码设计** - 所有URL、端口、连接字符串均从 `deploy.conf` 动态生成
-- **🔧 智能服务发现** - 自动识别现有服务状态，优先使用已运行的独立服务
+- **🔧 智能服务发现** - 自动识别现有服务状态，智能启动和管理服务
 - **🛡️ 冲突智能预防** - 端口占用检测、服务重复检测、资源冲突预警
 
 ##### 🌐 **配置管理特色**
@@ -215,11 +211,11 @@ flowchart LR
 - **🌐 动态URL构建** - 智能生成 `protocol://domain:port/path` 格式访问地址
 - **⚡ 智能启动检测** - 健康检查、状态监控、自动重启机制
 
-##### 📦 **服务隔离设计**
-- **🗄️ 数据完全隔离** - 邮件数据与主业务数据使用独立数据库实例
-- **🔧 配置独立管理** - 邮件系统拥有独立的环境配置和Docker编排
-- **📊 监控分离** - 独立的日志系统、健康检查、性能监控
-- **🚀 版本独立** - 邮件系统可独立升级、回滚，不影响主业务
+##### 📦 **统一服务架构**
+- **🗄️ 数据统一管理** - 邮件订阅数据与主业务数据统一存储在PostgreSQL
+- **🔧 配置集中管理** - 邮件系统配置集成在Strapi环境配置中
+- **📊 监控统一** - 统一的日志系统、健康检查、性能监控
+- **🚀 版本同步** - 邮件系统与主应用同步升级，保证功能一致性
 
 ## 🚀 快速开始
 
@@ -284,7 +280,7 @@ vim deployment/config/deploy.conf    # 自定义域名、密码、端口等
 **⚠️ 手动部署注意事项:**
 1. **配置优先**: 部署前务必检查 `deployment/config/deploy.conf` 配置
 2. **步骤顺序**: 必须先执行 `deploy config` 再执行 `deploy start`
-3. **端口冲突**: 确保配置的端口未被占用 (默认: 80, 1337, 7700, 8080)
+3. **端口冲突**: 确保配置的端口未被占用 (默认: 80, 1337, 7700)
 4. **权限要求**: 确保有Docker操作权限和端口绑定权限
 5. **备份数据**: 如需恢复数据，确保 `backups/` 目录下有相应备份文件
 
@@ -321,8 +317,7 @@ DB_NAME=aibianx_dev                # 数据库名称 (自动添加环境后缀 _
 DB_USER=aibianx_dev                # 数据库用户
 DB_PASSWORD=                       # 数据库密码 (开发环境可为空)
 DB_ADMIN_PASSWORD=postgres_admin_2024   # PostgreSQL管理员密码
-BILLIONMAIL_USERNAME=admin         # 邮件系统用户名
-BILLIONMAIL_PASSWORD=billionmail2024   # 邮件系统密码
+# 邮件系统已集成到Strapi，通过Admin界面管理
 
 # 📦 自动化配置
 BACKUP_VERSION=latest              # 备份版本选择
@@ -334,7 +329,7 @@ AUTO_DEPLOY_EMAIL=true             # 自动邮件系统
 FRONTEND_PORT=80                   # 前端端口
 BACKEND_PORT=1337                  # 后端端口  
 MEILISEARCH_PORT=7700              # 搜索引擎端口
-BILLIONMAIL_PORT=8080              # 邮件系统端口
+# EMAIL_PORT=1337              # 邮件系统已集成到Strapi
 ```
 
 **⚠️ 生产环境必须修改的配置:**
@@ -343,7 +338,7 @@ BILLIONMAIL_PORT=8080              # 邮件系统端口
 - `MAIL_DOMAIN=mail.yourdomain.com` - 设置邮件域名
 - `DB_PASSWORD=your_secure_password` - 设置数据库密码
 - `DB_ADMIN_PASSWORD=admin_secure_password` - 管理员密码
-- `BILLIONMAIL_PASSWORD=email_secure_password` - 邮件系统密码
+# - 邮件系统密码已不需要 (集成到Strapi)
 
 #### 🔧 **Step 3: 系统配置**
 ```bash
@@ -421,7 +416,7 @@ BILLIONMAIL_PORT=8080              # 邮件系统端口
 ```bash
 # 端口被占用
 ./scripts.sh tools status      # 查看端口占用情况
-sudo lsof -i :80,1337,7700,8080  # 检查具体端口占用
+sudo lsof -i :80,1337,7700  # 检查具体端口占用
 
 # 服务启动失败
 ./scripts.sh deploy stop       # 停止所有服务
@@ -473,8 +468,7 @@ tail -f logs/frontend.log       # 前端日志
 | 🌐 **前端网站** | [http://localhost](http://localhost) | 用户访问界面 | `curl localhost` |
 | ⚙️ **后端管理** | [http://localhost:1337/admin](http://localhost:1337/admin) | Strapi管理后台 | `curl localhost:1337/admin` |
 | 🔍 **搜索引擎** | [http://localhost:7700](http://localhost:7700) | MeiliSearch控制台 | `curl localhost:7700/health` |
-| 📧 **邮件管理** | [http://localhost:8080/billion](http://localhost:8080/billion) | BillionMail管理界面 | `curl localhost:8080/billion` |
-| 📮 **WebMail** | [http://localhost:8080/roundcube](http://localhost:8080/roundcube) | 邮件收发界面 | `curl localhost:8080/roundcube` |
+| 📧 **邮件订阅管理** | [http://localhost:1337/admin](http://localhost:1337/admin) | Strapi集成邮件订阅管理 | `curl localhost:1337/api/email-subscription/stats` |
 
 **📝 注意**: 生产环境地址将根据 `deployment/config/deploy.conf` 中的域名配置自动调整
 
@@ -489,9 +483,9 @@ tail -f logs/frontend.log       # 前端日志
   - 访问: http://localhost:1337/admin
   - 建议账号: `admin` / `admin@aibianx.com`
 
-- **BillionMail邮件系统**
-  - 访问: http://localhost:8080/billion  
-  - 默认账号: `admin` / `billionmail2024`
+- **邮件订阅系统** (已集成到Strapi后台)
+  - 访问: http://localhost:1337/admin  
+  - 使用: 登录Strapi后台管理邮件订阅
 
 - **MeiliSearch搜索**
   - 访问: http://localhost:7700

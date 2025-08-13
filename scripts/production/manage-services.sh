@@ -23,9 +23,7 @@ NC='\033[0m' # No Color
 
 # 获取Docker Compose文件
 get_compose_file() {
-    if [ -f "$PROJECT_ROOT/deployment/docker-compose.unified.yml" ]; then
-        echo "$PROJECT_ROOT/deployment/docker-compose.unified.yml"
-    elif [ -f "$PROJECT_ROOT/deployment/docker-compose.yml" ]; then
+    if [ -f "$PROJECT_ROOT/deployment/docker-compose.yml" ]; then
         echo "$PROJECT_ROOT/deployment/docker-compose.yml"
     else
         echo ""

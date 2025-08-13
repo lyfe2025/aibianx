@@ -32,56 +32,72 @@ show_menu() {
         deploy_mode=$(grep "^DEPLOY_MODE=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "dev")
     fi
     
-    # 根据模式设置协议
+    # 根据模式设置协议和菜单主题
     local protocol="http"
+    local env_color="${GREEN}"
+    local env_icon="🛠️"
+    local mode_desc="开发环境"
+    
     if [ "$deploy_mode" = "production" ]; then
         protocol="https"
+        env_color="${RED}"
+        env_icon="🚀"
+        mode_desc="生产环境"
     fi
     
-    echo -e "${CYAN}🚀 AI变现之路 - 极简管理工具${NC}"
+    echo -e "${CYAN}🚀 AI变现之路 - 智能管理工具${NC}"
     echo "===================================="
-    echo -e "${GREEN}📍 当前环境: ${deploy_mode} | 域名: ${domain}${NC}"
+    echo -e "${env_color}${env_icon} 当前环境: ${mode_desc} | 域名: ${domain}${NC}"
     echo ""
     
-    echo -e "${BLUE}📋 核心功能:${NC}"
+    # 根据环境显示不同的菜单
+    if [ "$deploy_mode" = "production" ]; then
+        show_production_menu
+    else
+        show_development_menu
+    fi
+}
+
+# 开发环境菜单
+show_development_menu() {
+    echo -e "${BLUE}📋 开发环境功能:${NC}"
     echo "  1) 🔧 极简一键配置        ⚙️  生成所有环境变量，恢复备份数据"
-    echo "  2) 🚀 启动完整环境        🌐 启动前端+后端+数据库+搜索引擎"
-    echo "  3) 🛑 停止所有服务        🔴 安全停止所有Docker容器"
+    echo "  2) 🚀 启动开发环境        🌐 本地开发服务器 (npm run dev)"
+    echo "  3) 🛑 停止开发服务        🔴 停止本地开发进程"
     echo "  4) 📦 备份管理           💾 查看/创建/恢复/验证备份文件"
     echo "  5) 🔍 系统状态           📊 检查所有服务运行状态"
-    echo "  9) 🌐 显示所有访问地址    🔗 查看完整的系统访问地址和服务状态"
     echo ""
-    
     echo -e "${BLUE}🛠️ 开发工具:${NC}"
     echo "  6) 📊 代码质量检查        🔎 ESLint+硬编码+环境检查"
     echo "  7) 🔍 搜索引擎管理        🎯 MeiliSearch索引管理"
-    echo "  8) 📧 邮件系统管理        📬 Strapi集成邮件营销系统"
+    echo "  8) 📧 邮件系统管理        📬 Strapi集成邮件订阅系统"
+    echo "  9) 🌐 显示所有访问地址    🔗 查看完整的系统访问地址和服务状态"
     echo ""
-    
-    # 动态读取端口配置（优先从配置文件读取）
-    local frontend_port="80"
-    local backend_port="1337"
-    local search_port="7700"
-    local email_port="8080"
-    
-    # 优先从配置文件读取
-    if [ -f "deployment/config/deploy.conf" ]; then
-        frontend_port=$(grep "^FRONTEND_PORT=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "80")
-        backend_port=$(grep "^BACKEND_PORT=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "1337")
-        search_port=$(grep "^MEILISEARCH_PORT=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "7700")
-    # 后备：从生成的环境文件读取
-    elif [ -f "backend/.env" ]; then
-        frontend_port=$(grep "^FRONTEND_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "80")
-        backend_port=$(grep "^BACKEND_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "1337")
-        search_port=$(grep "^MEILISEARCH_PORT=" backend/.env 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "7700")
-    fi
-    
-
-    
     echo -e "${BLUE}📚 快捷操作:${NC}"
+    echo "  e) 🔄 切换到生产环境      🚀 修改 deploy.conf 中的 DEPLOY_MODE"
     echo "  h) 📖 显示详细帮助        💡 命令行用法和配置说明"
     echo "  q) 🚪 退出              👋 安全退出管理工具"
+}
+
+# 生产环境菜单
+show_production_menu() {
+    echo -e "${RED}🚀 生产环境功能:${NC}"
+    echo "  1) 🔧 一键生产配置        ⚙️  生成生产级环境变量"
+    echo "  2) 🐳 启动生产环境        🌐 Docker Compose 容器部署"
+    echo "  3) 🛑 停止生产服务        🔴 停止所有生产容器"
+    echo "  4) 📦 备份管理           💾 生产数据备份和恢复"
+    echo "  5) 📊 生产监控           📈 容器状态、日志、性能监控"
     echo ""
+    echo -e "${RED}🔧 生产运维:${NC}"
+    echo "  6) 🏗️ 重建生产镜像        🔨 重新构建 Docker 镜像"
+    echo "  7) 🔍 查看容器日志        📋 实时查看服务日志"
+    echo "  8) 📧 邮件系统状态        📬 生产邮件服务状态"
+    echo "  9) 🌐 显示生产地址        🔗 查看生产环境访问地址"
+    echo ""
+    echo -e "${RED}📚 快捷操作:${NC}"
+    echo "  e) 🔄 切换到开发环境      🛠️ 修改 deploy.conf 中的 DEPLOY_MODE"
+    echo "  h) 📖 显示详细帮助        💡 命令行用法和配置说明"
+    echo "  q) 🚪 退出              👋 安全退出管理工具"
 }
 
 # 显示详细帮助
@@ -143,22 +159,46 @@ execute_choice() {
             return 1
             ;;
         "2")
-            echo -e "${CYAN}🚀 开始启动完整开发环境...${NC}"
-            echo -e "${BLUE}📋 启动流程说明:${NC}"
-            echo "   1️⃣  加载统一环境配置 (deployment/config/deploy.conf)"
-            echo "   2️⃣  检查Node.js版本和依赖"
-            echo "   3️⃣  验证数据库连接 (PostgreSQL)"
-            echo "   4️⃣  检查并启动搜索引擎 (MeiliSearch)"
-            echo "   5️⃣  启动后端服务 (Strapi)"
-            echo "   6️⃣  启动前端服务 (Next.js)"
-            echo "   7️⃣  同步搜索索引数据"
-            echo "   8️⃣  验证所有服务状态"
-            echo ""
-            echo -e "${YELLOW}🚀 开始执行启动流程...${NC}"
-            echo "======================================================="
-            "$SCRIPT_DIR/scripts/deployment/start-dev.sh"
-            echo "======================================================="
-            echo -e "${GREEN}✅ 开发环境启动完成！${NC}"
+            # 检查当前环境模式
+            local current_mode="dev"
+            if [ -f "deployment/config/deploy.conf" ]; then
+                current_mode=$(grep "^DEPLOY_MODE=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "dev")
+            fi
+            
+            if [ "$current_mode" = "production" ]; then
+                echo -e "${CYAN}🐳 开始启动生产环境...${NC}"
+                echo -e "${RED}📋 生产部署流程:${NC}"
+                echo "   1️⃣  检查 Docker 和 docker-compose"
+                echo "   2️⃣  加载生产环境配置"
+                echo "   3️⃣  构建生产 Docker 镜像"
+                echo "   4️⃣  启动生产容器栈"
+                echo "   5️⃣  等待服务就绪"
+                echo "   6️⃣  验证生产服务状态"
+                echo ""
+                echo -e "${YELLOW}🚀 开始执行生产部署...${NC}"
+                echo "======================================================="
+                "$SCRIPT_DIR/scripts/production/deploy-production.sh"
+                echo "======================================================="
+                echo -e "${GREEN}✅ 生产环境部署完成！${NC}"
+            else
+                echo -e "${CYAN}🚀 开始启动开发环境...${NC}"
+                echo -e "${BLUE}📋 开发启动流程:${NC}"
+                echo "   1️⃣  加载统一环境配置 (deployment/config/deploy.conf)"
+                echo "   2️⃣  检查Node.js版本和依赖"
+                echo "   3️⃣  验证数据库连接 (PostgreSQL)"
+                echo "   4️⃣  检查并启动搜索引擎 (MeiliSearch)"
+                echo "   5️⃣  启动后端服务 (Strapi)"
+                echo "   6️⃣  启动前端服务 (Next.js)"
+                echo "   7️⃣  同步搜索索引数据"
+                echo "   8️⃣  验证所有服务状态"
+                echo ""
+                echo -e "${YELLOW}🚀 开始执行启动流程...${NC}"
+                echo "======================================================="
+                "$SCRIPT_DIR/scripts/deployment/start-dev.sh"
+                echo "======================================================="
+                echo -e "${GREEN}✅ 开发环境启动完成！${NC}"
+            fi
+            
             echo ""
             echo -e "${CYAN}📋 正在显示所有服务状态和访问地址...${NC}"
             echo ""
@@ -231,6 +271,44 @@ execute_choice() {
             show_help
             echo ""
             echo -n -e "${YELLOW}按回车键继续...${NC}"
+            read
+            return 1
+            ;;
+        "e"|"E")
+            echo -e "${CYAN}🔄 环境切换${NC}"
+            echo "========================="
+            
+            # 读取当前环境
+            local current_mode="dev"
+            if [ -f "deployment/config/deploy.conf" ]; then
+                current_mode=$(grep "^DEPLOY_MODE=" deployment/config/deploy.conf 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "dev")
+            fi
+            
+            if [ "$current_mode" = "production" ]; then
+                echo -e "${YELLOW}当前环境: 生产环境${NC}"
+                echo -n -e "${BLUE}是否切换到开发环境? (y/n): ${NC}"
+                read -r switch_choice
+                if [[ $switch_choice =~ ^[Yy]$ ]]; then
+                    sed -i '' 's/DEPLOY_MODE=production/DEPLOY_MODE=dev/' deployment/config/deploy.conf
+                    echo -e "${GREEN}✅ 已切换到开发环境${NC}"
+                else
+                    echo -e "${YELLOW}取消切换${NC}"
+                fi
+            else
+                echo -e "${YELLOW}当前环境: 开发环境${NC}"
+                echo -n -e "${RED}是否切换到生产环境? (y/n): ${NC}"
+                read -r switch_choice
+                if [[ $switch_choice =~ ^[Yy]$ ]]; then
+                    sed -i '' 's/DEPLOY_MODE=dev/DEPLOY_MODE=production/' deployment/config/deploy.conf
+                    echo -e "${RED}✅ 已切换到生产环境${NC}"
+                    echo -e "${YELLOW}⚠️  请注意：生产环境将使用 Docker Compose 部署${NC}"
+                else
+                    echo -e "${YELLOW}取消切换${NC}"
+                fi
+            fi
+            
+            echo ""
+            echo -n -e "${YELLOW}按回车键返回主菜单...${NC}"
             read
             return 1
             ;;

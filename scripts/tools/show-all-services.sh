@@ -55,7 +55,7 @@ echo -e "${BLUE}📊 服务状态检查:${NC}"
 
 # 1. 前端服务检查
 echo -n "🌐 前端服务 (Next.js): "
-if curl -s -f "http://localhost:${FRONTEND_PORT}" > /dev/null 2>&1; then
+if curl -s -f "${FRONTEND_URL}" > /dev/null 2>&1; then
     echo -e "${GREEN}✅ 运行正常${NC}"
     FRONTEND_STATUS="✅"
 else
@@ -65,7 +65,7 @@ fi
 
 # 2. 后端服务检查
 echo -n "⚙️  后端服务 (Strapi): "
-if curl -s -f "http://localhost:${BACKEND_PORT}/api/articles" > /dev/null 2>&1; then
+if curl -s -f "${BACKEND_URL}/api/articles" > /dev/null 2>&1; then
     echo -e "${GREEN}✅ 运行正常${NC}"
     BACKEND_STATUS="✅"
 else
@@ -75,7 +75,7 @@ fi
 
 # 3. 搜索引擎检查
 echo -n "🔍 MeiliSearch搜索: "
-if curl -s -f "http://localhost:${MEILISEARCH_PORT}/health" > /dev/null 2>&1; then
+if curl -s -f "${MEILISEARCH_URL}/health" > /dev/null 2>&1; then
     echo -e "${GREEN}✅ 运行正常${NC}"
     SEARCH_STATUS="✅"
 else
@@ -151,7 +151,7 @@ if [ "$DB_STATUS" = "✅" ]; then
 fi
 
 if [ "$SEARCH_STATUS" = "✅" ]; then
-    SEARCH_DOCS=$(curl -s "http://localhost:${MEILISEARCH_PORT}/indexes/articles/stats" 2>/dev/null | grep -o '"numberOfDocuments":[0-9]*' | cut -d':' -f2)
+    SEARCH_DOCS=$(curl -s "${MEILISEARCH_URL}/indexes/articles/stats" 2>/dev/null | grep -o '"numberOfDocuments":[0-9]*' | cut -d':' -f2)
     echo "🔍 搜索索引文档: ${SEARCH_DOCS:-0}"
 fi
 

@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      // 3. 发送自定义密码重置邮件（使用BillionMail）
+      // 3. 发送自定义密码重置邮件
       const resetUrl = `${process.env.NEXTAUTH_URL || 'http://localhost'}/auth/reset-password`
       const emailResult = await sendPasswordResetEmail(email, resetUrl)
 

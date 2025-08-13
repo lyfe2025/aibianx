@@ -157,7 +157,7 @@ vim deployment/config/deploy.conf
 - **🌐 前端网站**: http://localhost
 - **⚙️ 后端管理**: http://localhost:1337/admin
 - **🔍 搜索管理**: http://localhost:7700
-- **📧 邮件管理**: http://localhost:8080
+- **📧 邮件订阅管理**: http://localhost:1337/admin (已完全集成到Strapi)
 
 ## 🔐 **默认账号信息**
 
@@ -165,9 +165,9 @@ vim deployment/config/deploy.conf
 - 首次访问时创建管理员账号
 - 推荐: admin / admin@aibianx.com
 
-### **BillionMail邮件系统**
-- 默认: admin / billionmail2024
-- 配置位置: deployment/config/deploy.conf
+### **邮件订阅系统** (已集成到Strapi)
+- 访问: 登录Strapi后台即可管理
+- 管理地址: http://localhost:1337/admin
 
 ## 📞 **获取帮助**
 

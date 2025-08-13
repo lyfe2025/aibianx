@@ -222,52 +222,75 @@ generate_configs() {
     # 创建目录
     mkdir -p "$PROJECT_ROOT/backend" "$PROJECT_ROOT/frontend" "$PROJECT_ROOT/deployment"
     
-    # 备份现有配置
-    backup_timestamp=$(date +"%Y%m%d_%H%M%S")
+    # 备份现有配置（添加毫秒防冲突）
+    backup_timestamp=$(date +"%Y%m%d_%H%M%S")_$(( RANDOM % 1000 ))
     for file in backend/.env frontend/.env.local deployment/.env; do
         if [ -f "$PROJECT_ROOT/$file" ]; then
             cp "$PROJECT_ROOT/$file" "$PROJECT_ROOT/$file.backup.$backup_timestamp"
         fi
     done
     
+    # 读取端口配置（从配置文件获取或使用默认值）
+    FRONTEND_PORT=$(grep "^FRONTEND_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "80")
+    BACKEND_PORT=$(grep "^BACKEND_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "1337")
+    MEILISEARCH_PORT=$(grep "^MEILISEARCH_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "7700")
+    
     # 根据部署模式设置变量
     if [ "$DEPLOY_MODE" = "production" ]; then
         CURRENT_PROTOCOL="https"
         DB_HOST="postgres"
-        # 智能添加环境后缀（如果用户未配置）
-        if [[ "$DB_NAME" == *"_prod" ]]; then
+        # 智能添加环境后缀（防止重复添加）
+        if [[ "$DB_NAME" =~ _(prod|dev)$ ]]; then
             DB_FULL_NAME="$DB_NAME"
         else
             DB_FULL_NAME="${DB_NAME}_prod"
         fi
-        if [[ "$DB_USER" == *"_prod" ]]; then
+        if [[ "$DB_USER" =~ _(prod|dev)$ ]]; then
             DB_FULL_USER="$DB_USER"
         else
             DB_FULL_USER="${DB_USER}_prod"
         fi
         NODE_ENV="production"
+        # 生产环境URL构建
+        FRONTEND_URL="${CURRENT_PROTOCOL}://${DOMAIN}"
+        BACKEND_URL="${CURRENT_PROTOCOL}://${DOMAIN}"
+        NEXTAUTH_BASE_URL="${CURRENT_PROTOCOL}://${DOMAIN}"
     else
         CURRENT_PROTOCOL="http"
         DB_HOST="localhost"
-        # 智能添加环境后缀（如果用户未配置）
-        if [[ "$DB_NAME" == *"_dev" ]]; then
+        # 智能添加环境后缀（防止重复添加）
+        if [[ "$DB_NAME" =~ _(prod|dev)$ ]]; then
             DB_FULL_NAME="$DB_NAME"
         else
             DB_FULL_NAME="${DB_NAME}_dev"
         fi
-        if [[ "$DB_USER" == *"_dev" ]]; then
+        if [[ "$DB_USER" =~ _(prod|dev)$ ]]; then
             DB_FULL_USER="$DB_USER"
         else
             DB_FULL_USER="${DB_USER}_dev"
         fi
         NODE_ENV="development"
+        # 开发环境URL构建（统一端口处理）
+        if [ "$FRONTEND_PORT" = "80" ]; then
+            FRONTEND_URL="${CURRENT_PROTOCOL}://${DOMAIN}"
+            NEXTAUTH_BASE_URL="${CURRENT_PROTOCOL}://${DOMAIN}"
+        else
+            FRONTEND_URL="${CURRENT_PROTOCOL}://${DOMAIN}:${FRONTEND_PORT}"
+            NEXTAUTH_BASE_URL="${CURRENT_PROTOCOL}://${DOMAIN}:${FRONTEND_PORT}"
+        fi
+        if [ "$BACKEND_PORT" = "80" ]; then
+            BACKEND_URL="${CURRENT_PROTOCOL}://${DOMAIN}"
+        else
+            BACKEND_URL="${CURRENT_PROTOCOL}://${DOMAIN}:${BACKEND_PORT}"
+        fi
     fi
     
-    # 读取端口配置（从配置文件获取或使用默认值）
-FRONTEND_PORT=$(grep "^FRONTEND_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "80")
-BACKEND_PORT=$(grep "^BACKEND_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "1337")
-MEILISEARCH_PORT=$(grep "^MEILISEARCH_PORT=" "$DEPLOY_CONFIG" 2>/dev/null | cut -d'=' -f2 | cut -d'#' -f1 | xargs || echo "7700")
-# 邮件系统已集成到Strapi，无需单独端口
+    # 处理数据库密码 - 如果为空则自动生成安全密码
+    if [ -z "$DB_PASSWORD" ]; then
+        DB_PASSWORD=$(openssl rand -hex 16)
+        echo -e "${YELLOW}⚠️  数据库密码为空，已自动生成安全密码: $DB_PASSWORD${NC}"
+        echo -e "${CYAN}💡 请记录此密码，或在 deployment/config/deploy.conf 中设置固定密码${NC}"
+    fi
 
 # 生成后端配置
 cat > "$PROJECT_ROOT/backend/.env" << EOF
@@ -298,12 +321,12 @@ DATABASE_USERNAME=$DB_FULL_USER
 DATABASE_PASSWORD=$DB_PASSWORD
 DATABASE_SSL=false
 
-# JWT配置 (自动生成)
-APP_KEYS=app_key_1,app_key_2,app_key_3,app_key_4
-API_TOKEN_SALT=api_token_salt_here
-ADMIN_JWT_SECRET=admin_jwt_secret_here
-TRANSFER_TOKEN_SALT=transfer_token_salt_here
-JWT_SECRET=jwt_secret_here
+# JWT配置 (自动生成安全密钥)
+APP_KEYS=$(openssl rand -hex 16),$(openssl rand -hex 16),$(openssl rand -hex 16),$(openssl rand -hex 16)
+API_TOKEN_SALT=$(openssl rand -hex 32)
+ADMIN_JWT_SECRET=$(openssl rand -hex 32)
+TRANSFER_TOKEN_SALT=$(openssl rand -hex 32)
+JWT_SECRET=$(openssl rand -hex 32)
 
 # 文件上传
 UPLOAD_LOCATION=./public/uploads
@@ -312,9 +335,10 @@ UPLOAD_LOCATION=./public/uploads
 MEILISEARCH_DOMAIN=$DOMAIN
 MEILISEARCH_PORT=$MEILISEARCH_PORT
 MEILISEARCH_PROTOCOL=$CURRENT_PROTOCOL
-MEILISEARCH_API_KEY=
+MEILISEARCH_API_KEY=$(openssl rand -hex 16)
 
-# 邮件系统已集成到Strapi
+# CORS配置
+CORS_ORIGINS=$FRONTEND_URL
 
 # 运行环境
 NODE_ENV=$NODE_ENV
@@ -338,20 +362,25 @@ NEXT_PUBLIC_BACKEND_DOMAIN=$DOMAIN
 NEXT_PUBLIC_BACKEND_PORT=$BACKEND_PORT
 NEXT_PUBLIC_BACKEND_PROTOCOL=$CURRENT_PROTOCOL
 
-# 搜索服务
+# 搜索服务  
 NEXT_PUBLIC_SEARCH_DOMAIN=$DOMAIN
 NEXT_PUBLIC_SEARCH_PORT=$MEILISEARCH_PORT
 NEXT_PUBLIC_SEARCH_PROTOCOL=$CURRENT_PROTOCOL
 NEXT_PUBLIC_SEARCH_API_KEY=
 
-# 邮件系统已集成到Strapi
+# 性能优化
+NEXT_PUBLIC_NODE_ENV=$NODE_ENV
+
+# 功能开关
+NEXT_PUBLIC_ENABLE_ANALYTICS=true
+NEXT_PUBLIC_ENABLE_SEO=true
 
 # 认证配置
 NEXTAUTH_SECRET=nextauth_secret_key_2024
-NEXTAUTH_URL=$CURRENT_PROTOCOL://$DOMAIN
+NEXTAUTH_URL=$NEXTAUTH_BASE_URL
 
 # 网站配置
-NEXT_PUBLIC_SITE_URL=$CURRENT_PROTOCOL://$DOMAIN
+NEXT_PUBLIC_SITE_URL=$FRONTEND_URL
 EOF
 
     # 生成Docker配置
@@ -370,20 +399,17 @@ POSTGRES_PASSWORD=$DB_ADMIN_PASSWORD
 REDIS_PASSWORD=redis_password_2024
 
 # 搜索引擎
-MEILI_MASTER_KEY=
+MEILI_MASTER_KEY=$(openssl rand -hex 32)
 
 # 端口配置
 FRONTEND_PORT=$FRONTEND_PORT
 BACKEND_PORT=$BACKEND_PORT
 MEILISEARCH_PORT=$MEILISEARCH_PORT
-# 邮件系统已集成到Strapi
 
 # NextAuth配置
 NEXTAUTH_SECRET=nextauth_secret_key_2024_$(date +%s)
-NEXT_PUBLIC_SITE_URL=$CURRENT_PROTOCOL://$DOMAIN
-NEXTAUTH_URL=$CURRENT_PROTOCOL://$DOMAIN
-
-# 邮件系统已集成到Strapi
+NEXT_PUBLIC_SITE_URL=$FRONTEND_URL
+NEXTAUTH_URL=$NEXTAUTH_BASE_URL
 
 # 系统配置
 TZ=Asia/Shanghai

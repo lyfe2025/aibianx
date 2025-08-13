@@ -255,11 +255,11 @@ module.exports = (plugin) => {
         },
       },
       
-      // BillionMail集成字段
-      billionmailSubscribed: {
+      // 邮件订阅字段
+      emailSubscribed: {
         edit: {
-          label: 'BillionMail订阅状态',
-          description: '是否已订阅邮件营销',
+          label: '邮件订阅状态',
+          description: '是否已订阅邮件通知',
           visible: true,
           editable: true,
         },
@@ -267,32 +267,6 @@ module.exports = (plugin) => {
           label: '邮件订阅',
           searchable: false,
           sortable: true,
-        },
-      },
-      billionmailSubscriberId: {
-        edit: {
-          label: 'BillionMail订阅者ID',
-          description: '在BillionMail系统中的订阅者ID',
-          visible: true,
-          editable: false,
-        },
-        list: {
-          label: '订阅者ID',
-          searchable: true,
-          sortable: false,
-        },
-      },
-      billionmailListIds: {
-        edit: {
-          label: '邮件列表ID',
-          description: '订阅的邮件列表ID集合',
-          visible: true,
-          editable: false,
-        },
-        list: {
-          label: '邮件列表',
-          searchable: false,
-          sortable: false,
         },
       },
       

@@ -103,7 +103,7 @@ services:
       - integrated-network
 
   # ===== 邮件系统已完全移除 =====
-  # 注意: BillionMail邮件系统已完全移除
+  # 注意: 邮件系统已集成到Strapi
   # 邮件服务将由自建系统提供
 
 # 数据卷

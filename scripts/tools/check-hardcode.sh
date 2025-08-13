@@ -60,6 +60,11 @@ should_skip_hardcode_check() {
         return 0
     fi
     
+    # 🔧 跳过自动生成的配置文件（最重要的修复）
+    if is_auto_generated_file "$file"; then
+        return 0
+    fi
+    
     # 跳过文档文件
     if [[ "$file" =~ \.md$ ]]; then
         return 0
@@ -92,6 +97,32 @@ should_skip_hardcode_check() {
     
     # 跳过URL映射表定义（在修复脚本中是正常的）
     if [[ "$content" =~ URL_REPLACEMENTS ]] || [[ "$content" =~ declare.*-A ]]; then
+        return 0
+    fi
+    
+    return 1
+}
+
+# 检查文件是否为自动生成的配置文件
+is_auto_generated_file() {
+    local file="$1"
+    
+    # 检查常见的自动生成配置文件路径
+    if [[ "$file" =~ deployment/\.env$ ]] || [[ "$file" =~ backend/\.env$ ]] || [[ "$file" =~ frontend/\.env\.local$ ]]; then
+        
+        # 检查文件头部是否包含自动生成标记
+        if [ -f "$file" ] && head -10 "$file" 2>/dev/null | grep -q "自动生成\|auto-generated\|AUTO GENERATED"; then
+            return 0
+        fi
+        
+        # 即使没有标记，这些路径的 .env 文件通常也是自动生成的
+        if [[ "$file" =~ deployment/\.env$ ]]; then
+            return 0
+        fi
+    fi
+    
+    # 跳过任何包含自动生成标记的文件
+    if [ -f "$file" ] && head -5 "$file" 2>/dev/null | grep -q "自动生成\|AUTO GENERATED\|auto-generated"; then
         return 0
     fi
     

@@ -33,13 +33,13 @@
       "type": "json",
       "description": "订阅标签列表"
     },
-    "billionmailSubscriberId": {
+    "emailSubscriberId": {
       "type": "string",
-      "description": "BillionMail系统中的订阅者ID"
+      "description": "本地邮件系统中的订阅者ID"
     },
-    "billionmailListIds": {
+    "emailListIds": {
       "type": "json",
-      "description": "已订阅的BillionMail邮件列表ID集合"
+      "description": "已订阅的邮件列表ID集合"
     },
     "status": {
       "type": "enumeration",

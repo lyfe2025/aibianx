@@ -31,7 +31,7 @@ async function configureEmailSubscriptionFields() {
           [{ name: 'email', size: 6 }, { name: 'user', size: 6 }],
           [{ name: 'source', size: 6 }, { name: 'status', size: 6 }],
           [{ name: 'tags', size: 12 }],
-          [{ name: 'billionmailSubscriberId', size: 6 }, { name: 'billionmailListIds', size: 6 }],
+          [{ name: 'emailSubscriberId', size: 6 }, { name: 'emailListIds', size: 6 }],
           [{ name: 'preferences', size: 6 }, { name: 'subscribedAt', size: 6 }],
           [{ name: 'lastEmailSent', size: 6 }]
         ]

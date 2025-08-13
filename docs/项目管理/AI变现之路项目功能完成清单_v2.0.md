@@ -67,7 +67,7 @@
 | **关于页面 (/about)** | ✅ 100% | `/app/about/page.tsx` | 6个展示区块完整 |
 | **个人中心 (/profile/*)** | ✅ 100% | `/app/profile/layout.tsx` | 左侧导航、6个子页面系统 |
 | **API调试页面 (/api-debug)** | ✅ 100% | `/app/api-debug/page.tsx` | 完整的API测试界面 |
-| **邮件测试页面 (/test-email)** | ✅ 100% | `/app/test-email/page.tsx` | BillionMail测试界面 |
+| **邮件测试页面 (/test-email)** | ✅ 100% | `/app/test-email/page.tsx` | 邮件系统测试界面 (已集成到Strapi) |
 | **搜索演示页面 (/search-demo)** | ✅ 100% | `/app/search-demo/page.tsx` | MeiliSearch功能演示 |
 | **支付页面 (/payment)** | ✅ 100% | `/app/payment/page.tsx` | 支付流程界面 |
 | **会员页面 (/membership)** | ✅ 100% | `/app/membership/page.tsx` | 会员管理界面 |
@@ -113,7 +113,7 @@
 | API路由 | 完成状态 | 功能验证 |
 |---------|---------|----------|
 | **NextAuth认证API** | ✅ 100% | `/api/auth/[...nextauth]` OAuth和邮箱双认证模式 |
-| **用户注册API** | ✅ 100% | `/api/auth/register` Strapi注册+BillionMail欢迎邮件 |
+| **用户注册API** | ✅ 100% | `/api/auth/register` Strapi注册+邮件订阅系统 |
 | **密码重置API** | ✅ 100% | `/api/auth/reset-password` 双阶段重置流程 |
 | **忘记密码API** | ✅ 100% | `/api/auth/forgot-password` 重置邮件发送 |
 | **邮箱验证API** | ✅ 100% | `/api/auth/send-verification` 验证码生成发送 |
@@ -326,15 +326,26 @@
 
 ## 📧 邮件营销系统（100%完成）🎉
 
-### BillionMail企业级系统集成（史诗级突破）
-| 系统组件 | 完成状态 | 实际验证 |
+### 邮件订阅系统（已重构为Strapi集成）
+
+> **🔄 重要架构变更说明（2025.2.3更新）**：
+> 邮件系统已从独立的BillionMail部署重构为Strapi集成方案，
+> 提供更简洁的部署和维护体验，同时保持完整的邮件订阅功能。
+
+| 系统组件 | 完成状态 | 当前实现方案 |
 |---------|---------|----------|
-| **BillionMail Docker部署** | ✅ 100% | 7个容器服务：core-billionmail、webmail、dovecot、postfix、rspamd、pgsql、redis (2025.2.2验证) |
-| **企业级邮件引擎** | ✅ 100% | BillionMail 4.0.1版本，完整的邮件营销平台 |
-| **BillionMail管理界面** | ✅ 100% | http://localhost:8080/billion 完全可用，billion/billion登录 |
-| **WebMail系统** | ✅ 100% | http://localhost:8080/roundcube RoundCube邮件界面 |
-| **API集成** | ✅ 100% | /api/v1 端点完整集成，前后端API调用成功 |
-| **邮件模板系统** | ✅ 100% | 7个邮件模板：验证码、欢迎、密码重置、登录验证等 |
+| **邮件订阅API** | ✅ 100% | `/api/email-subscription` - Strapi原生API管理 |
+| **订阅管理界面** | ✅ 100% | Strapi Admin - http://localhost:1337/admin |
+| **用户邮件订阅** | ✅ 100% | 用户表集成emailSubscribed字段 |
+| **OAuth邮件订阅** | ✅ 100% | OAuth登录自动触发邮件订阅 |
+| **订阅数据分析** | ✅ 100% | 订阅统计、状态管理、标签系统 |
+| **API集成** | ✅ 100% | 前端通过/api/email-subscription调用 |
+
+#### 新架构优势：
+- ✅ **部署简化**: 无需独立邮件服务器，减少容器依赖
+- ✅ **管理统一**: 通过Strapi Admin统一管理用户和订阅
+- ✅ **性能提升**: 减少服务间通信，提高响应速度  
+- ✅ **维护便捷**: 单一系统维护，降低运维复杂度
 | **容器编排系统** | ✅ 100% | Docker Compose完整编排，网络隔离、数据持久化 |
 
 ### NextAuth邮件认证集成（完全实现）

@@ -69,8 +69,8 @@ export default factories.createCoreController('api::email-subscription.email-sub
         tags,
         status: 'active' as const,
         subscribedAt: new Date(),
-        billionmailSubscriberId: null, // 暂时保留字段兼容性
-        billionmailListIds: ['newsletter'] // 默认列表
+        emailSubscriberId: null, // 本地邮件系统订阅者ID
+        emailListIds: ['newsletter'] // 默认列表
       };
 
       const subscription = await strapi.entityService.create('api::email-subscription.email-subscription', {
@@ -81,10 +81,8 @@ export default factories.createCoreController('api::email-subscription.email-sub
       if (user) {
         await strapi.entityService.update('plugin::users-permissions.user', user.id, {
           data: {
-            billionmailSubscribed: true,
-            billionmailSubscriberId: null,
-            billionmailListIds: subscriptionData.billionmailListIds
-          }
+            emailSubscribed: true
+          } as any
         });
       }
 
@@ -136,8 +134,8 @@ export default factories.createCoreController('api::email-subscription.email-sub
       if (subscription.user) {
         await strapi.entityService.update('plugin::users-permissions.user', subscription.user, {
           data: {
-            billionmailSubscribed: false
-          }
+            emailSubscribed: false
+          } as any
         });
       }
 

@@ -119,10 +119,8 @@ select_compose_file() {
     local compose_file=""
     
     case "$mode" in
-        "unified")
-            if [ -f "$PROJECT_ROOT/deployment/docker-compose.unified.yml" ]; then
-                compose_file="$PROJECT_ROOT/deployment/docker-compose.unified.yml"
-            elif [ -f "$PROJECT_ROOT/deployment/docker-compose.yml" ]; then
+        "unified"|"production")
+            if [ -f "$PROJECT_ROOT/deployment/docker-compose.yml" ]; then
                 compose_file="$PROJECT_ROOT/deployment/docker-compose.yml"
             fi
             ;;
@@ -135,10 +133,7 @@ select_compose_file() {
             ;;
         *)
             # 自动选择
-            if [ -f "$PROJECT_ROOT/deployment/docker-compose.unified.yml" ]; then
-                compose_file="$PROJECT_ROOT/deployment/docker-compose.unified.yml"
-                mode="unified"
-            elif [ -f "$PROJECT_ROOT/deployment/docker-compose.yml" ]; then
+            if [ -f "$PROJECT_ROOT/deployment/docker-compose.yml" ]; then
                 compose_file="$PROJECT_ROOT/deployment/docker-compose.yml"
                 mode="unified"
             fi

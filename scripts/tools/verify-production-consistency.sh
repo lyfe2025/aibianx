@@ -86,7 +86,7 @@ if docker ps --format "{{.Names}}" | grep -q "aibianx-" 2>/dev/null; then
     check_item "MeiliSearch容器运行" "docker ps --format '{{.Names}}' | grep -q 'aibianx-meilisearch'"
     check_item "后端容器运行" "docker ps --format '{{.Names}}' | grep -q 'aibianx-backend'"
     check_item "前端容器运行" "docker ps --format '{{.Names}}' | grep -q 'aibianx-frontend'"
-    check_item "邮件系统集成检查" "curl -s http://localhost:1337/api/email-subscriptions >/dev/null && echo '邮件系统API正常'"
+    check_item "邮件系统集成检查" "curl -s \${BACKEND_URL}/api/email-subscriptions >/dev/null && echo '邮件系统API正常'"
     check_item "Nginx网关容器运行" "docker ps --format '{{.Names}}' | grep -q 'aibianx-nginx'"
 else
     echo -e "${YELLOW}⚠️ 模拟环境容器未运行，请先启动模拟环境${NC}"

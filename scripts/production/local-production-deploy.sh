@@ -442,21 +442,21 @@ start_production_environment() {
     
     # 拉取镜像
     echo -e "${BLUE}🐳 拉取生产镜像...${NC}"
-    docker-compose -f docker-compose.unified.yml pull
+    docker-compose -f docker-compose.yml pull
     
     # 构建应用镜像
     echo -e "${BLUE}🔨 构建应用镜像...${NC}"
-    docker-compose -f docker-compose.unified.yml build --no-cache
+    docker-compose -f docker-compose.yml build --no-cache
     
     # 启动所有服务
     echo -e "${BLUE}🚀 启动生产服务栈...${NC}"
-    docker-compose -f docker-compose.unified.yml up -d
+    docker-compose -f docker-compose.yml up -d
     
     echo -e "${GREEN}✅ 生产环境启动完成${NC}"
     
     # 显示容器状态
     echo -e "${BLUE}📊 容器状态：${NC}"
-    docker-compose -f docker-compose.unified.yml ps
+    docker-compose -f docker-compose.yml ps
 }
 
 # 等待生产服务就绪（和真实生产环境一致的健康检查）
@@ -649,11 +649,11 @@ show_production_access_info() {
     echo -e "  MeiliSearch：${YELLOW}使用生成的API密钥${NC}"
     echo ""
     echo -e "${CYAN}🛠️  生产环境管理命令：${NC}"
-    echo -e "  查看所有服务：${YELLOW}cd deployment && docker-compose -f docker-compose.unified.yml ps${NC}"
-    echo -e "  查看实时日志：${YELLOW}cd deployment && docker-compose -f docker-compose.unified.yml logs -f${NC}"
-    echo -e "  重启所有服务：${YELLOW}cd deployment && docker-compose -f docker-compose.unified.yml restart${NC}"
-    echo -e "  停止所有服务：${YELLOW}cd deployment && docker-compose -f docker-compose.unified.yml down${NC}"
-    echo -e "  清理所有数据：${YELLOW}cd deployment && docker-compose -f docker-compose.unified.yml down -v${NC}"
+    echo -e "  查看所有服务：${YELLOW}cd deployment && docker-compose ps${NC}"
+    echo -e "  查看实时日志：${YELLOW}cd deployment && docker-compose logs -f${NC}"
+    echo -e "  重启所有服务：${YELLOW}cd deployment && docker-compose restart${NC}"
+    echo -e "  停止所有服务：${YELLOW}cd deployment && docker-compose down${NC}"
+    echo -e "  清理所有数据：${YELLOW}cd deployment && docker-compose down -v${NC}"
     echo ""
     echo -e "${CYAN}📊 监控命令：${NC}"
     echo -e "  容器资源监控：${YELLOW}docker stats${NC}"
@@ -699,7 +699,7 @@ main() {
         echo -e "${CYAN}现在你可以在本地完全验证生产部署流程和功能${NC}"
     else
         echo -e "${RED}❌ 生产环境部署验证失败${NC}"
-        echo -e "${YELLOW}请检查服务日志：cd deployment && docker-compose -f docker-compose.unified.yml logs${NC}"
+        echo -e "${YELLOW}请检查服务日志：cd deployment && docker-compose logs${NC}"
         exit 1
     fi
 }

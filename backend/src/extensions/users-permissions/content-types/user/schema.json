@@ -3,7 +3,7 @@
   "collectionName": "up_users",
   "info": {
     "name": "user",
-    "description": "扩展的用户表 - 支持多认证方式、会员系统、邀请返佣、邮件营销集成",
+    "description": "扩展的用户表 - 支持多认证方式、会员系统、邀请返佣、邮件订阅",
     "singularName": "user",
     "pluralName": "users",
     "displayName": "用户"
@@ -165,18 +165,10 @@
       "description": "累计返佣金额"
     },
     
-    "billionmailSubscribed": {
+    "emailSubscribed": {
       "type": "boolean",
       "default": false,
-      "description": "BillionMail订阅状态"
-    },
-    "billionmailSubscriberId": {
-      "type": "string",
-      "description": "BillionMail系统中的订阅者ID"
-    },
-    "billionmailListIds": {
-      "type": "json",
-      "description": "订阅的邮件列表ID集合"
+      "description": "邮件订阅状态"
     },
     
     "lastLoginAt": {
