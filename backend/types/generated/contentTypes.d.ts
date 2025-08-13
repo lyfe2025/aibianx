@@ -1279,6 +1279,133 @@ export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiSmtpConfigSmtpConfig extends Struct.CollectionTypeSchema {
+  collectionName: 'smtp_configs';
+  info: {
+    description: '\u90AE\u4EF6\u670D\u52A1\u5668SMTP\u914D\u7F6E\uFF0C\u7528\u4E8E\u7CFB\u7EDF\u90AE\u4EF6\u53D1\u9001\u529F\u80FD';
+    displayName: 'SMTP\u914D\u7F6E\u7BA1\u7406';
+    pluralName: 'smtp-configs';
+    singularName: 'smtp-config';
+  };
+  options: {
+    comment: 'SMTP\u90AE\u4EF6\u670D\u52A1\u5668\u914D\u7F6E\u8868\uFF0C\u5B58\u50A8\u90AE\u4EF6\u53D1\u9001\u6240\u9700\u7684\u670D\u52A1\u5668\u4FE1\u606F';
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    dailyLimit: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    dailySent: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    errorCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    fromEmail: Schema.Attribute.Email & Schema.Attribute.Required;
+    fromName: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }> &
+      Schema.Attribute.DefaultTo<'AI\u53D8\u73B0\u4E4B\u8DEF'>;
+    healthStatus: Schema.Attribute.Enumeration<
+      ['healthy', 'warning', 'error', 'unknown']
+    > &
+      Schema.Attribute.DefaultTo<'unknown'>;
+    host: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    isActive: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    isDefault: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    lastError: Schema.Attribute.Text;
+    lastHealthCheck: Schema.Attribute.DateTime;
+    lastUsed: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::smtp-config.smtp-config'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    notes: Schema.Attribute.Text;
+    password: Schema.Attribute.Password & Schema.Attribute.Required;
+    port: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 65535;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<587>;
+    priority: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 999;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<100>;
+    provider: Schema.Attribute.Enumeration<
+      [
+        'aliyun',
+        'tencent',
+        'netease',
+        'gmail',
+        'outlook',
+        'sendgrid',
+        'mailgun',
+        'other',
+      ]
+    > &
+      Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    replyTo: Schema.Attribute.Email;
+    secure: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    successCount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    username: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+  };
+}
+
 export interface ApiSystemConfigSystemConfig extends Struct.SingleTypeSchema {
   collectionName: 'system_configs';
   info: {
@@ -1951,6 +2078,7 @@ declare module '@strapi/strapi' {
       'api::refund.refund': ApiRefundRefund;
       'api::seo-metrics.seo-metrics': ApiSeoMetricsSeoMetrics;
       'api::site-config.site-config': ApiSiteConfigSiteConfig;
+      'api::smtp-config.smtp-config': ApiSmtpConfigSmtpConfig;
       'api::system-config.system-config': ApiSystemConfigSystemConfig;
       'api::tag.tag': ApiTagTag;
       'plugin::content-releases.release': PluginContentReleasesRelease;

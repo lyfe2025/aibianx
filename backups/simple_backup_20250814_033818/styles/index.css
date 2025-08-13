@@ -1,0 +1,42 @@
+/**
+ * AI变现之路 - CSS系统主入口
+ *
+ * 统一导入所有样式模块，确保正确的加载顺序
+ * 1. 变量系统 (最高优先级)
+ * 2. 字体系统
+ * 3. 工具类和页面专用样式
+ * 4. 全局样式重置和主题
+ */
+
+/* 1. CSS变量系统 - 必须最先加载 */
+@import './variables.css';
+
+/* 2. 字体系统 */
+@import './fonts.css';
+
+/* 3. 工具类样式 - 通用辅助类 */
+@import './utilities.css';
+
+/* 4. 页面专用样式 - 设置页面 */
+@import './settings.css';
+
+/* 5. 模态弹窗样式 - 功能独立模块 */
+@import './modal.css';
+
+/* 6. 亮色主题样式 - 主题特定优化 */
+@import './themes.css';
+
+/* 7. 移动端样式 - 触摸友好交互优化 */
+@import './mobile.css';
+
+/* 8. 响应式设计 - 媒体查询和断点规则 */
+@import './responsive.css';
+
+/* 9. 布局容器 - Container组件和页面布局 */
+@import './layout.css';
+
+/* 10. 基础组件 - 按钮、卡片、文字效果、交互状态 */
+@import './components.css';
+
+/* 11. 全局样式和主题切换逻辑 */
+/* 这部分将在globals.css中保留，只包含真正的全局样式 */

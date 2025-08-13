@@ -1,0 +1,200 @@
+/**
+ * AI变现之路 - 布局容器样式
+ * 
+ * Container组件和页面布局相关样式
+ * 包括：容器尺寸、间距、响应式适配等
+ */
+
+/* ===== Container 容器样式 ===== */
+
+/* 基础容器样式 */
+.container {
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* 容器尺寸变体 - 统一响应式断点 */
+.container--sm {
+    max-width: 640px;
+    padding: 0 var(--spacing-4);
+}
+
+.container--md {
+    max-width: 768px;
+    padding: 0 var(--spacing-6);
+}
+
+.container--lg {
+    max-width: 1024px;
+    padding: 0 var(--spacing-6);
+}
+
+.container--xl {
+    max-width: 1440px;
+    /* 🔧 统一使用1440px，与设计稿一致 */
+    padding: 0 var(--spacing-8);
+}
+
+/* 🔧 Container响应式优化 - 防止移动端溢出 */
+@media (max-width: 1439px) {
+    .container--xl {
+        max-width: 1200px !important;
+        padding: 0 var(--spacing-8) !important;
+    }
+}
+
+@media (max-width: 1199px) {
+    .container--xl {
+        max-width: 1024px !important;
+        padding: 0 var(--spacing-6) !important;
+    }
+
+    .container--lg {
+        max-width: 900px !important;
+        padding: 0 var(--spacing-6) !important;
+    }
+}
+
+@media (max-width: 1023px) {
+
+    .container--xl,
+    .container--lg {
+        max-width: 768px !important;
+        padding: 0 var(--spacing-6) !important;
+    }
+
+    .container--md {
+        max-width: 600px !important;
+        padding: 0 var(--spacing-5) !important;
+    }
+}
+
+@media (max-width: 767px) {
+
+    .container--xl,
+    .container--lg,
+    .container--md {
+        max-width: 100% !important;
+        padding: 0 var(--spacing-4) !important;
+    }
+
+    .container--sm {
+        max-width: 100% !important;
+        padding: 0 var(--spacing-4) !important;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .container--xl,
+    .container--lg,
+    .container--md,
+    .container--sm {
+        padding: 0 var(--spacing-3) !important;
+    }
+}
+
+/* 🔧 Container防溢出保护 */
+.container,
+.container--sm,
+.container--md,
+.container--lg,
+.container--xl {
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+}
+
+/* ===== 页面过渡效果增强 ===== */
+
+/* 平滑滚动优化 */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 0px;
+    /* 移除Header空间，让背景上移 */
+}
+
+/* 页面过渡容器优化 */
+.page-transition {
+    isolation: isolate;
+    /* 创建新的层叠上下文 */
+    contain: layout style paint;
+    /* 优化渲染性能 */
+}
+
+/* 标准页面间距优化 */
+.page-transition.standard-page {
+    padding-top: 0px;
+    /* 移除顶部间距，让背景上移 */
+    transition: padding-top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 个人中心页面特殊处理 */
+.page-transition.profile-page {
+    padding-top: 0;
+}
+
+/* 内容区域进入动画 */
+.page-transition>* {
+    animation: contentFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    /* 从0.6s减少到0.3s */
+}
+
+@keyframes contentFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+        /* 从20px减少到10px，减少位移 */
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 优化页面滚动性能 */
+* {
+    scroll-behavior: smooth;
+}
+
+/* 减少重排重绘 */
+.page-transition,
+.page-transition * {
+    will-change: auto;
+    /* 避免过度使用will-change */
+}
+
+/* 为动画元素单独优化 */
+.background-decoration,
+.nav-link,
+.icon-button {
+    will-change: transform, opacity;
+}
+
+/* 响应式过渡优化 */
+@media (max-width: 768px) {
+    .page-transition.standard-page {
+        padding-top: 0px;
+        /* 移除顶部间距，让背景上移 */
+    }
+
+    html {
+        scroll-padding-top: 0px;
+        /* 移除移动端Header空间 */
+    }
+}
+
+/* 设备性能优化 */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .page-transition,
+    .page-transition *,
+    .background-decoration {
+        animation: none !important;
+        transition: none !important;
+    }
+}

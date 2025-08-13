@@ -1,0 +1,361 @@
+/**
+ * AI变现之路 - 全局样式精简版
+ * 
+ * 导入CSS系统并定义全局样式重置和主题切换逻辑
+ * 注意：CSS变量、字体、组件、响应式等已分离到独立文件
+ */
+
+/* 导入CSS系统 */
+@import '../styles/index.css';
+
+/* ===== 全局样式重置 ===== */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+/* 主题背景 */
+html,
+body,
+#root,
+#__next {
+  background: var(--color-bg-primary) !important;
+  transition: background-color 0.3s ease;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  background: var(--color-bg-primary);
+}
+
+body {
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ===== 设置页面专用样式保留 ===== */
+/* 这部分样式具有特殊性，保留在globals.css中 */
+.settings-page .input,
+.settings-page input[type="text"],
+.settings-page input[type="email"],
+.settings-page input[type="password"],
+.settings-page input[type="tel"],
+.settings-page textarea {
+  background: var(--color-bg-input) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  border: 1px solid var(--color-border-primary) !important;
+  color: var(--color-text-primary) !important;
+  font-family: var(--font-family-primary) !important;
+}
+
+.settings-page .input:focus,
+.settings-page input[type="text"]:focus,
+.settings-page input[type="email"]:focus,
+.settings-page input[type="password"]:focus,
+.settings-page input[type="tel"]:focus,
+.settings-page textarea:focus {
+  border-color: var(--color-border-active) !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+  outline: none !important;
+}
+
+.settings-page .bio-textarea:focus {
+  border: 1px solid var(--color-border-active) !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+  outline: none !important;
+}
+
+.avatar-edit-button:hover {
+  transform: scale(1.1) !important;
+  box-shadow: var(--shadow-button) !important;
+}
+
+.avatar-edit-text:hover {
+  color: var(--color-text-primary) !important;
+}
+
+.avatar-container:hover {
+  border-color: var(--color-border-active) !important;
+  box-shadow: 0 0 24px rgba(59, 130, 246, 0.15) !important;
+}
+
+.settings-form-card {
+  transition: all 0.3s ease !important;
+}
+
+.settings-form-card:hover {
+  background: var(--color-bg-secondary) !important;
+  border-color: var(--color-border-secondary) !important;
+}
+
+/* 设置页面专用占位符样式 */
+.settings-page .input::placeholder,
+.settings-page input::placeholder,
+.settings-page textarea::placeholder {
+  color: var(--color-text-muted) !important;
+  opacity: 1 !important;
+}
+
+.settings-page .input-label {
+  color: var(--color-text-secondary) !important;
+  font-size: var(--font-size-sm) !important;
+  font-weight: 500 !important;
+  margin-bottom: var(--spacing-2) !important;
+}
+
+.settings-page .input-helper {
+  color: var(--color-text-muted) !important;
+  font-size: var(--font-size-xs) !important;
+  margin-top: var(--spacing-1) !important;
+}
+
+.settings-page .input-error {
+  color: #EF4444 !important;
+  font-size: var(--font-size-xs) !important;
+  margin-top: var(--spacing-1) !important;
+}
+
+/* ===== 特殊页面样式保留 ===== */
+/* 这些样式具有特殊性或跨模块特性，保留在globals.css中 */
+
+/* 用户中心页面内容区域间距优化 */
+.profile-page-content {
+  padding: var(--spacing-6) var(--spacing-4) !important;
+}
+
+.profile-page-content>div:nth-child(2)>div {
+  width: 100% !important;
+  max-width: 280px !important;
+}
+
+/* 搜索框特殊处理 - 完全移除边框 */
+.search-bar-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.search-container-no-border,
+.search-container-no-border:hover,
+.search-container-no-border:focus,
+.search-container-no-border:active {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.search-container-no-border::before,
+.search-container-no-border::after {
+  display: none !important;
+}
+
+/* ===== 关于页面专用布局样式 ===== */
+/* 这些样式具有特殊的布局需求，保留在globals.css中 */
+.about-mission-section {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+  margin-bottom: 74px !important;
+}
+
+.about-mission-cards-container {
+  display: flex !important;
+  gap: 40px !important;
+  width: 1200px !important;
+}
+
+.about-mission-title-section {
+  text-align: center !important;
+  padding-top: 32px !important;
+  margin-bottom: 64px !important;
+}
+
+.about-membership-section {
+  text-align: center !important;
+  margin-bottom: 74px !important;
+}
+
+.about-membership-cards-layout {
+  display: flex !important;
+  gap: 32px !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  width: 100% !important;
+}
+
+.about-membership-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 32px !important;
+  width: 744px !important;
+}
+
+.about-why-choose-section {
+  text-align: center !important;
+  margin-bottom: 73px !important;
+}
+
+.about-why-choose-cards {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+}
+
+.about-why-choose-container {
+  display: flex !important;
+  gap: 24px !important;
+  width: 1200px !important;
+}
+
+.about-stats-section {
+  text-align: center !important;
+  margin-bottom: 73px !important;
+}
+
+.about-stats-cards {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+  padding-top: 64px !important;
+}
+
+.about-stats-container {
+  display: flex !important;
+  gap: 24px !important;
+  width: 1200px !important;
+}
+
+.about-contact-section {
+  text-align: center !important;
+  margin-bottom: 73px !important;
+}
+
+.about-contact-content {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
+  padding-top: 64px !important;
+}
+
+.about-contact-layout {
+  display: flex !important;
+  align-items: flex-start !important;
+  width: 1200px !important;
+  gap: 157px !important;
+}
+
+/* ===== 响应式移动端特殊样式 ===== */
+/* 设置页面移动端响应式 */
+@media (max-width: 768px) {
+  .settings-form-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .settings-form-label {
+    text-align: left !important;
+    width: 100% !important;
+    padding-top: 0 !important;
+  }
+
+  .settings-form-card {
+    margin: 0 24px !important;
+    padding: 24px !important;
+  }
+
+  .settings-avatar {
+    width: 96px !important;
+    height: 96px !important;
+  }
+
+  .settings-buttons {
+    flex-direction: column !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  .settings-buttons button {
+    width: 100% !important;
+  }
+}
+
+/* 用户中心页面移动端优化 */
+@media (max-width: 480px) {
+  .profile-page-content {
+    padding: var(--spacing-5) var(--spacing-3) !important;
+  }
+
+  .profile-page-content>div:nth-child(2)>div {
+    padding: var(--spacing-4) !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .profile-page-content {
+    padding: var(--spacing-4) var(--spacing-2) !important;
+  }
+}
+
+/* ===== 无障碍和性能优化 ===== */
+/* 打印样式 */
+@media print {
+
+  header,
+  footer,
+  .glass-card,
+  .gradient-text {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .desktop-nav,
+  .mobile-menu-button,
+  #back-to-top {
+    display: none !important;
+  }
+}
+
+/* 高对比度支持 */
+@media (prefers-contrast: high) {
+  :root {
+    --color-border-primary: #666666;
+    --color-text-muted: #CCCCCC;
+    --color-bg-glass: rgba(0, 0, 0, 0.9);
+  }
+}
+
+/* 减少动画支持 */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .gradient-text {
+    animation: none !important;
+  }
+}

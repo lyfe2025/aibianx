@@ -1,0 +1,134 @@
+/**
+ * 移动端基础样式 - mobile-base.css
+ * 
+ * 移动端核心变量、断点系统和基础优化
+ */
+
+/* ========================================
+   移动端变量系统
+   ======================================== */
+
+:root {
+  /* 移动端断点 */
+  --mobile-xs: 320px;
+  --mobile-sm: 375px;
+  --mobile-md: 414px;
+  --mobile-lg: 768px;
+  --mobile-xl: 1024px;
+  
+  /* 移动端间距 */
+  --mobile-spacing-xs: 4px;
+  --mobile-spacing-sm: 8px;
+  --mobile-spacing-md: 16px;
+  --mobile-spacing-lg: 24px;
+  --mobile-spacing-xl: 32px;
+  
+  /* 触控目标尺寸 */
+  --touch-target-min: 44px;
+  --touch-target-comfortable: 48px;
+  --touch-target-large: 56px;
+  
+  /* 移动端字体 */
+  --mobile-font-scale: 0.9;
+  --mobile-line-height: 1.5;
+  
+  /* 移动端阴影 */
+  --mobile-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --mobile-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --mobile-shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================
+   移动端基础优化
+   ======================================== */
+
+@media (max-width: 768px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0);
+  }
+  
+  body {
+    font-size: calc(var(--font-size-base) * var(--mobile-font-scale));
+    line-height: var(--mobile-line-height);
+    overflow-x: hidden;
+    touch-action: manipulation;
+  }
+}
+
+/* ========================================
+   触控优化基础
+   ======================================== */
+
+.touch-target {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.touch-feedback {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.touch-feedback:active {
+  transform: scale(0.98);
+  opacity: 0.8;
+}
+
+/* ========================================
+   安全区域适配
+   ======================================== */
+
+@supports (padding: max(0px)) {
+  .safe-area-top {
+    padding-top: max(20px, env(safe-area-inset-top));
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+}
+
+/* ========================================
+   可访问性增强
+   ======================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-visible {
+  outline: 2px solid var(--color-primary-blue);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   减少动画偏好
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

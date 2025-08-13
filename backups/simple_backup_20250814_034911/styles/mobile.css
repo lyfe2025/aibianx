@@ -1,0 +1,62 @@
+/**
+ * 移动端样式主文件 - mobile.css
+ * 统一导入所有移动端样式模块
+ */
+
+/* 导入移动端样式模块 */
+@import './mobile-base.css';
+@import './mobile-components.css';
+@import './mobile-layout.css';
+@import './mobile-performance.css';
+
+/* 移动端应用根容器 */
+.mobile-app {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.mobile-app * {
+  box-sizing: border-box;
+}
+
+/* 基础工具类 */
+.mobile-show { display: block !important; }
+.mobile-hide { display: none !important; }
+.mobile-w-full { width: 100%; }
+.mobile-h-full { height: 100%; }
+
+/* 毛玻璃效果 */
+.mobile-glass {
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* 渐变背景 */
+.mobile-gradient-primary {
+  background: linear-gradient(135deg, 
+    var(--color-primary-blue) 0%, 
+    var(--color-primary-purple) 100%);
+}
+
+/* 加载动画 */
+.mobile-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--color-primary-blue);
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: mobile-spin 1s linear infinite;
+}
+
+@keyframes mobile-spin {
+  to { transform: rotate(360deg); }
+}

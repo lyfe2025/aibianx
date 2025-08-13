@@ -1,0 +1,220 @@
+/**
+ * 移动端组件样式 - mobile-components.css
+ * 
+ * 新开发移动端组件的专用样式
+ */
+
+/* ========================================
+   移动端卡片样式
+   ======================================== */
+
+.mobile-card {
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-glass);
+  border-radius: 12px;
+  padding: var(--mobile-spacing-lg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-card:hover {
+  border-color: var(--color-primary-blue);
+  box-shadow: var(--mobile-shadow-medium);
+}
+
+.mobile-card-compact {
+  padding: var(--mobile-spacing-md);
+  border-radius: 8px;
+}
+
+.mobile-card-interactive {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.mobile-card-interactive:active {
+  transform: translateY(1px);
+  box-shadow: var(--mobile-shadow-light);
+}
+
+/* ========================================
+   移动端按钮样式
+   ======================================== */
+
+.mobile-button {
+  min-height: var(--touch-target-min);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-button-primary {
+  background: linear-gradient(135deg, 
+    var(--color-primary-blue) 0%, 
+    var(--color-primary-purple) 100%);
+  color: white;
+}
+
+.mobile-button-secondary {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+}
+
+.mobile-button:active {
+  transform: scale(0.98);
+}
+
+.mobile-button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ========================================
+   移动端表单样式
+   ======================================== */
+
+.mobile-form-group {
+  margin-bottom: var(--mobile-spacing-lg);
+}
+
+.mobile-input {
+  width: 100%;
+  min-height: var(--touch-target-min);
+  padding: 12px 16px;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-size: 16px; /* 防止iOS缩放 */
+  transition: all 0.3s ease;
+}
+
+.mobile-input:focus {
+  outline: none;
+  border-color: var(--color-primary-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ========================================
+   移动端模态框样式
+   ======================================== */
+
+.mobile-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+}
+
+.mobile-modal {
+  width: 100%;
+  max-height: 90vh;
+  background: var(--color-bg-primary);
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  animation: slideUpMobile 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUpMobile {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.mobile-modal-header {
+  padding: var(--mobile-spacing-lg);
+  border-bottom: 1px solid var(--color-border-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobile-modal-content {
+  padding: var(--mobile-spacing-lg);
+  max-height: 60vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ========================================
+   发现页面组件
+   ======================================== */
+
+.discover-hero-mobile {
+  padding: var(--mobile-spacing-xl) var(--mobile-spacing-md);
+  text-align: center;
+}
+
+.discover-hero-title {
+  font-size: clamp(24px, 8vw, 32px);
+  line-height: 1.2;
+  margin-bottom: var(--mobile-spacing-md);
+}
+
+.discover-hero-subtitle {
+  font-size: clamp(14px, 4vw, 18px);
+  opacity: 0.8;
+  margin-bottom: var(--mobile-spacing-xl);
+}
+
+/* ========================================
+   会员状态组件
+   ======================================== */
+
+.membership-status-mobile {
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border-glass);
+  border-radius: 12px;
+  padding: var(--mobile-spacing-md);
+  backdrop-filter: blur(12px);
+  margin-bottom: var(--mobile-spacing-lg);
+}
+
+/* ========================================
+   Toast通知组件
+   ======================================== */
+
+.mobile-toast {
+  max-width: calc(100vw - 32px);
+  margin: 0 16px 12px 16px;
+  border-radius: 12px;
+  box-shadow: var(--mobile-shadow-heavy);
+}
+
+.mobile-toast-content {
+  padding: 14px;
+  gap: 10px;
+}
+
+/* ========================================
+   触控设备专用优化
+   ======================================== */
+
+@media (hover: none) and (pointer: coarse) {
+  .mobile-card:hover,
+  .mobile-button:hover {
+    transform: none;
+    background: initial;
+  }
+  
+  .mobile-card:active,
+  .mobile-button:active {
+    background: rgba(59, 130, 246, 0.1);
+  }
+}
