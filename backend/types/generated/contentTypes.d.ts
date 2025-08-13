@@ -631,14 +631,14 @@ export interface ApiEmailSubscriptionEmailSubscription
     draftAndPublish: false;
   };
   attributes: {
-    billionmailListIds: Schema.Attribute.JSON;
-    billionmailSubscriberId: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     email: Schema.Attribute.Email &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
+    emailListIds: Schema.Attribute.JSON;
+    emailSubscriberId: Schema.Attribute.String;
     lastEmailSent: Schema.Attribute.DateTime;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1834,7 +1834,7 @@ export interface PluginUsersPermissionsUser
   extends Struct.CollectionTypeSchema {
   collectionName: 'up_users';
   info: {
-    description: '\u6269\u5C55\u7684\u7528\u6237\u8868 - \u652F\u6301\u591A\u8BA4\u8BC1\u65B9\u5F0F\u3001\u4F1A\u5458\u7CFB\u7EDF\u3001\u9080\u8BF7\u8FD4\u4F63\u3001BillionMail\u96C6\u6210';
+    description: '\u6269\u5C55\u7684\u7528\u6237\u8868 - \u652F\u6301\u591A\u8BA4\u8BC1\u65B9\u5F0F\u3001\u4F1A\u5458\u7CFB\u7EDF\u3001\u9080\u8BF7\u8FD4\u4F63\u3001\u90AE\u4EF6\u8BA2\u9605';
     displayName: '\u7528\u6237';
     name: 'user';
     pluralName: 'users';
@@ -1846,10 +1846,6 @@ export interface PluginUsersPermissionsUser
   };
   attributes: {
     avatar: Schema.Attribute.Media<'images'>;
-    billionmailListIds: Schema.Attribute.JSON;
-    billionmailSubscribed: Schema.Attribute.Boolean &
-      Schema.Attribute.DefaultTo<false>;
-    billionmailSubscriberId: Schema.Attribute.String;
     birthday: Schema.Attribute.Date;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1864,6 +1860,8 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    emailSubscribed: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
     gender: Schema.Attribute.Enumeration<['male', 'female', 'other']>;
     githubId: Schema.Attribute.String;
     githubUsername: Schema.Attribute.String;

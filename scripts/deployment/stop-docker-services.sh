@@ -49,28 +49,14 @@ docker ps --format "table {{.Names}}\t{{.Image}}" | grep -E "(cranky_ride|hungry
 done
 
 echo ""
-echo -e "${BLUE}📋 BillionMail 邮件服务控制...${NC}"
-echo -e "${YELLOW}💡 注意: BillionMail 是独立服务，如需停止请选择:${NC}"
 echo "   a) 保持运行 (推荐) - 邮件服务独立运行"
 echo "   b) 同时停止 - 完全停止所有服务"
 echo ""
 echo -n -e "${YELLOW}请选择 [a/b，默认a]: ${NC}"
-read -r billionmail_choice
 
-if [ "$billionmail_choice" = "b" ] || [ "$billionmail_choice" = "B" ]; then
-    echo -e "${BLUE}🔄 停止 BillionMail 邮件服务...${NC}"
     
-    # 停止BillionMail相关容器
-    stop_container "billionmail-core-billionmail-1" "邮件核心服务"
-    stop_container "billionmail-webmail-billionmail-1" "邮件Web界面"
-    stop_container "billionmail-rspamd-billionmail-1" "邮件反垃圾服务"
     stop_container "aibianx-rspamd" "项目反垃圾服务"
-    stop_container "billionmail-dovecot-billionmail-1" "邮件收取服务"
-    stop_container "billionmail-postfix-billionmail-1" "邮件发送服务"
-    stop_container "billionmail-pgsql-billionmail-1" "邮件数据库"
-    stop_container "billionmail-redis-billionmail-1" "邮件缓存"
 else
-    echo -e "${GREEN}✅ BillionMail 邮件服务保持运行${NC}"
 fi
 
 # 等待容器完全停止

@@ -174,7 +174,7 @@ load_project_config() {
             
             # 导出变量 (如果value包含变量引用，先展开)
             case $key in
-                REPO_URL|PROJECT_NAME|REPO_ORG|DOMAIN|MAIL_DOMAIN)
+                REPO_URL|PROJECT_NAME|REPO_ORG|DOMAIN)
                     eval "export $key=\"$value\""
                     print_success "配置项: $key = $value"
                     ;;

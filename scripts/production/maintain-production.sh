@@ -157,13 +157,7 @@ backup_databases() {
         log_warning "主数据库备份失败"
     fi
     
-    # 备份BillionMail数据库（如果存在）- 已移除BillionMail
-    # if docker exec "$postgres_container" psql -U postgres -lqt | cut -d \| -f 1 | grep -qw billionmail; then
-    #     log_info "备份BillionMail数据库..."
-    #     if docker exec "$postgres_container" pg_dump -U postgres billionmail > "$backup_dir/database/billionmail.sql" 2>/dev/null; then
-    #         log_success "BillionMail数据库备份完成"
     #     else
-    #         log_warning "BillionMail数据库备份失败"
     #     fi
     # fi
     
@@ -303,13 +297,6 @@ restore_databases() {
         log_success "主数据库恢复完成"
     fi
     
-    # 恢复BillionMail数据库 - 已移除BillionMail
-    # if [ -f "$backup_dir/database/billionmail.sql" ]; then
-    #     log_info "恢复BillionMail数据库..."
-    #     docker exec -i "$postgres_container" psql -U postgres -c "DROP DATABASE IF EXISTS billionmail;"
-    #     docker exec -i "$postgres_container" psql -U postgres -c "CREATE DATABASE billionmail;"
-    #     docker exec -i "$postgres_container" psql -U postgres billionmail < "$backup_dir/database/billionmail.sql"
-    #     log_success "BillionMail数据库恢复完成"
     # fi
 }
 

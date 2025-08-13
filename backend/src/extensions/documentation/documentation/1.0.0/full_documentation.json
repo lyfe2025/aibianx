@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-08-13T14:46:05.195Z"
+    "x-generation-date": "2025-08-13T16:31:50.042Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -12014,10 +12014,10 @@
                 ]
               },
               "tags": {},
-              "billionmailSubscriberId": {
+              "emailSubscriberId": {
                 "type": "string"
               },
-              "billionmailListIds": {},
+              "emailListIds": {},
               "status": {
                 "type": "string",
                 "enum": [
@@ -12940,13 +12940,9 @@
                 "type": "number",
                 "format": "float"
               },
-              "billionmailSubscribed": {
+              "emailSubscribed": {
                 "type": "boolean"
               },
-              "billionmailSubscriberId": {
-                "type": "string"
-              },
-              "billionmailListIds": {},
               "lastLoginAt": {
                 "type": "string",
                 "format": "date-time"
@@ -13018,10 +13014,10 @@
             ]
           },
           "tags": {},
-          "billionmailSubscriberId": {
+          "emailSubscriberId": {
             "type": "string"
           },
-          "billionmailListIds": {},
+          "emailListIds": {},
           "status": {
             "type": "string",
             "enum": [
@@ -13113,10 +13109,10 @@
                   ]
                 },
                 "tags": {},
-                "billionmailSubscriberId": {
+                "emailSubscriberId": {
                   "type": "string"
                 },
-                "billionmailListIds": {},
+                "emailListIds": {},
                 "status": {
                   "type": "string",
                   "enum": [
@@ -14227,13 +14223,9 @@
                 "type": "number",
                 "format": "float"
               },
-              "billionmailSubscribed": {
+              "emailSubscribed": {
                 "type": "boolean"
               },
-              "billionmailSubscriberId": {
-                "type": "string"
-              },
-              "billionmailListIds": {},
               "lastLoginAt": {
                 "type": "string",
                 "format": "date-time"
@@ -15733,13 +15725,9 @@
                     "type": "number",
                     "format": "float"
                   },
-                  "billionmailSubscribed": {
+                  "emailSubscribed": {
                     "type": "boolean"
                   },
-                  "billionmailSubscriberId": {
-                    "type": "string"
-                  },
-                  "billionmailListIds": {},
                   "lastLoginAt": {
                     "type": "string",
                     "format": "date-time"

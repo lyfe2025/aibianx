@@ -516,9 +516,9 @@ deploy_unified() {
     if [ -f "$PROJECT_ROOT/deployment/setup-unified-deployment.sh" ]; then
         log_info "使用统一部署脚本..."
         
-        # 获取域名配置
+        # 获取域名配置（邮件域名已废弃，不再从配置读取）
         local domain=$(grep "NEXT_PUBLIC_FRONTEND_DOMAIN=" "$PROJECT_ROOT/frontend/.env.local" 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "yourdomain.com")
-        local mail_domain=$(grep "MAIL_DOMAIN=" "$PROJECT_ROOT/backend/.env" 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "mail.$domain")
+        local mail_domain="mail.$domain"
         
         # 执行统一部署
         cd "$PROJECT_ROOT/deployment"

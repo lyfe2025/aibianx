@@ -26,13 +26,12 @@ fi
 # 加载配置
 source "$PROJECT_ROOT/scripts/tools/load-config.sh"
 
-echo -e "${CYAN}🚀 AI变现之路 - 完整服务状态检查${NC}"
+echo -e "${CYAN}🚀 AI变现之路 - 完整服务状态检查 (邮件系统已集成到Strapi)${NC}"
 echo "=================================================="
 
 # 动态读取配置信息
 DEPLOY_MODE=${DEPLOY_MODE:-"dev"}
 DOMAIN=${DOMAIN:-"localhost"}
-MAIL_DOMAIN=${MAIL_DOMAIN:-"localhost"}
 
 # 端口配置
 FRONTEND_PORT=${FRONTEND_PORT:-"80"}
@@ -161,7 +160,7 @@ echo "启动所有服务: ./scripts.sh deploy start"
 echo "停止所有服务: ./scripts.sh deploy stop"
 echo "查看系统状态: ./scripts.sh tools status"
 echo "搜索引擎管理: ./scripts.sh search manage"
-echo "邮件系统管理: ./scripts.sh email check"
+echo "邮件系统管理: 由Strapi后台统一管理"
 
 # 统计运行状态
 RUNNING_COUNT=0

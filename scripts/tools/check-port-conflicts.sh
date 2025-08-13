@@ -21,7 +21,6 @@ PROJECT_PORTS=(
     "1337:后端API"
     "5432:PostgreSQL"
     "7700:MeiliSearch"
-    "8080:BillionMail管理界面"
     "25:SMTP"
     "465:SMTPS"
     "587:SMTP提交"
@@ -29,8 +28,6 @@ PROJECT_PORTS=(
     "993:IMAPS"
     "110:POP3"
     "995:POP3S"
-    "26379:Redis(BillionMail)"
-    "25432:PostgreSQL(BillionMail)"
 )
 
 # 日志函数
@@ -174,10 +171,6 @@ stop_docker_services() {
         docker-compose -f deployment/docker-compose.unified.yml down 2>/dev/null || true
     fi
     
-    # 停止BillionMail服务
-    if [ -f "$PROJECT_ROOT/BillionMail/docker-compose.yml" ]; then
-        log_info "停止BillionMail服务..."
-        cd "$PROJECT_ROOT/BillionMail"
         docker-compose down 2>/dev/null || true
     fi
     

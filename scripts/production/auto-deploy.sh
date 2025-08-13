@@ -24,7 +24,6 @@ NC='\033[0m' # No Color
 
 # 默认配置
 DEFAULT_DOMAIN="example.com"
-DEFAULT_MAIL_DOMAIN="mail.example.com"
 DEFAULT_PROJECT_DIR="/opt/aibianx"
 DEFAULT_GIT_URL="https://github.com/lyfe2025/aibianx.git"
 
@@ -54,7 +53,6 @@ log_step() {
 # 解析命令行参数
 parse_arguments() {
     local domain=""
-    local mail_domain=""
     local silent=false
     local mode="unified"
     
@@ -75,8 +73,6 @@ parse_arguments() {
             *)
                 if [ -z "$domain" ]; then
                     domain="$1"
-                elif [ -z "$mail_domain" ]; then
-                    mail_domain="$1"
                 fi
                 shift
                 ;;
@@ -85,7 +81,6 @@ parse_arguments() {
     
     # 导出变量供其他函数使用
     export DEPLOY_DOMAIN="${domain:-$DEFAULT_DOMAIN}"
-    export DEPLOY_MAIL_DOMAIN="${mail_domain:-$DEFAULT_MAIL_DOMAIN}"
     export DEPLOY_SILENT="$silent"
     export DEPLOY_MODE="$mode"
 }
@@ -97,7 +92,6 @@ show_deployment_info() {
     echo ""
     echo -e "${CYAN}📋 部署配置:${NC}"
     echo "   网站域名: $DEPLOY_DOMAIN"
-    echo "   邮件域名: $DEPLOY_MAIL_DOMAIN"
     echo "   部署模式: $DEPLOY_MODE"
     echo "   静默模式: $DEPLOY_SILENT"
     echo ""
@@ -230,10 +224,9 @@ generate_production_config() {
     log_step "生成生产配置"
     
     log_info "配置域名: $DEPLOY_DOMAIN"
-    log_info "邮件域名: $DEPLOY_MAIL_DOMAIN"
     
-    # 调用统一配置管理器
-    if "$PROJECT_DIR/deployment/configure-unified-env.sh" integrated "$DEPLOY_DOMAIN" "$DEPLOY_MAIL_DOMAIN"; then
+    # 调用统一配置管理器（已不需要邮件域名参数）
+    if "$PROJECT_DIR/deployment/configure-unified-env.sh"; then
         log_success "生产配置生成完成"
     else
         log_error "生产配置生成失败"
@@ -495,11 +488,10 @@ show_help() {
     echo "==========================================="
     echo ""
     echo "用法:"
-    echo "  $0 [domain] [mail-domain] [选项]"
+    echo "  $0 [domain] [选项]"
     echo ""
     echo "参数:"
     echo "  domain      网站域名 (默认: $DEFAULT_DOMAIN)"
-    echo "  mail-domain 邮件域名 (默认: $DEFAULT_MAIL_DOMAIN)"
     echo ""
     echo "选项:"
     echo "  --silent    静默模式，不需要用户交互"
@@ -508,8 +500,8 @@ show_help() {
     echo ""
     echo "示例:"
     echo "  $0                                    # 使用默认配置"
-    echo "  $0 example.com mail.example.com       # 指定域名"
-    echo "  $0 example.com mail.example.com --silent  # 静默部署"
+    echo "  $0 example.com                        # 指定域名"
+    echo "  $0 example.com --silent               # 静默部署"
     echo ""
     echo "功能说明:"
     echo "  ✅ 自动检测和安装基础环境"

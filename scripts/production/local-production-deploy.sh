@@ -19,7 +19,6 @@ NC='\033[0m'
 
 # 本地模拟生产配置（仅域名不同）
 LOCAL_DOMAIN="${1:-bianx.local}"
-LOCAL_MAIL_DOMAIN="mail.${LOCAL_DOMAIN}"
 LOCAL_IP="127.0.0.1"
 
 # 安全密钥生成函数（和生产环境完全一致）
@@ -39,7 +38,6 @@ echo -e "${CYAN}🚀 AI变现之路 - 本地生产环境部署${NC}"
 echo "=================================================="
 echo -e "${BLUE}域名配置：${NC}"
 echo -e "  主域名: ${LOCAL_DOMAIN}"
-echo -e "  邮件域名: ${LOCAL_MAIL_DOMAIN}"
 echo -e "  本地IP: ${LOCAL_IP}"
 echo ""
 
@@ -52,14 +50,12 @@ check_domain_resolution() {
         echo -e "${RED}❌ 域名 ${LOCAL_DOMAIN} 未在 /etc/hosts 中配置${NC}"
         echo -e "${CYAN}请手动添加以下行到 /etc/hosts：${NC}"
         echo "127.0.0.1 ${LOCAL_DOMAIN}"
-        echo "127.0.0.1 ${LOCAL_MAIL_DOMAIN}"
         echo "127.0.0.1 api.${LOCAL_DOMAIN}"
         echo ""
         read -p "$(echo -e ${YELLOW}是否自动添加到 /etc/hosts？[y/N]: ${NC})" -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             echo "127.0.0.1 ${LOCAL_DOMAIN}" | sudo tee -a /etc/hosts
-            echo "127.0.0.1 ${LOCAL_MAIL_DOMAIN}" | sudo tee -a /etc/hosts  
             echo "127.0.0.1 api.${LOCAL_DOMAIN}" | sudo tee -a /etc/hosts
             echo -e "${GREEN}✅ 域名解析已配置${NC}"
         else
@@ -123,10 +119,7 @@ NEXT_PUBLIC_SEARCH_PORT=7700
 NEXT_PUBLIC_SEARCH_PROTOCOL=http
 NEXT_PUBLIC_SEARCH_API_KEY=${meili_master_key}
 
-# BillionMail邮件营销配置（生产部署）- 已移除
-# NEXT_PUBLIC_BILLIONMAIL_DOMAIN=${LOCAL_MAIL_DOMAIN}
-# NEXT_PUBLIC_BILLIONMAIL_PORT=8080
-# NEXT_PUBLIC_BILLIONMAIL_PROTOCOL=http
+# 邮件营销配置（已移除）
 
 # NextAuth配置（生产级别）
 NEXTAUTH_URL=http://${LOCAL_DOMAIN}
@@ -193,10 +186,7 @@ MEILISEARCH_PORT=7700
 MEILISEARCH_PROTOCOL=http
 MEILISEARCH_API_KEY=${meili_master_key}
 
-# BillionMail邮件营销配置（生产部署）- 已移除
-# BILLIONMAIL_DOMAIN=${LOCAL_MAIL_DOMAIN}
-# BILLIONMAIL_PORT=8080
-# BILLIONMAIL_PROTOCOL=http
+# BillionMail邮件营销配置（已移除）
 # BILLIONMAIL_API_KEY=${billionmail_api_key}
 # BILLIONMAIL_DEFAULT_LIST_ID=1
 
@@ -226,7 +216,7 @@ PAYPAL_CLIENT_SECRET=your_paypal_client_secret
 PAYPAL_SANDBOX=true
 
 # 邮件配置（BillionMail已移除）
-SMTP_HOST=${LOCAL_MAIL_DOMAIN}
+SMTP_HOST=smtp.${LOCAL_DOMAIN}
 SMTP_PORT=587
 SMTP_USERNAME=noreply@${LOCAL_DOMAIN}
 SMTP_PASSWORD=smtp_password_${postgres_password}
@@ -249,7 +239,6 @@ COMPOSE_PROJECT_NAME=aibianx-integrated
 
 # 域名配置（仅此处不同于真实生产环境）
 DOMAIN=${LOCAL_DOMAIN}
-MAIL_DOMAIN=${LOCAL_MAIL_DOMAIN}
 
 # 数据库配置（使用开发环境数据库）
 POSTGRES_PASSWORD=
@@ -397,10 +386,7 @@ http {
         }
     }
     
-    # 邮件系统配置 (BillionMail已移除)
-    # server {
-    #     listen 80;
-    #     server_name ${LOCAL_MAIL_DOMAIN};
+    # 邮件系统配置 (已移除)
     #     
     #     # BillionMail管理界面 (已移除)
     #     location / {
@@ -530,18 +516,7 @@ wait_for_production_services() {
         sleep 2
     done
     
-    # 等待邮件系统就绪
-    echo -e "${BLUE}📧 等待BillionMail邮件系统...${NC}"
-    attempt=0
-    while [ $attempt -lt $max_attempts ]; do
-        if curl -s "${BILLIONMAIL_URL}" >/dev/null 2>&1; then
-            echo -e "${GREEN}✅ BillionMail邮件系统已就绪${NC}"
-            break
-        fi
-        attempt=$((attempt + 1))
-        echo -n "."
-        sleep 2
-    done
+    # 邮件系统已集成到Strapi后台，无需等待独立邮件系统
     
     echo -e "${GREEN}🎉 所有生产服务已就绪！${NC}"
 }
@@ -592,14 +567,7 @@ verify_production_deployment() {
         verification_failed=1
     fi
     
-    # 验证邮件系统
-    echo -n "📧 邮件系统: "
-    if curl -s "${BILLIONMAIL_URL}" >/dev/null 2>&1; then
-        echo -e "${GREEN}✅ 正常${NC}"
-    else
-        echo -e "${RED}❌ 异常${NC}"
-        verification_failed=1
-    fi
+    # 邮件系统已集成到Strapi后台，无需单独验证
     
     # 验证数据库连接
     echo -n "🗄️  数据库: "
@@ -640,8 +608,7 @@ show_production_access_info() {
     echo -e "  管理后台：${GREEN}http://${LOCAL_DOMAIN}:1337/admin${NC}"
     echo -e "  API文档：${GREEN}http://${LOCAL_DOMAIN}:1337/documentation${NC}"
     echo -e "  搜索引擎：${GREEN}http://${LOCAL_DOMAIN}:7700${NC}"
-    echo -e "  邮件管理：${GREEN}http://${LOCAL_MAIL_DOMAIN}:8080/billion${NC}"
-    echo -e "  网页邮箱：${GREEN}http://${LOCAL_MAIL_DOMAIN}:8080/roundcube${NC}"
+    # 邮件系统访问地址已并入Strapi后台
     echo ""
     echo -e "${CYAN}🔐 默认登录信息：${NC}"
     echo -e "  Strapi管理员：${YELLOW}使用初始管理员账户${NC}"

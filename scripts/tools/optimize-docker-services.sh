@@ -134,12 +134,8 @@ execute_optimization() {
 
 # 检查数据安全
 check_data_safety() {
-    echo "   🔍 检查BillionMail数据..."
-    if ! docker exec billionmail-pgsql-billionmail-1 pg_isready -U postgres > /dev/null 2>&1; then
-        echo "   ❌ BillionMail数据库不可访问"
         return 1
     fi
-    echo "   ✅ BillionMail数据库正常"
     
     echo "   🔍 检查项目数据..."
     if ! docker exec aibianx-postgres pg_isready -U postgres > /dev/null 2>&1; then
@@ -157,9 +153,7 @@ stop_redundant_services() {
     
     cd "$PROJECT_ROOT/deployment"
     
-    # 只停止与BillionMail重复的服务，保留项目需要的服务
     echo "   📦 保留项目主数据库和缓存..."
-    echo "   🗑️ 移除BillionMail相关的统一部署服务..."
     
     # 停止统一部署中的邮件相关服务 (如果有的话)
     docker-compose -f docker-compose.unified.yml stop rspamd > /dev/null 2>&1 || true
@@ -203,10 +197,7 @@ verify_optimization() {
         echo "   ❌ 项目数据库异常"
     fi
     
-    if docker exec billionmail-pgsql-billionmail-1 pg_isready > /dev/null 2>&1; then
-        echo "   ✅ BillionMail数据库健康"
     else
-        echo "   ❌ BillionMail数据库异常"
     fi
     
     echo "   ✅ 验证完成"
@@ -219,13 +210,6 @@ show_optimized_architecture() {
     echo "======================================"
     echo ""
     
-    echo -e "${GREEN}🟢 BillionMail邮件系统 (独立部署):${NC}"
-    echo "  📦 PostgreSQL: billionmail-pgsql-billionmail-1 (端口25432)"
-    echo "  📦 Redis: billionmail-redis-billionmail-1 (端口26379)"
-    echo "  📧 邮件核心: billionmail-core-billionmail-1 (端口8080)"
-    echo "  📬 WebMail: billionmail-webmail-billionmail-1"
-    echo "  📨 SMTP: billionmail-postfix-billionmail-1"
-    echo "  📥 IMAP: billionmail-dovecot-billionmail-1"
     echo ""
     
     echo -e "${BLUE}🔵 主项目系统 (统一部署):${NC}"
@@ -239,7 +223,6 @@ show_optimized_architecture() {
     echo "  ⚙️  后端: localhost:1337 (npm run develop)"
     echo ""
     
-    echo -e "${CYAN}💡 总计: $(docker ps | grep -E "(aibianx|billionmail|meilisearch)" | wc -l) 个Docker容器，功能完全分离${NC}"
 }
 
 # 主函数

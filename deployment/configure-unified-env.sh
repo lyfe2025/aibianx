@@ -7,7 +7,10 @@
 # 📝 使用: source deployment/configure-unified-env.sh 
 # ⚠️  重要: 所有脚本必须在开始时引用此文件
 
-set -e
+# 仅在直接执行时启用严格模式；被 source 加载时不要影响父Shell
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    set -e
+fi
 
 # 颜色定义
 export RED='\033[0;31m'
@@ -29,7 +32,7 @@ else
         export PROJECT_ROOT="$(cd .. && pwd)"
     else
         echo -e "${RED}❌ 无法确定项目根目录${NC}"
-        return 1
+        return 1 2>/dev/null || exit 1
     fi
 fi
 export CONFIG_FILE="${PROJECT_ROOT}/deployment/config/deploy.conf"
@@ -86,7 +89,6 @@ export LOG_DIR="${PROJECT_ROOT}/logs"
 
 # 导出所有原配置变量（保持向后兼容）
 export DOMAIN
-export MAIL_DOMAIN
 export DEPLOY_MODE
 export DB_ADMIN_PASSWORD
 # 邮件系统配置已集成到Strapi

@@ -36,7 +36,6 @@ check_service_conflicts() {
         
         # 验证端口分离
         local main_postgres=$(docker ps --format "{{.Names}} {{.Ports}}" | grep "aibianx-postgres" | grep "5432")
-        local mail_postgres=$(docker ps --format "{{.Names}} {{.Ports}}" | grep "billionmail.*postgres" | grep "25432")
         
         if [ -n "$main_postgres" ] && [ -n "$mail_postgres" ]; then
             echo "✅ PostgreSQL端口分离正确 (5432 + 25432)"
@@ -63,7 +62,6 @@ check_service_conflicts() {
         
         # 验证端口分离
         local main_redis=$(docker ps --format "{{.Names}} {{.Ports}}" | grep "aibianx-redis" | grep "6379")
-        local mail_redis=$(docker ps --format "{{.Names}} {{.Ports}}" | grep "billionmail.*redis" | grep "26379")
         
         if [ -n "$main_redis" ] && [ -n "$mail_redis" ]; then
             echo "✅ Redis端口分离正确 (6379 + 26379)"
@@ -86,11 +84,8 @@ check_service_conflicts() {
     echo "📊 rspamd服务数量: $rspamd_count"
     
     if [ "$rspamd_count" -eq 1 ]; then
-        local mail_rspamd=$(docker ps --format "{{.Names}}" | grep "billionmail.*rspamd")
         if [ -n "$mail_rspamd" ]; then
-            echo "✅ rspamd服务正确 (仅BillionMail)"
         else
-            echo "⚠️ rspamd服务不是BillionMail的"
             conflicts_found=1
         fi
     elif [ "$rspamd_count" -gt 1 ]; then
@@ -152,10 +147,6 @@ generate_config_fixes() {
     echo ""
     echo "🔧 建议的修改："
     echo "   1. 注释或删除以下服务定义："
-    echo "      - rspamd (使用BillionMail的)"
-    echo "      - postfix (使用BillionMail的)"  
-    echo "      - dovecot (使用BillionMail的)"
-    echo "      - webmail (使用BillionMail的)"
     echo ""
     echo "   2. 保留以下主项目服务："
     echo "      - postgres (主项目数据库)"
@@ -180,7 +171,6 @@ generate_config_fixes() {
         sed -i.tmp 's/^  postfix:/  # postfix:/' "$config_file"
         sed -i.tmp 's/^  dovecot:/  # dovecot:/' "$config_file"
         sed -i.tmp 's/^  webmail:/  # webmail:/' "$config_file"
-        sed -i.tmp 's/^  billionmail-core:/  # billionmail-core:/' "$config_file"
         
         # 清理临时文件
         rm -f "$config_file.tmp"
@@ -205,14 +195,6 @@ show_ideal_architecture() {
     echo "  🔍 meilisearch (端口7700) - 搜索引擎"
     echo ""
     
-    echo -e "${GREEN}🟢 BillionMail邮件系统 (独立部署):${NC}"
-    echo "  📦 billionmail-postgres (端口25432) - 邮件数据库"
-    echo "  📦 billionmail-redis (端口26379) - 邮件缓存"
-    echo "  📧 billionmail-core (端口8080) - 邮件管理"
-    echo "  📨 billionmail-postfix - SMTP服务器"
-    echo "  📥 billionmail-dovecot - IMAP/POP3服务器"
-    echo "  🛡️ billionmail-rspamd - 反垃圾邮件"
-    echo "  📬 billionmail-webmail - WebMail界面"
     echo ""
     
     echo -e "${GREEN}🟡 应用服务 (本地开发):${NC}"

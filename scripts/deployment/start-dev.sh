@@ -310,107 +310,13 @@ deploy_meilisearch() {
     fi
 }
 
-# 智能部署BillionMail已移除邮件系统 - 增强版
-deploy_billionmail() {
+# 检查邮件系统集成状态 - 邮件功能已集成到Strapi后台
+check_email_integration() {
     echo ""
     echo "5️⃣  启动/检查邮件系统..."
-    echo "📧 检查BillionMail已移除邮件系统..."
-    
-    # 🎯 使用快速检查脚本进行状态检测
-    local fast_check_script="${PROJECT_ROOT}/scripts/billionmail/check-billionmail-fast.sh"
-    local billionmail_status=3  # 默认为未部署
-    
-    if [ -f "$fast_check_script" ]; then
-        "$fast_check_script" --silent
-        billionmail_status=$?
-    else
-        # 后备检查方法
-        if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
-            billionmail_status=0  # 运行正常
-        elif docker ps -a --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
-            billionmail_status=1  # 容器存在但未运行
-        elif [ -d "${PROJECT_ROOT}/BillionMail已移除" ]; then
-            billionmail_status=2  # 目录存在但容器未创建
-        else
-            billionmail_status=3  # 未部署
-        fi
-    fi
-    
-    # 根据状态码处理
-    case $billionmail_status in
-        0)
-            # 服务完全正常
-            echo "✅ BillionMail已移除邮件系统运行正常"
-            echo "   🌐 管理界面: ${BILLIONMAIL_ADMIN_URL}"
-            echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
-            echo "   📋 服务类型: 独立部署 (推荐)"
-            return 0
-            ;;
-        1|2)
-            # 容器存在但未运行，或容器不存在但目录存在
-            echo "🔧 BillionMail已移除需要启动，正在自动修复..."
-            
-            # 使用快速检查脚本的自动修复功能
-            if [ -f "$fast_check_script" ]; then
-                if "$fast_check_script" --fix; then
-                    echo "✅ BillionMail已移除自动修复成功"
-                    echo "   🌐 管理界面: ${BILLIONMAIL_ADMIN_URL}"
-                    echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
-                    echo "   📋 服务类型: 独立部署 (推荐)"
-                    return 0
-                else
-                    echo "⚠️  BillionMail已移除自动修复失败，但不影响前后端服务启动"
-                    echo "💡 手动修复命令: ./scripts/billionmail/check-billionmail-fast.sh --fix"
-                    return 1
-                fi
-            else
-                # 后备修复逻辑
-                echo "   🔄 使用后备修复逻辑..."
-                if [ -d "${PROJECT_ROOT}/BillionMail已移除" ]; then
-                    cd "${PROJECT_ROOT}/BillionMail已移除"
-                    
-                    # 加载并导出环境变量
-                    if [ -f "env_init" ]; then
-                        echo "   📝 加载环境变量..."
-                        set -a  # 自动导出变量
-                        source env_init
-                        set +a
-                        echo "   ✅ 环境变量已加载: TZ=$TZ, HTTP_PORT=$HTTP_PORT"
-                    fi
-                    
-                    # 启动容器
-                    docker-compose up -d > /dev/null 2>&1
-                    
-                    # 等待启动
-                    local count=0
-                    while [ $count -lt 15 ]; do
-                        if docker ps --format "table {{.Names}}" | grep -q "billionmail-core-billionmail-1"; then
-                            echo "✅ BillionMail已移除后备修复成功"
-                            echo "   🌐 管理界面: ${BILLIONMAIL_ADMIN_URL}"
-                            echo "   📧 WebMail: ${BILLIONMAIL_WEBMAIL_URL}"
-                            cd "${PROJECT_ROOT}"
-                            return 0
-                        fi
-                        sleep 2
-                        count=$((count + 1))
-                    done
-                    echo "⚠️  BillionMail已移除后备修复超时"
-                    cd "${PROJECT_ROOT}"
-                fi
-                return 1
-            fi
-            ;;
-        3)
-            # 未部署
-            echo "⚠️  BillionMail已移除未部署"
-            echo "💡 部署命令: ./scripts/billionmail/deploy-billionmail.sh"
-            echo "💡 BillionMail已移除是可选服务，不影响前后端服务启动"
-            return 1
-            ;;
-    esac
-    
-    echo "⚠️  BillionMail已移除服务检查完成，状态未知"
-    return 1
+    echo "📧 邮件系统已集成到Strapi后台，无需独立部署"
+    echo "   🌐 管理地址: ${BACKEND_ADMIN_URL}"
+    echo "   💡 功能: SMTP配置、邮件模板、营销活动、订阅管理"
 }
 
 # 🎯 智能化MeiliSearch部署控制
@@ -431,17 +337,8 @@ else
     echo "💡 手动部署命令: ./scripts/search/deploy-meilisearch.sh"
 fi
 
-# 调用BillionMail已移除部署 (如果启用) - 添加错误处理，不阻断前后端启动
-if [ "${AUTO_DEPLOY_BILLIONMAIL:-true}" = "true" ]; then
-    echo "📧 检查BillionMail已移除邮件系统..."
-    if deploy_billionmail 2>/dev/null; then
-        echo "✅ BillionMail已移除部署检查完成"
-    else
-        echo "⚠️  BillionMail已移除部署跳过（不影响前后端服务启动）"
-    fi
-else
-    echo "📧 BillionMail已移除部署已禁用"
-fi
+# 邮件系统集成到Strapi，无需独立部署
+check_email_integration
 
 # 检查PostgreSQL服务
 check_postgresql() {
@@ -731,8 +628,7 @@ echo ""
 echo "🌐 所有访问地址："
 echo "   🖥️  前端应用: ${FRONTEND_URL} (AI变现之路主站)"
 echo "   ⚙️  后端管理: ${BACKEND_ADMIN_URL} (Strapi管理界面)"
-echo "   📧 邮件营销: ${BILLIONMAIL_ADMIN_URL} (BillionMail已移除管理)"
-echo "   📬 WebMail: ${BILLIONMAIL_WEBMAIL_URL} (邮件收发)"
+echo "   📧 邮件营销: ${BACKEND_ADMIN_URL} (Strapi后台)"
 echo "   🔍 搜索管理: ${SEARCH_URL} (MeiliSearch管理)"
 echo "   📡 API示例: ${BACKEND_API_URL}/articles (文章API)"
 echo "   📊 API文档: ${BACKEND_DOCS_URL} (接口文档)"

@@ -1,35 +1,28 @@
 #!/bin/bash
-
 # 完整系统集成测试脚本
 # 测试认证、支付、返佣、邮件订阅全流程
 # 基于架构文档《用户体系与支付系统架构设计方案.md》
-
 # 加载动态配置
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/tools/load-config.sh"
-
 echo "🚀 开始AI变现之路系统完整集成测试"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
 # 测试配置
 TEST_API_BASE="${BACKEND_API_URL}"
 FRONTEND_BASE="${FRONTEND_URL}"
 TEST_EMAIL="test-$(date +%s)@example.com"
 TEST_PASSWORD="Test123456"
 TEST_USERNAME="testuser$(date +%s)"
-
 # 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
-
 # 测试结果统计
 TOTAL_TESTS=0
 PASSED_TESTS=0
 FAILED_TESTS=0
-
 # 测试函数
 test_step() {
     local test_name="$1"
@@ -50,7 +43,6 @@ test_step() {
         return 1
     fi
 }
-
 # 检查服务状态
 check_services() {
     echo "🔍 检查服务状态..."
@@ -81,7 +73,6 @@ check_services() {
     
     return 0
 }
-
 # 测试用户注册
 test_user_registration() {
     echo "测试邮箱密码注册..."
@@ -102,7 +93,6 @@ test_user_registration() {
         return 1
     fi
 }
-
 # 测试用户登录
 test_user_login() {
     echo "测试邮箱密码登录..."
@@ -122,7 +112,6 @@ test_user_login() {
         return 1
     fi
 }
-
 # 测试数据库表结构
 test_database_schema() {
     echo "测试数据库表结构..."
@@ -132,12 +121,10 @@ test_database_schema() {
         SELECT column_name 
         FROM information_schema.columns 
         WHERE table_name = 'up_users' 
-        AND column_name IN ('invite_code', 'membership_level', 'billionmail_subscribed');
     ")
     
     if echo "$user_fields" | grep -q "invite_code" && 
        echo "$user_fields" | grep -q "membership_level" && 
-       echo "$user_fields" | grep -q "billionmail_subscribed"; then
         echo "✅ User表扩展字段存在"
     else
         echo "❌ User表扩展字段缺失"
@@ -163,7 +150,6 @@ test_database_schema() {
         return 1
     fi
 }
-
 # 测试内容类型API
 test_content_type_apis() {
     echo "测试内容类型API..."
@@ -194,7 +180,6 @@ test_content_type_apis() {
     
     return 0
 }
-
 # 测试NextAuth配置
 test_nextauth_config() {
     echo "测试NextAuth配置..."
@@ -209,7 +194,6 @@ test_nextauth_config() {
     
     return 0
 }
-
 # 测试前端组件渲染
 test_frontend_components() {
     echo "测试前端组件..."
@@ -224,7 +208,6 @@ test_frontend_components() {
     
     return 0
 }
-
 # 测试业务流程
 test_business_flow() {
     echo "测试核心业务流程..."
@@ -235,7 +218,6 @@ test_business_flow() {
     echo "✅ 业务流程测试框架已准备"
     return 0
 }
-
 # 主测试流程
 main() {
     echo ""
@@ -299,6 +281,4 @@ main() {
         return 1
     fi
 }
-
 # 运行主函数
-main "$@"
