@@ -579,6 +579,44 @@ textarea:-ms-input-placeholder {
     opacity: 1 !important;
 }
 
+/* ===== 浏览器自动填充样式统一（与手动输入一致） ===== */
+/* WebKit (Chrome/Safari/Edge) */
+input.input:-webkit-autofill,
+input.input:-webkit-autofill:hover,
+input.input:-webkit-autofill:focus,
+textarea.input:-webkit-autofill,
+textarea.input:-webkit-autofill:hover,
+textarea.input:-webkit-autofill:focus,
+select.input:-webkit-autofill,
+select.input:-webkit-autofill:hover,
+select.input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--color-text-primary) !important;
+    caret-color: var(--color-text-primary) !important;
+    /* 用inset阴影覆盖WebKit默认的浅色背景 */
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-bg-input) inset !important;
+    box-shadow: 0 0 0px 1000px var(--color-bg-input) inset !important;
+    background-color: var(--color-bg-input) !important;
+    border: 1px solid var(--color-border-primary) !important;
+    transition: background-color 9999s ease-in-out 0s !important;
+}
+
+/* WebKit: 首行文字样式与输入一致 */
+input.input:-webkit-autofill::first-line {
+    font-family: var(--font-family-primary) !important;
+    font-size: var(--font-size-base) !important;
+    color: var(--color-text-primary) !important;
+}
+
+/* Firefox */
+input.input:-moz-autofill,
+textarea.input:-moz-autofill,
+select.input:-moz-autofill {
+    color: var(--color-text-primary) !important;
+    background-color: var(--color-bg-input) !important;
+    box-shadow: 0 0 0px 1000px var(--color-bg-input) inset !important;
+    border: 1px solid var(--color-border-primary) !important;
+}
+
 /* 搜索框输入框特殊处理 - 移除焦点边框 */
 .search-bar-input:focus {
     border: none !important;
@@ -603,4 +641,28 @@ textarea:-ms-input-placeholder {
 .search-container-no-border::before,
 .search-container-no-border::after {
     display: none !important;
+}
+
+/* ===== 可复用滚动条样式（与目录滚动条一致的渐变风格） ===== */
+.scrollbar-gradient {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #60A5FA transparent; /* Firefox */
+}
+
+.scrollbar-gradient::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar-gradient::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+}
+
+.scrollbar-gradient::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #3B82F6, #8B5CF6);
+    border-radius: 3px;
+}
+
+.scrollbar-gradient:hover::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #2563EB, #7C3AED);
 }

@@ -7,7 +7,7 @@ interface TermsContentProps {
 
 export function TermsContent({ onBack }: TermsContentProps) {
     return (
-        <div style={{
+        <div className="scrollbar-gradient" style={{
             display: 'flex',
             flexDirection: 'column',
             gap: 'var(--spacing-4)',

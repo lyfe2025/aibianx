@@ -7,7 +7,7 @@ interface PrivacyContentProps {
 
 export function PrivacyContent({ onBack }: PrivacyContentProps) {
     return (
-        <div style={{
+        <div className="scrollbar-gradient" style={{
             display: 'flex',
             flexDirection: 'column',
             gap: 'var(--spacing-4)',
