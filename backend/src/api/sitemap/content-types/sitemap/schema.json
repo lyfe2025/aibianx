@@ -1,0 +1,50 @@
+{
+    "kind": "singleType",
+    "collectionName": "sitemaps",
+    "info": {
+        "singularName": "sitemap",
+        "pluralName": "sitemaps",
+        "displayName": "站点地图配置",
+        "description": "站点地图生成和配置管理"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "是否启用站点地图自动生成"
+        },
+        "baseUrl": {
+            "type": "string",
+            "default": "http://localhost:3000",
+            "description": "网站基础URL地址"
+        },
+        "includeArticles": {
+            "type": "boolean", 
+            "default": true,
+            "description": "是否包含文章页面"
+        },
+        "includeCategories": {
+            "type": "boolean",
+            "default": true,
+            "description": "是否包含分类页面"
+        },
+        "includeTags": {
+            "type": "boolean",
+            "default": true,
+            "description": "是否包含标签页面"
+        },
+        "lastGenerated": {
+            "type": "datetime",
+            "description": "最后生成时间"
+        },
+        "totalUrls": {
+            "type": "integer",
+            "default": 0,
+            "description": "站点地图包含的URL总数"
+        }
+    }
+}

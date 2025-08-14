@@ -1279,6 +1279,44 @@ export interface ApiSiteConfigSiteConfig extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiSitemapSitemap extends Struct.SingleTypeSchema {
+  collectionName: 'sitemaps';
+  info: {
+    description: '\u7AD9\u70B9\u5730\u56FE\u751F\u6210\u548C\u914D\u7F6E\u7BA1\u7406';
+    displayName: '\u7AD9\u70B9\u5730\u56FE\u914D\u7F6E';
+    pluralName: 'sitemaps';
+    singularName: 'sitemap';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    baseUrl: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'http://localhost:3000'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    enabled: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    includeArticles: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    includeCategories: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    includeTags: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    lastGenerated: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sitemap.sitemap'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    totalUrls: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSmtpConfigSmtpConfig extends Struct.CollectionTypeSchema {
   collectionName: 'smtp_configs';
   info: {
@@ -2078,6 +2116,7 @@ declare module '@strapi/strapi' {
       'api::refund.refund': ApiRefundRefund;
       'api::seo-metrics.seo-metrics': ApiSeoMetricsSeoMetrics;
       'api::site-config.site-config': ApiSiteConfigSiteConfig;
+      'api::sitemap.sitemap': ApiSitemapSitemap;
       'api::smtp-config.smtp-config': ApiSmtpConfigSmtpConfig;
       'api::system-config.system-config': ApiSystemConfigSystemConfig;
       'api::tag.tag': ApiTagTag;

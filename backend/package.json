@@ -19,6 +19,7 @@
   "dependencies": {
     "@strapi/plugin-cloud": "5.22.0",
     "@strapi/plugin-documentation": "^5.22.0",
+    "@strapi/plugin-seo": "^2.0.8",
     "@strapi/plugin-users-permissions": "5.22.0",
     "@strapi/strapi": "5.22.0",
     "@types/nodemailer": "^6.4.17",
