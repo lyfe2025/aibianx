@@ -5,6 +5,7 @@ import { GradientButton, Icon, Input } from '@/components/ui'
 // import { getPasswordStrength } from '@/lib/validations' // 已使用动态密码强度评估
 import { useModalStore } from '@/stores'
 import { usePasswordPolicy, usePasswordValidation } from '@/lib/hooks'
+// 还原为弹窗内提示，不使用全局Toast
 
 interface RegisterFormProps {
     onSubmit?: (data: RegisterFormData) => Promise<void>
@@ -18,32 +19,34 @@ interface RegisterFormData {
     email: string
     password: string
     confirmPassword: string
-    verificationCode: string
     agreeToTerms: boolean
 }
 
 export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms, onShowPrivacy }: RegisterFormProps = {}) {
     const { openModal } = useModalStore()
+    // 不使用全局Toast
     const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: '',
         confirmPassword: '',
-        verificationCode: '',
         agreeToTerms: false
     })
     const [errors, setErrors] = useState<Record<string, string>>({})
+    // 成功提示状态（弹窗内毛玻璃风格）
+    const [isSuccess, setIsSuccess] = useState(false)
+    const [successMessage, setSuccessMessage] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const effectiveLoading = externalLoading ?? isLoading
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-    // 验证码相关状态
-    const [isCodeSent, setIsCodeSent] = useState(false)
-    const [isSendingCode, setIsSendingCode] = useState(false)
-    const [isVerifyingCode, setIsVerifyingCode] = useState(false)
-    const [isCodeVerified, setIsCodeVerified] = useState(false)
-    const [countdown, setCountdown] = useState(0)
+    // 验证码相关状态 - 已禁用邮箱验证功能
+    // const [isCodeSent, setIsCodeSent] = useState(false)
+    // const [isSendingCode, setIsSendingCode] = useState(false)
+    // const [isVerifyingCode, setIsVerifyingCode] = useState(false)
+    // const [isCodeVerified, setIsCodeVerified] = useState(false)
+    // const [countdown, setCountdown] = useState(0)
 
     // 系统配置Hook
     const {
@@ -116,95 +119,9 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
     // 密码强度（使用动态配置）
     const passwordStrength = getDynamicPasswordStrength(formData.password)
 
-    // 发送验证码
-    const handleSendVerificationCode = async () => {
-        if (!formData.email) {
-            setErrors(prev => ({ ...prev, email: '请先输入邮箱地址' }))
-            return
-        }
-
-        // 验证邮箱格式
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(formData.email)) {
-            setErrors(prev => ({ ...prev, email: '邮箱格式不正确' }))
-            return
-        }
-
-        setIsSendingCode(true)
-        try {
-            const response = await fetch('/api/auth/send-verification', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: formData.email }),
-            })
-
-            const data = await response.json()
-
-            if (response.ok) {
-                setIsCodeSent(true)
-                setCountdown(60) // 60秒倒计时
-
-                // 启动倒计时
-                const timer = setInterval(() => {
-                    setCountdown(prev => {
-                        if (prev <= 1) {
-                            clearInterval(timer)
-                            return 0
-                        }
-                        return prev - 1
-                    })
-                }, 1000)
-
-                // 清除邮箱错误
-                setErrors(prev => ({ ...prev, email: '' }))
-            } else {
-                setErrors(prev => ({ ...prev, email: data.error }))
-            }
-        } catch (error) {
-            console.error('发送验证码失败:', error)
-            setErrors(prev => ({ ...prev, email: '发送验证码失败，请稍后重试' }))
-        } finally {
-            setIsSendingCode(false)
-        }
-    }
-
-    // 验证验证码
-    const handleVerifyCode = async () => {
-        if (!formData.verificationCode) {
-            setErrors(prev => ({ ...prev, verificationCode: '请输入验证码' }))
-            return
-        }
-
-        setIsVerifyingCode(true)
-        try {
-            const response = await fetch('/api/auth/verify-code', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: formData.email,
-                    code: formData.verificationCode
-                }),
-            })
-
-            const data = await response.json()
-
-            if (response.ok) {
-                setIsCodeVerified(true)
-                setErrors(prev => ({ ...prev, verificationCode: '' }))
-            } else {
-                setErrors(prev => ({ ...prev, verificationCode: data.error }))
-            }
-        } catch (error) {
-            console.error('验证验证码失败:', error)
-            setErrors(prev => ({ ...prev, verificationCode: '验证失败，请稍后重试' }))
-        } finally {
-            setIsVerifyingCode(false)
-        }
-    }
+    // 发送验证码和验证验证码功能已禁用 - 用户注册时不再需要邮箱验证
+    // const handleSendVerificationCode = async () => { ... }
+    // const handleVerifyCode = async () => { ... }
 
     const handleInputChange = (field: string, value: string | boolean) => {
         setFormData(prev => ({ ...prev, [field]: value }))
@@ -214,12 +131,17 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
             setErrors(prev => ({ ...prev, [field]: '' }))
         }
 
-        // 如果邮箱改变，重置验证码状态
-        if (field === 'email') {
-            setIsCodeSent(false)
-            setIsCodeVerified(false)
-            setCountdown(0)
+        // 如果用户勾选了同意条款，清除相关的错误信息
+        if (field === 'agreeToTerms' && value === true) {
+            setErrors(prev => ({ ...prev, agreeToTerms: '', submit: '' }))
         }
+
+        // 如果邮箱改变，重置验证码状态 - 已禁用邮箱验证功能
+        // if (field === 'email') {
+        //     setIsCodeSent(false)
+        //     setIsCodeVerified(false)
+        //     setCountdown(0)
+        // }
     }
 
     const validateForm = () => {
@@ -274,12 +196,8 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
             newErrors.confirmPassword = '两次输入的密码不一致'
         }
 
-        // 验证码验证
-        if (!formData.verificationCode) {
-            newErrors.verificationCode = '请输入验证码'
-        } else if (!isCodeVerified) {
-            newErrors.verificationCode = '请先验证邮箱验证码'
-        }
+        // 验证码验证 - 已禁用邮箱验证码要求
+        // 用户注册时不再需要邮箱验证码
 
         // 同意条款验证
         if (!formData.agreeToTerms) {
@@ -293,7 +211,11 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
+        // 清除之前的提交错误
+        setErrors(prev => ({ ...prev, submit: '' }))
+
         if (!validateForm()) {
+            // 验证失败，错误信息已在validateForm中设置
             return
         }
 
@@ -316,7 +238,6 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
                     body: JSON.stringify({
                         email: formData.email,
                         password: formData.password,
-                        code: formData.verificationCode,
                         username: formData.username,
                     }),
                 })
@@ -324,9 +245,15 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
                 const data = await response.json()
 
                 if (response.ok) {
-                    alert('注册成功！您现在可以使用邮箱和密码登录了。')
-                    // 可以在这里切换到登录弹窗
-                    openModal('login')
+                    // 弹窗内成功提示（毛玻璃风格）
+                    setIsSuccess(true)
+                    setSuccessMessage('🎉 注册成功！账户创建成功，您现在可以使用邮箱和密码登录了')
+                    setErrors({})
+
+                    setTimeout(() => {
+                        setIsSuccess(false)
+                        openModal('login')
+                    }, 3000)
                 } else {
                     setErrors({ submit: data.error || '注册失败，请稍后重试' })
                 }
@@ -390,107 +317,10 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
                     autoComplete="email"
                 />
 
-                {/* 发送验证码按钮 */}
-                {formData.email && !isCodeSent && (
-                    <div style={{ marginTop: 'var(--spacing-2)' }}>
-                        <GradientButton
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={handleSendVerificationCode}
-                            loading={isSendingCode}
-                            disabled={isSendingCode}
-                        >
-                            {isSendingCode ? '发送中...' : '发送验证码'}
-                        </GradientButton>
-                    </div>
-                )}
-
-                {/* 验证码发送成功提示 */}
-                {isCodeSent && (
-                    <div style={{
-                        marginTop: 'var(--spacing-2)',
-                        padding: 'var(--spacing-2)',
-                        background: 'var(--color-bg-success)',
-                        border: '1px solid var(--color-border-success)',
-                        borderRadius: 'var(--border-radius-md)',
-                        fontSize: 'var(--font-size-sm)',
-                        color: 'var(--color-success)',
-                    }}>
-                        ✅ 验证码已发送到您的邮箱，请查收！
-                        {countdown > 0 && (
-                            <span style={{ marginLeft: 'var(--spacing-2)' }}>
-                                ({countdown}s后可重新发送)
-                            </span>
-                        )}
-                        {countdown === 0 && (
-                            <button
-                                type="button"
-                                onClick={handleSendVerificationCode}
-                                style={{
-                                    marginLeft: 'var(--spacing-2)',
-                                    background: 'none',
-                                    border: 'none',
-                                    color: 'var(--color-primary-blue)',
-                                    cursor: 'pointer',
-                                    textDecoration: 'underline',
-                                    fontSize: 'var(--font-size-sm)',
-                                }}
-                            >
-                                重新发送
-                            </button>
-                        )}
-                    </div>
-                )}
+                {/* 邮箱验证码功能已禁用 - 用户注册时不再需要邮箱验证 */}
             </div>
 
-            {/* 验证码输入 */}
-            {isCodeSent && (
-                <div>
-                    <div style={{
-                        display: 'flex',
-                        gap: 'var(--spacing-2)',
-                        alignItems: 'flex-end',
-                    }}>
-                        <div style={{ flex: 1 }}>
-                            <Input
-                                type="text"
-                                placeholder="请输入6位验证码"
-                                value={formData.verificationCode}
-                                onChange={(e) => handleInputChange('verificationCode', e.target.value)}
-                                error={errors.verificationCode}
-                                icon={<Icon name="modals/verification-code-icon" size="sm" />}
-                                maxLength={6}
-                            />
-                        </div>
-                        <GradientButton
-                            type="button"
-                            variant="primary"
-                            size="md"
-                            onClick={handleVerifyCode}
-                            loading={isVerifyingCode}
-                            disabled={!formData.verificationCode || isVerifyingCode || isCodeVerified}
-                        >
-                            {isCodeVerified ? '已验证' : isVerifyingCode ? '验证中...' : '验证'}
-                        </GradientButton>
-                    </div>
-
-                    {/* 验证成功提示 */}
-                    {isCodeVerified && (
-                        <div style={{
-                            marginTop: 'var(--spacing-2)',
-                            padding: 'var(--spacing-2)',
-                            background: 'var(--color-bg-success)',
-                            border: '1px solid var(--color-border-success)',
-                            borderRadius: 'var(--border-radius-md)',
-                            fontSize: 'var(--font-size-sm)',
-                            color: 'var(--color-success)',
-                        }}>
-                            ✅ 邮箱验证成功！
-                        </div>
-                    )}
-                </div>
-            )}
+            {/* 验证码输入功能已禁用 - 用户注册时不再需要邮箱验证 */}
 
             {/* 安全信息标签 */}
             <div style={{
@@ -638,7 +468,11 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
                     style={{
                         width: '20px',
                         height: '20px',
-                        border: `2px solid ${formData.agreeToTerms ? 'var(--color-primary-blue)' : 'var(--color-border-primary)'}`,
+                        border: `2px solid ${
+                            errors.agreeToTerms ? 'var(--color-error)' : 
+                            formData.agreeToTerms ? 'var(--color-primary-blue)' : 
+                            'var(--color-border-primary)'
+                        }`,
                         borderRadius: '4px',
                         background: formData.agreeToTerms ? 'var(--color-primary-blue)' : 'transparent',
                         cursor: 'pointer',
@@ -710,7 +544,56 @@ export function RegisterForm({ onSubmit, isLoading: externalLoading, onShowTerms
                 </div>
             </div>
 
-            {/* 提交错误 */}
+        {/* 注册成功提示 - 弹窗内毛玻璃风格 */}
+        {isSuccess && (
+            <div style={{
+                padding: 'var(--spacing-4)',
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+                borderRadius: 'var(--radius-lg)',
+                fontSize: 'var(--font-size-base)',
+                color: 'var(--color-success)',
+                textAlign: 'center',
+                fontWeight: '500',
+                boxShadow: '0 8px 32px rgba(16, 185, 129, 0.1)',
+                animation: 'fadeInScale 0.5s ease-out',
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%)',
+                    animation: 'shimmer 2s ease-in-out infinite'
+                }} />
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                    {successMessage}
+                    <div style={{
+                        marginTop: 'var(--spacing-2)',
+                        fontSize: 'var(--font-size-sm)',
+                        opacity: 0.8
+                    }}>
+                        正在跳转到登录页面...
+                    </div>
+                </div>
+                <style jsx>{`
+                    @keyframes fadeInScale {
+                        from { opacity: 0; transform: scale(0.9) translateY(10px); }
+                        to { opacity: 1; transform: scale(1) translateY(0); }
+                    }
+                    @keyframes shimmer {
+                        0% { transform: translateX(-100%); }
+                        100% { transform: translateX(100%); }
+                    }
+                `}</style>
+            </div>
+        )}
+
+        {/* 提交错误 */}
             {errors.submit && (
                 <div style={{
                     padding: 'var(--spacing-3)',

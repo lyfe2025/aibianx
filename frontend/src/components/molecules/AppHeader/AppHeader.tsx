@@ -123,7 +123,8 @@ export function AppHeader() {
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '100%',
-        overflow: 'hidden',
+        // 允许下拉菜单（如头像菜单）溢出显示
+        overflow: 'visible',
         fontFamily: 'var(--font-family-primary)',
         fontSize: '16px',
         fontWeight: 400,

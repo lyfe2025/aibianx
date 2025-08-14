@@ -145,12 +145,8 @@ export function EmailSubscriptionCard({ className }: EmailSubscriptionCardProps)
                         flex: 1,
                         padding: '12px 16px',
                         borderRadius: '8px',
-                        border: `1px solid ${theme === 'light'
-                            ? (isEmailFocused ? '#3B82F6' : '#E2E8F0')
-                            : (isEmailFocused ? 'var(--color-bg-input)' : 'rgba(250, 252, 255, 0.95)')}`,
-                        background: theme === 'light'
-                            ? (isEmailFocused ? '#FFFFFF' : '#F8FAFC')
-                            : (isEmailFocused ? 'var(--color-bg-input)' : 'rgba(250, 252, 255, 0.95)'),
+                        border: `1px solid ${isEmailFocused ? 'var(--color-border-active)' : 'var(--color-border-primary)'}`,
+                        background: 'var(--color-bg-input)',
                         color: theme === 'light' ? '#1E293B' : 'var(--color-text-primary)',
                         fontSize: '14px',
                         fontFamily: 'var(--font-family-primary)',

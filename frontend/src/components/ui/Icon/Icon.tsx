@@ -82,6 +82,7 @@ const iconPathMap: Record<string, string> = {
     'user-icon': 'user-icon',
     'search-icon': 'search-icon',
     'renew-icon': 'renew-icon',
+    'dropdown-arrow': 'dropdown-arrow',
     'privilege-icon': 'privilege-icon',
     'privilege-arrow': 'privilege-arrow',
     'arrow-right-blue': 'arrow-right-blue',
@@ -143,9 +144,8 @@ export const Icon = ({
         name === 'privilege-icon' ||
         name === 'crown-white' ||
         name === 'crown-premium-white' ||
-        // profile-sidebar图标已改为currentColor，不需要filter处理
+        // profile-sidebar设置图标保持原色
         name === 'profile-sidebar-settings' ||
-        name === 'profile-sidebar-logout' ||
         // 应用类型的图标（通常有深色背景和白色图标内容）
         name.includes('article-stat') ||
         name.includes('tutorial-stat') ||

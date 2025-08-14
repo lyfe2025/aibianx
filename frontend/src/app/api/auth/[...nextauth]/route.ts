@@ -145,6 +145,11 @@ const authOptions: NextAuthOptions = {
             }
           }
 
+          // 处理登录失败的错误
+          const errorData = await response.json()
+          console.error('❌ Strapi登录失败:', errorData)
+          
+          // NextAuth要求返回null表示登录失败
           return null
         } catch (error) {
           console.error('❌ 登录验证失败:', error)

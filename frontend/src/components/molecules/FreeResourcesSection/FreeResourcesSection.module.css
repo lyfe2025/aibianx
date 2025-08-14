@@ -7,10 +7,15 @@
     background: transparent;
 }
 
-/* 标题容器 */
-.titleContainer {
+/* 区块标题容器 */
+.sectionTitleContainer {
     text-align: center;
     margin-bottom: 64px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 /* 主标题 */
@@ -24,6 +29,8 @@
     -webkit-text-fill-color: transparent;
     margin-bottom: 16px;
     font-family: var(--font-family-primary);
+    text-align: center;
+    width: 100%;
 }
 
 /* 副标题 */
@@ -33,6 +40,9 @@
     color: var(--color-text-secondary);
     margin: 0;
     font-family: var(--font-family-primary);
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
 }
 
 /* 资源卡片网格容器 */
@@ -84,9 +94,17 @@
     margin-bottom: 16px;
 }
 
-/* 标题容器 */
+/* 描述容器 */
+.descriptionContainer {
+    text-align: left;
+    width: 100%;
+}
+
+/* 卡片标题容器 */
 .titleContainer {
     margin-bottom: 12px;
+    text-align: left;
+    width: 100%;
 }
 
 /* 标题文字 */
@@ -97,9 +115,8 @@
     color: var(--color-text-primary);
     margin: 0;
     font-family: var(--font-family-primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-align: left;
+    width: 100%;
 }
 
 /* 描述文字 */
@@ -110,6 +127,8 @@
     margin: 0;
     font-family: var(--font-family-primary);
     flex: 1;
+    text-align: left;
+    width: 100%;
 }
 
 /* 平板端响应式 (768px - 1023px) */
@@ -118,7 +137,7 @@
         padding: 60px 0;
     }
 
-    .titleContainer {
+    .sectionTitleContainer {
         margin-bottom: 48px;
         padding: 0 24px;
     }
@@ -163,7 +182,7 @@
         padding: 40px 0;
     }
 
-    .titleContainer {
+    .sectionTitleContainer {
         margin-bottom: 32px;
         padding: 0 16px;
     }
@@ -225,7 +244,7 @@
         padding: 32px 0;
     }
 
-    .titleContainer {
+    .sectionTitleContainer {
         padding: 0 12px;
         margin-bottom: 24px;
     }

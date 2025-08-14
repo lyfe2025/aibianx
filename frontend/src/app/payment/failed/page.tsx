@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Container } from '@/components/ui'
@@ -13,7 +13,7 @@ interface PaymentError {
   failedAt?: string
 }
 
-export default function PaymentFailedPage() {
+function FailedContent() {
   const searchParams = useSearchParams()
   const { openModal } = useModalStore()
   const [paymentError, setPaymentError] = useState<PaymentError | null>(null)
@@ -267,5 +267,13 @@ export default function PaymentFailedPage() {
         </div>
       </div>
     </Container>
+  )
+}
+
+export default function PaymentFailedPage() {
+  return (
+    <Suspense fallback={<Container size="md" className="py-16"><div className="text-center text-gray-600">加载中...</div></Container>}>
+      <FailedContent />
+    </Suspense>
   )
 }

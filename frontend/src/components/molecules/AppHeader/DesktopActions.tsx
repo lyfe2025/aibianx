@@ -1,9 +1,11 @@
 'use client'
 
 import { Icon } from '@/components/ui'
+import { UserProfileDropdown } from '@/components/molecules'
 import { useTranslation } from '@/lib'
 import { getIconButtonStyles } from '@/lib/headerUtils'
 import { HEADER_STYLES } from '@/constants/headerConfig'
+import { useSession } from 'next-auth/react'
 
 interface DesktopActionsProps {
     theme: string
@@ -29,6 +31,7 @@ export function DesktopActions({
     onLogin
 }: DesktopActionsProps) {
     const { t } = useTranslation()
+    const { data: session, status } = useSession()
     const { buttons, transitions } = HEADER_STYLES
 
     const iconButtonStyles = getIconButtonStyles(
@@ -93,14 +96,40 @@ export function DesktopActions({
                 />
             </button>
 
-            {/* 登录按钮 */}
-            <button
-                onClick={onLogin}
-                style={loginButtonStyles}
-                className="btn btn--gradient"
-            >
-                {t('buttons.login')}
-            </button>
+            {/* 登录状态相关 UI */}
+            {isClient && status !== 'loading' && (
+                session ? (
+                    /* 已登录：显示用户头像下拉菜单 */
+                    <UserProfileDropdown />
+                ) : (
+                    /* 未登录：显示登录按钮 */
+                    <button
+                        onClick={onLogin}
+                        style={loginButtonStyles}
+                        className="btn btn--gradient"
+                    >
+                        {t('buttons.login')}
+                    </button>
+                )
+            )}
+            
+            {/* 加载状态占位符 */}
+            {(status === 'loading' || !isClient) && (
+                <div style={{
+                    width: '72px',
+                    height: '36px',
+                    background: 'rgba(59, 130, 246, 0.1)',
+                    borderRadius: buttons.login.borderRadius,
+                    marginLeft: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'var(--color-text-muted)',
+                    fontSize: 'var(--font-size-xs)'
+                }}>
+                    ...
+                </div>
+            )}
         </div>
     )
 } 

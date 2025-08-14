@@ -1,12 +1,12 @@
 'use client'
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Container } from '@/components/ui'
 import { useModalStore } from '@/stores'
 
-export default function PaymentCancelPage() {
+function CancelContent() {
   const searchParams = useSearchParams()
   const { openModal } = useModalStore()
   const paymentNo = searchParams.get('paymentNo')
@@ -159,5 +159,13 @@ export default function PaymentCancelPage() {
         </div>
       </div>
     </Container>
+  )
+}
+
+export default function PaymentCancelPage() {
+  return (
+    <Suspense fallback={<Container size="md" className="py-16"><div className="text-center text-gray-600">加载中...</div></Container>}>
+      <CancelContent />
+    </Suspense>
   )
 }

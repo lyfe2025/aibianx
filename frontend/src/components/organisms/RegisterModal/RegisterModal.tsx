@@ -17,24 +17,7 @@ type ModalContent = 'register' | 'terms' | 'privacy'
 
 export function RegisterModal() {
     const { type, isOpen, closeModal } = useModalStore()
-    const [isLoading, setIsLoading] = useState(false)
     const [currentContent, setCurrentContent] = useState<ModalContent>('register')
-
-    const handleRegister = async (data: RegisterFormData) => {
-        setIsLoading(true)
-        try {
-            // TODO: 实现注册API调用
-            console.log('注册请求:', data)
-            await new Promise(resolve => setTimeout(resolve, 1000))
-
-            // 注册成功，关闭弹窗
-            closeModal()
-        } catch (error) {
-            console.error('注册失败:', error)
-        } finally {
-            setIsLoading(false)
-        }
-    }
 
     const handleShowTerms = () => {
         setCurrentContent('terms')
@@ -88,8 +71,6 @@ export function RegisterModal() {
             default:
                 return (
                     <RegisterForm 
-                        onSubmit={handleRegister} 
-                        isLoading={isLoading}
                         onShowTerms={handleShowTerms}
                         onShowPrivacy={handleShowPrivacy}
                     />

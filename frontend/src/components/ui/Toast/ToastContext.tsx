@@ -223,6 +223,21 @@ export const ToastPresets = {
         duration: 3000
     },
 
+    // 注册成功
+    registerSuccess: {
+        type: 'success' as ToastType,
+        title: '注册成功',
+        message: '账户创建成功！您现在可以使用邮箱和密码登录了',
+        duration: 4000,
+        action: {
+            label: '立即登录',
+            onClick: () => {
+                // 这个onClick会在RegisterForm中被覆盖为实际的登录逻辑
+                console.log('切换到登录表单')
+            }
+        }
+    },
+
     // 网络错误
     networkError: {
         type: 'error' as ToastType,

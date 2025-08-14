@@ -4,11 +4,13 @@ import { useState } from 'react'
 import { GradientButton, Icon, Input } from '@/components/ui'
 import { useModalStore } from '@/stores'
 import { signIn } from 'next-auth/react'
+import { useToast, ToastPresets } from '@/components/ui/Toast'
 
 interface LoginFormProps {
     onSubmit?: (data: LoginFormData) => Promise<void>
     isLoading?: boolean
     showOAuth?: boolean
+    onInputChange?: () => void
     oauthConfig?: {
         isOAuthEnabled: boolean
         isGitHubEnabled: boolean
@@ -24,8 +26,9 @@ interface LoginFormData {
     rememberMe: boolean
 }
 
-export function LoginForm({ onSubmit, isLoading: externalLoading, showOAuth = true, oauthConfig }: LoginFormProps = {}) {
+export function LoginForm({ onSubmit, isLoading: externalLoading, showOAuth = true, onInputChange, oauthConfig }: LoginFormProps = {}) {
     const { openModal, closeModal } = useModalStore()
+    const { showToast } = useToast()
     const [formData, setFormData] = useState({
         emailOrUsername: '',
         password: '',
@@ -47,6 +50,7 @@ export function LoginForm({ onSubmit, isLoading: externalLoading, showOAuth = tr
 
             if (result?.ok) {
                 closeModal()
+                showToast(ToastPresets.loginSuccess)
             } else {
                 console.error(`${provider}登录失败:`, result?.error)
                 alert(`${provider}登录失败，请稍后重试`)
@@ -107,6 +111,9 @@ export function LoginForm({ onSubmit, isLoading: externalLoading, showOAuth = tr
         if (errors[field]) {
             setErrors(prev => ({ ...prev, [field]: '' }))
         }
+
+        // 调用外部的输入变化回调（用于清除登录错误）
+        onInputChange?.()
     }
 
     const validateForm = () => {

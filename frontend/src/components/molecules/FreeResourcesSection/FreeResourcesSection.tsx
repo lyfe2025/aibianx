@@ -1,5 +1,6 @@
 import { Container, GradientText, GradientButton, Tag } from '@/components/ui'
 import Link from 'next/link'
+import { useCallback } from 'react'
 import styles from './FreeResourcesSection.module.css'
 
 /**
@@ -43,13 +44,21 @@ export function FreeResourcesSection() {
         }
     ]
 
+    const scrollToFinalCTA = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault()
+        const target = document.getElementById('final-cta')
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+    }, [])
+
     return (
         <section
             className={styles.freeResourcesSection}
         >
             <Container>
                 {/* 区块标题 - 1:1还原设计稿 */}
-                <div className={styles.titleContainer}>
+                <div className={styles.sectionTitleContainer}>
                     {/* 主标题 */}
                     <div className={styles.mainTitle}>
                         免费精选资源
@@ -66,7 +75,8 @@ export function FreeResourcesSection() {
                     {resources.map((resource) => (
                         <Link
                             key={resource.id}
-                            href={`/resources/${resource.id}`}
+                            href="#final-cta"
+                            onClick={scrollToFinalCTA}
                             className={styles.resourceCard}
                         >
                             {/* 资源图片 - 1:1还原设计稿尺寸 */}
@@ -87,24 +97,14 @@ export function FreeResourcesSection() {
 
                             {/* 标题区域 - 1:1还原设计稿间距 */}
                             <div className={styles.titleContainer}>
-                                <div
-                                    className={styles.titleText}
-                                    style={{
-                                        width: resource.title === 'AI创业案例集' ? '107px' : '125px'
-                                    }}
-                                >
+                                <div className={styles.titleText}>
                                     {resource.title}
                                 </div>
                             </div>
 
                             {/* 描述区域 - 1:1还原设计稿间距 */}
                             <div className={styles.descriptionContainer}>
-                                <div
-                                    className={styles.descriptionText}
-                                    style={{
-                                        width: resource.description.length > 15 ? '195px' : '234px'
-                                    }}
-                                >
+                                <div className={styles.descriptionText}>
                                     {resource.description}
                                 </div>
                             </div>

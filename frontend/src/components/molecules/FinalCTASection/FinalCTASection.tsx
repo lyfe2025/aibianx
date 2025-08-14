@@ -58,7 +58,7 @@ export function FinalCTASection() {
     }
 
     return (
-        <section style={{
+        <section id="final-cta" style={{
             paddingTop: '48px',
             paddingBottom: '48px',
             background: 'transparent', // 改为透明，让粒子可见

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Container } from '@/components/ui'
 
@@ -8,7 +8,7 @@ import { Container } from '@/components/ui'
  * 邮件验证请求页面
  * 用户请求邮件登录后显示此页面
  */
-export default function VerifyRequestPage() {
+function VerifyContent() {
   const searchParams = useSearchParams()
   const [email, setEmail] = useState<string | null>(null)
 
@@ -171,5 +171,13 @@ export default function VerifyRequestPage() {
         </div>
       </Container>
     </div>
+  )
+}
+
+export default function VerifyRequestPage() {
+  return (
+    <Suspense fallback={<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}><span style={{color:'#6b7280'}}>加载中...</span></div>}>
+      <VerifyContent />
+    </Suspense>
   )
 }
